@@ -5,4 +5,15 @@
         <!-- Customize your theme here. -->
     </style>
 
+    <!-- Material Base Theme -->
+    <style name="MaterialTheme" parent="android:Theme.Material">
+        <!-- Main theme colors -->
+        <!--   your app branding color for the app bar -->
+        <item name="android:colorPrimary">@color/blue</item>
+        <!--   darker variant for the status bar and contextual app bars -->
+        <item name="android:colorPrimaryDark">@color/darkblue</item>
+        <!--   theme UI controls like checkboxes and text fields -->
+        <item name="android:colorAccent">#448AFF</item>
+    </style>
+
 </resources>
