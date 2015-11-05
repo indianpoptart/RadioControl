@@ -32,7 +32,7 @@ public class MainActivity extends Activity {
                 .withActivity(this)
                 .withHeaderBackground(R.mipmap.header)
                 .addProfiles(
-                        new ProfileDrawerItem().withName(getDeviceName()).withIcon(getResources().getDrawable(R.mipmap.profile))
+                        new ProfileDrawerItem().withName(getDeviceName()).withEmail("v1.0-ALPHA")
                 )
                 .withOnAccountHeaderListener(new AccountHeader.OnAccountHeaderListener() {
                     @Override
