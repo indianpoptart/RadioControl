@@ -1,13 +1,22 @@
 package com.nikhilparanjape.radiocontrol;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.net.wifi.WifiManager;
 import android.os.Build;
+import android.provider.Settings;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.materialdrawer.AccountHeader;
@@ -21,6 +30,8 @@ import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 
+import java.io.IOException;
+
 
 public class MainActivity extends Activity {
 
@@ -28,6 +39,47 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Context context = this;
+
+        //Get root
+        try {
+            Process p = Runtime.getRuntime().exec("su");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+        //Initialize network settings
+        ConnectivityManager cm =
+                (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+
+        //booleans for radios
+        boolean isWiFi = activeNetwork.getType() == ConnectivityManager.TYPE_WIFI;
+        boolean isEnabled = Settings.System.getInt(this.getContentResolver(), Settings.System.AIRPLANE_MODE_ON, 0) == 1;
+
+        if (isWiFi == true && isEnabled == false) {
+            Log.d("Wifi", "wifi is on");
+            Toast.makeText(MainActivity.this, "wifi is on", Toast.LENGTH_SHORT).show();
+            // Toggle airplane mode.
+            Settings.Global.putInt(
+                    context.getContentResolver(),
+                    Settings.System.AIRPLANE_MODE_ON, isEnabled ? 0 : 1);
+
+            // Post an intent to reload.
+            Intent intent = new Intent(Intent.ACTION_AIRPLANE_MODE_CHANGED);
+            intent.putExtra("state", !isEnabled);
+            sendBroadcast(intent);
+
+            toggleWiFi(true);
+        } else {
+
+        }
+
         AccountHeader headerResult = new AccountHeaderBuilder()
                 .withActivity(this)
                 .withHeaderBackground(R.mipmap.header)
@@ -67,7 +119,6 @@ public class MainActivity extends Activity {
 
     }
 
-
     public String getDeviceName() {
         String manufacturer = Build.MANUFACTURER;
         String model = Build.MODEL;
@@ -78,6 +129,15 @@ public class MainActivity extends Activity {
         }
     }
 
+    public void toggleWiFi(boolean status) {
+        WifiManager wifiManager = (WifiManager) this
+                .getSystemService(Context.WIFI_SERVICE);
+        if (status == true && !wifiManager.isWifiEnabled()) {
+            wifiManager.setWifiEnabled(true);
+        } else if (status == false && wifiManager.isWifiEnabled()) {
+            wifiManager.setWifiEnabled(false);
+        }
+    }
 
     private String capitalize(String s) {
         if (s == null || s.length() == 0) {
