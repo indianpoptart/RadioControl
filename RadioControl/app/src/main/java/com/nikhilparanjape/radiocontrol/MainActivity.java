@@ -30,6 +30,7 @@ import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 
+import java.io.DataOutputStream;
 import java.io.IOException;
 
 
@@ -39,16 +40,11 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Process p;
+        String[] airplaneCmd = {"su", "settings put global airplane_mode_on 1", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state true","svc wifi enable"};
+        String[] wifiCmd = {"su", "settings put global airplane_mode_on 1", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state true"};
         Context context = this;
-
-        //Get root
-        try {
-            Process p = Runtime.getRuntime().exec("su");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-
         //Initialize network settings
         ConnectivityManager cm =
                 (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -59,26 +55,34 @@ public class MainActivity extends Activity {
                 activeNetwork.isConnectedOrConnecting();
 
         //booleans for radios
-        boolean isWiFi = activeNetwork.getType() == ConnectivityManager.TYPE_WIFI;
         boolean isEnabled = Settings.System.getInt(this.getContentResolver(), Settings.System.AIRPLANE_MODE_ON, 0) == 1;
+        String test = Boolean.toString(isEnabled);
 
-        if (isWiFi == true && isEnabled == false) {
-            Log.d("Wifi", "wifi is on");
-            Toast.makeText(MainActivity.this, "wifi is on", Toast.LENGTH_SHORT).show();
-            // Toggle airplane mode.
-            Settings.Global.putInt(
-                    context.getContentResolver(),
-                    Settings.System.AIRPLANE_MODE_ON, isEnabled ? 0 : 1);
+        if (isConnected && isEnabled == false) {
+            boolean isWiFi = activeNetwork.getType() == ConnectivityManager.TYPE_WIFI;
+            if(isWiFi) {
+                try {
+                    p = Runtime.getRuntime().exec("su");
+                    DataOutputStream os = new DataOutputStream(p.getOutputStream());
+                    for (String tmpCmd : airplaneCmd) {
+                        os.writeBytes(tmpCmd + "\n");
+                    }
+                    os.writeBytes("exit\n");
+                    os.flush();
+                } catch (IOException e) {
 
-            // Post an intent to reload.
-            Intent intent = new Intent(Intent.ACTION_AIRPLANE_MODE_CHANGED);
-            intent.putExtra("state", !isEnabled);
-            sendBroadcast(intent);
+                }
+                Log.d("Wifi", "wifi is on" + test);
+            }
 
-            toggleWiFi(true);
-        } else {
+        } else if(isConnected == false && isEnabled == true){
 
         }
+
+        else {
+            Log.d("Else","something is different");
+        }
+
 
         AccountHeader headerResult = new AccountHeaderBuilder()
                 .withActivity(this)
