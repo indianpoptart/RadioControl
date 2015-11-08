@@ -13,7 +13,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 /**
- * Created by Nikhil on 11/8/2015.
+ * Created by Nikhil Paranjape on 11/8/2015.
  */
 public class WifiReceiver extends BroadcastReceiver {
 
@@ -25,9 +25,7 @@ public class WifiReceiver extends BroadcastReceiver {
         String[] airplaneCmd = {"su", "settings put global airplane_mode_on 1", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state true","svc wifi enable"};
         //Root commands if there is an active bluetooth connection
         String[] bluetoothCmd = {"su", "settings put global airplane_mode_on 1", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state true","svc wifi enable","service call bluetooth_manager 6"};
-        //Root commands if there is a wifi connection. NOT USED
-        String[] wifiCmd = {"su", "settings put global airplane_mode_on 1", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state true"};
-        //runs comand to disable airplane mode on wifi loss
+        //runs command to disable airplane mode on wifi loss
         String[] airOffCmd = {"su", "settings put global airplane_mode_on 0", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state false"};
         //Initialize network settings
         ConnectivityManager cm =
@@ -38,8 +36,6 @@ public class WifiReceiver extends BroadcastReceiver {
         // Check if the device is connected to the internet
         boolean isConnected = activeNetwork != null &&
                 activeNetwork.isConnectedOrConnecting();
-
-        //booleans for radios
 
         //Check for bluetooth
         BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -103,11 +99,5 @@ public class WifiReceiver extends BroadcastReceiver {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-    }
-    private static boolean isAirplaneModeOn(Context context) {
-
-        return Settings.System.getInt(context.getContentResolver(),
-                Settings.System.AIRPLANE_MODE_ON, 0) != 0;
-
     }
 };
