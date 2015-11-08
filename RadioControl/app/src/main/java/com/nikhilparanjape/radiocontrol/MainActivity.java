@@ -48,7 +48,7 @@ public class MainActivity extends Activity {
                 .withActivity(this)
                 .withHeaderBackground(R.mipmap.header)
                 .addProfiles(
-                        new ProfileDrawerItem().withName(getDeviceName()).withEmail("v1.1")
+                        new ProfileDrawerItem().withName(getDeviceName()).withEmail("v1.1.1 - Alpha")
                 )
                 .withOnAccountHeaderListener(new AccountHeader.OnAccountHeaderListener() {
                     @Override
