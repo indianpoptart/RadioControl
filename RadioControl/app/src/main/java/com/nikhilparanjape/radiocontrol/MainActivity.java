@@ -43,8 +43,8 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //Initialize the process
-        Process p;
+        /*//Initialize the process
+
         //Root commands for airplane mode
         String[] airplaneCmd = {"su", "settings put global airplane_mode_on 1", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state true","svc wifi enable"};
         //Root commands if there is an active bluetooth connection
@@ -68,41 +68,18 @@ public class MainActivity extends Activity {
         BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         //Check for airplane mode
         boolean isEnabled = Settings.System.getInt(this.getContentResolver(), Settings.System.AIRPLANE_MODE_ON, 0) == 1;
-        String test = Boolean.toString(isEnabled); // A test string, not needed
 
-        if (isConnected && isEnabled == false) {
+        if (isConnected && !isEnabled) {
             boolean isWiFi = activeNetwork.getType() == ConnectivityManager.TYPE_WIFI; //Boolean to check for an active WiFi connection
             //Check for wifi
             if(isWiFi) {
                 //If the bluetooth connection is on
-                if(bluetoothAdapter.isEnabled()) {
-                    try {
-                        p = Runtime.getRuntime().exec("su");
-                        DataOutputStream os = new DataOutputStream(p.getOutputStream());
-                        for (String tmpCmd : bluetoothCmd) {
-                            os.writeBytes(tmpCmd + "\n");
-                        }
-                        os.writeBytes("exit\n");
-                        os.flush();
-                    } catch (IOException e) {
-
-                    }
-                    Log.d("Wifi", "wifi is on" + test);
+                if(bluetoothAdapter.isEnabled() || bluetoothAdapter.isDiscovering()) {
+                    rootAccess(bluetoothCmd);
                 }
                 //If bluetooth is off, run the standard root request
-                else if(bluetoothAdapter == null){
-                    try {
-                        p = Runtime.getRuntime().exec("su"); //Request SU
-                        DataOutputStream os = new DataOutputStream(p.getOutputStream()); //Used for terminal
-                        for (String tmpCmd : airplaneCmd) {
-                            os.writeBytes(tmpCmd + "\n"); //Sends commands to the terminal
-                        }
-                        os.writeBytes("exit\n"); //Quits the terminal session
-                        os.flush(); //Ends datastream
-                    } catch (IOException e) {
-                        Log.d("Root", "There was an error with root");
-                    }
-                    Log.d("Wifi", "wifi is on" + test);
+                else if(!bluetoothAdapter.isEnabled()){
+                    rootAccess(airplaneCmd);
                 }
             }
         //Check if airplane mode is on, and wifi is off
@@ -113,7 +90,7 @@ public class MainActivity extends Activity {
 
         else {
             Log.d("Else","something is different");
-        }
+        }*/
 
         //Creates navigation drawer header
         AccountHeader headerResult = new AccountHeaderBuilder()
@@ -155,6 +132,21 @@ public class MainActivity extends Activity {
                 })
                 .build();
 
+    }
+
+    public void rootAccess(String[] commands){
+        Process p;
+        try {
+            p = Runtime.getRuntime().exec("su"); //Request SU
+            DataOutputStream os = new DataOutputStream(p.getOutputStream()); //Used for terminal
+            for (String tmpCmd : commands) {
+                os.writeBytes(tmpCmd + "\n"); //Sends commands to the terminal
+            }
+            os.writeBytes("exit\n"); //Quits the terminal session
+            os.flush(); //Ends datastream
+        } catch (IOException e) {
+            Log.d("Root", "There was an error with root");
+        }
     }
 
 
