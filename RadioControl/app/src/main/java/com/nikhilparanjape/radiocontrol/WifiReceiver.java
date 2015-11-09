@@ -9,9 +9,13 @@ import android.net.NetworkInfo;
 import android.provider.Settings;
 import android.provider.Settings.Global;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import static android.provider.Settings.Global.*;
 
@@ -50,17 +54,26 @@ public class WifiReceiver extends BroadcastReceiver {
             boolean isWiFi = activeNetwork.getType() == ConnectivityManager.TYPE_WIFI; //Boolean to check for an active WiFi connection
             //Check for wifi
             if(isWiFi) {
-                //If the bluetooth connection is on
-                if(bluetoothAdapter.isEnabled() || bluetoothAdapter.isDiscovering()) {
-                    rootAccessB(bluetoothCmd);
-                    Log.d("BlueWiFiAirplane", "Wifi-on,airplane-on,bluetooth-on");
+                //Check if connection is alive
+                if(isURLReachable(context)){
+                    //If the bluetooth connection is on
+                    if(bluetoothAdapter.isEnabled() || bluetoothAdapter.isDiscovering()) {
+                        rootAccessB(bluetoothCmd);
+                        Log.d("BlueWiFiAirplane", "Wifi-on,airplane-on,bluetooth-on");
 
+                    }
+                    //If bluetooth is off, run the standard root request
+                    else if(!bluetoothAdapter.isEnabled()){
+                        rootAccess(airplaneCmd);
+                        Log.d("WiFiAirplane", "Wifi is on,airplane-on");
+                    }
                 }
-                //If bluetooth is off, run the standard root request
-                else if(!bluetoothAdapter.isEnabled()){
-                    rootAccess(airplaneCmd);
-                    Log.d("WiFiAirplane", "Wifi is on,airplane-on");
+                //the connection is not actually connected to the internet
+                else{
+                    Log.d("Connection","Connection is not alive");
+                    Toast.makeText(context, "WiFi Connection unsuccessful", Toast.LENGTH_LONG).show();
                 }
+
             }
             //Check if we just lost WiFi signal
         }
@@ -125,5 +138,28 @@ public class WifiReceiver extends BroadcastReceiver {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+    public static boolean isURLReachable(Context context) {
+        ConnectivityManager conMan = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = conMan.getActiveNetworkInfo();
+        if (netInfo != null && netInfo.isConnected()) {
+            try {
+                URL url = new URL("google.com");   // Change to "http://google.com" for www  test.
+                HttpURLConnection urlc = (HttpURLConnection) url.openConnection();
+                urlc.setConnectTimeout(5 * 1000);          // 10 s.
+                urlc.connect();
+                if (urlc.getResponseCode() == 200) {        // 200 = "OK" code (http connection is fine).
+                    Log.wtf("Connection", "Success !");
+                    return true;
+                } else {
+                    return false;
+                }
+            } catch (MalformedURLException e1) {
+                return false;
+            } catch (IOException e) {
+                return false;
+            }
+        }
+        return false;
     }
 };
