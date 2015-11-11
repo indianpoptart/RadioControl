@@ -48,11 +48,7 @@ public class MainActivity extends Activity {
                 .withActivity(this)
                 .withHeaderBackground(R.mipmap.header)
                 .addProfiles(
-<<<<<<< HEAD
-                        new ProfileDrawerItem().withName(getDeviceName()).withEmail("v1.2 - Alpha")
-=======
-                        new ProfileDrawerItem().withName(getDeviceName()).withEmail("v1.1.1 - Alpha")
->>>>>>> parent of 7f1fe38... v1.1.1 - Release
+                        new ProfileDrawerItem().withName(getDeviceName()).withEmail("v1.1.1")
                 )
                 .withOnAccountHeaderListener(new AccountHeader.OnAccountHeaderListener() {
                     @Override

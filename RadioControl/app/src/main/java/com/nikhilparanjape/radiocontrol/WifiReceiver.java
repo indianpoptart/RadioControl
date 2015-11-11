@@ -9,23 +9,20 @@ import android.net.NetworkInfo;
 import android.provider.Settings;
 import android.provider.Settings.Global;
 import android.util.Log;
-import android.widget.Toast;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 import static android.provider.Settings.Global.*;
 
 /**
  * Created by Nikhil Paranjape on 11/8/2015.
  */
-public class WifiReceiver extends BroadcastReceiver{
+public class WifiReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        //Initialize Network Settings
         ConnectivityManager conMan = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = conMan.getActiveNetworkInfo();
         //Root commands for airplane mode
@@ -34,11 +31,9 @@ public class WifiReceiver extends BroadcastReceiver{
         String[] bluetoothCmd = {"su", "settings put global airplane_mode_on 1", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state true","svc wifi enable","service call bluetooth_manager 6"};
         //runs command to disable airplane mode on wifi loss
         String[] airOffCmd = {"su", "settings put global airplane_mode_on 0", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state false"};
-        //Initialize network settings
-        ConnectivityManager cm =
-                (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
-        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+
+        NetworkInfo activeNetwork = conMan.getActiveNetworkInfo();
 
         // Check if the device is connected to the internet
         boolean isConnected = activeNetwork != null &&
@@ -50,7 +45,6 @@ public class WifiReceiver extends BroadcastReceiver{
         //Check for airplane mode
         boolean isEnabled = Settings.System.getInt(context.getContentResolver(), AIRPLANE_MODE_ON, 0) == 1;
 
-
         //if connected and airplane mode is off
         if (isConnected && !isEnabled) {
             boolean isWiFi = activeNetwork.getType() == ConnectivityManager.TYPE_WIFI; //Boolean to check for an active WiFi connection
@@ -58,8 +52,7 @@ public class WifiReceiver extends BroadcastReceiver{
             if(isWiFi) {
                 //If the bluetooth connection is on
                 if(bluetoothAdapter.isEnabled() || bluetoothAdapter.isDiscovering()) {
-                    rootAccess(bluetoothCmd);
-
+                    rootAccessB(bluetoothCmd);
                     Log.d("BlueWiFiAirplane", "Wifi-on,airplane-on,bluetooth-on");
 
                 }
@@ -68,22 +61,32 @@ public class WifiReceiver extends BroadcastReceiver{
                     rootAccess(airplaneCmd);
                     Log.d("WiFiAirplane", "Wifi is on,airplane-on");
                 }
-                try{
-                    Thread.sleep(15000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
             }
+            //Check if we just lost WiFi signal
         }
-        //Check if wifi was just lost when airplane mode was on
-        else if(!isConnected && isEnabled){
+        else if(isConnected == false){
             Log.d("WIRELESS","SIGNAL LOST");
+            if(isEnabled){
                 rootAccess(airOffCmd);
                 Log.d("Wifi","Wifi signal lost, airplanemode has turned off");
+            }
+            else{
+                Log.d("wifi","Wifi is on");
+            }
         }
         else if(!isEnabled){
             Log.d("Airplane","Airplane mode is off");
         }
+
+        else {
+            Log.d("Else","something is different");
+        }
+
+
+        if (netInfo != null && netInfo.getType() == ConnectivityManager.TYPE_WIFI)
+            Log.d("WiFiReceiver", "Have Wifi Connection");
+        else
+            Log.d("WiFiReceiver", "Don't have Wifi Connection");
     }
     public void rootAccess(String[] commands){
         Process p;
@@ -96,10 +99,31 @@ public class WifiReceiver extends BroadcastReceiver{
             os.writeBytes("exit\n"); //Quits the terminal session
             os.flush(); //Ends datastream
             Log.d("Root", "Commands Completed");
-
-            //Log.d("Timer", "10 seconds after commands were completed");
+            Thread.sleep(10000);
+            Log.d("Timer", "10 seconds after commands were completed");
         } catch (IOException e) {
             Log.d("Root", "There was an error with root");
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+    public void rootAccessB(String[] commands){
+        Process p;
+        try {
+            p = Runtime.getRuntime().exec("su"); //Request SU
+            DataOutputStream os = new DataOutputStream(p.getOutputStream()); //Used for terminal
+            for (String tmpCmd : commands) {
+                os.writeBytes(tmpCmd + "\n"); //Sends commands to the terminal
+            }
+            os.writeBytes("exit\n"); //Quits the terminal session
+            os.flush(); //Ends datastream
+            Log.d("Root", "Commands Completed");
+            Thread.sleep(15000);
+            Log.d("Timer", "10 seconds after commands were completed");
+        } catch (IOException e) {
+            Log.d("Root", "There was an error with root");
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 };
