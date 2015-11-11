@@ -22,7 +22,7 @@ import static android.provider.Settings.Global.*;
 /**
  * Created by Nikhil Paranjape on 11/8/2015.
  */
-public class WifiReceiver extends BroadcastReceiver {
+public class WifiReceiver extends BroadcastReceiver{
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -49,57 +49,40 @@ public class WifiReceiver extends BroadcastReceiver {
         //Check for airplane mode
         boolean isEnabled = Settings.System.getInt(context.getContentResolver(), AIRPLANE_MODE_ON, 0) == 1;
 
+
         //if connected and airplane mode is off
         if (isConnected && !isEnabled) {
             boolean isWiFi = activeNetwork.getType() == ConnectivityManager.TYPE_WIFI; //Boolean to check for an active WiFi connection
             //Check for wifi
             if(isWiFi) {
-                //Check if connection is alive
-                if(isURLReachable(context)){
-                    //If the bluetooth connection is on
-                    if(bluetoothAdapter.isEnabled() || bluetoothAdapter.isDiscovering()) {
-                        rootAccessB(bluetoothCmd);
-                        Log.d("BlueWiFiAirplane", "Wifi-on,airplane-on,bluetooth-on");
+                //If the bluetooth connection is on
+                if(bluetoothAdapter.isEnabled() || bluetoothAdapter.isDiscovering()) {
+                    rootAccess(bluetoothCmd);
 
-                    }
-                    //If bluetooth is off, run the standard root request
-                    else if(!bluetoothAdapter.isEnabled()){
-                        rootAccess(airplaneCmd);
-                        Log.d("WiFiAirplane", "Wifi is on,airplane-on");
-                    }
-                }
-                //the connection is not actually connected to the internet
-                else{
-                    Log.d("Connection","Connection is not alive");
-                    Toast.makeText(context, "WiFi Connection unsuccessful", Toast.LENGTH_LONG).show();
-                }
+                    Log.d("BlueWiFiAirplane", "Wifi-on,airplane-on,bluetooth-on");
 
+                }
+                //If bluetooth is off, run the standard root request
+                else if(!bluetoothAdapter.isEnabled()){
+                    rootAccess(airplaneCmd);
+                    Log.d("WiFiAirplane", "Wifi is on,airplane-on");
+                }
+                try{
+                    Thread.sleep(15000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
-            //Check if we just lost WiFi signal
         }
-        else if(isConnected == false){
+        //Check if wifi was just lost when airplane mode was on
+        else if(!isConnected && isEnabled){
             Log.d("WIRELESS","SIGNAL LOST");
-            if(isEnabled){
                 rootAccess(airOffCmd);
                 Log.d("Wifi","Wifi signal lost, airplanemode has turned off");
-            }
-            else{
-                Log.d("wifi","Wifi is on");
-            }
         }
         else if(!isEnabled){
             Log.d("Airplane","Airplane mode is off");
         }
-
-        else {
-            Log.d("Else","something is different");
-        }
-
-
-        if (netInfo != null && netInfo.getType() == ConnectivityManager.TYPE_WIFI)
-            Log.d("WiFiReceiver", "Have Wifi Connection");
-        else
-            Log.d("WiFiReceiver", "Don't have Wifi Connection");
     }
     public void rootAccess(String[] commands){
         Process p;
@@ -112,54 +95,10 @@ public class WifiReceiver extends BroadcastReceiver {
             os.writeBytes("exit\n"); //Quits the terminal session
             os.flush(); //Ends datastream
             Log.d("Root", "Commands Completed");
-            Thread.sleep(10000);
-            Log.d("Timer", "10 seconds after commands were completed");
+
+            //Log.d("Timer", "10 seconds after commands were completed");
         } catch (IOException e) {
             Log.d("Root", "There was an error with root");
-        } catch (InterruptedException e) {
-            e.printStackTrace();
         }
-    }
-    public void rootAccessB(String[] commands){
-        Process p;
-        try {
-            p = Runtime.getRuntime().exec("su"); //Request SU
-            DataOutputStream os = new DataOutputStream(p.getOutputStream()); //Used for terminal
-            for (String tmpCmd : commands) {
-                os.writeBytes(tmpCmd + "\n"); //Sends commands to the terminal
-            }
-            os.writeBytes("exit\n"); //Quits the terminal session
-            os.flush(); //Ends datastream
-            Log.d("Root", "Commands Completed");
-            Thread.sleep(15000);
-            Log.d("Timer", "10 seconds after commands were completed");
-        } catch (IOException e) {
-            Log.d("Root", "There was an error with root");
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-    public static boolean isURLReachable(Context context) {
-        ConnectivityManager conMan = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo netInfo = conMan.getActiveNetworkInfo();
-        if (netInfo != null && netInfo.isConnected()) {
-            try {
-                URL url = new URL("google.com");   // Change to "http://google.com" for www  test.
-                HttpURLConnection urlc = (HttpURLConnection) url.openConnection();
-                urlc.setConnectTimeout(5 * 1000);          // 10 s.
-                urlc.connect();
-                if (urlc.getResponseCode() == 200) {        // 200 = "OK" code (http connection is fine).
-                    Log.wtf("Connection", "Success !");
-                    return true;
-                } else {
-                    return false;
-                }
-            } catch (MalformedURLException e1) {
-                return false;
-            } catch (IOException e) {
-                return false;
-            }
-        }
-        return false;
     }
 };
