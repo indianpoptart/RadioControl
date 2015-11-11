@@ -52,13 +52,13 @@ public class WifiReceiver extends BroadcastReceiver {
             if(isWiFi) {
                 //If the bluetooth connection is on
                 if(bluetoothAdapter.isEnabled() || bluetoothAdapter.isDiscovering()) {
-                    rootAccessB(bluetoothCmd);
+                    rootAccess(bluetoothCmd,15000);
                     Log.d("BlueWiFiAirplane", "Wifi-on,airplane-on,bluetooth-on");
 
                 }
                 //If bluetooth is off, run the standard root request
                 else if(!bluetoothAdapter.isEnabled()){
-                    rootAccess(airplaneCmd);
+                    rootAccess(airplaneCmd,13000);
                     Log.d("WiFiAirplane", "Wifi is on,airplane-on");
                 }
             }
@@ -67,7 +67,7 @@ public class WifiReceiver extends BroadcastReceiver {
         else if(isConnected == false){
             Log.d("WIRELESS","SIGNAL LOST");
             if(isEnabled){
-                rootAccess(airOffCmd);
+                rootAccess(airOffCmd,0);
                 Log.d("Wifi","Wifi signal lost, airplanemode has turned off");
             }
             else{
@@ -88,7 +88,7 @@ public class WifiReceiver extends BroadcastReceiver {
         else
             Log.d("WiFiReceiver", "Don't have Wifi Connection");
     }
-    public void rootAccess(String[] commands){
+    public void rootAccess(String[] commands,long time){
         Process p;
         try {
             p = Runtime.getRuntime().exec("su"); //Request SU
@@ -99,26 +99,7 @@ public class WifiReceiver extends BroadcastReceiver {
             os.writeBytes("exit\n"); //Quits the terminal session
             os.flush(); //Ends datastream
             Log.d("Root", "Commands Completed");
-            Thread.sleep(10000);
-            Log.d("Timer", "10 seconds after commands were completed");
-        } catch (IOException e) {
-            Log.d("Root", "There was an error with root");
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-    public void rootAccessB(String[] commands){
-        Process p;
-        try {
-            p = Runtime.getRuntime().exec("su"); //Request SU
-            DataOutputStream os = new DataOutputStream(p.getOutputStream()); //Used for terminal
-            for (String tmpCmd : commands) {
-                os.writeBytes(tmpCmd + "\n"); //Sends commands to the terminal
-            }
-            os.writeBytes("exit\n"); //Quits the terminal session
-            os.flush(); //Ends datastream
-            Log.d("Root", "Commands Completed");
-            Thread.sleep(15000);
+            Thread.sleep(time);
             Log.d("Timer", "10 seconds after commands were completed");
         } catch (IOException e) {
             Log.d("Root", "There was an error with root");
