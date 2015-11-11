@@ -26,7 +26,6 @@ public class WifiReceiver extends BroadcastReceiver{
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        //Initialize Network Settings
         ConnectivityManager conMan = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = conMan.getActiveNetworkInfo();
         //Root commands for airplane mode
@@ -35,9 +34,11 @@ public class WifiReceiver extends BroadcastReceiver{
         String[] bluetoothCmd = {"su", "settings put global airplane_mode_on 1", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state true","svc wifi enable","service call bluetooth_manager 6"};
         //runs command to disable airplane mode on wifi loss
         String[] airOffCmd = {"su", "settings put global airplane_mode_on 0", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state false"};
+        //Initialize network settings
+        ConnectivityManager cm =
+                (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
-
-        NetworkInfo activeNetwork = conMan.getActiveNetworkInfo();
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
 
         // Check if the device is connected to the internet
         boolean isConnected = activeNetwork != null &&
