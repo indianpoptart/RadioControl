@@ -1,9 +1,11 @@
 package com.nikhilparanjape.radiocontrol;
 
+import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.provider.Settings;
@@ -20,6 +22,7 @@ import static android.provider.Settings.Global.*;
  */
 public class WifiReceiver extends BroadcastReceiver {
 
+
     @Override
     public void onReceive(Context context, Intent intent) {
         //Initialize Network Settings
@@ -31,6 +34,12 @@ public class WifiReceiver extends BroadcastReceiver {
         String[] bluetoothCmd = {"su", "settings put global airplane_mode_on 1", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state true","svc wifi enable","service call bluetooth_manager 6"};
         //runs command to disable airplane mode on wifi loss
         String[] airOffCmd = {"su", "settings put global airplane_mode_on 0", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state false"};
+
+
+        SharedPreferences sp = context.getSharedPreferences("spinnerPref", Context.MODE_PRIVATE);
+        long secondsValue = sp.getLong("seconds_spinner", -1);
+        long timer = secondsValue*1000;
+        Log.d("SpinnerVal","The seconds were received: " + secondsValue + ", Timer:" + timer);
 
 
         NetworkInfo activeNetwork = conMan.getActiveNetworkInfo();
@@ -52,13 +61,13 @@ public class WifiReceiver extends BroadcastReceiver {
             if(isWiFi) {
                 //If the bluetooth connection is on
                 if(bluetoothAdapter.isEnabled() || bluetoothAdapter.isDiscovering()) {
-                    rootAccess(bluetoothCmd,15000);
+                    rootAccess(bluetoothCmd,timer);
                     Log.d("BlueWiFiAirplane", "Wifi-on,airplane-on,bluetooth-on");
 
                 }
                 //If bluetooth is off, run the standard root request
                 else if(!bluetoothAdapter.isEnabled()){
-                    rootAccess(airplaneCmd,13000);
+                    rootAccess(airplaneCmd,timer);
                     Log.d("WiFiAirplane", "Wifi is on,airplane-on");
                 }
             }
@@ -67,7 +76,7 @@ public class WifiReceiver extends BroadcastReceiver {
         else if(isConnected == false){
             Log.d("WIRELESS","SIGNAL LOST");
             if(isEnabled){
-                rootAccess(airOffCmd,0);
+                rootAccess(airOffCmd,timer);
                 Log.d("Wifi","Wifi signal lost, airplanemode has turned off");
             }
             else{

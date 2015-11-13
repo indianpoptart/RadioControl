@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
@@ -17,6 +18,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
@@ -36,12 +41,27 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements AdapterView.OnItemSelectedListener{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Integer[] seconds_array = new Integer[]{0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20};
+        //Initialize Spinner
+        Spinner spinner = (Spinner) findViewById(R.id.secSpinner);
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter <Integer> adapter = new ArrayAdapter<Integer>( this,android.R.layout.simple_spinner_item, seconds_array);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Apply the adapter to the spinner
+        spinner.setAdapter(adapter);
+        SharedPreferences sp = getSharedPreferences("spinnerPref", Context.MODE_PRIVATE);
+        long secondsValue = sp.getLong("seconds_spinner", -1);
+        spinner.setSelection((int) secondsValue);
+        spinner.setOnItemSelectedListener(this);
 
         //Creates navigation drawer header
         AccountHeader headerResult = new AccountHeaderBuilder()
@@ -106,6 +126,21 @@ public class MainActivity extends Activity {
             return Character.toUpperCase(first) + s.substring(1);
         }
     }
+
+    public void onItemSelected(AdapterView<?> parent, View view,
+                               int pos, long id) {
+        Log.d("Spinner","Value set to: " + id);
+        SharedPreferences sp = getSharedPreferences("spinnerPref", Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putLong("seconds_spinner", id);
+        editor.commit();
+    }
+
+    public void onNothingSelected(AdapterView<?> parent) {
+        // Another interface callback
+
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
