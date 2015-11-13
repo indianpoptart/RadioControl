@@ -37,4 +37,12 @@
         android:layout_below="@+id/textView2"
         android:layout_toEndOf="@+id/secSpinner" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Set the switch delay below"
+        android:id="@+id/textView4"
+        android:layout_above="@+id/textView2" />
+
 </RelativeLayout>
