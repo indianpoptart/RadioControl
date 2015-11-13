@@ -1,28 +1,16 @@
 package com.nikhilparanjape.radiocontrol;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.net.wifi.WifiManager;
 import android.os.Build;
-import android.provider.Settings;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.materialdrawer.AccountHeader;
@@ -35,7 +23,6 @@ import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IProfile;
-import com.mikepenz.materialdrawer.util.IdDistributor;
 
 import java.io.DataOutputStream;
 import java.io.IOException;

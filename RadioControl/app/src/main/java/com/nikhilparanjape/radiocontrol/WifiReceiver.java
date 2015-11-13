@@ -1,6 +1,5 @@
 package com.nikhilparanjape.radiocontrol;
 
-import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -9,7 +8,6 @@ import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.provider.Settings;
-import android.provider.Settings.Global;
 import android.util.Log;
 
 import java.io.DataOutputStream;
