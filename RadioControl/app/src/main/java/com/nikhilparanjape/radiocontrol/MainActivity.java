@@ -59,7 +59,7 @@ public class MainActivity extends Activity implements AdapterView.OnItemSelected
         // Apply the adapter to the spinner
         spinner.setAdapter(adapter);
         SharedPreferences sp = getSharedPreferences("spinnerPref", Context.MODE_PRIVATE);
-        long secondsValue = sp.getLong("seconds_spinner", -1);
+        long secondsValue = sp.getLong("seconds_spinner", 10);
         spinner.setSelection((int) secondsValue);
         spinner.setOnItemSelectedListener(this);
 
@@ -68,7 +68,7 @@ public class MainActivity extends Activity implements AdapterView.OnItemSelected
                 .withActivity(this)
                 .withHeaderBackground(R.mipmap.header)
                 .addProfiles(
-                        new ProfileDrawerItem().withName(getDeviceName()).withEmail("v1.1.1")
+                        new ProfileDrawerItem().withName(getDeviceName()).withEmail("v1.2 - Beta")
                 )
                 .withOnAccountHeaderListener(new AccountHeader.OnAccountHeaderListener() {
                     @Override
