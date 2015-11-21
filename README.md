@@ -13,7 +13,9 @@ This could work for Republic Wireless users, but your device must be rooted, and
 # Versions
 
 Current Stable Release: v1.2
+
 Current Alpha Release: n/a
+
 Current Beta Release: n/a
 
 # Credits
