@@ -52,7 +52,7 @@ public class MainActivity extends Activity implements AdapterView.OnItemSelected
         // Apply the adapter to the spinner
         spinner.setAdapter(adapter);
         SharedPreferences sp = getSharedPreferences("spinnerPref", Context.MODE_PRIVATE);
-        long secondsValue = sp.getLong("seconds_spinner", 10);
+        long secondsValue = sp.getLong("seconds_spinner", 15);
         spinner.setSelection((int) secondsValue);
         spinner.setOnItemSelectedListener(this);
 
@@ -61,7 +61,7 @@ public class MainActivity extends Activity implements AdapterView.OnItemSelected
                 .withActivity(this)
                 .withHeaderBackground(R.mipmap.header)
                 .addProfiles(
-                        new ProfileDrawerItem().withName(getDeviceName()).withEmail("v1.2.1 - Alpha")
+                        new ProfileDrawerItem().withName(getDeviceName()).withEmail("v1.3 - Alpha")
                 )
                 .withOnAccountHeaderListener(new AccountHeader.OnAccountHeaderListener() {
                     @Override
@@ -72,7 +72,6 @@ public class MainActivity extends Activity implements AdapterView.OnItemSelected
                 .build();
         //Creates navigation drawer items
         PrimaryDrawerItem item1 = new PrimaryDrawerItem().withName("Home").withIcon(GoogleMaterial.Icon.gmd_wifi);
-        SecondaryDrawerItem item4 = new SecondaryDrawerItem().withName("About").withIcon(GoogleMaterial.Icon.gmd_help);
         SecondaryDrawerItem item2 = new SecondaryDrawerItem().withName("Settings").withIcon(GoogleMaterial.Icon.gmd_settings);
         SecondaryDrawerItem item3 = new SecondaryDrawerItem().withName("About").withIcon(GoogleMaterial.Icon.gmd_info);
 

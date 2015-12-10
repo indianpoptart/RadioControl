@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.AudioManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
@@ -58,20 +59,31 @@ public class WifiReceiver extends BroadcastReceiver {
             boolean isWiFi = activeNetwork.getType() == ConnectivityManager.TYPE_WIFI; //Boolean to check for an active WiFi connection
             //Check for wifi
             if(isWiFi) {
-                int l = linkSpeed(context);
-                //If the bluetooth connection is on
-                if(bluetoothAdapter.isEnabled() || bluetoothAdapter.isDiscovering()) {
-                    rootAccess(bluetoothCmd,timer);
-                    Log.d("BlueWiFiAirplane", "Wifi-on,airplane-on,bluetooth-on");
+                //int l = linkSpeed(context);
+                //Checks that user is not in call
+                if(!isCallActive(context)){
+                    //If the bluetooth connection is on
+                    if(bluetoothAdapter.isEnabled() || bluetoothAdapter.isDiscovering()) {
+                        rootAccess(bluetoothCmd,timer);
+                        Log.d("BlueWiFiAirplane", "Wifi-on,airplane-on,bluetooth-on");
 
-                }
-                //If bluetooth is off, run the standard root request
-                else if(!bluetoothAdapter.isEnabled()){
-                    if(l < 3){
+                    }
+                    //If bluetooth is off, run the standard root request
+                    else if(!bluetoothAdapter.isEnabled()){
                         rootAccess(airplaneCmd,timer);
                         Log.d("WiFiAirplane", "Wifi is on,airplane-on");
-                    }
 
+                    }
+                }
+                //Checks that user is currently in call and pauses execution till the call ends
+                else if(isCallActive(context)){
+                    while(isCallActive(context)){
+                        try {
+                            Thread.sleep(1000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
                 }
             }
             //Check if we just lost WiFi signal
@@ -100,12 +112,23 @@ public class WifiReceiver extends BroadcastReceiver {
         else
             Log.d("WiFiReceiver", "Don't have Wifi Connection");
     }
+    //Code that checks WiFi link speed
     public int linkSpeed(Context c){
         WifiManager wifiManager = (WifiManager)c.getSystemService(Context.WIFI_SERVICE);
         int linkSpeed = wifiManager.getConnectionInfo().getRssi();
         Log.d("LinkSpeed","Speed " + linkSpeed);
         return linkSpeed;
     }
+    //Check if user is currently in call
+    public boolean isCallActive(Context context){ AudioManager manager = (AudioManager)context.getSystemService(Context.AUDIO_SERVICE);
+        if(manager.getMode()== AudioManager.MODE_IN_CALL){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+    //Run the root commands
     public void rootAccess(String[] commands,long time){
         Process p;
         try {
