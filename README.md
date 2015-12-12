@@ -11,22 +11,22 @@ This app will probably only be useful to Project Fi users as it can disable radi
 This could work for Republic Wireless users, but your device must be rooted, and most of their devices are hard to root without losing functionality.
 
 #What's New?
-v1.3
+v1.3 (12/12/2015)
 - Added feature that checks if user is in a call and roams over to WiFi. The app will wait for the phone call to end to switch to airplane mode
 - Changed default timer from 10 to 15 seconds
 
-v1.2
+v1.2 (11/15/2015)
 - Added an experimental delay, default is 10 seconds, 15 seconds is the best
 - Bug fixes
 - Removed wake lock permission, not used
 - Fixed redundant code
 
-v1.1.1
+v1.1.1 (11/9/2015)
 - Fixed bluetooth infinite loop problem
 - Bug fixes
 - Organized code
 
-v1.1
+v1.1 (11/8/2015)
 - App now works automatically, no need to open the app
 - Added bluetooth support, it will be enabled or disabled as needed
 - Bug fixes
@@ -39,6 +39,10 @@ Current Stable Release: v1.3
 Current Alpha Release: n/a
 
 Current Beta Release: n/a
+
+#Upcoming Features
+- Whats new changelog
+- ~~Check if user is in call~~
 
 # Credits
 Thanks to mikepenz for the Material Drawer design
