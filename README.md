@@ -10,6 +10,15 @@ An app that auto toggles wifi and cell radio for maximum battery life
 This app will probably only be useful to Project Fi users as it can disable radios while keeping wifi on if.
 This could work for Republic Wireless users, but your device must be rooted, and most of their devices are hard to root without losing functionality.
 
+# Versions
+
+Current Stable Release: v1.3
+
+Current Alpha Release: v1.3.1
+
+Current Beta Release: n/a
+
+
 #What's New?
 v1.3 (12/12/2015)
 - Added feature that checks if user is in a call and roams over to WiFi. The app will wait for the phone call to end to switch to airplane mode
@@ -31,14 +40,6 @@ v1.1 (11/8/2015)
 - Added bluetooth support, it will be enabled or disabled as needed
 - Bug fixes
 - Organized code
-
-# Versions
-
-Current Stable Release: v1.3
-
-Current Alpha Release: n/a
-
-Current Beta Release: n/a
 
 #Upcoming Features
 - Whats new changelog
