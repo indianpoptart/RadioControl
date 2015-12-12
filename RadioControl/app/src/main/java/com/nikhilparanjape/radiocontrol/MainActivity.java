@@ -1,11 +1,15 @@
 package com.nikhilparanjape.radiocontrol;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -29,12 +33,13 @@ import java.io.IOException;
 
 
 public class MainActivity extends Activity implements AdapterView.OnItemSelectedListener{
-
+    private static final String PRIVATE_PREF = "whatsnew";
+    private static final String VERSION_KEY = "version_number";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        init();
         Integer[] seconds_array = new Integer[]{
                 0,1,2,3,4,5,6,7,8,9,10,
                 11,12,13,14,15,16,17,18,19,20,
@@ -61,7 +66,7 @@ public class MainActivity extends Activity implements AdapterView.OnItemSelected
                 .withActivity(this)
                 .withHeaderBackground(R.mipmap.header)
                 .addProfiles(
-                        new ProfileDrawerItem().withName(getDeviceName()).withEmail("v1.3")
+                        new ProfileDrawerItem().withName(getDeviceName()).withEmail("v1.3.1 - Alpha")
                 )
                 .withOnAccountHeaderListener(new AccountHeader.OnAccountHeaderListener() {
                     @Override
@@ -96,6 +101,43 @@ public class MainActivity extends Activity implements AdapterView.OnItemSelected
                 .build();
 
     }
+    //Init for the Whats new dialog
+    private void init() {
+        SharedPreferences sharedPref    = getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE);
+        int currentVersionNumber        = 0;
+
+        int savedVersionNumber          = sharedPref.getInt(VERSION_KEY, 0);
+
+        try {
+            PackageInfo pi          = getPackageManager().getPackageInfo(getPackageName(), 0);
+            currentVersionNumber    = pi.versionCode;
+        } catch (Exception e) {}
+
+        if (currentVersionNumber > savedVersionNumber) {
+            showWhatsNewDialog();
+
+            SharedPreferences.Editor editor   = sharedPref.edit();
+
+            editor.putInt(VERSION_KEY, currentVersionNumber);
+            editor.commit();
+        }
+    }
+    //whats new dialog
+    private void showWhatsNewDialog() {
+        LayoutInflater inflater = LayoutInflater.from(this);//Creates layout inflator for dialog
+        View view = inflater.inflate(R.layout.dialog_whatsnew, null);//Initializes the view for whats new dialog
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);//creates alertdialog
+
+        builder.setView(view).setTitle("                 Whats New - Alpha")//sets title
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        builder.create().show();
+    }
+
     //Grab device make and model for drawer
     public String getDeviceName() {
         String manufacturer = Build.MANUFACTURER;
