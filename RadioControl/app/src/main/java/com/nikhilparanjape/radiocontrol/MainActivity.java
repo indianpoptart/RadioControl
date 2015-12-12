@@ -61,7 +61,7 @@ public class MainActivity extends Activity implements AdapterView.OnItemSelected
                 .withActivity(this)
                 .withHeaderBackground(R.mipmap.header)
                 .addProfiles(
-                        new ProfileDrawerItem().withName(getDeviceName()).withEmail("v1.3 - Alpha")
+                        new ProfileDrawerItem().withName(getDeviceName()).withEmail("v1.3")
                 )
                 .withOnAccountHeaderListener(new AccountHeader.OnAccountHeaderListener() {
                     @Override
