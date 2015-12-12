@@ -46,5 +46,5 @@ v1.1 (11/8/2015)
 - ~~Check if user is in call~~
 
 # Credits
-Thanks to mikepenz for the Material Drawer design
+Thanks to [Mike Penz](https://github.com/mikepenz) for the Material Drawer design
 
