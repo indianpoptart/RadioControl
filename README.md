@@ -12,11 +12,11 @@ This could work for Republic Wireless users, but your device must be rooted, and
 
 # Versions
 
-Current Stable Release: v1.3
+Latest Stable Release: v1.3
 
-Current Alpha Release: v1.3.1
+Current Alpha Release: v1.4
 
-Current Beta Release: n/a
+Current Beta Release: v1.3.1
 
 
 #What's New?
