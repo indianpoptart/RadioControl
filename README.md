@@ -14,9 +14,9 @@ This could work for Republic Wireless users, but your device must be rooted, and
 
 Latest Stable Release: [v1.3](https://github.com/indianpoptart/RadioControl/releases/latest)
 
-Current Alpha Release: [v1.4](https://github.com/indianpoptart/RadioControl/commit/f32f875fbd1a5ca1676ab80440e66e51626402d0)
+Current Alpha Release: [v1.4](https://github.com/indianpoptart/RadioControl/releases/tag/v1.4-alpha1)
 
-Current Beta Release: [v1.3.1](https://github.com/indianpoptart/RadioControl/releases/tag/v1.3.1-alpha1)
+Current Beta Release: [v1.3.1](https://github.com/indianpoptart/RadioControl/releases/tag/v1.3.1-beta1)
 
 
 #What's New?
