@@ -21,6 +21,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -45,12 +46,16 @@ public class MainActivity extends Activity implements AdapterView.OnItemSelected
     private static final String PRIVATE_PREF = "radiocontrol-prefs";
     private static final String VERSION_KEY = "version_number";
     private TextView tv;
+    ListView lv;
+    Model[] modelItems;
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        lv = (ListView) findViewById(R.id.listView);
         init();
         getWifiNetworks();
         Integer[] seconds_array = new Integer[]{
@@ -115,7 +120,9 @@ public class MainActivity extends Activity implements AdapterView.OnItemSelected
                 })
                 .build();
 
+
     }
+
     //Init for the Whats new dialog
     private void init() {
         SharedPreferences sharedPref    = getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE);
@@ -171,11 +178,24 @@ public class MainActivity extends Activity implements AdapterView.OnItemSelected
         if (networks == null) {
         }
         String[] ssids = new String[networks.size()];
-        SharedPreferences.Editor editor = sp.edit();
+        final SharedPreferences.Editor editor = sp.edit();
+        modelItems = new Model[networks.size()];
         for (int i=0 ; i<networks.size(); i++) {
             ssids[i] = networks.get(i).SSID;
-            editor.putString("wifinetwork"+i, networks.get(i).SSID);
+            modelItems[i] = new Model(networks.get(i).SSID, 0);
+            //editor.putString("wifinetwork"+i, networks.get(i).SSID);
         }
+        CustomAdapter adapter = new CustomAdapter(this, modelItems);
+        lv.setAdapter(adapter);
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView parent, View view,
+                                    int position, long id) {
+                // When clicked, show a toast with the TextView text
+                Model network = (Model) parent.getItemAtPosition(position);
+                editor.putString("wifinetwork"+position, network.getName());
+                Log.d("WiFiNETWORKS", "Network Added: " + network.getName());
+            }
+        });
         editor.commit();
     }
     //Capitalizes names for devices. Used by getDeviceName()
