@@ -14,12 +14,17 @@ This could work for Republic Wireless users, but your device must be rooted, and
 
 Latest Stable Release: [v1.3](https://github.com/indianpoptart/RadioControl/releases/latest)
 
-Current Alpha Release: v1.4
+Current Alpha Release: [v1.4](https://github.com/indianpoptart/RadioControl/commit/f32f875fbd1a5ca1676ab80440e66e51626402d0)
 
 Current Beta Release: [v1.3.1](https://github.com/indianpoptart/RadioControl/releases/tag/v1.3.1-alpha1)
 
 
 #What's New?
+v1.4 - Alpha (TBD)
+- Adding the ability to choose a Wifi network you don't want the app to
+work on
+- Made sharedprefs for all preferences the same pref xml
+
 v1.3 (12/12/2015)
 - Added feature that checks if user is in a call and roams over to WiFi. The app will wait for the phone call to end to switch to airplane mode
 - Changed default timer from 10 to 15 seconds
