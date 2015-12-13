@@ -12,11 +12,11 @@ This could work for Republic Wireless users, but your device must be rooted, and
 
 # Versions
 
-Latest Stable Release: v1.3
+Latest Stable Release: [v1.3](https://github.com/indianpoptart/RadioControl/releases/latest)
 
 Current Alpha Release: v1.4
 
-Current Beta Release: v1.3.1
+Current Beta Release: [v1.3.1](https://github.com/indianpoptart/RadioControl/releases/tag/v1.3.1-alpha1)
 
 
 #What's New?
