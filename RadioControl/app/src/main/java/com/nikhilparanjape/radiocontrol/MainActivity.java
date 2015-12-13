@@ -1,11 +1,18 @@
 package com.nikhilparanjape.radiocontrol;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
+import android.net.wifi.ScanResult;
+import android.net.wifi.WifiConfiguration;
+import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,6 +22,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.materialdrawer.AccountHeader;
@@ -30,16 +38,21 @@ import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.List;
 
 
 public class MainActivity extends Activity implements AdapterView.OnItemSelectedListener{
-    private static final String PRIVATE_PREF = "whatsnew";
+    private static final String PRIVATE_PREF = "radiocontrol-prefs";
     private static final String VERSION_KEY = "version_number";
+    private TextView tv;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         init();
+        getWifiNetworks();
         Integer[] seconds_array = new Integer[]{
                 0,1,2,3,4,5,6,7,8,9,10,
                 11,12,13,14,15,16,17,18,19,20,
@@ -47,7 +60,7 @@ public class MainActivity extends Activity implements AdapterView.OnItemSelected
                 31,32,33,34,35,36,37,38,39,40,
                 41,42,43,44,45,46,47,48,49,50,
                 51,52,53,54,55,56,57,58,59,60};
-        //Initialize Spinner
+        //Initialize Timer Spinner
         Spinner spinner = (Spinner) findViewById(R.id.secSpinner);
         // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter <Integer> adapter = new ArrayAdapter<Integer>( this,android.R.layout.simple_spinner_item, seconds_array);
@@ -56,10 +69,12 @@ public class MainActivity extends Activity implements AdapterView.OnItemSelected
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner
         spinner.setAdapter(adapter);
-        SharedPreferences sp = getSharedPreferences("spinnerPref", Context.MODE_PRIVATE);
+        SharedPreferences sp = getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE);
         long secondsValue = sp.getLong("seconds_spinner", 15);
         spinner.setSelection((int) secondsValue);
         spinner.setOnItemSelectedListener(this);
+
+
 
         //Creates navigation drawer header
         AccountHeader headerResult = new AccountHeaderBuilder()
@@ -148,6 +163,21 @@ public class MainActivity extends Activity implements AdapterView.OnItemSelected
             return capitalize(manufacturer) + " " + model;
         }
     }
+    private void getWifiNetworks() {
+        SharedPreferences sp = getSharedPreferences("NetworkList", Context.MODE_PRIVATE);
+        final WifiManager wifiManager =
+                (WifiManager)getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        List<WifiConfiguration> networks = wifiManager.getConfiguredNetworks();
+        if (networks == null) {
+        }
+        String[] ssids = new String[networks.size()];
+        SharedPreferences.Editor editor = sp.edit();
+        for (int i=0 ; i<networks.size(); i++) {
+            ssids[i] = networks.get(i).SSID;
+            editor.putString("wifinetwork"+i, networks.get(i).SSID);
+        }
+        editor.commit();
+    }
     //Capitalizes names for devices. Used by getDeviceName()
     private String capitalize(String s) {
         if (s == null || s.length() == 0) {
@@ -164,7 +194,7 @@ public class MainActivity extends Activity implements AdapterView.OnItemSelected
     public void onItemSelected(AdapterView<?> parent, View view,
                                int pos, long id) {
         Log.d("Spinner","Value set to: " + id);
-        SharedPreferences sp = getSharedPreferences("spinnerPref", Activity.MODE_PRIVATE);
+        SharedPreferences sp = getSharedPreferences(PRIVATE_PREF, Activity.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.putLong("seconds_spinner", id);
         editor.commit();

@@ -21,7 +21,7 @@ import static android.provider.Settings.Global.*;
  * Created by Nikhil Paranjape on 11/8/2015.
  */
 public class WifiReceiver extends BroadcastReceiver {
-
+    private static final String PRIVATE_PREF = "radiocontrol-prefs";
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -36,10 +36,10 @@ public class WifiReceiver extends BroadcastReceiver {
         String[] airOffCmd = {"su", "settings put global airplane_mode_on 0", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state false"};
 
 
-        SharedPreferences sp = context.getSharedPreferences("spinnerPref", Context.MODE_PRIVATE);
+        SharedPreferences sp = context.getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE);
         long secondsValue = sp.getLong("seconds_spinner", -1);
         long timer = secondsValue*1000;
-        Log.d("SpinnerVal","The seconds were received: " + secondsValue + ", Timer:" + timer);
+        Log.d("SpinnerVal", "The seconds were received: " + secondsValue + ", Timer:" + timer);
 
 
         NetworkInfo activeNetwork = conMan.getActiveNetworkInfo();
