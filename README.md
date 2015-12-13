@@ -43,6 +43,7 @@ v1.1 (11/8/2015)
 
 #Upcoming Features
 - Whats new changelog
+- Choose what SSID you want the app to toggle onto
 - ~~Check if user is in call~~
 
 # Credits
