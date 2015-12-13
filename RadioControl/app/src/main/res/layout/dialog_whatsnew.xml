@@ -14,7 +14,7 @@
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="- Added this what's new dialog\n- Added wifi network list to enable and disable for \n  certain wifi networks. " />
+        android:text="- Added this what's new dialog\n- Added wifi network disabler so the app will enable or disable \n  itself for certain wifi networks." />
 
     <TextView
         android:layout_width="fill_parent"

@@ -1,29 +1,28 @@
 package com.nikhilparanjape.radiocontrol;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
-import android.net.wifi.ScanResult;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.materialdrawer.AccountHeader;
@@ -37,17 +36,16 @@ import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 
 public class MainActivity extends Activity implements AdapterView.OnItemSelectedListener{
     private static final String PRIVATE_PREF = "radiocontrol-prefs";
     private static final String VERSION_KEY = "version_number";
-    private TextView tv;
-    ListView lv;
     Model[] modelItems;
+    public static ArrayList<String> ssidList = new ArrayList<String>();
+    String ssidlist[];
 
 
 
@@ -55,9 +53,51 @@ public class MainActivity extends Activity implements AdapterView.OnItemSelected
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        lv = (ListView) findViewById(R.id.listView);
         init();
-        getWifiNetworks();
+
+        //Save button for the network list
+        Button btn = (Button) findViewById(R.id.button);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SharedPreferences pref = getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = pref.edit();
+
+                final EditText field = (EditText) findViewById(R.id.editText);
+
+                // get value in field
+                String value = field.getText().toString();
+                if (value.length() != 0) {
+                    ssidList.add(value);
+                }
+
+                // pair the value in text field with the key
+                editor.putString("disabled_networks", ssidList.toString());
+                field.setText("");
+                Toast.makeText(MainActivity.this,
+                        "SSID Saved", Toast.LENGTH_LONG).show();
+                editor.commit();
+            }
+
+        });
+
+        //Clear button for the network list
+        Button btn2 = (Button) findViewById(R.id.button2);
+        btn2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SharedPreferences pref = getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = pref.edit();
+                editor.remove("disabled_networks");
+                Toast.makeText(MainActivity.this,
+                        "Disabled SSID list cleared", Toast.LENGTH_LONG).show();
+                editor.apply();
+            }
+
+        });
+
+
+        //getWifiNetworks();
         Integer[] seconds_array = new Integer[]{
                 0,1,2,3,4,5,6,7,8,9,10,
                 11,12,13,14,15,16,17,18,19,20,
@@ -86,7 +126,7 @@ public class MainActivity extends Activity implements AdapterView.OnItemSelected
                 .withActivity(this)
                 .withHeaderBackground(R.mipmap.header)
                 .addProfiles(
-                        new ProfileDrawerItem().withName(getDeviceName()).withEmail("v1.3.1 - Alpha")
+                        new ProfileDrawerItem().withName(getDeviceName()).withEmail("v1.4 - Alpha")
                 )
                 .withOnAccountHeaderListener(new AccountHeader.OnAccountHeaderListener() {
                     @Override
@@ -171,32 +211,21 @@ public class MainActivity extends Activity implements AdapterView.OnItemSelected
         }
     }
     private void getWifiNetworks() {
-        SharedPreferences sp = getSharedPreferences("NetworkList", Context.MODE_PRIVATE);
+        //SharedPreferences sp = getSharedPreferences("NetworkList", Context.MODE_PRIVATE);
         final WifiManager wifiManager =
                 (WifiManager)getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         List<WifiConfiguration> networks = wifiManager.getConfiguredNetworks();
         if (networks == null) {
         }
         String[] ssids = new String[networks.size()];
-        final SharedPreferences.Editor editor = sp.edit();
+        //final SharedPreferences.Editor editor = sp.edit();
         modelItems = new Model[networks.size()];
         for (int i=0 ; i<networks.size(); i++) {
             ssids[i] = networks.get(i).SSID;
             modelItems[i] = new Model(networks.get(i).SSID, 0);
             //editor.putString("wifinetwork"+i, networks.get(i).SSID);
         }
-        CustomAdapter adapter = new CustomAdapter(this, modelItems);
-        lv.setAdapter(adapter);
-        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView parent, View view,
-                                    int position, long id) {
-                // When clicked, show a toast with the TextView text
-                Model network = (Model) parent.getItemAtPosition(position);
-                editor.putString("wifinetwork"+position, network.getName());
-                Log.d("WiFiNETWORKS", "Network Added: " + network.getName());
-            }
-        });
-        editor.commit();
+        //editor.commit();
     }
     //Capitalizes names for devices. Used by getDeviceName()
     private String capitalize(String s) {

@@ -8,12 +8,14 @@ import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.provider.Settings;
 import android.util.Log;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.Arrays;
 
 import static android.provider.Settings.Global.*;
 
@@ -41,6 +43,8 @@ public class WifiReceiver extends BroadcastReceiver {
         long timer = secondsValue*1000;
         Log.d("SpinnerVal", "The seconds were received: " + secondsValue + ", Timer:" + timer);
 
+        //Setup Disabled networks
+        String arrayString = sp.getString("disabled_networks", "1");
 
         NetworkInfo activeNetwork = conMan.getActiveNetworkInfo();
 
@@ -59,35 +63,39 @@ public class WifiReceiver extends BroadcastReceiver {
             boolean isWiFi = activeNetwork.getType() == ConnectivityManager.TYPE_WIFI; //Boolean to check for an active WiFi connection
             //Check for wifi
             if(isWiFi) {
-                //int l = linkSpeed(context);
-                //Checks that user is not in call
-                if(!isCallActive(context)){
-                    //If the bluetooth connection is on
-                    if(bluetoothAdapter.isEnabled() || bluetoothAdapter.isDiscovering()) {
-                        rootAccess(bluetoothCmd,timer);
-                        Log.d("BlueWiFiAirplane", "Wifi-on,airplane-on,bluetooth-on");
-
+                //Check the list of disabled networks
+                if(arrayString != null || !arrayString.contains(getCurrentSsid(context))){
+                    Log.d("DISABLED-NETWORK",getCurrentSsid(context) + " was not found in list " + arrayString);
+                    //Checks that user is not in call
+                    if(!isCallActive(context)){
+                        //If the bluetooth connection is on
+                        if(bluetoothAdapter.isEnabled() || bluetoothAdapter.isDiscovering()) {
+                            rootAccess(bluetoothCmd,timer);
+                            Log.d("BlueWiFiAirplane", "Wifi-on,airplane-on,bluetooth-on");
+                        }
+                        //If bluetooth is off, run the standard root request
+                        else if(!bluetoothAdapter.isEnabled()){
+                            rootAccess(airplaneCmd,timer);
+                            Log.d("WiFiAirplane", "Wifi is on,airplane-on");
+                        }
                     }
-                    //If bluetooth is off, run the standard root request
-                    else if(!bluetoothAdapter.isEnabled()){
-                        rootAccess(airplaneCmd,timer);
-                        Log.d("WiFiAirplane", "Wifi is on,airplane-on");
-
-                    }
-                }
-                //Checks that user is currently in call and pauses execution till the call ends
-                else if(isCallActive(context)){
-                    while(isCallActive(context)){
-                        try {
-                            Thread.sleep(1000);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
+                    //Checks that user is currently in call and pauses execution till the call ends
+                    else if(isCallActive(context)){
+                        while(isCallActive(context)){
+                            try {
+                                Thread.sleep(1000);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
                         }
                     }
                 }
+                else if(Arrays.asList(arrayString).contains(getCurrentSsid(context))){
+                    Log.d("DISABLED-NETWORK",getCurrentSsid(context) + " was blocked from list " + arrayString);
+                }
             }
-            //Check if we just lost WiFi signal
         }
+        //Check if we just lost WiFi signal
         else if(isConnected == false){
             Log.d("WIRELESS","SIGNAL LOST");
             if(isEnabled){
@@ -111,6 +119,19 @@ public class WifiReceiver extends BroadcastReceiver {
             Log.d("WiFiReceiver", "Have Wifi Connection");
         else
             Log.d("WiFiReceiver", "Don't have Wifi Connection");
+    }
+    //Checks for current ssid
+    public static String getCurrentSsid(Context context) {
+        String ssid = null;
+        ConnectivityManager connManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+        if (networkInfo.isConnected()) {
+            final WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+            final WifiInfo connectionInfo = wifiManager.getConnectionInfo();
+                ssid = connectionInfo.getSSID();
+            ssid = ssid.substring(1, ssid.length()-1);
+        }
+        return ssid;
     }
     //Code that checks WiFi link speed
     public int linkSpeed(Context c){
