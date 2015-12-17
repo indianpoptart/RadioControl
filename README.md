@@ -59,10 +59,10 @@ v1.1 (11/8/2015)
 - Organized code
 
 #Upcoming Features
-- Whats new changelog
-- Choose what SSID you want the app to toggle onto
-- Disable only cell radio so the app doesn't have to reenable WiFi after enabling Airplane mode
-- ~~Check if user is in call~~
+- ~~Whats new changelog~~ - Completed in v1.4
+- Choose what SSID you want the app to toggle onto - Completed in v2.0 alpha
+- Disable only cell radio so the app doesn't have to reenable WiFi after enabling Airplane mode - Completed in v2.0 alpha
+- ~~Check if user is in call~~ - Completed in v1.3
 
 # Credits
 Thanks to [Mike Penz](https://github.com/mikepenz) for the Material Drawer design
