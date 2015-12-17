@@ -25,6 +25,9 @@ v1.4 - Alpha (TBD)
 work on
 - Made sharedprefs for all preferences the same pref xml
 
+v1.3.1 (N/A)
+-Added a whats new dialog just for cosmetics
+
 v1.3 (12/12/2015)
 - Added feature that checks if user is in a call and roams over to WiFi. The app will wait for the phone call to end to switch to airplane mode
 - Changed default timer from 10 to 15 seconds
