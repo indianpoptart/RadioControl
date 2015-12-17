@@ -4,24 +4,18 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
-import android.net.wifi.WifiConfiguration;
-import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
-import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
@@ -37,10 +31,9 @@ import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 
 import java.util.ArrayList;
-import java.util.List;
 
 
-public class MainActivity extends Activity implements AdapterView.OnItemSelectedListener{
+public class MainActivity extends Activity {
     private static final String PRIVATE_PREF = "radiocontrol-prefs";
     private static final String VERSION_KEY = "version_number";
     Model[] modelItems;
@@ -54,6 +47,18 @@ public class MainActivity extends Activity implements AdapterView.OnItemSelected
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         init();
+        String versionName = BuildConfig.VERSION_NAME;
+        SharedPreferences pref = getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE);
+        long theme = pref.getLong("themes", 0);
+        if(theme == 0){
+
+        }
+
+        final EditText field = (EditText) findViewById(R.id.editText);
+
+        // get value in field
+        String value = field.getText().toString();
+
 
         //Save button for the network list
         Button btn = (Button) findViewById(R.id.button);
@@ -62,20 +67,28 @@ public class MainActivity extends Activity implements AdapterView.OnItemSelected
             public void onClick(View v) {
                 SharedPreferences pref = getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = pref.edit();
+                String arrayString = pref.getString("disabled_networks", "1");
 
                 final EditText field = (EditText) findViewById(R.id.editText);
 
                 // get value in field
                 String value = field.getText().toString();
                 if (value.length() != 0) {
-                    ssidList.add(value);
+                    //Check if the list contains the entered SSID
+                    if(!arrayString.contains(value)){
+                        ssidList.add(value);
+                        // pair the value in text field with the key
+                        editor.putString("disabled_networks", ssidList.toString());
+                        field.setText("");
+                        Toast.makeText(MainActivity.this,
+                                "SSID saved", Toast.LENGTH_LONG).show();
+                    }
+                    else{
+                        Toast.makeText(MainActivity.this,
+                                "SSID already exists", Toast.LENGTH_LONG).show();
+                        field.setText("");
+                    }
                 }
-
-                // pair the value in text field with the key
-                editor.putString("disabled_networks", ssidList.toString());
-                field.setText("");
-                Toast.makeText(MainActivity.this,
-                        "SSID Saved", Toast.LENGTH_LONG).show();
                 editor.commit();
             }
 
@@ -96,37 +109,12 @@ public class MainActivity extends Activity implements AdapterView.OnItemSelected
 
         });
 
-
-        //getWifiNetworks();
-        Integer[] seconds_array = new Integer[]{
-                0,1,2,3,4,5,6,7,8,9,10,
-                11,12,13,14,15,16,17,18,19,20,
-                21,22,23,24,25,26,27,28,29,30,
-                31,32,33,34,35,36,37,38,39,40,
-                41,42,43,44,45,46,47,48,49,50,
-                51,52,53,54,55,56,57,58,59,60};
-        //Initialize Timer Spinner
-        Spinner spinner = (Spinner) findViewById(R.id.secSpinner);
-        // Create an ArrayAdapter using the string array and a default spinner layout
-        ArrayAdapter <Integer> adapter = new ArrayAdapter<Integer>( this,android.R.layout.simple_spinner_item, seconds_array);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // Specify the layout to use when the list of choices appears
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // Apply the adapter to the spinner
-        spinner.setAdapter(adapter);
-        SharedPreferences sp = getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE);
-        long secondsValue = sp.getLong("seconds_spinner", 15);
-        spinner.setSelection((int) secondsValue);
-        spinner.setOnItemSelectedListener(this);
-
-
-
         //Creates navigation drawer header
         AccountHeader headerResult = new AccountHeaderBuilder()
                 .withActivity(this)
                 .withHeaderBackground(R.mipmap.header)
                 .addProfiles(
-                        new ProfileDrawerItem().withName(getDeviceName()).withEmail("v1.4")
+                        new ProfileDrawerItem().withName(getDeviceName()).withEmail(versionName)
                 )
                 .withOnAccountHeaderListener(new AccountHeader.OnAccountHeaderListener() {
                     @Override
@@ -145,27 +133,38 @@ public class MainActivity extends Activity implements AdapterView.OnItemSelected
                 .withAccountHeader(headerResult)
                 .withActivity(this)
                 .withTranslucentStatusBar(false)
-                .withActionBarDrawerToggle(true)
+                .withActionBarDrawerToggle(false)
                 .addDrawerItems(
                         item1,
                         new DividerDrawerItem(),
                         item2,
                         item3
                 )
+
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
                     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
+                        Log.d("drawer", "The drawer is: " + drawerItem + " position is " + position);
+                        //Settings button
+                        if (position == 3) {
+                            startSettingsActivity();
+                            Log.d("drawer", "Started settings activity");
+                        }
+                        //About button
+                        else if (position == 4) {
+                            startAboutActivity();
+                            Log.d("drawer", "Started about activity");
+                        }
                         return false;
                     }
                 })
                 .build();
-
-
+        result.setSelection(1);
     }
 
     //Init for the Whats new dialog
     private void init() {
-        SharedPreferences sharedPref    = getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE);
         int currentVersionNumber        = 0;
 
         int savedVersionNumber          = sharedPref.getInt(VERSION_KEY, 0);
@@ -184,6 +183,17 @@ public class MainActivity extends Activity implements AdapterView.OnItemSelected
             editor.commit();
         }
     }
+    //starts about activity
+    public void startAboutActivity() {
+        Intent intent = new Intent(this, AboutActivity.class);
+        startActivity(intent);
+    }
+    //starts settings activity
+    public void startSettingsActivity() {
+        Intent intent = new Intent(this, SettingsActivity.class);
+        startActivity(intent);
+    }
+
     //whats new dialog
     private void showWhatsNewDialog() {
         LayoutInflater inflater = LayoutInflater.from(this);//Creates layout inflator for dialog
@@ -199,9 +209,8 @@ public class MainActivity extends Activity implements AdapterView.OnItemSelected
                 });
         builder.create().show();
     }
-
     //Grab device make and model for drawer
-    public String getDeviceName() {
+    public static String getDeviceName() {
         String manufacturer = Build.MANUFACTURER;
         String model = Build.MODEL;
         if (model.startsWith(manufacturer)) {
@@ -210,25 +219,9 @@ public class MainActivity extends Activity implements AdapterView.OnItemSelected
             return capitalize(manufacturer) + " " + model;
         }
     }
-    private void getWifiNetworks() {
-        //SharedPreferences sp = getSharedPreferences("NetworkList", Context.MODE_PRIVATE);
-        final WifiManager wifiManager =
-                (WifiManager)getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-        List<WifiConfiguration> networks = wifiManager.getConfiguredNetworks();
-        if (networks == null) {
-        }
-        String[] ssids = new String[networks.size()];
-        //final SharedPreferences.Editor editor = sp.edit();
-        modelItems = new Model[networks.size()];
-        for (int i=0 ; i<networks.size(); i++) {
-            ssids[i] = networks.get(i).SSID;
-            modelItems[i] = new Model(networks.get(i).SSID, 0);
-            //editor.putString("wifinetwork"+i, networks.get(i).SSID);
-        }
-        //editor.commit();
-    }
+
     //Capitalizes names for devices. Used by getDeviceName()
-    private String capitalize(String s) {
+    private static String capitalize(String s) {
         if (s == null || s.length() == 0) {
             return "";
         }
@@ -239,21 +232,6 @@ public class MainActivity extends Activity implements AdapterView.OnItemSelected
             return Character.toUpperCase(first) + s.substring(1);
         }
     }
-
-    public void onItemSelected(AdapterView<?> parent, View view,
-                               int pos, long id) {
-        Log.d("Spinner","Value set to: " + id);
-        SharedPreferences sp = getSharedPreferences(PRIVATE_PREF, Activity.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sp.edit();
-        editor.putLong("seconds_spinner", id);
-        editor.commit();
-    }
-
-    public void onNothingSelected(AdapterView<?> parent) {
-        // Another interface callback
-
-    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will

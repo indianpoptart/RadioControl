@@ -31,20 +31,22 @@ public class WifiReceiver extends BroadcastReceiver {
         ConnectivityManager conMan = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = conMan.getActiveNetworkInfo();
         //Root commands for airplane mode
-        String[] airplaneCmd = {"su", "settings put global airplane_mode_on 1", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state true","svc wifi enable"};
+        //String[] airplaneCmd = {"su", "settings put global airplane_mode_on 1", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state true","svc wifi enable"};
         //Root commands if there is an active bluetooth connection
-        String[] bluetoothCmd = {"su", "settings put global airplane_mode_on 1", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state true","svc wifi enable","service call bluetooth_manager 6"};
+        //String[] bluetoothCmd = {"su", "settings put global airplane_mode_on 1", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state true","svc wifi enable","service call bluetooth_manager 6"};
         //runs command to disable airplane mode on wifi loss
-        String[] airOffCmd = {"su", "settings put global airplane_mode_on 0", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state false"};
-        //Run *BETA* mobile data off command
-        String[] dtOffCmd = {"su", "svc data disable"};
-        //Run *BETA* mobile data on command
-        String[] dtOnCmd = {"su", "svc data enable"};
+        //String[] airOffCmd = {"su", "settings put global airplane_mode_on 0", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state false"};
+        //Root commands for airplane mode, without disabling wifi
+        String[] airplaneCmd2 = {"su", "settings put global airplane_mode_radios  \"cell,bluetooth,wimax\"", "content update --uri content://settings/global --bind value:s:'cell,bluetooth,wimax' --where \"name='airplane_mode_radios'\"", "settings put global airplane_mode_on 1", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state true"};
+        //Root commands if there is an active bluetooth connection, without disabling wifi
+        String[] bluetoothCmd2 = {"su", "settings put global airplane_mode_radios  \"cell,wimax\"", "content update --uri content://settings/global --bind value:s:'cell,wimax' --where \"name='airplane_mode_radios'\"", "settings put global airplane_mode_on 1", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state true"};
+        //runs command to disable airplane mode on wifi loss, while restoring previous airplane settings
+        String[] airOffCmd2 = {"su", "settings put global airplane_mode_on 0", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state false", "settings put global airplane_mode_radios  \"cell,bluetooth,nfc,wimax\"", "content update --uri content://settings/global --bind value:s:'cell,bluetooth,nfc,wimax' --where \"name='airplane_mode_radios'\""};
 
         SharedPreferences sp = context.getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE);
-        long secondsValue = sp.getLong("seconds_spinner", -1);
-        long timer = secondsValue*1000;
-        Log.d("SpinnerVal", "The seconds were received: " + secondsValue + ", Timer:" + timer);
+        //long secondsValue = sp.getLong("seconds_spinner", -1);
+        //long timer = secondsValue*1000;
+        //Log.d("SpinnerVal", "The seconds were received: " + secondsValue + ", Timer:" + timer);
 
         //Setup Disabled networks
         String arrayString = sp.getString("disabled_networks", "1");
@@ -67,20 +69,20 @@ public class WifiReceiver extends BroadcastReceiver {
             //Check for wifi
             if(isWiFi) {
                 //Check the list of disabled networks
-                if(arrayString != null || !arrayString.contains(getCurrentSsid(context))){
+                if(!arrayString.contains(getCurrentSsid(context))){
                     Log.d("DISABLED-NETWORK",getCurrentSsid(context) + " was not found in list " + arrayString);
                     //Checks that user is not in call
                     if(!isCallActive(context)){
                         //If the bluetooth connection is on
                         if(bluetoothAdapter.isEnabled() || bluetoothAdapter.isDiscovering()) {
-                            rootAccess(bluetoothCmd,timer);
-                            //rootAccess(dtOffCmd,timer);
+                            //rootAccess(bluetoothCmd,timer);
+                            rootAccess(bluetoothCmd2);
                             Log.d("BlueWiFiAirplane", "Wifi-on,airplane-on,bluetooth-on");
                         }
                         //If bluetooth is off, run the standard root request
                         else if(!bluetoothAdapter.isEnabled()){
-                            rootAccess(airplaneCmd,timer);
-                            //rootAccess(dtOffCmd,timer);
+                            //rootAccess(airplaneCmd,timer);
+                            rootAccess(airplaneCmd2);
                             Log.d("WiFiAirplane", "Wifi is on,airplane-on");
                         }
                     }
@@ -104,8 +106,8 @@ public class WifiReceiver extends BroadcastReceiver {
         else if(isConnected == false){
             Log.d("WIRELESS","SIGNAL LOST");
             if(isEnabled){
-                rootAccess(airOffCmd,timer);
-                //rootAccess(dtOnCmd,timer);
+                //rootAccess(airOffCmd,timer);
+                rootAccess(airOffCmd2);
                 Log.d("Wifi","Wifi signal lost, airplane mode has turned off");
             }
             else{
@@ -156,7 +158,7 @@ public class WifiReceiver extends BroadcastReceiver {
         }
     }
     //Run the root commands
-    public void rootAccess(String[] commands,long time){
+    public void rootAccess(String[] commands){
         Process p;
         try {
             p = Runtime.getRuntime().exec("su"); //Request SU
@@ -167,12 +169,8 @@ public class WifiReceiver extends BroadcastReceiver {
             os.writeBytes("exit\n"); //Quits the terminal session
             os.flush(); //Ends datastream
             Log.d("Root", "Commands Completed");
-            Thread.sleep(time);
-            Log.d("Timer", "10 seconds after commands were completed");
         } catch (IOException e) {
             Log.d("Root", "There was an error with root");
-        } catch (InterruptedException e) {
-            e.printStackTrace();
         }
     }
 };
