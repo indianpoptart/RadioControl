@@ -12,18 +12,27 @@ This could work for Republic Wireless users, but your device must be rooted, and
 
 # Versions
 
-Latest Stable Release: [v1.3](https://github.com/indianpoptart/RadioControl/releases/latest)
+Latest Stable Release: [v1.4](https://github.com/indianpoptart/RadioControl/releases/latest)
 
-Current Alpha Release: [v1.4](https://github.com/indianpoptart/RadioControl/releases/tag/v1.4-alpha1)
+Current Alpha Release: [v2.0](https://github.com/indianpoptart/RadioControl/releases/tag/v2.0-alpha1)
 
-Current Beta Release: [v1.3.1](https://github.com/indianpoptart/RadioControl/releases/tag/v1.3.1-beta1)
+Current Beta Release: [N/A]()
 
 
 #What's New?
-v1.4 - Alpha (TBD)
+v2.0 - Alpha (TBD)
+- The app no longer requires the timer, It can turn on airplane mode without turning off WiFi or Bluetooth 
+- Timer related bug fixes
+- Removed pause timer
+- Removed redundant code
+- Drawer now works as intended
+- Added a scroll feature to whats new dialog 
+
+v1.4 (12/15/2015)
 - Adding the ability to choose a Wifi network you don't want the app to
 work on
 - Made sharedprefs for all preferences the same pref xml
+- Added wifi network disabler so the app will enable or disable itself for certain wifi networks.
 
 v1.3.1 (N/A)
 - Added a whats new dialog just for cosmetics
