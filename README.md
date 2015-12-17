@@ -20,10 +20,10 @@ Current Beta Release: [N/A]()
 
 # Compatibility
 Tested on the following devices
-- Nexus 6
-- Nexus 6P
-- Nexus 5X
-- Moto X (2nd Gen.)
+- Nexus 6 ![Motorola](https://nikhilp.org/images/moto.png)
+- Nexus 6P ![Huawei](https://nikhilp.org/images/huawei.png)
+- Nexus 5X ![LG](https://nikhilp.org/images/lg.png)
+- Moto X (2nd Gen.) ![Motorola](https://nikhilp.org/images/moto.png)
 
 #What's New?
 v2.0 - Alpha (TBD)
