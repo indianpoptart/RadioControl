@@ -7,8 +7,8 @@ android {
         applicationId "com.nikhilparanjape.radiocontrol"
         minSdkVersion 21
         targetSdkVersion 23
-        versionCode 6
-        versionName "1.4 - Alpha"
+        versionCode 7
+        versionName "1.4"
     }
     buildTypes {
         release {

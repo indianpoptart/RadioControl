@@ -30,9 +30,6 @@
             </intent-filter>
         </receiver>
 
-        <activity
-            android:name=".SSIDActivity"
-            android:label="@string/title_activity_ssid"></activity>
     </application>
 
 </manifest>

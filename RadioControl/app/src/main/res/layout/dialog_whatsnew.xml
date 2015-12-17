@@ -8,7 +8,7 @@
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Version 1.4 - Alpha"
+        android:text="Version 1.4"
         android:textStyle="bold"/>
 
     <TextView

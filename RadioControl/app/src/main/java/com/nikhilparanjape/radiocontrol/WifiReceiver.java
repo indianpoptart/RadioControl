@@ -36,7 +36,10 @@ public class WifiReceiver extends BroadcastReceiver {
         String[] bluetoothCmd = {"su", "settings put global airplane_mode_on 1", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state true","svc wifi enable","service call bluetooth_manager 6"};
         //runs command to disable airplane mode on wifi loss
         String[] airOffCmd = {"su", "settings put global airplane_mode_on 0", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state false"};
-
+        //Run *BETA* mobile data off command
+        String[] dtOffCmd = {"su", "svc data disable"};
+        //Run *BETA* mobile data on command
+        String[] dtOnCmd = {"su", "svc data enable"};
 
         SharedPreferences sp = context.getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE);
         long secondsValue = sp.getLong("seconds_spinner", -1);
@@ -71,11 +74,13 @@ public class WifiReceiver extends BroadcastReceiver {
                         //If the bluetooth connection is on
                         if(bluetoothAdapter.isEnabled() || bluetoothAdapter.isDiscovering()) {
                             rootAccess(bluetoothCmd,timer);
+                            //rootAccess(dtOffCmd,timer);
                             Log.d("BlueWiFiAirplane", "Wifi-on,airplane-on,bluetooth-on");
                         }
                         //If bluetooth is off, run the standard root request
                         else if(!bluetoothAdapter.isEnabled()){
                             rootAccess(airplaneCmd,timer);
+                            //rootAccess(dtOffCmd,timer);
                             Log.d("WiFiAirplane", "Wifi is on,airplane-on");
                         }
                     }
@@ -100,7 +105,8 @@ public class WifiReceiver extends BroadcastReceiver {
             Log.d("WIRELESS","SIGNAL LOST");
             if(isEnabled){
                 rootAccess(airOffCmd,timer);
-                Log.d("Wifi","Wifi signal lost, airplanemode has turned off");
+                //rootAccess(dtOnCmd,timer);
+                Log.d("Wifi","Wifi signal lost, airplane mode has turned off");
             }
             else{
                 Log.d("wifi","Wifi is on");
