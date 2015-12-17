@@ -18,6 +18,12 @@ Current Alpha Release: [v2.0](https://github.com/indianpoptart/RadioControl/rele
 
 Current Beta Release: [N/A]()
 
+# Compatibility
+Tested on the following devices
+- Nexus 6
+- Nexus 6P
+- Nexus 5X
+- Moto X (2nd Gen.)
 
 #What's New?
 v2.0 - Alpha (TBD)
@@ -26,7 +32,8 @@ v2.0 - Alpha (TBD)
 - Removed pause timer
 - Removed redundant code
 - Drawer now works as intended
-- Added a scroll feature to whats new dialog 
+- Added a scroll feature to whats new dialog
+- Added dark theme(Replacing light theme until theme chooser is in place)
 
 v1.4 (12/15/2015)
 - Adding the ability to choose a Wifi network you don't want the app to
