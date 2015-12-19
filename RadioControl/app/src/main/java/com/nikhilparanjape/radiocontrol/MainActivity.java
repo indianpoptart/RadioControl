@@ -115,58 +115,167 @@ public class MainActivity extends Activity {
             }
 
         });
-
-        //Creates navigation drawer header
-        AccountHeader headerResult = new AccountHeaderBuilder()
-                .withActivity(this)
-                .withHeaderBackground(R.mipmap.header)
-                .addProfiles(
-                        new ProfileDrawerItem().withName(getDeviceName()).withEmail(versionName)
-                )
-                .withOnAccountHeaderListener(new AccountHeader.OnAccountHeaderListener() {
-                    @Override
-                    public boolean onProfileChanged(View view, IProfile profile, boolean currentProfile) {
-                        return false;
-                    }
-                })
-                .build();
-        //Creates navigation drawer items
-        PrimaryDrawerItem item1 = new PrimaryDrawerItem().withName("Home").withIcon(GoogleMaterial.Icon.gmd_wifi);
-        SecondaryDrawerItem item2 = new SecondaryDrawerItem().withName("Settings").withIcon(GoogleMaterial.Icon.gmd_settings);
-        SecondaryDrawerItem item3 = new SecondaryDrawerItem().withName("About").withIcon(GoogleMaterial.Icon.gmd_info);
-
-        //Create navigation drawer
-        Drawer result = new DrawerBuilder()
-                .withAccountHeader(headerResult)
-                .withActivity(this)
-                .withTranslucentStatusBar(false)
-                .withActionBarDrawerToggle(false)
-                .addDrawerItems(
-                        item1,
-                        new DividerDrawerItem(),
-                        item2,
-                        item3
-                )
-
-                .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
-                    @Override
-                    public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
-                        Log.d("drawer", "The drawer is: " + drawerItem + " position is " + position);
-                        //Settings button
-                        if (position == 3) {
-                            startSettingsActivity();
-                            Log.d("drawer", "Started settings activity");
+        if(getDeviceName().contains("Nexus 6P")){
+            //Creates navigation drawer header
+            AccountHeader headerResult = new AccountHeaderBuilder()
+                    .withActivity(this)
+                    .withHeaderBackground(R.mipmap.header)
+                    .addProfiles(
+                            new ProfileDrawerItem().withName(getDeviceName()).withEmail(versionName).withIcon(getResources().getDrawable(R.mipmap.huawei))
+                    )
+                    .withOnAccountHeaderListener(new AccountHeader.OnAccountHeaderListener() {
+                        @Override
+                        public boolean onProfileChanged(View view, IProfile profile, boolean currentProfile) {
+                            return false;
                         }
-                        //About button
-                        else if (position == 4) {
-                            startAboutActivity();
-                            Log.d("drawer", "Started about activity");
+                    })
+                    .build();
+            //Creates navigation drawer items
+            PrimaryDrawerItem item1 = new PrimaryDrawerItem().withName("Home").withIcon(GoogleMaterial.Icon.gmd_wifi);
+            SecondaryDrawerItem item2 = new SecondaryDrawerItem().withName("Settings").withIcon(GoogleMaterial.Icon.gmd_settings);
+            SecondaryDrawerItem item3 = new SecondaryDrawerItem().withName("About").withIcon(GoogleMaterial.Icon.gmd_info);
+
+            //Create navigation drawer
+            Drawer result = new DrawerBuilder()
+                    .withAccountHeader(headerResult)
+                    .withActivity(this)
+                    .withTranslucentStatusBar(false)
+                    .withActionBarDrawerToggle(false)
+                    .addDrawerItems(
+                            item1,
+                            new DividerDrawerItem(),
+                            item2,
+                            item3
+                    )
+
+                    .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
+                        @Override
+                        public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
+                            Log.d("drawer", "The drawer is: " + drawerItem + " position is " + position);
+                            //Settings button
+                            if (position == 3) {
+                                startSettingsActivity();
+                                Log.d("drawer", "Started settings activity");
+                            }
+                            //About button
+                            else if (position == 4) {
+                                startAboutActivity();
+                                Log.d("drawer", "Started about activity");
+                            }
+                            return false;
                         }
-                        return false;
-                    }
-                })
-                .build();
-        result.setSelection(1);
+                    })
+                    .build();
+            result.setSelection(1);
+        }
+        else if(getDeviceName().contains("Motorola Nexus 6")){
+            //Creates navigation drawer header
+            AccountHeader headerResult = new AccountHeaderBuilder()
+                    .withActivity(this)
+                    .withHeaderBackground(R.mipmap.header)
+                    .addProfiles(
+                            new ProfileDrawerItem().withName(getDeviceName()).withEmail(versionName).withIcon(getResources().getDrawable(R.mipmap.moto2))
+                    )
+                    .withOnAccountHeaderListener(new AccountHeader.OnAccountHeaderListener() {
+                        @Override
+                        public boolean onProfileChanged(View view, IProfile profile, boolean currentProfile) {
+                            return false;
+                        }
+                    })
+                    .build();
+            //Creates navigation drawer items
+            PrimaryDrawerItem item1 = new PrimaryDrawerItem().withName("Home").withIcon(GoogleMaterial.Icon.gmd_wifi);
+            SecondaryDrawerItem item2 = new SecondaryDrawerItem().withName("Settings").withIcon(GoogleMaterial.Icon.gmd_settings);
+            SecondaryDrawerItem item3 = new SecondaryDrawerItem().withName("About").withIcon(GoogleMaterial.Icon.gmd_info);
+
+            //Create navigation drawer
+            Drawer result = new DrawerBuilder()
+                    .withAccountHeader(headerResult)
+                    .withActivity(this)
+                    .withTranslucentStatusBar(false)
+                    .withActionBarDrawerToggle(false)
+                    .addDrawerItems(
+                            item1,
+                            new DividerDrawerItem(),
+                            item2,
+                            item3
+                    )
+
+                    .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
+                        @Override
+                        public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
+                            Log.d("drawer", "The drawer is: " + drawerItem + " position is " + position);
+                            //Settings button
+                            if (position == 3) {
+                                startSettingsActivity();
+                                Log.d("drawer", "Started settings activity");
+                            }
+                            //About button
+                            else if (position == 4) {
+                                startAboutActivity();
+                                Log.d("drawer", "Started about activity");
+                            }
+                            return false;
+                        }
+                    })
+                    .build();
+            result.setSelection(1);
+        }
+        else{
+            //Creates navigation drawer header
+            AccountHeader headerResult = new AccountHeaderBuilder()
+                    .withActivity(this)
+                    .withHeaderBackground(R.mipmap.header)
+                    .addProfiles(
+                            new ProfileDrawerItem().withName(getDeviceName()).withEmail(versionName)
+                    )
+                    .withOnAccountHeaderListener(new AccountHeader.OnAccountHeaderListener() {
+                        @Override
+                        public boolean onProfileChanged(View view, IProfile profile, boolean currentProfile) {
+                            return false;
+                        }
+                    })
+                    .build();
+            //Creates navigation drawer items
+            PrimaryDrawerItem item1 = new PrimaryDrawerItem().withName("Home").withIcon(GoogleMaterial.Icon.gmd_wifi);
+            SecondaryDrawerItem item2 = new SecondaryDrawerItem().withName("Settings").withIcon(GoogleMaterial.Icon.gmd_settings);
+            SecondaryDrawerItem item3 = new SecondaryDrawerItem().withName("About").withIcon(GoogleMaterial.Icon.gmd_info);
+
+            //Create navigation drawer
+            Drawer result = new DrawerBuilder()
+                    .withAccountHeader(headerResult)
+                    .withActivity(this)
+                    .withTranslucentStatusBar(false)
+                    .withActionBarDrawerToggle(false)
+                    .addDrawerItems(
+                            item1,
+                            new DividerDrawerItem(),
+                            item2,
+                            item3
+                    )
+
+                    .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
+                        @Override
+                        public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
+                            Log.d("drawer", "The drawer is: " + drawerItem + " position is " + position);
+                            //Settings button
+                            if (position == 3) {
+                                startSettingsActivity();
+                                Log.d("drawer", "Started settings activity");
+                            }
+                            //About button
+                            else if (position == 4) {
+                                startAboutActivity();
+                                Log.d("drawer", "Started about activity");
+                            }
+                            return false;
+                        }
+                    })
+                    .build();
+            result.setSelection(1);
+        }
+
+
     }
 
     //Init for the Whats new dialog
