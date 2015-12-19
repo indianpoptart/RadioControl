@@ -1,15 +1,19 @@
 package com.nikhilparanjape.radiocontrol;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.app.Activity;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.materialdrawer.AccountHeader;
@@ -23,17 +27,17 @@ import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 
+import java.util.ArrayList;
+
 public class SettingsActivity extends Activity implements AdapterView.OnItemSelectedListener {
     private static final String PRIVATE_PREF = "radiocontrol-prefs";
-
+    public static ArrayList<String> ssidList = new ArrayList<String>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
         String versionName = BuildConfig.VERSION_NAME;
-        String[] themes = new String[]{"Material Light", "Material Dark"};
-
 
         //Creates navigation drawer header
         AccountHeader headerResult = new AccountHeaderBuilder()
@@ -86,26 +90,7 @@ public class SettingsActivity extends Activity implements AdapterView.OnItemSele
                 })
                 .build();
         result.setSelection(3);
-
-        //Initialize Timer Spinner
-        Spinner spinner = (Spinner) findViewById(R.id.themeSpinner);
-        // Create an ArrayAdapter using the string array and a default spinner layout
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, themes);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // Specify the layout to use when the list of choices appears
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // Apply the adapter to the spinner
-        spinner.setAdapter(adapter);
-        SharedPreferences sp = getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE);
-        long theme = sp.getLong("themes", 0);
-        spinner.setSelection((int) theme);
-        spinner.setOnItemSelectedListener(this);
     }
-
-
-
-
-
     //starts about activity
     public void startAboutActivity() {
         Intent intent = new Intent(this, AboutActivity.class);

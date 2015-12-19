@@ -12,16 +12,11 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Select the app theme"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Nothing here... Yet"
         android:id="@+id/textView2"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true" />
 
-    <Spinner
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/themeSpinner"
-        android:layout_below="@+id/textView2"
-        android:layout_alignEnd="@+id/textView2" />
 </RelativeLayout>

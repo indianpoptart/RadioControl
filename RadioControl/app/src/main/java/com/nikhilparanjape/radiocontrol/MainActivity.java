@@ -7,15 +7,17 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
@@ -32,6 +34,8 @@ import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 
 import java.util.ArrayList;
 
+import static android.provider.Settings.Global.AIRPLANE_MODE_ON;
+
 
 public class MainActivity extends Activity {
     private static final String PRIVATE_PREF = "radiocontrol-prefs";
@@ -39,6 +43,8 @@ public class MainActivity extends Activity {
     Model[] modelItems;
     public static ArrayList<String> ssidList = new ArrayList<String>();
     String ssidlist[];
+    private static TextView airplane;
+
 
 
 
@@ -49,16 +55,17 @@ public class MainActivity extends Activity {
         init();
         String versionName = BuildConfig.VERSION_NAME;
         SharedPreferences pref = getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE);
-        long theme = pref.getLong("themes", 0);
-        if(theme == 0){
+        airplane = (TextView) findViewById(R.id.airStatus);
 
+        boolean isEnabled = Settings.System.getInt(this.getContentResolver(), AIRPLANE_MODE_ON, 0) == 1;
+        if(isEnabled){
+            airplane.setText("ON");
+            airplane.setTextColor(Color.GREEN);
         }
-
-        final EditText field = (EditText) findViewById(R.id.editText);
-
-        // get value in field
-        String value = field.getText().toString();
-
+        else{
+            airplane.setText("OFF");
+            airplane.setTextColor(Color.RED);
+        }
 
         //Save button for the network list
         Button btn = (Button) findViewById(R.id.button);
@@ -230,6 +237,17 @@ public class MainActivity extends Activity {
             return s;
         } else {
             return Character.toUpperCase(first) + s.substring(1);
+        }
+    }
+    public static void airStatus(boolean tr){
+
+        if(tr){
+            airplane.setText("ON");
+            airplane.setTextColor(Color.GREEN);
+        }
+        else{
+            airplane.setText("OFF");
+            airplane.setTextColor(Color.RED);
         }
     }
     @Override

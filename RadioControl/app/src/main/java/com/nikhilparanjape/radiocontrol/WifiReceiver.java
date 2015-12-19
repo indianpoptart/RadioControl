@@ -62,6 +62,7 @@ public class WifiReceiver extends BroadcastReceiver {
 
         //Check for airplane mode
         boolean isEnabled = Settings.System.getInt(context.getContentResolver(), AIRPLANE_MODE_ON, 0) == 1;
+        MainActivity.airStatus(isEnabled);
 
         //if connected and airplane mode is off
         if (isConnected && !isEnabled) {
