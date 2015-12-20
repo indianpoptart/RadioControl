@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -44,6 +45,7 @@ public class MainActivity extends Activity {
     public static ArrayList<String> ssidList = new ArrayList<String>();
     String ssidlist[];
     private static TextView airplane;
+    Drawable icon;
 
 
 
@@ -54,18 +56,6 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         init();
         String versionName = BuildConfig.VERSION_NAME;
-        SharedPreferences pref = getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE);
-        airplane = (TextView) findViewById(R.id.airStatus);
-
-        boolean isEnabled = Settings.System.getInt(this.getContentResolver(), AIRPLANE_MODE_ON, 0) == 1;
-        if(isEnabled){
-            airplane.setText("ON");
-            airplane.setTextColor(Color.GREEN);
-        }
-        else{
-            airplane.setText("OFF");
-            airplane.setTextColor(Color.RED);
-        }
 
         //Save button for the network list
         Button btn = (Button) findViewById(R.id.button);
@@ -82,15 +72,14 @@ public class MainActivity extends Activity {
                 String value = field.getText().toString();
                 if (value.length() != 0) {
                     //Check if the list contains the entered SSID
-                    if(!arrayString.contains(value)){
+                    if (!arrayString.contains(value)) {
                         ssidList.add(value);
                         // pair the value in text field with the key
                         editor.putString("disabled_networks", ssidList.toString());
                         field.setText("");
                         Toast.makeText(MainActivity.this,
                                 "SSID saved", Toast.LENGTH_LONG).show();
-                    }
-                    else{
+                    } else {
                         Toast.makeText(MainActivity.this,
                                 "SSID already exists", Toast.LENGTH_LONG).show();
                         field.setText("");
@@ -115,169 +104,73 @@ public class MainActivity extends Activity {
             }
 
         });
+
+        //Drawable lg = getResources().getDrawable(R.mipmap.lg);
         if(getDeviceName().contains("Nexus 6P")){
-            //Creates navigation drawer header
-            AccountHeader headerResult = new AccountHeaderBuilder()
-                    .withActivity(this)
-                    .withHeaderBackground(R.mipmap.header)
-                    .addProfiles(
-                            new ProfileDrawerItem().withName(getDeviceName()).withEmail(versionName).withIcon(getResources().getDrawable(R.mipmap.huawei))
-                    )
-                    .withOnAccountHeaderListener(new AccountHeader.OnAccountHeaderListener() {
-                        @Override
-                        public boolean onProfileChanged(View view, IProfile profile, boolean currentProfile) {
-                            return false;
-                        }
-                    })
-                    .build();
-            //Creates navigation drawer items
-            PrimaryDrawerItem item1 = new PrimaryDrawerItem().withName("Home").withIcon(GoogleMaterial.Icon.gmd_wifi);
-            SecondaryDrawerItem item2 = new SecondaryDrawerItem().withName("Settings").withIcon(GoogleMaterial.Icon.gmd_settings);
-            SecondaryDrawerItem item3 = new SecondaryDrawerItem().withName("About").withIcon(GoogleMaterial.Icon.gmd_info);
-
-            //Create navigation drawer
-            Drawer result = new DrawerBuilder()
-                    .withAccountHeader(headerResult)
-                    .withActivity(this)
-                    .withTranslucentStatusBar(false)
-                    .withActionBarDrawerToggle(false)
-                    .addDrawerItems(
-                            item1,
-                            new DividerDrawerItem(),
-                            item2,
-                            item3
-                    )
-
-                    .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
-                        @Override
-                        public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
-                            Log.d("drawer", "The drawer is: " + drawerItem + " position is " + position);
-                            //Settings button
-                            if (position == 3) {
-                                startSettingsActivity();
-                                Log.d("drawer", "Started settings activity");
-                            }
-                            //About button
-                            else if (position == 4) {
-                                startAboutActivity();
-                                Log.d("drawer", "Started about activity");
-                            }
-                            return false;
-                        }
-                    })
-                    .build();
-            result.setSelection(1);
+            icon = getResources().getDrawable(R.mipmap.huawei);
         }
         else if(getDeviceName().contains("Motorola Nexus 6")){
-            //Creates navigation drawer header
-            AccountHeader headerResult = new AccountHeaderBuilder()
-                    .withActivity(this)
-                    .withHeaderBackground(R.mipmap.header)
-                    .addProfiles(
-                            new ProfileDrawerItem().withName(getDeviceName()).withEmail(versionName).withIcon(getResources().getDrawable(R.mipmap.moto2))
-                    )
-                    .withOnAccountHeaderListener(new AccountHeader.OnAccountHeaderListener() {
-                        @Override
-                        public boolean onProfileChanged(View view, IProfile profile, boolean currentProfile) {
-                            return false;
-                        }
-                    })
-                    .build();
-            //Creates navigation drawer items
-            PrimaryDrawerItem item1 = new PrimaryDrawerItem().withName("Home").withIcon(GoogleMaterial.Icon.gmd_wifi);
-            SecondaryDrawerItem item2 = new SecondaryDrawerItem().withName("Settings").withIcon(GoogleMaterial.Icon.gmd_settings);
-            SecondaryDrawerItem item3 = new SecondaryDrawerItem().withName("About").withIcon(GoogleMaterial.Icon.gmd_info);
-
-            //Create navigation drawer
-            Drawer result = new DrawerBuilder()
-                    .withAccountHeader(headerResult)
-                    .withActivity(this)
-                    .withTranslucentStatusBar(false)
-                    .withActionBarDrawerToggle(false)
-                    .addDrawerItems(
-                            item1,
-                            new DividerDrawerItem(),
-                            item2,
-                            item3
-                    )
-
-                    .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
-                        @Override
-                        public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
-                            Log.d("drawer", "The drawer is: " + drawerItem + " position is " + position);
-                            //Settings button
-                            if (position == 3) {
-                                startSettingsActivity();
-                                Log.d("drawer", "Started settings activity");
-                            }
-                            //About button
-                            else if (position == 4) {
-                                startAboutActivity();
-                                Log.d("drawer", "Started about activity");
-                            }
-                            return false;
-                        }
-                    })
-                    .build();
-            result.setSelection(1);
+            icon = getResources().getDrawable(R.mipmap.moto2);
+        }
+        else if(getDeviceName().contains("Nexus 5X")){
+            icon = getResources().getDrawable(R.mipmap.lg);
         }
         else{
-            //Creates navigation drawer header
-            AccountHeader headerResult = new AccountHeaderBuilder()
-                    .withActivity(this)
-                    .withHeaderBackground(R.mipmap.header)
-                    .addProfiles(
-                            new ProfileDrawerItem().withName(getDeviceName()).withEmail(versionName)
-                    )
-                    .withOnAccountHeaderListener(new AccountHeader.OnAccountHeaderListener() {
-                        @Override
-                        public boolean onProfileChanged(View view, IProfile profile, boolean currentProfile) {
-                            return false;
-                        }
-                    })
-                    .build();
-            //Creates navigation drawer items
-            PrimaryDrawerItem item1 = new PrimaryDrawerItem().withName("Home").withIcon(GoogleMaterial.Icon.gmd_wifi);
-            SecondaryDrawerItem item2 = new SecondaryDrawerItem().withName("Settings").withIcon(GoogleMaterial.Icon.gmd_settings);
-            SecondaryDrawerItem item3 = new SecondaryDrawerItem().withName("About").withIcon(GoogleMaterial.Icon.gmd_info);
-
-            //Create navigation drawer
-            Drawer result = new DrawerBuilder()
-                    .withAccountHeader(headerResult)
-                    .withActivity(this)
-                    .withTranslucentStatusBar(false)
-                    .withActionBarDrawerToggle(false)
-                    .addDrawerItems(
-                            item1,
-                            new DividerDrawerItem(),
-                            item2,
-                            item3
-                    )
-
-                    .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
-                        @Override
-                        public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
-                            Log.d("drawer", "The drawer is: " + drawerItem + " position is " + position);
-                            //Settings button
-                            if (position == 3) {
-                                startSettingsActivity();
-                                Log.d("drawer", "Started settings activity");
-                            }
-                            //About button
-                            else if (position == 4) {
-                                startAboutActivity();
-                                Log.d("drawer", "Started about activity");
-                            }
-                            return false;
-                        }
-                    })
-                    .build();
-            result.setSelection(1);
+            icon = getResources().getDrawable(R.mipmap.ic_launcher);
         }
+        //Creates navigation drawer header
+        AccountHeader headerResult = new AccountHeaderBuilder()
+                .withActivity(this)
+                .withHeaderBackground(R.mipmap.header)
+                .addProfiles(
+                        new ProfileDrawerItem().withName(getDeviceName()).withEmail("v" + versionName).withIcon(icon)
+                )
+                .withOnAccountHeaderListener(new AccountHeader.OnAccountHeaderListener() {
+                    @Override
+                    public boolean onProfileChanged(View view, IProfile profile, boolean currentProfile) {
+                        return false;
+                    }
+                })
+                .build();
+        //Creates navigation drawer items
+        PrimaryDrawerItem item1 = new PrimaryDrawerItem().withName("Home").withIcon(GoogleMaterial.Icon.gmd_wifi);
+        SecondaryDrawerItem item2 = new SecondaryDrawerItem().withName("Settings").withIcon(GoogleMaterial.Icon.gmd_settings);
+        SecondaryDrawerItem item3 = new SecondaryDrawerItem().withName("About").withIcon(GoogleMaterial.Icon.gmd_info);
 
+        //Create navigation drawer
+        Drawer result = new DrawerBuilder()
+                .withAccountHeader(headerResult)
+                .withActivity(this)
+                .withTranslucentStatusBar(false)
+                .withActionBarDrawerToggle(false)
+                .addDrawerItems(
+                        item1,
+                        new DividerDrawerItem(),
+                        item2,
+                        item3
+                )
+
+                .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
+                    @Override
+                    public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
+                        Log.d("drawer", "The drawer is: " + drawerItem + " position is " + position);
+                        //Settings button
+                        if (position == 3) {
+                            startSettingsActivity();
+                            Log.d("drawer", "Started settings activity");
+                        }
+                        //About button
+                        else if (position == 4) {
+                            startAboutActivity();
+                            Log.d("drawer", "Started about activity");
+                        }
+                        return false;
+                    }
+                })
+                .build();
+        result.setSelection(1);
 
     }
-
     //Init for the Whats new dialog
     private void init() {
         SharedPreferences sharedPref = getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE);
@@ -346,17 +239,6 @@ public class MainActivity extends Activity {
             return s;
         } else {
             return Character.toUpperCase(first) + s.substring(1);
-        }
-    }
-    public static void airStatus(boolean tr){
-
-        if(tr){
-            airplane.setText("ON");
-            airplane.setTextColor(Color.GREEN);
-        }
-        else{
-            airplane.setText("OFF");
-            airplane.setTextColor(Color.RED);
         }
     }
     @Override

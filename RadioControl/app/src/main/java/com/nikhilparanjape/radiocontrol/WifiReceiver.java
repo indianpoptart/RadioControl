@@ -1,6 +1,5 @@
 package com.nikhilparanjape.radiocontrol;
 
-import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -30,23 +29,12 @@ public class WifiReceiver extends BroadcastReceiver {
         //Initialize Network Settings
         ConnectivityManager conMan = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = conMan.getActiveNetworkInfo();
-        //Root commands for airplane mode
-        //String[] airplaneCmd = {"su", "settings put global airplane_mode_on 1", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state true","svc wifi enable"};
-        //Root commands if there is an active bluetooth connection
-        //String[] bluetoothCmd = {"su", "settings put global airplane_mode_on 1", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state true","svc wifi enable","service call bluetooth_manager 6"};
-        //runs command to disable airplane mode on wifi loss
-        //String[] airOffCmd = {"su", "settings put global airplane_mode_on 0", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state false"};
-        //Root commands for airplane mode, without disabling wifi
-        String[] airplaneCmd2 = {"su", "settings put global airplane_mode_radios  \"cell,bluetooth,wimax\"", "content update --uri content://settings/global --bind value:s:'cell,bluetooth,wimax' --where \"name='airplane_mode_radios'\"", "settings put global airplane_mode_on 1", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state true"};
-        //Root commands if there is an active bluetooth connection, without disabling wifi
-        String[] bluetoothCmd2 = {"su", "settings put global airplane_mode_radios  \"cell,wimax\"", "content update --uri content://settings/global --bind value:s:'cell,wimax' --where \"name='airplane_mode_radios'\"", "settings put global airplane_mode_on 1", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state true"};
+        //Root commands which disable cell only
+        String[] airCmd = {"su", "settings put global airplane_mode_radios  \"cell\"", "content update --uri content://settings/global --bind value:s:'cell' --where \"name='airplane_mode_radios'\"", "settings put global airplane_mode_on 1", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state true"};
         //runs command to disable airplane mode on wifi loss, while restoring previous airplane settings
         String[] airOffCmd2 = {"su", "settings put global airplane_mode_on 0", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state false", "settings put global airplane_mode_radios  \"cell,bluetooth,nfc,wimax\"", "content update --uri content://settings/global --bind value:s:'cell,bluetooth,nfc,wimax' --where \"name='airplane_mode_radios'\""};
 
         SharedPreferences sp = context.getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE);
-        //long secondsValue = sp.getLong("seconds_spinner", -1);
-        //long timer = secondsValue*1000;
-        //Log.d("SpinnerVal", "The seconds were received: " + secondsValue + ", Timer:" + timer);
 
         //Setup Disabled networks
         String arrayString = sp.getString("disabled_networks", "1");
@@ -57,12 +45,8 @@ public class WifiReceiver extends BroadcastReceiver {
         boolean isConnected = activeNetwork != null &&
                 activeNetwork.isConnectedOrConnecting();
 
-        //Check for bluetooth
-        BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-
         //Check for airplane mode
-        boolean isEnabled = Settings.System.getInt(context.getContentResolver(), AIRPLANE_MODE_ON, 0) == 1;
-        MainActivity.airStatus(isEnabled);
+        boolean isEnabled = Settings.Global.getInt(context.getContentResolver(), AIRPLANE_MODE_ON, 0) == 1;
 
         //if connected and airplane mode is off
         if (isConnected && !isEnabled) {
@@ -74,18 +58,8 @@ public class WifiReceiver extends BroadcastReceiver {
                     Log.d("DISABLED-NETWORK",getCurrentSsid(context) + " was not found in list " + arrayString);
                     //Checks that user is not in call
                     if(!isCallActive(context)){
-                        //If the bluetooth connection is on
-                        if(bluetoothAdapter.isEnabled() || bluetoothAdapter.isDiscovering()) {
-                            //rootAccess(bluetoothCmd,timer);
-                            rootAccess(bluetoothCmd2);
-                            Log.d("BlueWiFiAirplane", "Wifi-on,airplane-on,bluetooth-on");
-                        }
-                        //If bluetooth is off, run the standard root request
-                        else if(!bluetoothAdapter.isEnabled()){
-                            //rootAccess(airplaneCmd,timer);
-                            rootAccess(airplaneCmd2);
-                            Log.d("WiFiAirplane", "Wifi is on,airplane-on");
-                        }
+                        rootAccess(airCmd);
+                        Log.d("WiFiAirplane", "Wifi is on,airplane-on");
                     }
                     //Checks that user is currently in call and pauses execution till the call ends
                     else if(isCallActive(context)){
@@ -107,7 +81,6 @@ public class WifiReceiver extends BroadcastReceiver {
         else if(isConnected == false){
             Log.d("WIRELESS","SIGNAL LOST");
             if(isEnabled){
-                //rootAccess(airOffCmd,timer);
                 rootAccess(airOffCmd2);
                 Log.d("Wifi","Wifi signal lost, airplane mode has turned off");
             }
@@ -115,14 +88,10 @@ public class WifiReceiver extends BroadcastReceiver {
                 Log.d("wifi","Wifi is on");
             }
         }
-        else if(!isEnabled){
-            Log.d("Airplane","Airplane mode is off");
-        }
 
         else {
             Log.d("Else","something is different");
         }
-
 
         if (netInfo != null && netInfo.getType() == ConnectivityManager.TYPE_WIFI)
             Log.d("WiFiReceiver", "Have Wifi Connection");

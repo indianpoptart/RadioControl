@@ -6,7 +6,7 @@
     android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MainActivity">
 
 
-    <TextView android:text="Swipe from the left for an easter egg" android:layout_width="wrap_content"
+    <TextView android:text="Swipe from the left for the drawer" android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/textView" />
 
