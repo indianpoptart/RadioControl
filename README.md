@@ -67,6 +67,7 @@ v1.1 (11/8/2015)
 
 #Upcoming Features
 - ~~Whats new changelog~~ - Completed in v1.4
+- Request root access at the start of the app so the app works when its needed, instead of waiting for it to be granted
 - Choose what SSID you want the app to toggle onto - Completed in v2.0 alpha
 - Disable only cell radio so the app doesn't have to reenable WiFi after enabling Airplane mode - Completed in v2.0 alpha
 - ~~Check if user is in call~~ - Completed in v1.3
