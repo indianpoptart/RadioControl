@@ -109,7 +109,7 @@ public class MainActivity extends Activity {
         if(getDeviceName().contains("Nexus 6P")){
             icon = getResources().getDrawable(R.mipmap.huawei);
         }
-        else if(getDeviceName().contains("Motorola Nexus 6")){
+        else if(getDeviceName().contains("Motorola")){
             icon = getResources().getDrawable(R.mipmap.moto2);
         }
         else if(getDeviceName().contains("Nexus 5X")){

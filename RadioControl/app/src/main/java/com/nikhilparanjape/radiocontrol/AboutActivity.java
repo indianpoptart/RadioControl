@@ -1,6 +1,7 @@
 package com.nikhilparanjape.radiocontrol;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.app.Activity;
 import android.util.Log;
@@ -20,6 +21,7 @@ import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 
 public class AboutActivity extends Activity {
+    Drawable icon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +30,20 @@ public class AboutActivity extends Activity {
         String versionName = BuildConfig.VERSION_NAME;
         TextView t = (TextView)findViewById(R.id.verNum);
         t.setText(versionName);
+
+        //Drawable lg = getResources().getDrawable(R.mipmap.lg);
+        if(MainActivity.getDeviceName().contains("Huawei")){
+            icon = getResources().getDrawable(R.mipmap.huawei);
+        }
+        else if(MainActivity.getDeviceName().contains("Motorola")){
+            icon = getResources().getDrawable(R.mipmap.moto2);
+        }
+        else if(MainActivity.getDeviceName().contains("LG")){
+            icon = getResources().getDrawable(R.mipmap.lg);
+        }
+        else{
+            icon = getResources().getDrawable(R.mipmap.ic_launcher);
+        }
 
         //Creates navigation drawer header
         AccountHeader headerResult = new AccountHeaderBuilder()

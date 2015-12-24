@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.app.Activity;
 import android.util.Log;
@@ -32,6 +33,8 @@ import java.util.ArrayList;
 public class SettingsActivity extends Activity implements AdapterView.OnItemSelectedListener {
     private static final String PRIVATE_PREF = "radiocontrol-prefs";
     public static ArrayList<String> ssidList = new ArrayList<String>();
+    Drawable icon;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,12 +42,26 @@ public class SettingsActivity extends Activity implements AdapterView.OnItemSele
 
         String versionName = BuildConfig.VERSION_NAME;
 
+        //Drawable lg = getResources().getDrawable(R.mipmap.lg);
+        if(MainActivity.getDeviceName().contains("Nexus 6P")){
+            icon = getResources().getDrawable(R.mipmap.huawei);
+        }
+        else if(MainActivity.getDeviceName().contains("Motorola")){
+            icon = getResources().getDrawable(R.mipmap.moto2);
+        }
+        else if(MainActivity.getDeviceName().contains("Nexus 5X")){
+            icon = getResources().getDrawable(R.mipmap.lg);
+        }
+        else{
+            icon = getResources().getDrawable(R.mipmap.ic_launcher);
+        }
+
         //Creates navigation drawer header
         AccountHeader headerResult = new AccountHeaderBuilder()
                 .withActivity(this)
                 .withHeaderBackground(R.mipmap.header)
                 .addProfiles(
-                        new ProfileDrawerItem().withName(MainActivity.getDeviceName()).withEmail(versionName)
+                        new ProfileDrawerItem().withName(MainActivity.getDeviceName()).withEmail(versionName).withIcon(icon)
                 )
                 .withOnAccountHeaderListener(new AccountHeader.OnAccountHeaderListener() {
                     @Override
