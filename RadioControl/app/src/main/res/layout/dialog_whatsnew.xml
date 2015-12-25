@@ -11,6 +11,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -20,7 +21,7 @@
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="- The app no longer requires the timer, It can turn on airplane \n  mode without turning off WiFi or Bluetooth \n- Timer related bug fixes \n- Removed pause timer \n- Removed redundant code \n- Drawer now works as intended \n- Added a scroll feature to whats new dialog \n- Checks for root at launch  " />
+                android:text="- The app no longer requires the timer, It can turn on airplane \n  mode without turning off WiFi or Bluetooth \n- Timer related bug fixes \n- Removed pause timer \n- Removed redundant code \n- Drawer now works as intended \n- Added a scroll feature to whats new dialog \n- Checks for root at launch\n  " />
 
             <TextView
                 android:layout_width="fill_parent"

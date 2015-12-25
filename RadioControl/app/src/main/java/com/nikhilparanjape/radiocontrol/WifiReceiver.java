@@ -22,7 +22,7 @@ import static android.provider.Settings.Global.*;
  * Created by Nikhil Paranjape on 11/8/2015.
  */
 public class WifiReceiver extends BroadcastReceiver {
-    private static final String PRIVATE_PREF = "radiocontrol-prefs";
+    private static final String PRIVATE_PREF = "prefs";
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -58,7 +58,7 @@ public class WifiReceiver extends BroadcastReceiver {
                     Log.d("DISABLED-NETWORK",getCurrentSsid(context) + " was not found in list " + arrayString);
                     //Checks that user is not in call
                     if(!isCallActive(context)){
-                        rootAccess(airCmd);
+                        RootAccess.runCommands(airCmd);
                         Log.d("WiFiAirplane", "Wifi is on,airplane-on");
                     }
                     //Checks that user is currently in call and pauses execution till the call ends
@@ -81,7 +81,7 @@ public class WifiReceiver extends BroadcastReceiver {
         else if(isConnected == false){
             Log.d("WIRELESS","SIGNAL LOST");
             if(isEnabled){
-                rootAccess(airOffCmd2);
+                RootAccess.runCommands(airOffCmd2);
                 Log.d("Wifi","Wifi signal lost, airplane mode has turned off");
             }
             else{
@@ -125,22 +125,6 @@ public class WifiReceiver extends BroadcastReceiver {
         }
         else{
             return false;
-        }
-    }
-    //Run the root commands
-    public void rootAccess(String[] commands){
-        Process p;
-        try {
-            p = Runtime.getRuntime().exec("su"); //Request SU
-            DataOutputStream os = new DataOutputStream(p.getOutputStream()); //Used for terminal
-            for (String tmpCmd : commands) {
-                os.writeBytes(tmpCmd + "\n"); //Sends commands to the terminal
-            }
-            os.writeBytes("exit\n"); //Quits the terminal session
-            os.flush(); //Ends datastream
-            Log.d("Root", "Commands Completed");
-        } catch (IOException e) {
-            Log.d("Root", "There was an error with root");
         }
     }
 };

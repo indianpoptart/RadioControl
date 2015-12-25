@@ -80,7 +80,7 @@ public class SettingsActivity extends Activity implements AdapterView.OnItemSele
                 .withAccountHeader(headerResult)
                 .withActivity(this)
                 .withTranslucentStatusBar(false)
-                .withActionBarDrawerToggle(false)
+                .withActionBarDrawerToggle(true)
                 .addDrawerItems(
                         item1,
                         new DividerDrawerItem(),

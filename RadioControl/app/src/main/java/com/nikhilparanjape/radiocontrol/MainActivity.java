@@ -38,54 +38,26 @@ import static android.provider.Settings.Global.AIRPLANE_MODE_ON;
 
 
 public class MainActivity extends Activity {
-    private static final String PRIVATE_PREF = "radiocontrol-prefs";
+    private static final String PRIVATE_PREF = "prefs";
     private static final String VERSION_KEY = "version_number";
-    Model[] modelItems;
     public static ArrayList<String> ssidList = new ArrayList<String>();
-    String ssidlist[];
-    private static TextView airplane;
     Drawable icon;
-
-
+    String versionName = BuildConfig.VERSION_NAME;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        getActionBar().setDisplayHomeAsUpEnabled(false);
         init();//initializes the whats new dialog
-
-        String versionName = BuildConfig.VERSION_NAME;
 
         //Save button for the network list
         Button btn = (Button) findViewById(R.id.button);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SharedPreferences pref = getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = pref.edit();
-                String arrayString = pref.getString("disabled_networks", "1");
-
-                final EditText field = (EditText) findViewById(R.id.editText);
-
-                // get value in field
-                String value = field.getText().toString();
-                if (value.length() != 0) {
-                    //Check if the list contains the entered SSID
-                    if (!arrayString.contains(value)) {
-                        ssidList.add(value);
-                        // pair the value in text field with the key
-                        editor.putString("disabled_networks", ssidList.toString());
-                        field.setText("");
-                        Toast.makeText(MainActivity.this,
-                                "SSID saved", Toast.LENGTH_LONG).show();
-                    } else {
-                        Toast.makeText(MainActivity.this,
-                                "SSID already exists", Toast.LENGTH_LONG).show();
-                        field.setText("");
-                    }
-                }
-                editor.commit();
+                ssidButtonChecker();
             }
 
         });
@@ -95,16 +67,39 @@ public class MainActivity extends Activity {
         btn2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SharedPreferences pref = getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = pref.edit();
-                editor.remove("disabled_networks");
-                Toast.makeText(MainActivity.this,
-                        "Disabled SSID list cleared", Toast.LENGTH_LONG).show();
-                editor.apply();
+                ssidClearButton();
             }
 
         });
 
+        drawerCreate(); //Initalizes Drawer
+        rootInit();//Checks for root
+
+    }
+
+
+
+    //Initialize method for the Whats new dialog
+    private void init() {
+        SharedPreferences sharedPref = getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        int currentVersionNumber = 0;
+
+        int savedVersionNumber = sharedPref.getInt(VERSION_KEY, 0);
+
+        try {
+            PackageInfo pi = getPackageManager().getPackageInfo(getPackageName(), 0);
+            currentVersionNumber = pi.versionCode;
+        } catch (Exception e) {}
+
+        if (currentVersionNumber > savedVersionNumber) {
+            showWhatsNewDialog();
+            editor.putInt(VERSION_KEY, currentVersionNumber);
+            editor.commit();
+        }
+    }
+    //Method to create the Navigation Drawer
+    public void drawerCreate(){
         //Drawable lg = getResources().getDrawable(R.mipmap.lg);
         if(getDeviceName().contains("Nexus 6P")){
             icon = getResources().getDrawable(R.mipmap.huawei);
@@ -134,33 +129,28 @@ public class MainActivity extends Activity {
                 .build();
         //Creates navigation drawer items
         PrimaryDrawerItem item1 = new PrimaryDrawerItem().withName("Home").withIcon(GoogleMaterial.Icon.gmd_wifi);
-        SecondaryDrawerItem item2 = new SecondaryDrawerItem().withName("Settings").withIcon(GoogleMaterial.Icon.gmd_settings);
-        SecondaryDrawerItem item3 = new SecondaryDrawerItem().withName("About").withIcon(GoogleMaterial.Icon.gmd_info);
+        //SecondaryDrawerItem item2 = new SecondaryDrawerItem().withName("Settings").withIcon(GoogleMaterial.Icon.gmd_settings);
+        SecondaryDrawerItem item2 = new SecondaryDrawerItem().withName("About").withIcon(GoogleMaterial.Icon.gmd_info);
 
         //Create navigation drawer
         Drawer result = new DrawerBuilder()
                 .withAccountHeader(headerResult)
                 .withActivity(this)
                 .withTranslucentStatusBar(false)
-                .withActionBarDrawerToggle(false)
+                .withActionBarDrawerToggleAnimated(true)
+                .withActionBarDrawerToggle(true)
                 .addDrawerItems(
                         item1,
                         new DividerDrawerItem(),
-                        item2,
-                        item3
+                        item2
                 )
 
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
                     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
                         Log.d("drawer", "The drawer is: " + drawerItem + " position is " + position);
-                        //Settings button
-                        if (position == 3) {
-                            startSettingsActivity();
-                            Log.d("drawer", "Started settings activity");
-                        }
                         //About button
-                        else if (position == 4) {
+                        if (position == 3) {
                             startAboutActivity();
                             Log.d("drawer", "Started about activity");
                         }
@@ -168,31 +158,49 @@ public class MainActivity extends Activity {
                     }
                 })
                 .build();
-        result.setSelection(1);
 
-        rootInit();//Checks for root
+        if(result.isDrawerOpen()){
 
-    }
-    //Init for the Whats new dialog
-    private void init() {
-        SharedPreferences sharedPref = getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE);
-        int currentVersionNumber        = 0;
-
-        int savedVersionNumber          = sharedPref.getInt(VERSION_KEY, 0);
-
-        try {
-            PackageInfo pi          = getPackageManager().getPackageInfo(getPackageName(), 0);
-            currentVersionNumber    = pi.versionCode;
-        } catch (Exception e) {}
-
-        if (currentVersionNumber > savedVersionNumber) {
-            showWhatsNewDialog();
-
-            SharedPreferences.Editor editor   = sharedPref.edit();
-
-            editor.putInt(VERSION_KEY, currentVersionNumber);
-            editor.commit();
         }
+        else if(!result.isDrawerOpen()){
+            //result.getActionBarDrawerToggle().setDrawerIndicatorEnabled(true);
+        }
+    }
+    //Method for the ssid save button
+    public void ssidButtonChecker(){
+        SharedPreferences pref = getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
+        String arrayString = pref.getString("disabled_networks", "1");
+
+        final EditText field = (EditText) findViewById(R.id.editText);
+
+        // get value in field
+        String value = field.getText().toString();
+        if (value.length() != 0) {
+            //Check if the list contains the entered SSID
+            if (!arrayString.contains(value)) {
+                ssidList.add(value);
+                // pair the value in text field with the key
+                editor.putString("disabled_networks", ssidList.toString());
+                field.setText("");
+                Toast.makeText(MainActivity.this,
+                        "SSID saved", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(MainActivity.this,
+                        "SSID already exists", Toast.LENGTH_LONG).show();
+                field.setText("");
+            }
+        }
+        editor.commit();
+    }
+    //Method for the ssid list clear button
+    public void ssidClearButton(){
+        SharedPreferences pref = getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
+        editor.remove("disabled_networks");
+        Toast.makeText(MainActivity.this,
+                "Disabled SSID list cleared", Toast.LENGTH_LONG).show();
+        editor.apply();
     }
     //starts about activity
     public void startAboutActivity() {
@@ -249,14 +257,15 @@ public class MainActivity extends Activity {
         editor.putBoolean(key,value);
     }
     public void rootInit(){
-        Process p;
+
         try {
-            // Preform su to get root privledges
-            p = Runtime.getRuntime().exec("su");
-            boolPrefEditor("isRoot", true);
+            // Preform su to get root privileges
+            boolPrefEditor("isRooted", true);
+            Process p = Runtime.getRuntime().exec("su");
+
         } catch (IOException e) {
             // TODO Code to run in input/output exception
-            boolPrefEditor("isRoot", false);
+            boolPrefEditor("isRooted", false);
         }
     }
     @Override
