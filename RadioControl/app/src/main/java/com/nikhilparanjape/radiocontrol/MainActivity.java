@@ -16,7 +16,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
@@ -34,7 +33,6 @@ import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import static android.provider.Settings.Global.AIRPLANE_MODE_ON;
 
 
 public class MainActivity extends Activity {
@@ -49,7 +47,6 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        getActionBar().setDisplayHomeAsUpEnabled(false);
         init();//initializes the whats new dialog
 
         //Save button for the network list
@@ -76,8 +73,6 @@ public class MainActivity extends Activity {
         rootInit();//Checks for root
 
     }
-
-
 
     //Initialize method for the Whats new dialog
     private void init() {
@@ -107,7 +102,7 @@ public class MainActivity extends Activity {
         else if(getDeviceName().contains("Motorola")){
             icon = getResources().getDrawable(R.mipmap.moto2);
         }
-        else if(getDeviceName().contains("Nexus 5X")){
+        else if(getDeviceName().contains("LG")){
             icon = getResources().getDrawable(R.mipmap.lg);
         }
         else{
@@ -158,13 +153,8 @@ public class MainActivity extends Activity {
                     }
                 })
                 .build();
+        result.setSelection(item1);
 
-        if(result.isDrawerOpen()){
-
-        }
-        else if(!result.isDrawerOpen()){
-            //result.getActionBarDrawerToggle().setDrawerIndicatorEnabled(true);
-        }
     }
     //Method for the ssid save button
     public void ssidButtonChecker(){
@@ -219,7 +209,7 @@ public class MainActivity extends Activity {
         View view = inflater.inflate(R.layout.dialog_whatsnew, null);//Initializes the view for whats new dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(this);//creates alertdialog
 
-        builder.setView(view).setTitle("                 Whats New - Alpha")//sets title
+        builder.setView(view).setTitle("Whats New")//sets title
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

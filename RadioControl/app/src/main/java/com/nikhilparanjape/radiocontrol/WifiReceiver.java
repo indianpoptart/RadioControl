@@ -12,8 +12,6 @@ import android.net.wifi.WifiManager;
 import android.provider.Settings;
 import android.util.Log;
 
-import java.io.DataOutputStream;
-import java.io.IOException;
 import java.util.Arrays;
 
 import static android.provider.Settings.Global.*;
@@ -48,14 +46,14 @@ public class WifiReceiver extends BroadcastReceiver {
         //Check for airplane mode
         boolean isEnabled = Settings.Global.getInt(context.getContentResolver(), AIRPLANE_MODE_ON, 0) == 1;
 
-        //if connected and airplane mode is off
+        //if network is connected and airplane mode is off
         if (isConnected && !isEnabled) {
             boolean isWiFi = activeNetwork.getType() == ConnectivityManager.TYPE_WIFI; //Boolean to check for an active WiFi connection
-            //Check for wifi
+            //Check for wifi connection
             if(isWiFi) {
                 //Check the list of disabled networks
                 if(!arrayString.contains(getCurrentSsid(context))){
-                    Log.d("DISABLED-NETWORK",getCurrentSsid(context) + " was not found in list " + arrayString);
+                    Log.d("DISABLED-NETWORK",getCurrentSsid(context) + " was not found the following strings " + arrayString);
                     //Checks that user is not in call
                     if(!isCallActive(context)){
                         RootAccess.runCommands(airCmd);
@@ -64,11 +62,7 @@ public class WifiReceiver extends BroadcastReceiver {
                     //Checks that user is currently in call and pauses execution till the call ends
                     else if(isCallActive(context)){
                         while(isCallActive(context)){
-                            try {
-                                Thread.sleep(1000);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
+                            waitFor(1000);//Wait for call to end
                         }
                     }
                 }
@@ -76,9 +70,12 @@ public class WifiReceiver extends BroadcastReceiver {
                     Log.d("DISABLED-NETWORK",getCurrentSsid(context) + " was blocked from list " + arrayString);
                 }
             }
+            else{
+                Log.d("Unknown","An unknown network was detected"); //Maybe you have a PAN connection?? Who knows
+            }
         }
         //Check if we just lost WiFi signal
-        else if(isConnected == false){
+        if(isConnected == false){
             Log.d("WIRELESS","SIGNAL LOST");
             if(isEnabled){
                 RootAccess.runCommands(airOffCmd2);
@@ -88,7 +85,6 @@ public class WifiReceiver extends BroadcastReceiver {
                 Log.d("wifi","Wifi is on");
             }
         }
-
         else {
             Log.d("Else","something is different");
         }
@@ -97,6 +93,13 @@ public class WifiReceiver extends BroadcastReceiver {
             Log.d("WiFiReceiver", "Have Wifi Connection");
         else
             Log.d("WiFiReceiver", "Don't have Wifi Connection");
+    }
+    public void waitFor(long timer){
+        try {
+            Thread.sleep(timer);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
     //Checks for current ssid
     public static String getCurrentSsid(Context context) {

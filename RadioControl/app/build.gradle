@@ -8,7 +8,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 23
         versionCode 7
-        versionName "2.0 - Beta1"
+        versionName "2.0 - Alpha5"
     }
     buildTypes {
         release {
@@ -22,7 +22,7 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile('com.mikepenz:materialdrawer:4.4.5@aar') {
+    compile('com.mikepenz:materialdrawer:4.6.1@aar') {
         transitive = true
     }
     compile 'com.android.support:appcompat-v7:23.1.1'
