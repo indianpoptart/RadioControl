@@ -7,11 +7,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -33,6 +31,7 @@ import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import static android.provider.Settings.Global.AIRPLANE_MODE_ON;
@@ -54,7 +53,8 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        init();
+        init();//initializes the whats new dialog
+
         String versionName = BuildConfig.VERSION_NAME;
 
         //Save button for the network list
@@ -170,6 +170,8 @@ public class MainActivity extends Activity {
                 .build();
         result.setSelection(1);
 
+        rootInit();//Checks for root
+
     }
     //Init for the Whats new dialog
     private void init() {
@@ -239,6 +241,22 @@ public class MainActivity extends Activity {
             return s;
         } else {
             return Character.toUpperCase(first) + s.substring(1);
+        }
+    }
+    public void boolPrefEditor(String key, boolean value){
+        SharedPreferences pref = getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putBoolean(key,value);
+    }
+    public void rootInit(){
+        Process p;
+        try {
+            // Preform su to get root privledges
+            p = Runtime.getRuntime().exec("su");
+            boolPrefEditor("isRoot", true);
+        } catch (IOException e) {
+            // TODO Code to run in input/output exception
+            boolPrefEditor("isRoot", false);
         }
     }
     @Override
