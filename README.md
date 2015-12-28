@@ -26,7 +26,7 @@ Tested on the following devices
 - Moto X (2nd Gen.) ![Motorola](https://nikhilp.org/images/moto.png)
 
 #What's New?
-v2.0 - Alpha (12/29/2015)
+v2.0 (12/29/2015)
 - The app no longer requires the timer, It can turn on airplane mode without turning off WiFi or Bluetooth 
 - Timer related bug fixes
 - Removed pause timer
