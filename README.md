@@ -12,11 +12,11 @@ This could work for Republic Wireless users, but your device must be rooted, and
 
 # Versions
 
-Latest Stable Release: [v1.4](https://github.com/indianpoptart/RadioControl/releases/latest)
+Latest Stable Release: [v2.0](https://github.com/indianpoptart/RadioControl/releases/latest)
 
-Current Alpha Release: [v2.0-alpha5](https://github.com/indianpoptart/RadioControl/releases/tag/v2.0-alpha5)
+Current Alpha Release: [NA]()
 
-Current Beta Release: [v2.0-beta1](https://github.com/indianpoptart/RadioControl/releases/tag/v2.0-beta1)
+Current Beta Release: [NA]()
 
 # Compatibility
 Tested on the following devices
@@ -26,7 +26,7 @@ Tested on the following devices
 - Moto X (2nd Gen.) ![Motorola](https://nikhilp.org/images/moto.png)
 
 #What's New?
-v2.0 - Alpha (TBD)
+v2.0 - Alpha (12/29/2015)
 - The app no longer requires the timer, It can turn on airplane mode without turning off WiFi or Bluetooth 
 - Timer related bug fixes
 - Removed pause timer

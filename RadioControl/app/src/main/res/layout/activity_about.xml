@@ -48,8 +48,8 @@
         android:layout_height="wrap_content"
         android:text="Changelog"
         android:id="@+id/changelog"
-        android:layout_below="@+id/textView7"
-        android:layout_alignEnd="@+id/verNum" />
+        android:layout_below="@+id/infoView"
+        android:layout_alignParentStart="true" />
 
 
 </RelativeLayout>

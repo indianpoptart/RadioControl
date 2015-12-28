@@ -15,13 +15,13 @@
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="Version 2.0 - Alpha"
+                android:text="Version 2.0"
                 android:textStyle="bold"/>
 
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="- The app no longer requires the timer, It can turn on airplane \n  mode without turning off WiFi or Bluetooth \n- Timer related bug fixes \n- Removed pause timer \n- Removed redundant code \n- Drawer now works as intended \n- Added a scroll feature to whats new dialog \n- Checks for root at launch\n______________________________________________________________ " />
+                android:text="- The app no longer requires the timer, It can turn on airplane \n  mode without turning off WiFi or Bluetooth \n- Timer related bug fixes \n- Removed pause timer \n- Removed redundant code \n- Drawer now works as intended \n- Added a scroll feature to whats new dialog \n- Changed to dark theme\n- Checks for root at launch\n______________________________________________________________ " />
 
             <TextView
                 android:layout_width="fill_parent"

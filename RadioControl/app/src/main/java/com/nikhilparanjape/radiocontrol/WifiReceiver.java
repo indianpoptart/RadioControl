@@ -66,6 +66,7 @@ public class WifiReceiver extends BroadcastReceiver {
                         }
                     }
                 }
+                //Pauses because WiFi network is in the list of disabled SSIDs
                 else if(Arrays.asList(arrayString).contains(getCurrentSsid(context))){
                     Log.d("DISABLED-NETWORK",getCurrentSsid(context) + " was blocked from list " + arrayString);
                 }
@@ -89,10 +90,10 @@ public class WifiReceiver extends BroadcastReceiver {
             Log.d("Else","something is different");
         }
 
-        if (netInfo != null && netInfo.getType() == ConnectivityManager.TYPE_WIFI)
-            Log.d("WiFiReceiver", "Have Wifi Connection");
-        else
-            Log.d("WiFiReceiver", "Don't have Wifi Connection");
+        //if (netInfo != null && netInfo.getType() == ConnectivityManager.TYPE_WIFI)
+            //Log.d("WiFiReceiver", "Have Wifi Connection");
+        //else
+            //Log.d("WiFiReceiver", "Don't have Wifi Connection");
     }
     public void waitFor(long timer){
         try {
