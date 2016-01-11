@@ -10,7 +10,8 @@ An app that auto toggles wifi and cell radio for maximum battery life
 This app will probably only be useful to Project Fi users as it can disable radios while keeping wifi on if.
 This could work for Republic Wireless users, but your device must be rooted, and most of their devices are hard to root without losing functionality.
 
-Feel free to ask questions related to Android programming or this project in the [public Gitter chat room.](https://gitter.im/indianpoptart/RadioControl) The issues page should be primarily used for bug reports and enhancement ideas.
+Feel free to ask questions related to Android programming or this project in the public Gitter chat room. The issues page should be primarily used for bug reports and enhancement ideas.
+[![Join the chat at https://gitter.im/indianpoptart/RadioControl](https://badges.gitter.im/indianpoptart/RadioControl.svg)](https://gitter.im/indianpoptart/RadioControl?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 # Versions
 
