@@ -11,6 +11,17 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Version 2.0.1"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="- New Icon \n- New settings menu \n______________________________________________________________ " />
+
 
             <TextView
                 android:layout_width="fill_parent"
