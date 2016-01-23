@@ -18,7 +18,7 @@ Feel free to ask questions related to Android programming or this project in the
 
 Latest Stable Release: [v2.0](https://github.com/indianpoptart/RadioControl/releases/latest)
 
-Current Alpha Release: [NA]()
+Current Alpha Release: [v2.0.1](https://github.com/indianpoptart/RadioControl/releases/tag/v2.0.1-alpha1)
 
 Current Beta Release: [NA]()
 
@@ -30,6 +30,12 @@ Tested on the following devices
 - Moto X (2nd Gen.) ![Motorola](https://nikhilp.org/images/moto.png)
 
 #What's New?
+v2.0.1 - Alpha1 (1/23/2016)
+- Added an on off switch so the user can decide whether or not they want
+to enable RadioControl or not.
+- (WIP) Added ssid disabler in settings. Main screen one is still
+active. The one in settings does not work
+
 v2.0 (12/29/2015)
 - The app no longer requires the timer, It can turn on airplane mode without turning off WiFi or Bluetooth 
 - Timer related bug fixes
