@@ -15,8 +15,12 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.materialdrawer.AccountHeader;
@@ -48,6 +52,10 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         init();//initializes the whats new dialog
+        final SharedPreferences sharedPref = getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE);
+        final SharedPreferences.Editor editor = sharedPref.edit();
+        final TextView statusText = (TextView)findViewById(R.id.statusText);
+        Switch toggle = (Switch) findViewById(R.id.enableSwitch);
 
         //Save button for the network list
         Button btn = (Button) findViewById(R.id.button);
@@ -72,7 +80,38 @@ public class MainActivity extends Activity {
         drawerCreate(); //Initalizes Drawer
         rootInit();//Checks for root
 
+        if (!toggle.isChecked()) {
+            editor.putInt("isActive",0);
+            statusText.setText("Disabled");
+            statusText.setTextColor(getResources().getColor(R.color.status_deactivated));
+            editor.commit();
+
+        } else {
+            editor.putInt("isActive",1);
+            statusText.setText("Enabled");
+            statusText.setTextColor(getResources().getColor(R.color.status_activated));
+            editor.commit();
+        }
+
+        toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (!isChecked) {
+                    editor.putInt("isActive",0);
+                    statusText.setText("Disabled");
+                    statusText.setTextColor(getResources().getColor(R.color.status_deactivated));
+                    editor.commit();
+
+                } else {
+                    editor.putInt("isActive",1);
+                    statusText.setText("Enabled");
+                    statusText.setTextColor(getResources().getColor(R.color.status_activated));
+                    editor.commit();
+                }
+            }
+        });
+
     }
+
 
     //Initialize method for the Whats new dialog
     private void init() {
@@ -124,8 +163,8 @@ public class MainActivity extends Activity {
                 .build();
         //Creates navigation drawer items
         PrimaryDrawerItem item1 = new PrimaryDrawerItem().withName("Home").withIcon(GoogleMaterial.Icon.gmd_wifi);
-        //SecondaryDrawerItem item2 = new SecondaryDrawerItem().withName("Settings").withIcon(GoogleMaterial.Icon.gmd_settings);
-        SecondaryDrawerItem item2 = new SecondaryDrawerItem().withName("About").withIcon(GoogleMaterial.Icon.gmd_info);
+        SecondaryDrawerItem item2 = new SecondaryDrawerItem().withName("Settings").withIcon(GoogleMaterial.Icon.gmd_settings);
+        SecondaryDrawerItem item3 = new SecondaryDrawerItem().withName("About").withIcon(GoogleMaterial.Icon.gmd_info);
 
         //Create navigation drawer
         Drawer result = new DrawerBuilder()
@@ -137,7 +176,8 @@ public class MainActivity extends Activity {
                 .addDrawerItems(
                         item1,
                         new DividerDrawerItem(),
-                        item2
+                        item2,
+                        item3
                 )
 
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
@@ -146,6 +186,10 @@ public class MainActivity extends Activity {
                         Log.d("drawer", "The drawer is: " + drawerItem + " position is " + position);
                         //About button
                         if (position == 3) {
+                            startSettingsActivity();
+                            Log.d("drawer", "Started settings activity");
+                        }
+                        else if (position == 4) {
                             startAboutActivity();
                             Log.d("drawer", "Started about activity");
                         }

@@ -8,33 +8,37 @@
 
     <TextView android:text="Swipe from the left for the drawer" android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/textView" />
+        android:id="@+id/textView"
+        android:layout_below="@+id/enableSwitch"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="31dp" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Enter in the SSID you want to disable"
+        android:text="Enter in the SSID, when connected to, the app will not enable airplane mode"
         android:id="@+id/textView5"
-        android:layout_below="@+id/textView"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="51dp" />
+        android:layout_below="@+id/textView"
+        android:layout_alignParentLeft="true" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Save"
         android:id="@+id/button"
-        android:layout_below="@+id/textView5"
-        android:layout_alignEnd="@+id/textView5" />
+        android:layout_alignTop="@+id/editText"
+        android:layout_alignEnd="@+id/enableSwitch" />
 
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/editText"
         android:hint="Enter SSID"
-        android:layout_alignTop="@+id/button"
         android:layout_alignParentStart="true"
+        android:layout_below="@+id/textView5"
+        android:layout_alignParentLeft="true"
         android:layout_toStartOf="@+id/button" />
 
     <Button
@@ -42,8 +46,35 @@
         android:layout_height="wrap_content"
         android:text="Clear List"
         android:id="@+id/button2"
+        android:layout_alignParentStart="true"
         android:layout_below="@+id/button"
+        android:layout_alignParentLeft="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="RadioControl is "
+        android:id="@+id/textView3"
+        android:layout_alignParentTop="true"
         android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="null"
+        android:id="@+id/statusText"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/textView3" />
+
+    <Switch
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/enableSwitch"
+        android:checked="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true" />
 
 
 </RelativeLayout>

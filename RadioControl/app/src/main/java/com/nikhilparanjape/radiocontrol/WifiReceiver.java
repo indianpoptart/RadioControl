@@ -46,48 +46,54 @@ public class WifiReceiver extends BroadcastReceiver {
         //Check for airplane mode
         boolean isEnabled = Settings.Global.getInt(context.getContentResolver(), AIRPLANE_MODE_ON, 0) == 1;
 
-        //if network is connected and airplane mode is off
-        if (isConnected && !isEnabled) {
-            boolean isWiFi = activeNetwork.getType() == ConnectivityManager.TYPE_WIFI; //Boolean to check for an active WiFi connection
-            //Check for wifi connection
-            if(isWiFi) {
-                //Check the list of disabled networks
-                if(!arrayString.contains(getCurrentSsid(context))){
-                    Log.d("DISABLED-NETWORK",getCurrentSsid(context) + " was not found the following strings " + arrayString);
-                    //Checks that user is not in call
-                    if(!isCallActive(context)){
-                        RootAccess.runCommands(airCmd);
-                        Log.d("WiFiAirplane", "Wifi is on,airplane-on");
-                    }
-                    //Checks that user is currently in call and pauses execution till the call ends
-                    else if(isCallActive(context)){
-                        while(isCallActive(context)){
-                            waitFor(1000);//Wait for call to end
+        //Check if user wants the app on
+        if(sp.getInt("isActive",0) == 1){
+            //if network is connected and airplane mode is off
+            if (isConnected && !isEnabled) {
+                boolean isWiFi = activeNetwork.getType() == ConnectivityManager.TYPE_WIFI; //Boolean to check for an active WiFi connection
+                //Check for wifi connection
+                if(isWiFi) {
+                    //Check the list of disabled networks
+                    if(!arrayString.contains(getCurrentSsid(context))){
+                        Log.d("DISABLED-NETWORK",getCurrentSsid(context) + " was not found the following strings " + arrayString);
+                        //Checks that user is not in call
+                        if(!isCallActive(context)){
+                            RootAccess.runCommands(airCmd);
+                            Log.d("WiFiAirplane", "Wifi is on,airplane-on");
+                        }
+                        //Checks that user is currently in call and pauses execution till the call ends
+                        else if(isCallActive(context)){
+                            while(isCallActive(context)){
+                                waitFor(1000);//Wait for call to end
+                            }
                         }
                     }
+                    //Pauses because WiFi network is in the list of disabled SSIDs
+                    else if(Arrays.asList(arrayString).contains(getCurrentSsid(context))){
+                        Log.d("DISABLED-NETWORK",getCurrentSsid(context) + " was blocked from list " + arrayString);
+                    }
                 }
-                //Pauses because WiFi network is in the list of disabled SSIDs
-                else if(Arrays.asList(arrayString).contains(getCurrentSsid(context))){
-                    Log.d("DISABLED-NETWORK",getCurrentSsid(context) + " was blocked from list " + arrayString);
+                else{
+                    Log.d("Unknown","An unknown network was detected"); //Maybe you have a PAN connection?? Who knows
                 }
             }
-            else{
-                Log.d("Unknown","An unknown network was detected"); //Maybe you have a PAN connection?? Who knows
+            //Check if we just lost WiFi signal
+            if(isConnected == false){
+                Log.d("WIRELESS","SIGNAL LOST");
+                if(isEnabled){
+                    RootAccess.runCommands(airOffCmd2);
+                    Log.d("Wifi","Wifi signal lost, airplane mode has turned off");
+                }
+                else{
+                    Log.d("wifi","Wifi is on");
+                }
+            }
+            else {
+                Log.d("Else","something is different");
             }
         }
-        //Check if we just lost WiFi signal
-        if(isConnected == false){
-            Log.d("WIRELESS","SIGNAL LOST");
-            if(isEnabled){
-                RootAccess.runCommands(airOffCmd2);
-                Log.d("Wifi","Wifi signal lost, airplane mode has turned off");
-            }
-            else{
-                Log.d("wifi","Wifi is on");
-            }
-        }
-        else {
-            Log.d("Else","something is different");
+        else if(sp.getInt("isActive",0) == 0){
+            Log.d("RadioControl","We can't do anything, we have been disabled");
         }
 
         //if (netInfo != null && netInfo.getType() == ConnectivityManager.TYPE_WIFI)

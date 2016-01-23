@@ -1,10 +1,14 @@
 package com.nikhilparanjape.radiocontrol;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.app.Activity;
+import android.preference.PreferenceActivity;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 
@@ -21,7 +25,7 @@ import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 
 
-public class SettingsActivity extends Activity{
+public class SettingsActivity extends PreferenceActivity {
     //private static final String PRIVATE_PREF = "radiocontrol-prefs";
     Drawable icon;
     String versionName = BuildConfig.VERSION_NAME;
@@ -29,7 +33,7 @@ public class SettingsActivity extends Activity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_settings);
+        addPreferencesFromResource(R.xml.settings);
 
     }
 
@@ -110,10 +114,26 @@ public class SettingsActivity extends Activity{
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
+    //Show WiFi List
+    public void wifiPicker(){
+        LayoutInflater inflater = LayoutInflater.from(this);//Creates layout inflator for dialog
+        View view = inflater.inflate(R.layout.dialog_ssidchooser, null);//Initializes the view for whats new dialog
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);//creates alertdialog
+
+        builder.setView(view).setTitle("SSID Chooser")//sets title
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        builder.create().show();
+    }
 
     public void onNothingSelected(AdapterView<?> parent) {
         // Another interface callback
 
     }
+
 
 }

@@ -78,8 +78,8 @@ public class AboutActivity extends Activity {
                 .build();
         //Creates navigation drawer items
         PrimaryDrawerItem item1 = new PrimaryDrawerItem().withName("Home").withIcon(GoogleMaterial.Icon.gmd_wifi);
-        //SecondaryDrawerItem item2 = new SecondaryDrawerItem().withName("Settings").withIcon(GoogleMaterial.Icon.gmd_settings);
-        SecondaryDrawerItem item2 = new SecondaryDrawerItem().withName("About").withIcon(GoogleMaterial.Icon.gmd_info);
+        SecondaryDrawerItem item2 = new SecondaryDrawerItem().withName("Settings").withIcon(GoogleMaterial.Icon.gmd_settings);
+        SecondaryDrawerItem item3 = new SecondaryDrawerItem().withName("About").withIcon(GoogleMaterial.Icon.gmd_info);
 
         //Create navigation drawer
         Drawer result = new DrawerBuilder()
@@ -91,7 +91,8 @@ public class AboutActivity extends Activity {
                 .addDrawerItems(
                         item1,
                         new DividerDrawerItem(),
-                        item2
+                        item2,
+                        item3
                 )
 
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
@@ -101,13 +102,17 @@ public class AboutActivity extends Activity {
                         //About button
                         if (position == 1) {
                             startMainActivity();
-                            Log.d("drawer", "Started about activity");
+                            Log.d("drawer", "Started main activity");
+                        }
+                        else if (position == 3) {
+                            startSettingsActivity();
+                            Log.d("drawer", "Started settings activity");
                         }
                         return false;
                     }
                 })
                 .build();
-        result.setSelection(item2);
+        result.setSelection(item3);
 
     }
     //whats new dialog

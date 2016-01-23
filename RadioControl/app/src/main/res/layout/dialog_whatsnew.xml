@@ -20,7 +20,7 @@
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="- New Icon \n- New settings menu \n______________________________________________________________ " />
+                android:text="- New Icon \n- New settings menu \n- New on off switch" />
 
 
             <TextView
@@ -32,7 +32,7 @@
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="- The app no longer requires the timer, It can turn on airplane \n  mode without turning off WiFi or Bluetooth \n- Timer related bug fixes \n- Removed pause timer \n- Removed redundant code \n- Drawer now works as intended \n- Added a scroll feature to whats new dialog \n- Changed to dark theme\n- Checks for root at launch\n______________________________________________________________ " />
+                android:text="- The app no longer requires the timer, It can turn on airplane \n  mode without turning off WiFi or Bluetooth \n- Timer related bug fixes \n- Removed pause timer \n- Removed redundant code \n- Drawer now works as intended \n- Added a scroll feature to whats new dialog \n- Changed to dark theme\n- Checks for root at launch\n " />
 
             <TextView
                 android:layout_width="fill_parent"
@@ -43,7 +43,7 @@
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="- Added this what's new dialog\n- Added wifi network disabler so the app will enable or disable \n  itself for certain wifi networks.\n______________________________________________________________ " />
+                android:text="- Added this what's new dialog\n- Added wifi network disabler so the app will enable or disable \n  itself for certain wifi networks.\n " />
 
             <TextView
                 android:layout_width="fill_parent"
@@ -54,7 +54,7 @@
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="- Added feature that checks if user is in a call and roams over\n  to WiFi.\n- Changed default timer from 10 to 15 seconds\n______________________________________________________________ " />
+                android:text="- Added feature that checks if user is in a call and roams over\n  to WiFi.\n- Changed default timer from 10 to 15 seconds\n " />
 
             <TextView
                 android:layout_width="fill_parent"
@@ -66,7 +66,7 @@
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="- Added an experimental delay, default is 10 seconds,\n  15 seconds is the best\n- Bug fixes\n- Removed wake lock permission, not used\n- Fixed redundant code \n______________________________________________________________ " />
+                android:text="- Added an experimental delay, default is 10 seconds,\n  15 seconds is the best\n- Bug fixes\n- Removed wake lock permission, not used\n- Fixed redundant code \n " />
 
             <TextView
                 android:layout_width="fill_parent"
@@ -78,7 +78,7 @@
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="- Fixed bluetooth infinite loop problem\n- Bug fixes\n- Organized code \n______________________________________________________________ " />
+                android:text="- Fixed bluetooth infinite loop problem\n- Bug fixes\n- Organized code \n " />
 
             <TextView
                 android:layout_width="fill_parent"

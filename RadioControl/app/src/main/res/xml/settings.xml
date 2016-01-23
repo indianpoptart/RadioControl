@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceScreen
+        android:key="button_wifi_chooser"
+        android:title="SSID Disabler"
+        android:persistent="false">
+        <CheckBoxPreference
+            android:key="pref_key_auto_delete"
+            android:summary=""
+            android:title="SSID"
+            android:defaultValue="false" />
+    </PreferenceScreen>
+</PreferenceScreen>
