@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <PreferenceScreen
-        android:key="button_wifi_chooser"
-        android:title="SSID Disabler"
-        android:persistent="false">
-        <CheckBoxPreference
-            android:key="pref_key_auto_delete"
-            android:summary=""
-            android:title="SSID"
-            android:defaultValue="false" />
-    </PreferenceScreen>
+    <PreferenceCategory android:title="General Settings">
+        <MultiSelectListPreference
+            android:key="ssid"
+            android:title="Network Settings"
+            android:dialogTitle="Network Settings"
+            android:defaultValue="@array/empty_array"
+            android:summary="Do not enable airplane mode when connected to the selected networks"
+            />
+        <Preference
+            android:key="clear-ssid"
+            android:title="Clear Network Settings"
+            android:defaultValue="@array/empty_array"
+            android:summary="Clear the disabled networks list"
+            />
+    </PreferenceCategory>
 </PreferenceScreen>
