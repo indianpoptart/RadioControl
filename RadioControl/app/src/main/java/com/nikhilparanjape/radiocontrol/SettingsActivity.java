@@ -57,6 +57,13 @@ public class SettingsActivity extends PreferenceActivity {
         // THIS IS REQUIRED IF YOU DON'T HAVE 'entries' and 'entryValues' in your XML
         setListPreferenceData(listPreference);
 
+        Preference clearPref = (Preference) findPreference("clear-ssid");
+        clearPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            public boolean onPreferenceClick(Preference preference) {
+                ssidClearButton();
+                return false;
+            }
+        });
 
 
     }
@@ -120,6 +127,15 @@ public class SettingsActivity extends PreferenceActivity {
                     }
                 });
         builder.create().show();
+    }
+    //Method for the ssid list clear button
+    public void ssidClearButton(){
+        SharedPreferences pref = getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
+        editor.remove("disabled_networks");
+        Toast.makeText(SettingsActivity.this,
+                "Disabled SSID list cleared", Toast.LENGTH_LONG).show();
+        editor.apply();
     }
 
     public void wifiSaver() {

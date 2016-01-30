@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.app.Activity;
+import android.preference.Preference;
+import android.preference.PreferenceActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,27 +26,32 @@ import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 
-public class AboutActivity extends Activity {
+public class AboutActivity extends PreferenceActivity {
     Drawable icon;
     String versionName = BuildConfig.VERSION_NAME;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_about);
+        //setContentView(R.layout.activity_about);
+        addPreferencesFromResource(R.xml.about);
 
-        TextView t = (TextView)findViewById(R.id.verNum);
-        t.setText(versionName);
+        final Preference pref = findPreference("version");
+        CharSequence cs = versionName;
+        pref.setSummary(cs);
+        //TextView t = (TextView)findViewById(R.id.verNum);
+        //t.setText(versionName);
 
         drawerCreate();
-        Button btn = (Button) findViewById(R.id.changelog);
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        Preference myPref = (Preference) findPreference("changelog");
+        myPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            public boolean onPreferenceClick(Preference preference) {
                 changelog();
+                return false;
             }
-
         });
+
+
     }
 
     //Method to create the Navigation Drawer

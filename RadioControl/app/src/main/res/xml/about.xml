@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <Preference
+        android:key="version"
+        android:title="RadioControl version"
+        android:defaultValue="@array/empty_array"
+        android:summary="null"
+        />
+    <Preference
+        android:key="changelog"
+        android:title="Changelog"
+        android:defaultValue="@array/empty_array"
+        android:summary="View the current changelog"
+        />
+    <Preference
+        android:title="Support Website">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="https://nikhilp.org/support"
+            />
+    </Preference>
+</PreferenceScreen>
