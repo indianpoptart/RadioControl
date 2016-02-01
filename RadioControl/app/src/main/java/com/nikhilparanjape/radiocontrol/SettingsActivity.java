@@ -6,6 +6,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
@@ -14,6 +16,8 @@ import android.preference.ListPreference;
 import android.preference.MultiSelectListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
+import android.preference.PreferenceFragment;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,6 +42,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static android.provider.Settings.Global.AIRPLANE_MODE_ON;
+
 
 public class SettingsActivity extends PreferenceActivity {
     //private static final String PRIVATE_PREF = "radiocontrol-prefs";
@@ -46,16 +52,28 @@ public class SettingsActivity extends PreferenceActivity {
     public static ArrayList<String> ssidList = new ArrayList<String>();
     String versionName = BuildConfig.VERSION_NAME;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
+
+    protected void onCreate(Context context, final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.settings);
+        //getFragmentManager().beginTransaction().replace(android.R.id.content, new SettingsFragment()).commit();
         //wifiSaver();
-        drawerCreate();
+        //drawerCreate();
+
+        //connectivity manager for wifi check
+        ConnectivityManager conMan = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        //Check active networks
+        NetworkInfo activeNetwork = conMan.getActiveNetworkInfo();
+        //Check if the network is connected to the internet
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+        //Check for airplane mode
+        boolean isEnabled = Settings.Global.getInt(context.getContentResolver(), AIRPLANE_MODE_ON, 0) == 1;
 
         final MultiSelectListPreference listPreference = (MultiSelectListPreference) findPreference("ssid");
         // THIS IS REQUIRED IF YOU DON'T HAVE 'entries' and 'entryValues' in your XML
-        setListPreferenceData(listPreference);
+        setListPreferenceData(context,listPreference);
+
 
         Preference clearPref = (Preference) findPreference("clear-ssid");
         clearPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
@@ -65,42 +83,74 @@ public class SettingsActivity extends PreferenceActivity {
             }
         });
 
+    }
+    public static class SettingsFragment extends PreferenceFragment
+    {
+        @Override
+        public void onCreate(final Bundle savedInstanceState)
+        {
+            super.onCreate(savedInstanceState);
+            addPreferencesFromResource(R.xml.settings);
 
+        }
     }
 
-    protected void setListPreferenceData(MultiSelectListPreference lp) {
-        WifiManager wifiManager = (WifiManager)getSystemService(Context.WIFI_SERVICE);
+    protected void setListPreferenceData(Context context, MultiSelectListPreference lp) {
 
-        SharedPreferences pref = getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = pref.edit();
-        String arrayString = pref.getString("disabled_networks", "1");
-        Set<String> valuesSet = new HashSet<>();
+        //connectivity manager for wifi check
+        ConnectivityManager conMan = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        //Check active networks
+        NetworkInfo activeNetwork = conMan.getActiveNetworkInfo();
+        //Check if the network is connected to the internet
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+        //Check for airplane mode
+        boolean isEnabled = Settings.Global.getInt(context.getContentResolver(), AIRPLANE_MODE_ON, 0) == 1;
 
-        List<WifiConfiguration> list = wifiManager.getConfiguredNetworks();
-        if(list.isEmpty())
-        {
-            Log.e("Connection Setup","Empty list returned");
-        }
-        String ssid = null;
-        for( WifiConfiguration i : list ) {
-            if(i.SSID != null) {
-                ssid = i.SSID;
-                ssid = ssid.substring(1, ssid.length()-1);
-                Log.e("RadioControl",ssid+" network listed");
-                //Check if the list contains the entered SSID
-                if (!arrayString.contains(ssid)) {
-                    ssidList.add(ssid);
-                    Collections.addAll(valuesSet, ssid);
-                    // pair the value in text field with the key
+        if(isConnected && !isEnabled){
+            //Run this if everything is connected
+            boolean isWiFi = activeNetwork.getType() == ConnectivityManager.TYPE_WIFI; //Boolean to check for an active WiFi connection
+            if(isWiFi){
+                WifiManager wifiManager = (WifiManager)getSystemService(Context.WIFI_SERVICE);
+
+                SharedPreferences pref = getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = pref.edit();
+                String arrayString = pref.getString("disabled_networks", "1");
+                Set<String> valuesSet = new HashSet<>();
+
+                List<WifiConfiguration> list = wifiManager.getConfiguredNetworks();
+                if(list.isEmpty())
+                {
+                    Log.e("Connection Setup","Empty list returned");
+                }
+                String ssid = null;
+                for( WifiConfiguration i : list ) {
+                    if(i.SSID != null) {
+                        ssid = i.SSID;
+                        ssid = ssid.substring(1, ssid.length()-1);
+                        Log.e("RadioControl",ssid+" network listed");
+                        //Check if the list contains the entered SSID
+                        if (!arrayString.contains(ssid)) {
+                            ssidList.add(ssid);
+                            Collections.addAll(valuesSet, ssid);
+                            // pair the value in text field with the key
+                        }
+
+                    }
                 }
 
+                CharSequence[] cs = ssidList.toArray(new CharSequence[ssidList.size()]);
+                lp.setValues(valuesSet);
+                lp.setEntries(cs);
+                lp.setEntryValues(cs);
+            }
+            else{
+                Toast.makeText(SettingsActivity.this,
+                        "Enable WiFi first", Toast.LENGTH_LONG).show();
             }
         }
 
-        CharSequence[] cs = ssidList.toArray(new CharSequence[ssidList.size()]);
-        lp.setValues(valuesSet);
-        lp.setEntries(cs);
-        lp.setEntryValues(cs);
+
     }
 
     //starts about activity
@@ -173,73 +223,6 @@ public class SettingsActivity extends PreferenceActivity {
     public void onNothingSelected(AdapterView<?> parent) {
         // Another interface callback
 
-    }
-    public void drawerCreate(){
-        //Drawable lg = getResources().getDrawable(R.mipmap.lg);
-        if(MainActivity.getDeviceName().contains("Nexus 6P")){
-            icon = getResources().getDrawable(R.mipmap.huawei);
-        }
-        else if(MainActivity.getDeviceName().contains("Motorola")){
-            icon = getResources().getDrawable(R.mipmap.moto2);
-        }
-        else if(MainActivity.getDeviceName().contains("LG")){
-            icon = getResources().getDrawable(R.mipmap.lg);
-        }
-        else{
-            icon = getResources().getDrawable(R.mipmap.ic_launcher);
-        }
-
-        //Creates navigation drawer header
-        AccountHeader headerResult = new AccountHeaderBuilder()
-                .withActivity(this)
-                .withHeaderBackground(R.mipmap.header)
-                .addProfiles(
-                        new ProfileDrawerItem().withName(MainActivity.getDeviceName()).withEmail(versionName).withIcon(icon)
-                )
-                .withOnAccountHeaderListener(new AccountHeader.OnAccountHeaderListener() {
-                    @Override
-                    public boolean onProfileChanged(View view, IProfile profile, boolean currentProfile) {
-                        return false;
-                    }
-                })
-                .build();
-        //Creates navigation drawer items
-        PrimaryDrawerItem item1 = new PrimaryDrawerItem().withName("Home").withIcon(GoogleMaterial.Icon.gmd_wifi);
-        SecondaryDrawerItem item2 = new SecondaryDrawerItem().withName("Settings").withIcon(GoogleMaterial.Icon.gmd_settings);
-        SecondaryDrawerItem item3 = new SecondaryDrawerItem().withName("About").withIcon(GoogleMaterial.Icon.gmd_info);
-
-        //Create navigation drawer
-        Drawer result = new DrawerBuilder()
-                .withAccountHeader(headerResult)
-                .withActivity(this)
-                .withTranslucentStatusBar(false)
-                .withActionBarDrawerToggle(true)
-                .addDrawerItems(
-                        item1,
-                        new DividerDrawerItem(),
-                        item2,
-                        item3
-                )
-
-                .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
-                    @Override
-                    public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
-                        Log.d("drawer", "The drawer is: " + drawerItem + " position is " + position);
-                        //Settings button
-                        if (position == 1) {
-                            startMainActivity();
-                            Log.d("drawer", "Started about activity");
-                        }
-                        //About button
-                        else if (position == 4) {
-                            startAboutActivity();
-                            Log.d("drawer", "Started about activity");
-                        }
-                        return false;
-                    }
-                })
-                .build();
-        result.setSelection(item2);
     }
 
 
