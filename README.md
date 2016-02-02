@@ -1,7 +1,7 @@
 # RadioControl
 ![icon](https://nikhilp.org/images/ic_launcher.png)
 
-!!Root Required!!
+**Root Required!**
 
 I created this app because of the lack of apps on the play store that enable airplane mode, while keeping wifi on. Probably because not many carriers have WiFi calling and SMS over WiFi
 
