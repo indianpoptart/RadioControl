@@ -55,6 +55,7 @@ public class MainActivity extends Activity {
         final SharedPreferences sharedPref = getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE);
         final SharedPreferences.Editor editor = sharedPref.edit();
         final TextView statusText = (TextView)findViewById(R.id.statusText);
+        final TextView linkText = (TextView)findViewById(R.id.linkSpeed);
         Switch toggle = (Switch) findViewById(R.id.enableSwitch);
 
         //Save button for the network list
@@ -77,33 +78,71 @@ public class MainActivity extends Activity {
 
         });
 
+        //Clear button for the network list
+        Button btn3 = (Button) findViewById(R.id.linkSpeedButton);
+        btn3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int linkspeed = WifiReceiver.linkSpeed(getApplicationContext());
+                if(linkspeed == -1){
+                    linkText.setText("Cellular network detected");
+                }
+                else{
+                    linkText.setText("Link speed = " + linkspeed + "Mbps");
+                }
+
+
+            }
+
+        });
+
         drawerCreate(); //Initalizes Drawer
-        rootInit();//Checks for root
+        //rootInit();//Checks for root
 
-        if (!toggle.isChecked()) {
-            editor.putInt("isActive",0);
-            statusText.setText("Disabled");
+        if(rootInit() == false){
+            toggle.setClickable(false);
+            statusText.setText("couldn't get root");
             statusText.setTextColor(getResources().getColor(R.color.status_deactivated));
-            editor.commit();
+        }
 
-        } else {
-            editor.putInt("isActive",1);
-            statusText.setText("Enabled");
-            statusText.setTextColor(getResources().getColor(R.color.status_activated));
-            editor.commit();
+        if(sharedPref.getInt("isActive",1) == 1){
+            if(rootInit() == false){
+                toggle.setClickable(false);
+                statusText.setText("couldn't get root");
+                statusText.setTextColor(getResources().getColor(R.color.status_deactivated));
+            }
+            else{
+                statusText.setText("is Enabled");
+                statusText.setTextColor(getResources().getColor(R.color.status_activated));
+                toggle.setChecked(true);
+            }
+
+        }
+        else if(sharedPref.getInt("isActive",1) == 0){
+            if(rootInit() == false){
+                toggle.setClickable(false);
+                statusText.setText("couldn't get root");
+                statusText.setTextColor(getResources().getColor(R.color.status_deactivated));
+            }
+            else{
+                statusText.setText("is Disabled");
+                statusText.setTextColor(getResources().getColor(R.color.status_activated));
+                toggle.setChecked(false);
+            }
+
         }
 
         toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (!isChecked) {
                     editor.putInt("isActive",0);
-                    statusText.setText("Disabled");
+                    statusText.setText("is Disabled");
                     statusText.setTextColor(getResources().getColor(R.color.status_deactivated));
                     editor.commit();
 
                 } else {
                     editor.putInt("isActive",1);
-                    statusText.setText("Enabled");
+                    statusText.setText("is Enabled");
                     statusText.setTextColor(getResources().getColor(R.color.status_activated));
                     editor.commit();
                 }
@@ -290,16 +329,19 @@ public class MainActivity extends Activity {
         SharedPreferences.Editor editor = pref.edit();
         editor.putBoolean(key,value);
     }
-    public void rootInit(){
+    public boolean rootInit(){
 
         try {
-            // Preform su to get root privileges
-            boolPrefEditor("isRooted", true);
+
             Process p = Runtime.getRuntime().exec("su");
+            // Perform su to get root privileges
+            boolPrefEditor("isRooted", true);
+            return true;
 
         } catch (IOException e) {
             // TODO Code to run in input/output exception
             boolPrefEditor("isRooted", false);
+            return false;
         }
     }
     @Override

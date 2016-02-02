@@ -55,11 +55,11 @@ public class WifiReceiver extends BroadcastReceiver {
                 if(isWiFi) {
                     //Check the list of disabled networks
                     if(!arrayString.contains(getCurrentSsid(context))){
-                        Log.d("DISABLED-NETWORK",getCurrentSsid(context) + " was not found the following strings " + arrayString);
+                        Log.d("RadioControl",getCurrentSsid(context) + " was not found the following strings " + arrayString);
                         //Checks that user is not in call
                         if(!isCallActive(context)){
                             RootAccess.runCommands(airCmd);
-                            Log.d("WiFiAirplane", "Wifi is on,airplane-on");
+                            Log.d("RadioControl", "Wifi is on,airplane-on");
                         }
                         //Checks that user is currently in call and pauses execution till the call ends
                         else if(isCallActive(context)){
@@ -70,26 +70,23 @@ public class WifiReceiver extends BroadcastReceiver {
                     }
                     //Pauses because WiFi network is in the list of disabled SSIDs
                     else if(Arrays.asList(arrayString).contains(getCurrentSsid(context))){
-                        Log.d("DISABLED-NETWORK",getCurrentSsid(context) + " was blocked from list " + arrayString);
+                        Log.d("RadioControl",getCurrentSsid(context) + " was blocked from list " + arrayString);
                     }
                 }
                 else{
-                    Log.d("Unknown","An unknown network was detected"); //Maybe you have a PAN connection?? Who knows
+                    Log.d("RadioControl","An unknown network was detected"); //Maybe you have a PAN connection?? Who knows
                 }
             }
             //Check if we just lost WiFi signal
             if(isConnected == false){
-                Log.d("WIRELESS","SIGNAL LOST");
+                Log.d("RadioControl","WIFI SIGNAL LOST");
                 if(isEnabled){
                     RootAccess.runCommands(airOffCmd2);
-                    Log.d("Wifi","Wifi signal lost, airplane mode has turned off");
+                    Log.d("RadioControl","Wifi signal lost, airplane mode has been turned on");
                 }
                 else{
-                    Log.d("wifi","Wifi is on");
+                    Log.d("RadioControl","Wifi is on");
                 }
-            }
-            else {
-                Log.d("Else","something is different");
             }
         }
         else if(sp.getInt("isActive",0) == 0){
@@ -122,10 +119,10 @@ public class WifiReceiver extends BroadcastReceiver {
         return ssid;
     }
     //Code that checks WiFi link speed
-    public int linkSpeed(Context c){
+    public static int linkSpeed(Context c){
         WifiManager wifiManager = (WifiManager)c.getSystemService(Context.WIFI_SERVICE);
-        int linkSpeed = wifiManager.getConnectionInfo().getRssi();
-        Log.d("LinkSpeed","Speed " + linkSpeed);
+        int linkSpeed = wifiManager.getConnectionInfo().getLinkSpeed();
+        Log.d("RadioControl","Link speed = " + linkSpeed + "Mbps");
         return linkSpeed;
     }
     //Check if user is currently in call

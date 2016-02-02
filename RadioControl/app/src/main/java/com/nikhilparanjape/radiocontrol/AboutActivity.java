@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.materialdrawer.AccountHeader;
@@ -43,6 +44,19 @@ public class AboutActivity extends PreferenceActivity {
         //t.setText(versionName);
 
         //drawerCreate();
+        Preference versionPref = (Preference) findPreference("version");
+        versionPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            int z = 0;
+            public boolean onPreferenceClick(Preference preference) {
+                z++;
+                if(z >= 7){
+                    Toast.makeText(AboutActivity.this, "You found an easter egg", Toast.LENGTH_LONG).show();
+                    z=0;
+                }
+                return false;
+            }
+        });
+
         Preference myPref = (Preference) findPreference("changelog");
         myPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             public boolean onPreferenceClick(Preference preference) {

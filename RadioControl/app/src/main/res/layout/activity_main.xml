@@ -54,7 +54,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="RadioControl is "
+        android:text="RadioControl "
         android:id="@+id/textView3"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true" />
@@ -75,6 +75,27 @@
         android:checked="true"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Link Speed Test"
+        android:id="@+id/linkSpeedButton"
+        android:layout_below="@+id/button2"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="113dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Link speed = "
+        android:id="@+id/linkSpeed"
+        android:layout_marginTop="35dp"
+        android:layout_below="@+id/linkSpeedButton"
+        android:layout_alignParentStart="true"
+        android:layout_alignEnd="@+id/enableSwitch" />
 
 
 </RelativeLayout>
