@@ -18,7 +18,7 @@ Feel free to ask questions related to Android programming or this project in the
 
 Latest Stable Release: [v2.0](https://github.com/indianpoptart/RadioControl/releases/latest)
 
-Current Alpha Release: [v2.0.1](https://github.com/indianpoptart/RadioControl/releases/tag/v2.0.1-alpha3)
+Current Alpha Release: [v2.0.1](https://github.com/indianpoptart/RadioControl/releases/tag/v2.0.1-alpha4)
 
 Current Beta Release: [NA]()
 
@@ -30,6 +30,11 @@ Tested on the following devices
 - Moto X (2nd Gen.) ![Motorola](https://nikhilp.org/images/moto.png)
 
 #What's New?
+v2.0.1 - Alpha4 (2/1/2016)
+- Added Linkspeed test, maybe for a future function
+- Added easter egg :)
+- Changed all Log.d to show up as radio control, easier to find in logcat.
+
 v2.0.1 - Alpha3 (1/30/2016)
 - Added about preferencescreen
 - Working clear ssid list button in settings preferenceScreen
