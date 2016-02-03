@@ -8,7 +8,7 @@ import java.io.IOException;
 /**
  * Created by Nikhil on 12/25/2015.
  */
-public class RootAccess {
+public class RootAccess{
     public static void runCommands(String[] commands){
         Process p;
         try {

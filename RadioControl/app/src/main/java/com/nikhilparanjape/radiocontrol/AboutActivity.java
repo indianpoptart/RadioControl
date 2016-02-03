@@ -1,8 +1,10 @@
 package com.nikhilparanjape.radiocontrol;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.app.Activity;
@@ -30,11 +32,13 @@ import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 public class AboutActivity extends PreferenceActivity {
     Drawable icon;
     String versionName = BuildConfig.VERSION_NAME;
+    private static final String PRIVATE_PREF = "prefs";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.activity_about);
+
         addPreferencesFromResource(R.xml.about);
 
         final Preference pref = findPreference("version");
@@ -52,6 +56,12 @@ public class AboutActivity extends PreferenceActivity {
                 if(z >= 7){
                     Toast.makeText(AboutActivity.this, "You found an easter egg", Toast.LENGTH_LONG).show();
                     z=0;
+                    Log.d("RadioControl","Easter egg activated");
+                    SharedPreferences sp = getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE); //Initializes prefs.xml
+                    SharedPreferences.Editor editor = sp.edit();//Initializes xml editor
+
+                    editor.putBoolean("isEasterEgg", true); //Puts the boolean into prefs.xml
+                    editor.commit(); //Ends writing to prefs file
                 }
                 return false;
             }

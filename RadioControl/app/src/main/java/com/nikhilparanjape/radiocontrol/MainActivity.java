@@ -20,7 +20,6 @@ import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.ToggleButton;
 
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.materialdrawer.AccountHeader;
@@ -56,6 +55,7 @@ public class MainActivity extends Activity {
         final SharedPreferences.Editor editor = sharedPref.edit();
         final TextView statusText = (TextView)findViewById(R.id.statusText);
         final TextView linkText = (TextView)findViewById(R.id.linkSpeed);
+        final TextView connectionStatusText = (TextView) findViewById(R.id.pingStatus);
         Switch toggle = (Switch) findViewById(R.id.enableSwitch);
 
         //Save button for the network list
@@ -78,8 +78,18 @@ public class MainActivity extends Activity {
 
         });
 
-        //Clear button for the network list
+        //LinkSpeed Button
         Button btn3 = (Button) findViewById(R.id.linkSpeedButton);
+        //Check if the easter egg is NOT activated
+        if(!sharedPref.getBoolean("isEasterEgg",false)){
+            btn3.setVisibility(View.GONE);
+            linkText.setVisibility(View.GONE);
+        }
+        else if(sharedPref.getBoolean("isEasterEgg",false)){
+            btn3.setVisibility(View.VISIBLE);
+            linkText.setVisibility(View.VISIBLE);
+        }
+
         btn3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -91,6 +101,55 @@ public class MainActivity extends Activity {
                     linkText.setText("Link speed = " + linkspeed + "Mbps");
                 }
 
+
+            }
+
+        });
+
+        //Connection Test button
+        Button conn = (Button) findViewById(R.id.pingTestButton);
+        //Check if the easter egg is NOT activated
+        if(!sharedPref.getBoolean("isEasterEgg",false)){
+            conn.setVisibility(View.GONE);
+            connectionStatusText.setVisibility(View.GONE);
+        }
+        else if(sharedPref.getBoolean("isEasterEgg",false)){
+            conn.setVisibility(View.VISIBLE);
+            connectionStatusText.setVisibility(View.VISIBLE);
+        }
+
+        conn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(Utilities.isOnline()){
+                    if(Utilities.isConnectedWifi(getApplicationContext())){
+                        connectionStatusText.setText("Connected to the internet thru WIFI");
+                        connectionStatusText.setTextColor(getResources().getColor(R.color.status_activated));
+                    }
+                    else if(Utilities.isConnectedMobile(getApplicationContext())){
+                        if(Utilities.isConnectedFast(getApplicationContext())){
+                            connectionStatusText.setText("Connected to the internet thru FAST CELL");
+                            connectionStatusText.setTextColor(getResources().getColor(R.color.status_activated));
+                        }
+                        else if(!Utilities.isConnectedFast(getApplicationContext())){
+                            connectionStatusText.setText("Connected to the internet thru SLOW CELL");
+                            connectionStatusText.setTextColor(getResources().getColor(R.color.status_activated));
+                        }
+
+                    }
+
+                }
+                else{
+                    if(Utilities.isAirplaneMode(getApplicationContext())){
+                        connectionStatusText.setText("Airplane mode is on");
+                        connectionStatusText.setTextColor(getResources().getColor(R.color.status_deactivated));
+                    }
+                    else{
+                        connectionStatusText.setText("Unable to connect to the internet");
+                        connectionStatusText.setTextColor(getResources().getColor(R.color.status_deactivated));
+                    }
+
+                }
 
             }
 
@@ -150,7 +209,26 @@ public class MainActivity extends Activity {
         });
 
     }
+    /*
+ * isOnline - Check if there is a NetworkConnection
+ * @return boolean
+ */
+    public boolean isOnline() {
 
+        Runtime runtime = Runtime.getRuntime();
+        try {
+
+            Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");
+            int exitValue = ipProcess.waitFor();
+            Log.d("RadioControl","Val: " + exitValue);
+            return (exitValue == 0);
+
+        }
+        catch (IOException e){ e.printStackTrace(); }
+        catch (InterruptedException e) { e.printStackTrace(); }
+
+        return false;
+    }
 
     //Initialize method for the Whats new dialog
     private void init() {
@@ -227,8 +305,7 @@ public class MainActivity extends Activity {
                         if (position == 3) {
                             startSettingsActivity();
                             Log.d("drawer", "Started settings activity");
-                        }
-                        else if (position == 4) {
+                        } else if (position == 4) {
                             startAboutActivity();
                             Log.d("drawer", "Started about activity");
                         }
@@ -342,6 +419,69 @@ public class MainActivity extends Activity {
             // TODO Code to run in input/output exception
             boolPrefEditor("isRooted", false);
             return false;
+        }
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        final SharedPreferences sharedPref = getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE);
+
+        //Connection Test button
+        Button conn = (Button) findViewById(R.id.pingTestButton);
+        //Ping text
+        TextView connectionStatusText = (TextView) findViewById(R.id.pingStatus);
+
+        //Check if the easter egg is NOT activated
+        if(!sharedPref.getBoolean("isEasterEgg",false)){
+            conn.setVisibility(View.GONE);
+            connectionStatusText.setVisibility(View.GONE);
+        }
+        else if(sharedPref.getBoolean("isEasterEgg",false)){
+            conn.setVisibility(View.VISIBLE);
+            connectionStatusText.setVisibility(View.VISIBLE);
+        }
+
+        //LinkSpeed Button
+        Button btn3 = (Button) findViewById(R.id.linkSpeedButton);
+        final TextView linkText = (TextView)findViewById(R.id.linkSpeed);
+        //LinkSpeed button and text
+        if(!sharedPref.getBoolean("isEasterEgg",false)){
+            btn3.setVisibility(View.GONE);
+            linkText.setVisibility(View.GONE);
+        }
+        else if(sharedPref.getBoolean("isEasterEgg",false)){
+            btn3.setVisibility(View.VISIBLE);
+            linkText.setVisibility(View.VISIBLE);
+        }
+        TextView statusText = (TextView)findViewById(R.id.statusText);
+        Switch toggle = (Switch) findViewById(R.id.enableSwitch);
+
+        if(sharedPref.getInt("isActive",1) == 1){
+            if(rootInit() == false){
+                toggle.setClickable(false);
+                statusText.setText("couldn't get root");
+                statusText.setTextColor(getResources().getColor(R.color.status_deactivated));
+            }
+            else{
+                statusText.setText("is Enabled");
+                statusText.setTextColor(getResources().getColor(R.color.status_activated));
+                toggle.setChecked(true);
+            }
+
+        }
+        else if(sharedPref.getInt("isActive",1) == 0){
+            if(rootInit() == false){
+                toggle.setClickable(false);
+                statusText.setText("couldn't get root");
+                statusText.setTextColor(getResources().getColor(R.color.status_deactivated));
+            }
+            else{
+                statusText.setText("is Disabled");
+                statusText.setTextColor(getResources().getColor(R.color.status_activated));
+                toggle.setChecked(false);
+            }
+
         }
     }
     @Override

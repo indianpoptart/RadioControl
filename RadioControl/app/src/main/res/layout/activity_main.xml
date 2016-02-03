@@ -90,12 +90,27 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Link speed = "
         android:id="@+id/linkSpeed"
-        android:layout_marginTop="35dp"
         android:layout_below="@+id/linkSpeedButton"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ping Test"
+        android:id="@+id/pingTestButton"
+        android:layout_below="@+id/linkSpeed"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:id="@+id/pingStatus"
+        android:layout_below="@+id/pingTestButton"
         android:layout_alignParentStart="true"
-        android:layout_alignEnd="@+id/enableSwitch" />
+        android:layout_alignParentEnd="true" />
 
 
 </RelativeLayout>

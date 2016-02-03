@@ -18,7 +18,7 @@ Feel free to ask questions related to Android programming or this project in the
 
 Latest Stable Release: [v2.0](https://github.com/indianpoptart/RadioControl/releases/latest)
 
-Current Alpha Release: [v2.0.1](https://github.com/indianpoptart/RadioControl/releases/tag/v2.0.1-alpha4)
+Current Alpha Release: [v2.0.1](https://github.com/indianpoptart/RadioControl/releases/tag/v2.0.1-alpha5)
 
 Current Beta Release: [NA]()
 
@@ -30,6 +30,13 @@ Tested on the following devices
 - Moto X (2nd Gen.) ![Motorola](https://nikhilp.org/images/moto.png)
 
 #What's New?
+v2.0.1 - Alpha5 (2/3/2016)
+- Added LinkSpeed as an easter egg thing
+- Added a ping test, It tests if one packet can reach Google DNS servers. It then displays if the current network is connected to the internet
+- Added a utilities class that has a bunch of connection tools (Future features maybe, mainly for debug)
+- Forgot about onResume, put that in to check easter egg and the toggle switch (Still WIP)
+- Enabled multidex for some reason
+
 v2.0.1 - Alpha4 (2/1/2016)
 - Added Linkspeed test, maybe for a future function
 - Added easter egg :)
