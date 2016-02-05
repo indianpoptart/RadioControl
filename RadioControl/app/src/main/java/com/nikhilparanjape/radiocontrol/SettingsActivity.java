@@ -17,6 +17,7 @@ import android.preference.MultiSelectListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
+import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -53,26 +54,44 @@ public class SettingsActivity extends PreferenceActivity {
     String versionName = BuildConfig.VERSION_NAME;
 
 
-    protected void onCreate(Context context, final Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.settings);
-        //getFragmentManager().beginTransaction().replace(android.R.id.content, new SettingsFragment()).commit();
-        //wifiSaver();
-        //drawerCreate();
-
-        //connectivity manager for wifi check
-        ConnectivityManager conMan = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        //Check active networks
-        NetworkInfo activeNetwork = conMan.getActiveNetworkInfo();
-        //Check if the network is connected to the internet
-        boolean isConnected = activeNetwork != null &&
-                activeNetwork.isConnectedOrConnecting();
-        //Check for airplane mode
-        boolean isEnabled = Settings.Global.getInt(context.getContentResolver(), AIRPLANE_MODE_ON, 0) == 1;
+        Utilities util = new Utilities();
+        Context c = getApplicationContext();
 
         final MultiSelectListPreference listPreference = (MultiSelectListPreference) findPreference("ssid");
+        listPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            public boolean onPreferenceChange(Preference preference, Object o) {
+                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+                Set<String> selections = preferences.getStringSet("ssid", null);
+                String[] selected= selections.toArray(new String[] {});
+                for (int j = 0; j < selected.length ; j++){
+                    System.out.println("\ntest" + j +" : " + selected[j]);
+                    Log.d("RadioControl", "\ntest" + j +" : " + selected[j]);
+                }
+                Log.d("RadioControl", "Object: " + o);
+                PreferenceManager
+                        .getDefaultSharedPreferences(SettingsActivity.this)
+                        .edit()
+                        .putStringSet("ssid",selections)
+                        .commit();
+
+                return true;
+            }
+        });
         // THIS IS REQUIRED IF YOU DON'T HAVE 'entries' and 'entryValues' in your XML
-        setListPreferenceData(context,listPreference);
+        if(util.isConnectedWifi(c)){
+            getPreferenceScreen().findPreference("ssid").setEnabled(true);
+            //Listen for changes, I'm not sure if this is how it's meant to work, but it does :/
+
+            setListPreferenceData(listPreference);
+        }
+        else{
+            //Toast.makeText(SettingsActivity.this,
+            //"Enable WiFi first", Toast.LENGTH_LONG).show();
+            getPreferenceScreen().findPreference("ssid").setEnabled(false);
+        }
 
 
         Preference clearPref = (Preference) findPreference("clear-ssid");
@@ -84,71 +103,42 @@ public class SettingsActivity extends PreferenceActivity {
         });
 
     }
-    public static class SettingsFragment extends PreferenceFragment
-    {
-        @Override
-        public void onCreate(final Bundle savedInstanceState)
+
+    protected void setListPreferenceData(MultiSelectListPreference lp) {
+        //Run this if everything is connected
+
+        WifiManager wifiManager = (WifiManager)getSystemService(Context.WIFI_SERVICE);
+
+        SharedPreferences pref = getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
+        String arrayString = pref.getString("disabled_networks", "1");
+        Set<String> valuesSet = new HashSet<>();
+
+        List<WifiConfiguration> list = wifiManager.getConfiguredNetworks();
+        if(list.isEmpty())
         {
-            super.onCreate(savedInstanceState);
-            addPreferencesFromResource(R.xml.settings);
-
+            Log.e("Connection Setup","Empty list returned");
         }
-    }
-
-    protected void setListPreferenceData(Context context, MultiSelectListPreference lp) {
-
-        //connectivity manager for wifi check
-        ConnectivityManager conMan = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        //Check active networks
-        NetworkInfo activeNetwork = conMan.getActiveNetworkInfo();
-        //Check if the network is connected to the internet
-        boolean isConnected = activeNetwork != null &&
-                activeNetwork.isConnectedOrConnecting();
-        //Check for airplane mode
-        boolean isEnabled = Settings.Global.getInt(context.getContentResolver(), AIRPLANE_MODE_ON, 0) == 1;
-
-        if(isConnected && !isEnabled){
-            //Run this if everything is connected
-            boolean isWiFi = activeNetwork.getType() == ConnectivityManager.TYPE_WIFI; //Boolean to check for an active WiFi connection
-            if(isWiFi){
-                WifiManager wifiManager = (WifiManager)getSystemService(Context.WIFI_SERVICE);
-
-                SharedPreferences pref = getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = pref.edit();
-                String arrayString = pref.getString("disabled_networks", "1");
-                Set<String> valuesSet = new HashSet<>();
-
-                List<WifiConfiguration> list = wifiManager.getConfiguredNetworks();
-                if(list.isEmpty())
-                {
-                    Log.e("Connection Setup","Empty list returned");
-                }
-                String ssid = null;
-                for( WifiConfiguration i : list ) {
-                    if(i.SSID != null) {
-                        ssid = i.SSID;
-                        ssid = ssid.substring(1, ssid.length()-1);
-                        Log.e("RadioControl",ssid+" network listed");
-                        //Check if the list contains the entered SSID
-                        if (!arrayString.contains(ssid)) {
-                            ssidList.add(ssid);
-                            Collections.addAll(valuesSet, ssid);
-                            // pair the value in text field with the key
-                        }
-
-                    }
+        String ssid = null;
+        for( WifiConfiguration i : list ) {
+            if(i.SSID != null) {
+                ssid = i.SSID;
+                ssid = ssid.substring(1, ssid.length()-1);
+                Log.e("RadioControl",ssid+" network listed");
+                //Check if the list contains the entered SSID
+                if (!arrayString.contains(ssid)) {
+                    ssidList.add(ssid);
+                    Collections.addAll(valuesSet, ssid);
+                    // pair the value in text field with the key
                 }
 
-                CharSequence[] cs = ssidList.toArray(new CharSequence[ssidList.size()]);
-                lp.setValues(valuesSet);
-                lp.setEntries(cs);
-                lp.setEntryValues(cs);
-            }
-            else{
-                Toast.makeText(SettingsActivity.this,
-                        "Enable WiFi first", Toast.LENGTH_LONG).show();
             }
         }
+
+        CharSequence[] cs = ssidList.toArray(new CharSequence[ssidList.size()]);
+        lp.setValues(valuesSet);
+        lp.setEntries(cs);
+        lp.setEntryValues(cs);
 
 
     }

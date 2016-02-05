@@ -26,41 +26,38 @@ public class WifiReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         intent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
         //Initialize Network Settings
-        ConnectivityManager conMan = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo netInfo = conMan.getActiveNetworkInfo();
+        //ConnectivityManager conMan = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        //NetworkInfo netInfo = conMan.getActiveNetworkInfo();
         //Root commands which disable cell only
         String[] airCmd = {"su", "settings put global airplane_mode_radios  \"cell\"", "content update --uri content://settings/global --bind value:s:'cell' --where \"name='airplane_mode_radios'\"", "settings put global airplane_mode_on 1", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state true"};
         //runs command to disable airplane mode on wifi loss, while restoring previous airplane settings
         String[] airOffCmd2 = {"su", "settings put global airplane_mode_on 0", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state false", "settings put global airplane_mode_radios  \"cell,bluetooth,nfc,wimax\"", "content update --uri content://settings/global --bind value:s:'cell,bluetooth,nfc,wimax' --where \"name='airplane_mode_radios'\""};
 
         SharedPreferences sp = context.getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE);
-
+        Utilities util = new Utilities();
         //Setup Disabled networks
-        String arrayString = sp.getString("disabled_networks", "1");
-
-        NetworkInfo activeNetwork = conMan.getActiveNetworkInfo();
-
+        //NetworkInfo activeNetwork = conMan.getActiveNetworkInfo();
         // Check if the device is connected to the internet
-        boolean isConnected = activeNetwork != null &&
-                activeNetwork.isConnectedOrConnecting();
-
+        //boolean isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting();
         //Check for airplane mode
-        boolean isEnabled = Settings.Global.getInt(context.getContentResolver(), AIRPLANE_MODE_ON, 0) == 1;
+        //boolean isEnabled = Settings.Global.getInt(context.getContentResolver(), AIRPLANE_MODE_ON, 0) == 1;
+
+        String arrayString = sp.getString("disabled_networks", "1");
 
         //Check if user wants the app on
         if(sp.getInt("isActive",0) == 1){
             //if network is connected and airplane mode is off
-            if (isConnected && !isEnabled) {
-                boolean isWiFi = activeNetwork.getType() == ConnectivityManager.TYPE_WIFI; //Boolean to check for an active WiFi connection
+            if (util.isConnected(context) && !util.isAirplaneMode(context)) {
+                //boolean isWiFi = activeNetwork.getType() == ConnectivityManager.TYPE_WIFI; //Boolean to check for an active WiFi connection
                 //Check for wifi connection
-                if(isWiFi) {
+                if(util.isConnectedWifi(context)) {
                     //Check the list of disabled networks
                     if(!arrayString.contains(getCurrentSsid(context))){
                         Log.d("RadioControl",getCurrentSsid(context) + " was not found the following strings " + arrayString);
                         //Checks that user is not in call
                         if(!isCallActive(context)){
                             RootAccess.runCommands(airCmd);
-                            Log.d("RadioControl", "Wifi is on,airplane-on");
+                            Log.d("RadioControl", "WiFi is on, Airplane mode is on");
                         }
                         //Checks that user is currently in call and pauses execution till the call ends
                         else if(isCallActive(context)){
@@ -79,9 +76,9 @@ public class WifiReceiver extends BroadcastReceiver {
                 }
             }
             //Check if we just lost WiFi signal
-            if(isConnected == false){
+            if(util.isConnected(context) == false){
                 Log.d("RadioControl","WIFI SIGNAL LOST");
-                if(isEnabled){
+                if(util.isAirplaneMode(context)){
                     RootAccess.runCommands(airOffCmd2);
                     Log.d("RadioControl","Wifi signal lost, airplane mode has been turned on");
                 }

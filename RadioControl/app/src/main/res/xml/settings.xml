@@ -14,5 +14,10 @@
             android:defaultValue="@array/empty_array"
             android:summary="Clear the disabled networks list"
             />
+        <CheckBoxPreference
+            android:key="linkSpeed"
+            android:title="Enable low link speed switching"
+            android:summary="Switches off WiFi when the RSSI is 10 Mbps"
+            android:defaultValue="false" />
     </PreferenceCategory>
 </PreferenceScreen>
