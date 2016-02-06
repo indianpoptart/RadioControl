@@ -18,7 +18,7 @@ Feel free to ask questions related to Android programming or this project in the
 
 Latest Stable Release: [v2.0](https://github.com/indianpoptart/RadioControl/releases/latest)
 
-Current Alpha Release: [v2.0.1](https://github.com/indianpoptart/RadioControl/releases/tag/v2.1-alpha6)
+Current Alpha Release: [v2.1](https://github.com/indianpoptart/RadioControl/releases/tag/v2.1-alpha6)
 
 Current Beta Release: [NA]()
 
