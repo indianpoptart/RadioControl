@@ -15,9 +15,31 @@
             android:summary="Clear the disabled networks list"
             />
         <CheckBoxPreference
-            android:key="linkSpeed"
-            android:title="Enable low link speed switching"
-            android:summary="Switches off WiFi when the RSSI is 10 Mbps"
+            android:key="isNetworkAlive"
+            android:title="Enable no internet alert"
+            android:summary="Opens a dialog letting you know that the current network is not connected to the internet"
             android:defaultValue="false" />
+        <PreferenceScreen
+            android:key="button_network_key"
+            android:title="Alert Settings"
+            android:persistent="false">
+
+            <CheckBoxPreference
+                android:key="networkVibrate"
+                android:title="Enable vibrate"
+                android:summary="Enables vibrate on alerts"
+                android:defaultValue="false" />
+            <CheckBoxPreference
+                android:key="networkSound"
+                android:title="Enable sounds"
+                android:summary="Enables sounds on alert"
+                android:defaultValue="false" />
+            <CheckBoxPreference
+                android:key="networkPriority"
+                android:title="Enable Heads-up"
+                android:summary="Enables heads-up notifications"
+                android:defaultValue="false" />
+        </PreferenceScreen>
+
     </PreferenceCategory>
 </PreferenceScreen>

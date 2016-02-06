@@ -209,26 +209,6 @@ public class MainActivity extends Activity {
         });
 
     }
-    /*
- * isOnline - Check if there is a NetworkConnection
- * @return boolean
- */
-    public boolean isOnline() {
-
-        Runtime runtime = Runtime.getRuntime();
-        try {
-
-            Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");
-            int exitValue = ipProcess.waitFor();
-            Log.d("RadioControl","Val: " + exitValue);
-            return (exitValue == 0);
-
-        }
-        catch (IOException e){ e.printStackTrace(); }
-        catch (InterruptedException e) { e.printStackTrace(); }
-
-        return false;
-    }
 
     //Initialize method for the Whats new dialog
     private void init() {
@@ -388,6 +368,7 @@ public class MainActivity extends Activity {
             return capitalize(manufacturer) + " " + model;
         }
     }
+
 
     //Capitalizes names for devices. Used by getDeviceName()
     private static String capitalize(String s) {

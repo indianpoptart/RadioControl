@@ -1,49 +1,25 @@
 package com.nikhilparanjape.radiocontrol;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
-import android.app.Activity;
-import android.preference.ListPreference;
 import android.preference.MultiSelectListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
-import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
-import android.provider.Settings;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Toast;
-
-import com.mikepenz.google_material_typeface_library.GoogleMaterial;
-import com.mikepenz.materialdrawer.AccountHeader;
-import com.mikepenz.materialdrawer.AccountHeaderBuilder;
-import com.mikepenz.materialdrawer.Drawer;
-import com.mikepenz.materialdrawer.DrawerBuilder;
-import com.mikepenz.materialdrawer.model.DividerDrawerItem;
-import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
-import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
-import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
-import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
-import com.mikepenz.materialdrawer.model.interfaces.IProfile;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static android.provider.Settings.Global.AIRPLANE_MODE_ON;
 
 
 public class SettingsActivity extends PreferenceActivity {
@@ -92,7 +68,7 @@ public class SettingsActivity extends PreferenceActivity {
             //"Enable WiFi first", Toast.LENGTH_LONG).show();
             getPreferenceScreen().findPreference("ssid").setEnabled(false);
         }
-
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
 
         Preference clearPref = (Preference) findPreference("clear-ssid");
         clearPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
@@ -109,10 +85,10 @@ public class SettingsActivity extends PreferenceActivity {
 
         WifiManager wifiManager = (WifiManager)getSystemService(Context.WIFI_SERVICE);
 
-        SharedPreferences pref = getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE);
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         SharedPreferences.Editor editor = pref.edit();
-        String arrayString = pref.getString("disabled_networks", "1");
         Set<String> valuesSet = new HashSet<>();
+        Set<String> arrayString = pref.getStringSet("ssid", valuesSet);
 
         List<WifiConfiguration> list = wifiManager.getConfiguredNetworks();
         if(list.isEmpty())
@@ -136,10 +112,11 @@ public class SettingsActivity extends PreferenceActivity {
         }
 
         CharSequence[] cs = ssidList.toArray(new CharSequence[ssidList.size()]);
-        lp.setValues(valuesSet);
+        //CharSequence[] ce = arrayString.toArray(new CharSequence[valuesSet.size()]);
+        Log.d("RadioControl", "CS: " + cs);
+        //lp.setValues((Set<String>) ssidList);
         lp.setEntries(cs);
         lp.setEntryValues(cs);
-
 
     }
 
@@ -153,26 +130,11 @@ public class SettingsActivity extends PreferenceActivity {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
-    //Show WiFi List
-    public void wifiPicker(){
-        LayoutInflater inflater = LayoutInflater.from(this);//Creates layout inflator for dialog
-        View view = inflater.inflate(R.layout.dialog_ssidchooser, null);//Initializes the view for whats new dialog
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);//creates alertdialog
-
-        builder.setView(view).setTitle("SSID Chooser")//sets title
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-        builder.create().show();
-    }
     //Method for the ssid list clear button
     public void ssidClearButton(){
-        SharedPreferences pref = getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE);
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         SharedPreferences.Editor editor = pref.edit();
-        editor.remove("disabled_networks");
+        editor.remove("ssid");
         Toast.makeText(SettingsActivity.this,
                 "Disabled SSID list cleared", Toast.LENGTH_LONG).show();
         editor.apply();

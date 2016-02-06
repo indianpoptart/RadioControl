@@ -18,7 +18,7 @@ Feel free to ask questions related to Android programming or this project in the
 
 Latest Stable Release: [v2.0](https://github.com/indianpoptart/RadioControl/releases/latest)
 
-Current Alpha Release: [v2.0.1](https://github.com/indianpoptart/RadioControl/releases/tag/v2.0.1-alpha5)
+Current Alpha Release: [v2.0.1](https://github.com/indianpoptart/RadioControl/releases/tag/v2.1-alpha6)
 
 Current Beta Release: [NA]()
 
@@ -30,6 +30,13 @@ Tested on the following devices
 - Moto X (2nd Gen.) ![Motorola](https://nikhilp.org/images/moto.png)
 
 #What's New?
+v2.1 - Alpha6 (2/6/2015)
+- v2.0.1 becomes v2.1 (A lot of stuff added, so not just a patch anymore)
+- Added notification if network isn't connected to the internet
+- Network settings semi work. Main screen one is still the one to use right now
+- Cleaned up some imports
+- More testing needed
+
 v2.0.1 - Alpha5 (2/3/2016)
 - Added LinkSpeed as an easter egg thing
 - Added a ping test, It tests if one packet can reach Google DNS servers. It then displays if the current network is connected to the internet

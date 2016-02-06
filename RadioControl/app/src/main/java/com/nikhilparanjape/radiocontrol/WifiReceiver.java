@@ -1,5 +1,8 @@
 package com.nikhilparanjape.radiocontrol;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -9,10 +12,11 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
-import android.provider.Settings;
+import android.preference.PreferenceManager;
+import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 
-import java.util.Arrays;
+import java.util.Set;
 
 import static android.provider.Settings.Global.*;
 
@@ -25,6 +29,8 @@ public class WifiReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         intent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
+
+
         //Initialize Network Settings
         //ConnectivityManager conMan = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         //NetworkInfo netInfo = conMan.getActiveNetworkInfo();
@@ -34,15 +40,17 @@ public class WifiReceiver extends BroadcastReceiver {
         String[] airOffCmd2 = {"su", "settings put global airplane_mode_on 0", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state false", "settings put global airplane_mode_radios  \"cell,bluetooth,nfc,wimax\"", "content update --uri content://settings/global --bind value:s:'cell,bluetooth,nfc,wimax' --where \"name='airplane_mode_radios'\""};
 
         SharedPreferences sp = context.getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         Utilities util = new Utilities();
-        //Setup Disabled networks
-        //NetworkInfo activeNetwork = conMan.getActiveNetworkInfo();
-        // Check if the device is connected to the internet
-        //boolean isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting();
-        //Check for airplane mode
-        //boolean isEnabled = Settings.Global.getInt(context.getContentResolver(), AIRPLANE_MODE_ON, 0) == 1;
 
         String arrayString = sp.getString("disabled_networks", "1");
+        Set<String> selections = prefs.getStringSet("ssid", null);
+        boolean linkSpeed = prefs.getBoolean("linkSpeed", false);
+        boolean alertPriority = prefs.getBoolean("networkPriority", false);
+        boolean alertSounds = prefs.getBoolean("networkSound",false);
+        boolean alertVibrate = prefs.getBoolean("networkVibrate",false);
+        boolean networkAlert= prefs.getBoolean("isNetworkAlive",false);
+
 
         //Check if user wants the app on
         if(sp.getInt("isActive",0) == 1){
@@ -52,12 +60,28 @@ public class WifiReceiver extends BroadcastReceiver {
                 //Check for wifi connection
                 if(util.isConnectedWifi(context)) {
                     //Check the list of disabled networks
-                    if(!arrayString.contains(getCurrentSsid(context))){
-                        Log.d("RadioControl",getCurrentSsid(context) + " was not found the following strings " + arrayString);
+                    if(!selections.contains(getCurrentSsid(context))){
+                        Log.d("RadioControl",getCurrentSsid(context) + " was not found the following strings " + selections);
                         //Checks that user is not in call
                         if(!isCallActive(context)){
-                            RootAccess.runCommands(airCmd);
-                            Log.d("RadioControl", "WiFi is on, Airplane mode is on");
+                            //Checks if the user wants network alerts
+                            if(networkAlert){
+                                //If the connection can reach Google
+                                if(util.isOnline()){
+                                    RootAccess.runCommands(airCmd);
+                                    Log.d("RadioControl", "WiFi is on, Airplane mode is on");
+                                }
+                                //If the network is not alive
+                                else{
+                                    sendNote(context, "You are not connected to the internet",alertVibrate,alertSounds,alertPriority);
+                                }
+                            }
+                            //The user does not want network alert notifications
+                            else{
+                                RootAccess.runCommands(airCmd);
+                                Log.d("RadioControl", "WiFi is on, Airplane mode is on");
+                            }
+
                         }
                         //Checks that user is currently in call and pauses execution till the call ends
                         else if(isCallActive(context)){
@@ -67,12 +91,9 @@ public class WifiReceiver extends BroadcastReceiver {
                         }
                     }
                     //Pauses because WiFi network is in the list of disabled SSIDs
-                    else if(Arrays.asList(arrayString).contains(getCurrentSsid(context))){
+                    else if(selections.contains(getCurrentSsid(context))){
                         Log.d("RadioControl",getCurrentSsid(context) + " was blocked from list " + arrayString);
                     }
-                }
-                else{
-                    Log.d("RadioControl","An unknown network was detected"); //Maybe you have a PAN connection?? Who knows
                 }
             }
             //Check if we just lost WiFi signal
@@ -88,13 +109,8 @@ public class WifiReceiver extends BroadcastReceiver {
             }
         }
         else if(sp.getInt("isActive",0) == 0){
-            Log.d("RadioControl","We can't do anything, we have been disabled");
+            Log.d("RadioControl","RadioControl has been disabled");
         }
-
-        //if (netInfo != null && netInfo.getType() == ConnectivityManager.TYPE_WIFI)
-            //Log.d("WiFiReceiver", "Have Wifi Connection");
-        //else
-            //Log.d("WiFiReceiver", "Don't have Wifi Connection");
     }
     public void waitFor(long timer){
         try {
@@ -120,9 +136,46 @@ public class WifiReceiver extends BroadcastReceiver {
     public static int linkSpeed(Context c){
         WifiManager wifiManager = (WifiManager)c.getSystemService(Context.WIFI_SERVICE);
         int linkSpeed = wifiManager.getConnectionInfo().getLinkSpeed();
-        Log.d("RadioControl","Link speed = " + linkSpeed + "Mbps");
+        Log.d("RadioControl", "Link speed = " + linkSpeed + "Mbps");
         return linkSpeed;
     }
+    //Network Alert Notification
+    public static void sendNote(Context context, String mes, boolean vibrate, boolean sound, boolean heads){
+        int priority;
+        if(!heads){
+            priority = 0;
+        }
+        else if(heads){
+            priority = 1;
+        }
+        else{
+            priority = 1;
+        }
+
+        PendingIntent pi = PendingIntent.getActivity(context, 1, new Intent(WifiManager.ACTION_PICK_WIFI_NETWORK), 0);
+        //Resources r = getResources();
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        Notification notification = new NotificationCompat.Builder(context)
+                .setSmallIcon(R.drawable.ic_warning_black_48dp)
+                .setContentTitle("RadioControl Network Alert")
+                .setContentIntent(pi)
+                .setContentText(mes)
+                .setPriority(priority)
+                .setAutoCancel(true)
+                .build();
+
+        if(vibrate){
+            notification.defaults|= Notification.DEFAULT_VIBRATE;
+        }
+        if(sound){
+            notification.defaults|= Notification.DEFAULT_SOUND;
+        }
+
+
+        notificationManager.notify(1, notification);
+
+    }
+
     //Check if user is currently in call
     public boolean isCallActive(Context context){ AudioManager manager = (AudioManager)context.getSystemService(Context.AUDIO_SERVICE);
         if(manager.getMode()== AudioManager.MODE_IN_CALL){

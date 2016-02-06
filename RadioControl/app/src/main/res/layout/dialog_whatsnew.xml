@@ -14,13 +14,13 @@
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="Version 2.0.1"
+                android:text="Version 2.1"
                 android:textStyle="bold"/>
 
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="- New Icon \n- New settings menu \n- New on off switch" />
+                android:text="- New Icon \n- New settings menu \n- New on off switch \n- Network connection alerts \n- Better settings and about menu \n- Bug Fixes \n- Added ping test" />
 
 
             <TextView
