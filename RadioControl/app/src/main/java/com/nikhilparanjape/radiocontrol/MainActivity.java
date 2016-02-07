@@ -185,7 +185,7 @@ public class MainActivity extends Activity {
             }
             else{
                 statusText.setText("is Disabled");
-                statusText.setTextColor(getResources().getColor(R.color.status_activated));
+                statusText.setTextColor(getResources().getColor(R.color.status_deactivated));
                 toggle.setChecked(false);
             }
 
@@ -439,16 +439,9 @@ public class MainActivity extends Activity {
         Switch toggle = (Switch) findViewById(R.id.enableSwitch);
 
         if(sharedPref.getInt("isActive",1) == 1){
-            if(rootInit() == false){
-                toggle.setClickable(false);
-                statusText.setText("couldn't get root");
-                statusText.setTextColor(getResources().getColor(R.color.status_deactivated));
-            }
-            else{
-                statusText.setText("is Enabled");
-                statusText.setTextColor(getResources().getColor(R.color.status_activated));
-                toggle.setChecked(true);
-            }
+            statusText.setText("is Enabled");
+            statusText.setTextColor(getResources().getColor(R.color.status_activated));
+            toggle.setChecked(true);
 
         }
         else if(sharedPref.getInt("isActive",1) == 0){
@@ -459,7 +452,7 @@ public class MainActivity extends Activity {
             }
             else{
                 statusText.setText("is Disabled");
-                statusText.setTextColor(getResources().getColor(R.color.status_activated));
+                statusText.setTextColor(getResources().getColor(R.color.status_deactivated));
                 toggle.setChecked(false);
             }
 
