@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <PreferenceCategory android:title="General Settings">
+    <PreferenceCategory android:title="Experimental Features">
         <MultiSelectListPreference
             android:key="ssid"
             android:title="Network Settings"
-            android:dialogTitle="Network Settings"
+            android:dialogTitle="Network Settings (Experimental)"
             android:defaultValue="@array/empty_array"
             android:summary="Do not enable airplane mode when connected to the selected networks"
             />
@@ -14,14 +14,16 @@
             android:defaultValue="@array/empty_array"
             android:summary="Clear the disabled networks list"
             />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="Alert Settings">
         <CheckBoxPreference
             android:key="isNetworkAlive"
-            android:title="Enable no internet alert"
-            android:summary="Opens a dialog letting you know that the current network is not connected to the internet"
+            android:title="Enable internet access alert"
+            android:summary="Shows a notification when the current WiFi network is not connected to the internet"
             android:defaultValue="false" />
         <PreferenceScreen
             android:key="button_network_key"
-            android:title="Alert Settings"
+            android:title="Notification Settings"
             android:persistent="false">
 
             <CheckBoxPreference
@@ -40,6 +42,8 @@
                 android:summary="Enables heads-up notifications"
                 android:defaultValue="false" />
         </PreferenceScreen>
-
     </PreferenceCategory>
+
+
+
 </PreferenceScreen>

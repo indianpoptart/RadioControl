@@ -10,16 +10,15 @@ import android.content.pm.PackageInfo;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.materialdrawer.AccountHeader;
@@ -33,15 +32,19 @@ import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 
+import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 
-
+/**
+ * Created by Nikhil Paranjape on 11/3/2015.
+ */
 
 public class MainActivity extends Activity {
     private static final String PRIVATE_PREF = "prefs";
     private static final String VERSION_KEY = "version_number";
-    public static ArrayList<String> ssidList = new ArrayList<String>();
     Drawable icon;
     String versionName = BuildConfig.VERSION_NAME;
 
@@ -58,44 +61,25 @@ public class MainActivity extends Activity {
         final TextView connectionStatusText = (TextView) findViewById(R.id.pingStatus);
         Switch toggle = (Switch) findViewById(R.id.enableSwitch);
 
-        //Save button for the network list
-        Button btn = (Button) findViewById(R.id.button);
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ssidButtonChecker();
-            }
-
-        });
-
-        //Clear button for the network list
-        Button btn2 = (Button) findViewById(R.id.button2);
-        btn2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ssidClearButton();
-            }
-
-        });
-
+        rootInit();
         //LinkSpeed Button
-        Button btn3 = (Button) findViewById(R.id.linkSpeedButton);
+        Button linkSpeedButton = (Button) findViewById(R.id.linkSpeedButton);
         //Check if the easter egg is NOT activated
         if(!sharedPref.getBoolean("isEasterEgg",false)){
-            btn3.setVisibility(View.GONE);
+            linkSpeedButton.setVisibility(View.GONE);
             linkText.setVisibility(View.GONE);
         }
         else if(sharedPref.getBoolean("isEasterEgg",false)){
-            btn3.setVisibility(View.VISIBLE);
+            linkSpeedButton.setVisibility(View.VISIBLE);
             linkText.setVisibility(View.VISIBLE);
         }
 
-        btn3.setOnClickListener(new View.OnClickListener() {
+        linkSpeedButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 int linkspeed = WifiReceiver.linkSpeed(getApplicationContext());
                 if(linkspeed == -1){
-                    linkText.setText("Cellular network detected");
+                    linkText.setText("Unknown network detected");
                 }
                 else{
                     linkText.setText("Link speed = " + linkspeed + "Mbps");
@@ -140,7 +124,7 @@ public class MainActivity extends Activity {
 
                 }
                 else{
-                    if(Utilities.isAirplaneMode(getApplicationContext())){
+                    if(Utilities.isAirplaneMode(getApplicationContext()) && !Utilities.isConnected(getApplicationContext())){
                         connectionStatusText.setText("Airplane mode is on");
                         connectionStatusText.setTextColor(getResources().getColor(R.color.status_deactivated));
                     }
@@ -229,6 +213,7 @@ public class MainActivity extends Activity {
             editor.commit();
         }
     }
+
     //Method to create the Navigation Drawer
     public void drawerCreate(){
         //Drawable lg = getResources().getDrawable(R.mipmap.lg);
@@ -268,8 +253,6 @@ public class MainActivity extends Activity {
                 .withAccountHeader(headerResult)
                 .withActivity(this)
                 .withTranslucentStatusBar(false)
-                .withActionBarDrawerToggleAnimated(true)
-                .withActionBarDrawerToggle(true)
                 .addDrawerItems(
                         item1,
                         new DividerDrawerItem(),
@@ -296,42 +279,7 @@ public class MainActivity extends Activity {
         result.setSelection(item1);
 
     }
-    //Method for the ssid save button
-    public void ssidButtonChecker(){
-        SharedPreferences pref = getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = pref.edit();
-        String arrayString = pref.getString("disabled_networks", "1");
 
-        final EditText field = (EditText) findViewById(R.id.editText);
-
-        // get value in field
-        String value = field.getText().toString();
-        if (value.length() != 0) {
-            //Check if the list contains the entered SSID
-            if (!arrayString.contains(value)) {
-                ssidList.add(value);
-                // pair the value in text field with the key
-                editor.putString("disabled_networks", ssidList.toString());
-                field.setText("");
-                Toast.makeText(MainActivity.this,
-                        "SSID saved", Toast.LENGTH_LONG).show();
-            } else {
-                Toast.makeText(MainActivity.this,
-                        "SSID already exists", Toast.LENGTH_LONG).show();
-                field.setText("");
-            }
-        }
-        editor.commit();
-    }
-    //Method for the ssid list clear button
-    public void ssidClearButton(){
-        SharedPreferences pref = getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = pref.edit();
-        editor.remove("disabled_networks");
-        Toast.makeText(MainActivity.this,
-                "Disabled SSID list cleared", Toast.LENGTH_LONG).show();
-        editor.apply();
-    }
     //starts about activity
     public void startAboutActivity() {
         Intent intent = new Intent(this, AboutActivity.class);
@@ -388,17 +336,10 @@ public class MainActivity extends Activity {
         editor.putBoolean(key,value);
     }
     public boolean rootInit(){
-
-        try {
-
+        try{
             Process p = Runtime.getRuntime().exec("su");
-            // Perform su to get root privileges
-            boolPrefEditor("isRooted", true);
             return true;
-
-        } catch (IOException e) {
-            // TODO Code to run in input/output exception
-            boolPrefEditor("isRooted", false);
+        }catch (IOException e){
             return false;
         }
     }
@@ -457,19 +398,5 @@ public class MainActivity extends Activity {
             }
 
         }
-    }
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 }

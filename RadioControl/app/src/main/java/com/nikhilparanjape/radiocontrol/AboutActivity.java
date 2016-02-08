@@ -14,6 +14,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Toast;
 
+/**
+ * Created by Nikhil Paranjape on 12/16/2015.
+ */
+
 public class AboutActivity extends PreferenceActivity {
     Drawable icon;
     String versionName = BuildConfig.VERSION_NAME;
@@ -37,16 +41,30 @@ public class AboutActivity extends PreferenceActivity {
         versionPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             int z = 0;
             public boolean onPreferenceClick(Preference preference) {
+                SharedPreferences sp = getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE); //Initializes prefs.xml
+                SharedPreferences.Editor editor = sp.edit();//Initializes xml editor
                 z++;
+                Log.d("RadioControl",(7-z)+ " steps away from easter egg");
                 if(z >= 7){
-                    Toast.makeText(AboutActivity.this, "You found an easter egg", Toast.LENGTH_LONG).show();
-                    z=0;
-                    Log.d("RadioControl","Easter egg activated");
-                    SharedPreferences sp = getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE); //Initializes prefs.xml
-                    SharedPreferences.Editor editor = sp.edit();//Initializes xml editor
+                    if (!sp.getBoolean("isEasterEgg",false)) {
+                        Toast.makeText(AboutActivity.this, "You found an easter egg", Toast.LENGTH_LONG).show();
+                        z=0;
+                        Log.d("RadioControl","Easter egg activated");
 
-                    editor.putBoolean("isEasterEgg", true); //Puts the boolean into prefs.xml
-                    editor.commit(); //Ends writing to prefs file
+
+                        editor.putBoolean("isEasterEgg", true); //Puts the boolean into prefs.xml
+                        editor.commit(); //Ends writing to prefs file
+                    }
+                    else if(sp.getBoolean("isEasterEgg",false)){
+                        Toast.makeText(AboutActivity.this, "You disabled the easter egg", Toast.LENGTH_LONG).show();
+                        z=0;
+                        Log.d("RadioControl","Easter egg deactivated");
+
+
+                        editor.putBoolean("isEasterEgg", false); //Puts the boolean into prefs.xml
+                        editor.commit(); //Ends writing to prefs file
+                    }
+
                 }
                 return false;
             }

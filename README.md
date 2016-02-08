@@ -18,7 +18,7 @@ Feel free to ask questions related to Android programming or this project in the
 
 Latest Stable Release: [v2.0](https://github.com/indianpoptart/RadioControl/releases/latest)
 
-Current Alpha Release: [v2.1](https://github.com/indianpoptart/RadioControl/releases/tag/v2.1-alpha6)
+Current Alpha Release: [v2.1](https://github.com/indianpoptart/RadioControl/releases/tag/v2.1-alpha7)
 
 Current Beta Release: [NA]()
 
@@ -30,6 +30,13 @@ Tested on the following devices
 - Moto X (2nd Gen.) ![Motorola](https://nikhilp.org/images/moto.png)
 
 #What's New?
+v2.1 - Alpha7 (2/8/2016)
+- Removed the SSID Disabler from main screen (Caused many many issues)
+- Settings SSID disabler semi works
+- Cleaned up some wording issues in Settings menu
+- Added option to get network alerts even if the app is set to off.
+- Added easter egg disabler
+
 v2.1 - Alpha6 (2/6/2015)
 - v2.0.1 becomes v2.1 (A lot of stuff added, so not just a patch anymore)
 - Added notification if network isn't connected to the internet

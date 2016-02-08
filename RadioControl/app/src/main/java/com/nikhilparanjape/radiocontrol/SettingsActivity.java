@@ -20,7 +20,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-
+/**
+ * Created by Nikhil Paranjape on 12/16/2015.
+ */
 
 public class SettingsActivity extends PreferenceActivity {
     //private static final String PRIVATE_PREF = "radiocontrol-prefs";

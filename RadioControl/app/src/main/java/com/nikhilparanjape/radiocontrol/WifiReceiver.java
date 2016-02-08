@@ -18,7 +18,6 @@ import android.util.Log;
 
 import java.util.Set;
 
-import static android.provider.Settings.Global.*;
 
 /**
  * Created by Nikhil Paranjape on 11/8/2015.
@@ -30,10 +29,6 @@ public class WifiReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         intent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
 
-
-        //Initialize Network Settings
-        //ConnectivityManager conMan = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        //NetworkInfo netInfo = conMan.getActiveNetworkInfo();
         //Root commands which disable cell only
         String[] airCmd = {"su", "settings put global airplane_mode_radios  \"cell\"", "content update --uri content://settings/global --bind value:s:'cell' --where \"name='airplane_mode_radios'\"", "settings put global airplane_mode_on 1", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state true"};
         //runs command to disable airplane mode on wifi loss, while restoring previous airplane settings
@@ -41,12 +36,10 @@ public class WifiReceiver extends BroadcastReceiver {
 
         SharedPreferences sp = context.getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        Utilities util = new Utilities();
+        Utilities util = new Utilities(); //Network utils
 
-        String arrayString = sp.getString("disabled_networks", "1");
         Set<String> selections = prefs.getStringSet("ssid", null);
-        boolean linkSpeed = prefs.getBoolean("linkSpeed", false);
-        boolean alertPriority = prefs.getBoolean("networkPriority", false);
+        boolean alertPriority = prefs.getBoolean("networkPriority", false);//Setting for network notifier
         boolean alertSounds = prefs.getBoolean("networkSound",false);
         boolean alertVibrate = prefs.getBoolean("networkVibrate",false);
         boolean networkAlert= prefs.getBoolean("isNetworkAlive",false);
@@ -92,7 +85,7 @@ public class WifiReceiver extends BroadcastReceiver {
                     }
                     //Pauses because WiFi network is in the list of disabled SSIDs
                     else if(selections.contains(getCurrentSsid(context))){
-                        Log.d("RadioControl",getCurrentSsid(context) + " was blocked from list " + arrayString);
+                        Log.d("RadioControl",getCurrentSsid(context) + " was blocked from list " + selections);
                     }
                 }
             }
@@ -110,6 +103,16 @@ public class WifiReceiver extends BroadcastReceiver {
         }
         else if(sp.getInt("isActive",0) == 0){
             Log.d("RadioControl","RadioControl has been disabled");
+            if(networkAlert){
+                //If the connection can reach Google
+                if(!util.isOnline()){
+                    sendNote(context, "You are not connected to the internet",alertVibrate,alertSounds,alertPriority);
+                }
+                //If the network is not alive
+                else{
+
+                }
+            }
         }
     }
     public void waitFor(long timer){
