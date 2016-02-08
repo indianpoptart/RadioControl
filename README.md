@@ -22,6 +22,10 @@ Current Alpha Release: [v2.1](https://github.com/indianpoptart/RadioControl/rele
 
 Current Beta Release: [NA]()
 
+# New Features
+###### New network notification
+<img src="https://nikhilp.org/images/notificationPic.png" width="384">
+
 # Compatibility
 Tested on the following devices
 - Nexus 6 ![Motorola](https://nikhilp.org/images/moto.png)
@@ -29,7 +33,7 @@ Tested on the following devices
 - Nexus 5X ![LG](https://nikhilp.org/images/lg.png)
 - Moto X (2nd Gen.) ![Motorola](https://nikhilp.org/images/moto.png)
 
-#What's New?
+# What's New?
 v2.1 - Alpha7 (2/8/2016)
 - Removed the SSID Disabler from main screen (Caused many many issues)
 - Settings SSID disabler semi works
