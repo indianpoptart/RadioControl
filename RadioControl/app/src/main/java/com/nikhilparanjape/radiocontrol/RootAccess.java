@@ -24,18 +24,4 @@ public class RootAccess{
             Log.d("Root", "There was an error with root");
         }
     }
-    public static boolean getRoot(){
-        Process p;
-        try {
-            p = Runtime.getRuntime().exec("su"); //Request SU
-            DataOutputStream os = new DataOutputStream(p.getOutputStream()); //Used for terminal
-            os.writeBytes("exit\n"); //Quits the terminal session
-            os.flush(); //Ends datastream
-            Log.d("Root", "Commands Completed");
-            return true;
-        } catch (IOException e) {
-            Log.d("Root", "There was an error with root");
-            return false;
-        }
-    }
 }

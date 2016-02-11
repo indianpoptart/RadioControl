@@ -19,25 +19,18 @@ import android.widget.Toast;
  */
 
 public class AboutActivity extends PreferenceActivity {
-    Drawable icon;
     String versionName = BuildConfig.VERSION_NAME;
     private static final String PRIVATE_PREF = "prefs";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_about);
 
         addPreferencesFromResource(R.xml.about);
 
-        final Preference pref = findPreference("version");
+        Preference versionPref = findPreference("version");
         CharSequence cs = versionName;
-        pref.setSummary(cs);
-        //TextView t = (TextView)findViewById(R.id.verNum);
-        //t.setText(versionName);
-
-        //drawerCreate();
-        Preference versionPref = (Preference) findPreference("version");
+        versionPref.setSummary("v" + cs);
         versionPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             int z = 0;
             public boolean onPreferenceClick(Preference preference) {
@@ -70,7 +63,7 @@ public class AboutActivity extends PreferenceActivity {
             }
         });
 
-        Preference myPref = (Preference) findPreference("changelog");
+        Preference myPref = findPreference("changelog");
         myPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             public boolean onPreferenceClick(Preference preference) {
                 changelog();
@@ -95,17 +88,6 @@ public class AboutActivity extends PreferenceActivity {
                     }
                 });
         builder.create().show();
-    }
-    //starts about activity
-    public void startSettingsActivity() {
-        Intent intent = new Intent(this, SettingsActivity.class);
-
-        startActivity(intent);
-    }
-    //starts about activity
-    public void startMainActivity() {
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
     }
 
 }

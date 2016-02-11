@@ -10,10 +10,8 @@ import android.content.pm.PackageInfo;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -32,11 +30,7 @@ import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 
-import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
 
 /**
  * Created by Nikhil Paranjape on 11/3/2015.
@@ -45,8 +39,11 @@ import java.util.ArrayList;
 public class MainActivity extends Activity {
     private static final String PRIVATE_PREF = "prefs";
     private static final String VERSION_KEY = "version_number";
+
+
     Drawable icon;
     String versionName = BuildConfig.VERSION_NAME;
+    Utilities util = new Utilities();
 
 
     @Override
@@ -62,6 +59,7 @@ public class MainActivity extends Activity {
         Switch toggle = (Switch) findViewById(R.id.enableSwitch);
 
         rootInit();
+
         //LinkSpeed Button
         Button linkSpeedButton = (Button) findViewById(R.id.linkSpeedButton);
         //Check if the easter egg is NOT activated
@@ -77,7 +75,7 @@ public class MainActivity extends Activity {
         linkSpeedButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int linkspeed = WifiReceiver.linkSpeed(getApplicationContext());
+                int linkspeed = util.linkSpeed(getApplicationContext());
                 if(linkspeed == -1){
                     linkText.setText("Unknown network detected");
                 }
@@ -140,7 +138,6 @@ public class MainActivity extends Activity {
         });
 
         drawerCreate(); //Initalizes Drawer
-        //rootInit();//Checks for root
 
         if(rootInit() == false){
             toggle.setClickable(false);

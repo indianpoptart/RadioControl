@@ -1,11 +1,21 @@
 package com.nikhilparanjape.radiocontrol;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
+import android.media.AudioManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.provider.Settings;
+import android.support.v7.app.NotificationCompat;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+
+import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 
 import java.io.IOException;
 
@@ -17,7 +27,7 @@ public class Utilities {
  * isOnline - Check if there is a NetworkConnection
  * @return boolean
  */
-    public static boolean isOnline() {;
+    public static boolean isOnline() {
         Runtime runtime = Runtime.getRuntime();
         try {
 
@@ -34,6 +44,76 @@ public class Utilities {
     }
 
     /**
+     * gets network ssid
+     * @param context
+     * @return
+     */
+    public static String getCurrentSsid(Context context) {
+        String ssid = null;
+        ConnectivityManager connManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+        if (networkInfo.isConnected()) {
+            final WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+            final WifiInfo connectionInfo = wifiManager.getConnectionInfo();
+            ssid = connectionInfo.getSSID();
+            ssid = ssid.substring(1, ssid.length()-1);
+        }
+        return ssid;
+    }
+
+    /**
+     * Checks link speed
+     * @param c
+     * @return
+     */
+    public static int linkSpeed(Context c){
+        WifiManager wifiManager = (WifiManager)c.getSystemService(Context.WIFI_SERVICE);
+        int linkSpeed = wifiManager.getConnectionInfo().getLinkSpeed();
+        Log.d("RadioControl", "Link speed = " + linkSpeed + "Mbps");
+        return linkSpeed;
+    }
+
+    /**
+     * Makes a network alert
+     * @param context
+     * @return
+     */
+    public static void sendNote(Context context, String mes, boolean vibrate, boolean sound, boolean heads){
+        int priority;
+        if(!heads){
+            priority = 0;
+        }
+        else if(heads){
+            priority = 1;
+        }
+        else{
+            priority = 1;
+        }
+        PendingIntent pi = PendingIntent.getActivity(context, 1, new Intent(WifiManager.ACTION_PICK_WIFI_NETWORK), 0);
+        //Resources r = getResources();
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        Notification notification = new NotificationCompat.Builder(context)
+                .setSmallIcon(R.drawable.ic_warning_black_48dp)
+                .setContentTitle("RadioControl Network Alert")
+                .setContentIntent(pi)
+                .setContentText(mes)
+                .setPriority(priority)
+                .setAutoCancel(true)
+                .build();
+
+        if(vibrate){
+            notification.defaults|= Notification.DEFAULT_VIBRATE;
+        }
+        if(sound){
+            notification.defaults|= Notification.DEFAULT_SOUND;
+        }
+
+
+        notificationManager.notify(1, notification);
+
+    }
+
+    /**
      * Get the network info
      * @param context
      * @return
@@ -41,6 +121,26 @@ public class Utilities {
     public static NetworkInfo getNetworkInfo(Context context){
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         return cm.getActiveNetworkInfo();
+    }
+
+    /**
+     * Enable WiFi without root
+     *@param context
+     */
+    public void enableWifi(Context context){
+        WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+        wifiManager.setWifiEnabled(true);
+
+    }
+
+    /**
+     * Disable WiFi without root
+     *@param context
+     */
+    public void disableWifi(Context context){
+        WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+        wifiManager.setWifiEnabled(false);
+
     }
 
     /**
@@ -71,6 +171,20 @@ public class Utilities {
     public static boolean isConnectedMobile(Context context){
         NetworkInfo info = getNetworkInfo(context);
         return (info != null && info.isConnected() && info.getType() == ConnectivityManager.TYPE_MOBILE);
+    }
+
+    /**
+     * Check if there is any active call
+     * @param context
+     * @return
+     */
+    public boolean isCallActive(Context context){ AudioManager manager = (AudioManager)context.getSystemService(Context.AUDIO_SERVICE);
+        if(manager.getMode()== AudioManager.MODE_IN_CALL){
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 
     /**

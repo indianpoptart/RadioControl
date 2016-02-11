@@ -18,9 +18,9 @@ Feel free to ask questions related to Android programming or this project in the
 
 Latest Stable Release: [v2.0](https://github.com/indianpoptart/RadioControl/releases/latest)
 
-Current Alpha Release: [v2.1](https://github.com/indianpoptart/RadioControl/releases/tag/v2.1-alpha7)
+Current Alpha Release: [v2.1-alpha7](https://github.com/indianpoptart/RadioControl/releases/tag/v2.1-alpha7)
 
-Current Beta Release: [NA]()
+Current Beta Release: [v3.0-beta1](https://github.com/indianpoptart/RadioControl/releases/tag/v3.0-beta1)
 
 # New Features
 ###### New network notification
@@ -34,6 +34,15 @@ Tested on the following devices
 - Moto X (2nd Gen.) ![Motorola](https://nikhilp.org/images/moto.png)
 
 # What's New?
+v3.0 - Beta1 (2/10/2016)
+- v2.1 became v3.0 because I added a non backwards compatible feature
+- Cleaned up code
+- Organized WifiReceiver
+- WifiReceiver speed increase
+- All settings are marked as experimental
+- Network alert gets called while launching, therefore, it gets called each time you join wifi
+- Cleaned up imports
+
 v2.1 - Alpha7 (2/8/2016)
 - Removed the SSID Disabler from main screen (Caused many many issues)
 - Settings SSID disabler semi works

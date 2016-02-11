@@ -19,7 +19,7 @@
         <CheckBoxPreference
             android:key="isNetworkAlive"
             android:title="Enable internet access alert"
-            android:summary="Shows a notification when the current WiFi network is not connected to the internet"
+            android:summary="Shows a notification when the current WiFi network is not connected to the internet (EXPERIMENTAL)"
             android:defaultValue="false" />
         <PreferenceScreen
             android:key="button_network_key"
