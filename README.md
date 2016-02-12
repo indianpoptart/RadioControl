@@ -21,7 +21,7 @@ Latest Stable Release: [v2.0](https://github.com/indianpoptart/RadioControl/rele
 
 Current Alpha Release: [v2.1-alpha7](https://github.com/indianpoptart/RadioControl/releases/tag/v2.1-alpha7)
 
-Current Beta Release: [v3.0-beta1](https://github.com/indianpoptart/RadioControl/releases/tag/v3.0-beta1)
+Current Beta Release: [v3.0-beta2](https://github.com/indianpoptart/RadioControl/releases/tag/v3.0-beta2)
 
 # New Features
 ###### New network notification
