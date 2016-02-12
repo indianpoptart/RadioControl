@@ -14,6 +14,9 @@ Feel free to ask questions related to Android programming or this project in the
 
 [![Join the chat at https://gitter.im/indianpoptart/RadioControl](https://badges.gitter.im/indianpoptart/RadioControl.svg)](https://gitter.im/indianpoptart/RadioControl?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
+# Release Update!!!
+I will be unable to make fast, reliable updates for a few months. Main rig died, stuck with old macbook for now. So expect delayed beta updates, testing might be limited, etc. Sorry about that
+
 # Versions
 
 Latest Stable Release: [v2.0](https://github.com/indianpoptart/RadioControl/releases/latest)
