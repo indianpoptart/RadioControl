@@ -61,7 +61,6 @@ public class SettingsActivity extends PreferenceActivity {
         else{
             getPreferenceScreen().findPreference("ssid").setEnabled(false);
         }
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
 
         Preference clearPref = findPreference("clear-ssid");
         clearPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {

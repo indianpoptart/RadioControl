@@ -14,8 +14,6 @@ Feel free to ask questions related to Android programming or this project in the
 
 [![Join the chat at https://gitter.im/indianpoptart/RadioControl](https://badges.gitter.im/indianpoptart/RadioControl.svg)](https://gitter.im/indianpoptart/RadioControl?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-# Release Update!!!
-I will be unable to make fast, reliable updates for a few months. Main rig died, stuck with old macbook for now. So expect delayed beta updates, testing might be limited, etc. Sorry about that
 
 # Versions
 
@@ -37,6 +35,10 @@ Tested on the following devices
 - Moto X (2nd Gen.) ![Motorola](https://nikhilp.org/images/moto.png)
 
 # What's New?
+v3.0 - Beta2 (2/12/2016)
+- Added help wiki link in about page
+- Internet alert seems to be working without problem. Still experimental/being tested
+
 v3.0 - Beta1 (2/10/2016)
 - v2.1 became v3.0 because I added a non backwards compatible feature
 - Cleaned up code
@@ -87,7 +89,7 @@ to enable RadioControl or not.
 active. The one in settings does not work
 
 v2.0 (12/29/2015)
-- The app no longer requires the timer, It can turn on airplane mode without turning off WiFi or Bluetooth 
+- The app no longer requires the timer, It can turn on airplane mode without turning off WiFi or Bluetooth
 - Timer related bug fixes
 - Removed pause timer
 - Removed redundant code
@@ -134,4 +136,3 @@ v1.1 (11/8/2015)
 
 # Credits
 Thanks to [Mike Penz](https://github.com/mikepenz) for the Material Drawer design
-

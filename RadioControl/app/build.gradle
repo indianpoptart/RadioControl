@@ -8,7 +8,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 23
         versionCode 8
-        versionName "3.0 - Beta1"
+        versionName "3.0 - Beta2"
         // Enabling multidex support.
         multiDexEnabled true
     }
@@ -28,6 +28,6 @@ dependencies {
         transitive = true
     }
     compile 'com.android.support:appcompat-v7:23.1.1'
-    compile 'com.mikepenz:google-material-typeface:2.1.2.1@aar'
+    compile 'com.mikepenz:google-material-typeface:2.2.0.1@aar'
     compile 'com.android.support:support-v4:23.1.1'
 }

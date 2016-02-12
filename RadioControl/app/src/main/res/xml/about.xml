@@ -19,4 +19,11 @@
             android:data="https://nikhilp.org/support"
             />
     </Preference>
+    <Preference
+        android:title="Help Wiki">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="https://github.com/indianpoptart/RadioControl/wiki"
+            />
+    </Preference>
 </PreferenceScreen>

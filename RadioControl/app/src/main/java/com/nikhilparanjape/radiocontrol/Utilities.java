@@ -23,10 +23,12 @@ import java.io.IOException;
  * Created by Nikhil on 2/3/2016.
  */
 public class Utilities {
-    /*
- * isOnline - Check if there is a NetworkConnection
- * @return boolean
- */
+
+
+    /**
+     * isOnline - Check if there is a NetworkConnection
+     * @return boolean
+     */
     public static boolean isOnline() {
         Runtime runtime = Runtime.getRuntime();
         try {
