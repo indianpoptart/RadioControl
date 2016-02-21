@@ -2,23 +2,28 @@ package com.nikhilparanjape.radiocontrol;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.vending.billing.IInAppBillingService;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
@@ -30,7 +35,14 @@ import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IProfile;
+import com.nikhilparanjape.radiocontrol.util.IabHelper;
+import com.nikhilparanjape.radiocontrol.util.IabResult;
+import com.nikhilparanjape.radiocontrol.util.Inventory;
+import com.nikhilparanjape.radiocontrol.util.Purchase;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 
 /**
@@ -44,11 +56,65 @@ public class MainActivity extends Activity {
     Drawable icon;
     String versionName = BuildConfig.VERSION_NAME;
     Utilities util = new Utilities();
+    IInAppBillingService mService;
+    static final String ITEM_SKU = "com.nikhilparanjape.radiocontrol.test_donate1";
+    static final String ITEM_ONE_DOLLAR = "com.nikhilparanjape.radiocontrol.donate.onedollar";
+    static final String ITEM_THREE_DOLLAR = "com.nikhilparanjape.radiocontrol.donate.threedollar";
+    static final String ITEM_FIVE_DOLLAR = "com.nikhilparanjape.radiocontrol.donate.fivedollar";
+    static final String ITEM_TEN_DOLLAR = "com.nikhilparanjape.radiocontrol.donate.tendollar";
+
+
+    ServiceConnection mServiceConn = new ServiceConnection() {
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            mService = null;
+        }
+
+        @Override
+        public void onServiceConnected(ComponentName name,
+                                       IBinder service) {
+            mService = IInAppBillingService.Stub.asInterface(service);
+        }
+    };
+    IabHelper mHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        File key = new File("res/key.txt");
+        String base64EncodedPublicKey = null;
+        try{
+            BufferedReader brTest = new BufferedReader(new FileReader(key));
+            base64EncodedPublicKey = brTest.readLine();
+            Log.d("RadioControl", "key gotten");
+        }catch (IOException e){
+
+        }
+
+        mHelper = new IabHelper(this, base64EncodedPublicKey);
+
+        mHelper.startSetup(new
+                                   IabHelper.OnIabSetupFinishedListener() {
+                                       public void onIabSetupFinished(IabResult result)
+                                       {
+                                           if (!result.isSuccess()) {
+                                               Log.d("RadioControl", "In-app Billing setup failed: " +
+                                                       result);
+                                           } else {
+                                               Log.d("RadioControl", "In-app Billing is set up OK");
+                                           }
+                                       }
+                                   });
+
+
+
+        Intent serviceIntent =
+                new Intent("com.android.vending.billing.InAppBillingService.BIND");
+        serviceIntent.setPackage("com.android.vending");
+        bindService(serviceIntent, mServiceConn, Context.BIND_AUTO_CREATE);
+
         init();//initializes the whats new dialog
 
         final SharedPreferences sharedPref = getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE);
@@ -211,7 +277,8 @@ public class MainActivity extends Activity {
         PrimaryDrawerItem item1 = new PrimaryDrawerItem().withName("Home").withIcon(GoogleMaterial.Icon.gmd_wifi);
         SecondaryDrawerItem item2 = new SecondaryDrawerItem().withName("Settings").withIcon(GoogleMaterial.Icon.gmd_settings);
         SecondaryDrawerItem item3 = new SecondaryDrawerItem().withName("About").withIcon(GoogleMaterial.Icon.gmd_info);
-        SecondaryDrawerItem item4 = new SecondaryDrawerItem().withName("Send Feedback").withIcon(GoogleMaterial.Icon.gmd_mail_send);
+        SecondaryDrawerItem item4 = new SecondaryDrawerItem().withName("Donate").withIcon(GoogleMaterial.Icon.gmd_money);
+        SecondaryDrawerItem item5 = new SecondaryDrawerItem().withName("Send Feedback").withIcon(GoogleMaterial.Icon.gmd_mail_send);
 
         //Create navigation drawer
         Drawer result = new DrawerBuilder()
@@ -224,7 +291,8 @@ public class MainActivity extends Activity {
                         item2,
                         item3,
                         new DividerDrawerItem(),
-                        item4
+                        item4,
+                        item5
                 )
 
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
@@ -239,6 +307,11 @@ public class MainActivity extends Activity {
                             startAboutActivity();
                             Log.d("drawer", "Started about activity");
                         } else if (position == 6) {
+                            //Toast.makeText(MainActivity.this, "Not Available Yet", Toast.LENGTH_LONG).show();
+                            Log.d("RadioControl", "In-app");
+                            showDonateDialog();
+
+                        } else if (position == 7) {
                             Toast.makeText(MainActivity.this, "Not Available Yet", Toast.LENGTH_LONG).show();
                             Log.d("RadioControl", "Feedback");
                         }
@@ -275,6 +348,57 @@ public class MainActivity extends Activity {
                     }
                 });
         builder.create().show();
+    }
+    //whats new dialog
+    private void showDonateDialog() {
+        LayoutInflater inflater = LayoutInflater.from(this);//Creates layout inflator for dialog
+        View view = inflater.inflate(R.layout.dialog_donate, null);//Initializes the view for whats new dialog
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);//creates alertdialog
+
+
+        builder.setView(view).setTitle("Donate")//sets title
+                .setPositiveButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Log.v("RadioControl", "Donate Cancelled");
+                        dialog.dismiss();
+                    }
+
+                });
+
+        final AlertDialog alert = builder.create();
+        alert.show();
+
+        Button oneButton = (Button) view.findViewById(R.id.oneDollar);
+        oneButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                alert.cancel();
+                buyItem(0);
+            }
+        });
+        Button threeButton = (Button) view.findViewById(R.id.threeDollar);
+        threeButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                alert.cancel();
+                buyItem(1);
+            }
+        });
+        Button fiveButton = (Button) view.findViewById(R.id.fiveDollar);
+        fiveButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                alert.cancel();
+                buyItem(2);
+            }
+        });
+        Button tenButton = (Button) view.findViewById(R.id.tenDollar);
+        tenButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                alert.cancel();
+                buyItem(3);
+            }
+        });
+
+
     }
     //Grab device make and model for drawer
     public static String getDeviceName() {
@@ -381,5 +505,84 @@ public class MainActivity extends Activity {
             }
 
         }
+    }
+    IabHelper.OnIabPurchaseFinishedListener mPurchaseFinishedListener
+            = new IabHelper.OnIabPurchaseFinishedListener() {
+        public void onIabPurchaseFinished(IabResult result,
+                                          Purchase purchase)
+        {
+            if (result.isFailure()) {
+                Toast.makeText(MainActivity.this, "Thanks for the thought, but the purchase failed", Toast.LENGTH_LONG).show();
+                return;
+            }
+            else if (purchase.getSku().equals(ITEM_SKU)) {
+                //consumeItem();
+                Toast.makeText(MainActivity.this, "Thanks for the donation :)", Toast.LENGTH_LONG).show();
+            }
+
+        }
+    };
+    IabHelper.OnConsumeFinishedListener mConsumeFinishedListener =
+            new IabHelper.OnConsumeFinishedListener() {
+                public void onConsumeFinished(Purchase purchase,
+                                              IabResult result) {
+
+                    if (result.isSuccess()) {
+                        Toast.makeText(MainActivity.this, "Thanks for the donation :)", Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(MainActivity.this, "Thanks for the thought, but the purchase failed", Toast.LENGTH_LONG).show();
+                    }
+                }
+            };
+
+    public void consumeItem() {
+        mHelper.queryInventoryAsync(mReceivedInventoryListener);
+    }
+    public void buyItem(int bill){
+        //Check if $0.99
+        if(bill == 0){
+            mHelper.launchPurchaseFlow(this, ITEM_ONE_DOLLAR, 10001,
+                    mPurchaseFinishedListener, "one");
+        }
+        //Check if $2.99
+        else if(bill == 1){
+                mHelper.launchPurchaseFlow(this, ITEM_THREE_DOLLAR, 10001,
+                        mPurchaseFinishedListener, "three");
+        }
+        //Check if $4.99
+        else if(bill == 2){
+            mHelper.launchPurchaseFlow(this, ITEM_FIVE_DOLLAR, 10001,
+                    mPurchaseFinishedListener, "five");
+        }
+        //Check if $9.99
+        else if(bill == 3){
+            mHelper.launchPurchaseFlow(this, ITEM_TEN_DOLLAR, 10001,
+                    mPurchaseFinishedListener, "ten");
+        }
+
+
+    }
+
+    IabHelper.QueryInventoryFinishedListener mReceivedInventoryListener
+            = new IabHelper.QueryInventoryFinishedListener() {
+        public void onQueryInventoryFinished(IabResult result,
+                                             Inventory inventory) {
+
+            if (result.isFailure()) {
+                // Handle failure
+            } else {
+                mHelper.consumeAsync(inventory.getPurchase(ITEM_SKU),
+                        mConsumeFinishedListener);
+            }
+        }
+    };
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (mService != null) {
+            unbindService(mServiceConn);
+        }
+        if (mHelper != null) mHelper.dispose();
+        mHelper = null;
     }
 }
