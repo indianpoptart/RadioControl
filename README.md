@@ -21,7 +21,7 @@ Latest Stable Release: [v2.0](https://github.com/indianpoptart/RadioControl/rele
 
 Current Alpha Release: [v2.1-alpha7](https://github.com/indianpoptart/RadioControl/releases/tag/v2.1-alpha7)
 
-Current Beta Release: [v3.0-beta2](https://github.com/indianpoptart/RadioControl/releases/tag/v3.0-beta2)
+Current Beta Release: [v3.0-beta3](https://github.com/indianpoptart/RadioControl/releases/tag/v3.0-beta3)
 
 # New Features
 ###### New network notification
@@ -35,6 +35,12 @@ Tested on the following devices
 - Moto X (2nd Gen.) ![Motorola](https://nikhilp.org/images/moto.png)
 
 # What's New?
+v3.0 - Beta3 (2/20/2016)
+- Fixed toggle switch bug
+- Fixed WiFi Receiver/Network Settings null bug
+- Added non-working feedback button
+- Changed easter egg to developer feature
+
 v3.0 - Beta2 (2/12/2016)
 - Added help wiki link in about page
 - Internet alert seems to be working without problem. Still experimental/being tested
