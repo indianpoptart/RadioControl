@@ -39,22 +39,22 @@ public class AboutActivity extends PreferenceActivity {
                 z++;
                 Log.d("RadioControl",(7-z)+ " steps away from easter egg");
                 if(z >= 7){
-                    if (!sp.getBoolean("isEasterEgg",false)) {
-                        Toast.makeText(AboutActivity.this, "You found an easter egg", Toast.LENGTH_LONG).show();
+                    if (!sp.getBoolean("isDeveloper",false)) {
+                        Toast.makeText(AboutActivity.this, "Enabled developer features", Toast.LENGTH_LONG).show();
                         z=0;
-                        Log.d("RadioControl","Easter egg activated");
+                        Log.d("RadioControl","Developer features activated");
 
 
-                        editor.putBoolean("isEasterEgg", true); //Puts the boolean into prefs.xml
+                        editor.putBoolean("isDeveloper", true); //Puts the boolean into prefs.xml
                         editor.commit(); //Ends writing to prefs file
                     }
-                    else if(sp.getBoolean("isEasterEgg",false)){
-                        Toast.makeText(AboutActivity.this, "You disabled the easter egg", Toast.LENGTH_LONG).show();
+                    else if(sp.getBoolean("isDeveloper",false)){
+                        Toast.makeText(AboutActivity.this, "Disabled developer features", Toast.LENGTH_LONG).show();
                         z=0;
-                        Log.d("RadioControl","Easter egg deactivated");
+                        Log.d("RadioControl","Developer features deactivated");
 
 
-                        editor.putBoolean("isEasterEgg", false); //Puts the boolean into prefs.xml
+                        editor.putBoolean("isDeveloper", false); //Puts the boolean into prefs.xml
                         editor.commit(); //Ends writing to prefs file
                     }
 

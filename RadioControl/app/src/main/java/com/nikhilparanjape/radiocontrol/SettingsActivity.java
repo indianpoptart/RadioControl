@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.preference.CheckBoxPreference;
 import android.preference.MultiSelectListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
@@ -69,6 +70,7 @@ public class SettingsActivity extends PreferenceActivity {
                 return false;
             }
         });
+
 
     }
 

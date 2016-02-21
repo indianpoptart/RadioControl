@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.materialdrawer.AccountHeader;
@@ -40,17 +41,16 @@ public class MainActivity extends Activity {
     private static final String PRIVATE_PREF = "prefs";
     private static final String VERSION_KEY = "version_number";
 
-
     Drawable icon;
     String versionName = BuildConfig.VERSION_NAME;
     Utilities util = new Utilities();
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         init();//initializes the whats new dialog
+
         final SharedPreferences sharedPref = getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE);
         final SharedPreferences.Editor editor = sharedPref.edit();
         final TextView statusText = (TextView)findViewById(R.id.statusText);
@@ -88,7 +88,7 @@ public class MainActivity extends Activity {
 
         });
 
-        //Connection Test button
+        //Connection Test button (Dev Feature)
         Button conn = (Button) findViewById(R.id.pingTestButton);
         //Check if the easter egg is NOT activated
         if(!sharedPref.getBoolean("isEasterEgg",false)){
@@ -139,39 +139,6 @@ public class MainActivity extends Activity {
 
         drawerCreate(); //Initalizes Drawer
 
-        if(rootInit() == false){
-            toggle.setClickable(false);
-            statusText.setText("couldn't get root");
-            statusText.setTextColor(getResources().getColor(R.color.status_deactivated));
-        }
-
-        if(sharedPref.getInt("isActive",1) == 1){
-            if(rootInit() == false){
-                toggle.setClickable(false);
-                statusText.setText("couldn't get root");
-                statusText.setTextColor(getResources().getColor(R.color.status_deactivated));
-            }
-            else{
-                statusText.setText("is Enabled");
-                statusText.setTextColor(getResources().getColor(R.color.status_activated));
-                toggle.setChecked(true);
-            }
-
-        }
-        else if(sharedPref.getInt("isActive",1) == 0){
-            if(rootInit() == false){
-                toggle.setClickable(false);
-                statusText.setText("couldn't get root");
-                statusText.setTextColor(getResources().getColor(R.color.status_deactivated));
-            }
-            else{
-                statusText.setText("is Disabled");
-                statusText.setTextColor(getResources().getColor(R.color.status_deactivated));
-                toggle.setChecked(false);
-            }
-
-        }
-
         toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (!isChecked) {
@@ -180,7 +147,7 @@ public class MainActivity extends Activity {
                     statusText.setTextColor(getResources().getColor(R.color.status_deactivated));
                     editor.commit();
 
-                } else {
+                } else if (isChecked){
                     editor.putInt("isActive",1);
                     statusText.setText("is Enabled");
                     statusText.setTextColor(getResources().getColor(R.color.status_activated));
@@ -244,6 +211,7 @@ public class MainActivity extends Activity {
         PrimaryDrawerItem item1 = new PrimaryDrawerItem().withName("Home").withIcon(GoogleMaterial.Icon.gmd_wifi);
         SecondaryDrawerItem item2 = new SecondaryDrawerItem().withName("Settings").withIcon(GoogleMaterial.Icon.gmd_settings);
         SecondaryDrawerItem item3 = new SecondaryDrawerItem().withName("About").withIcon(GoogleMaterial.Icon.gmd_info);
+        SecondaryDrawerItem item4 = new SecondaryDrawerItem().withName("Send Feedback").withIcon(GoogleMaterial.Icon.gmd_mail_send);
 
         //Create navigation drawer
         Drawer result = new DrawerBuilder()
@@ -254,7 +222,9 @@ public class MainActivity extends Activity {
                         item1,
                         new DividerDrawerItem(),
                         item2,
-                        item3
+                        item3,
+                        new DividerDrawerItem(),
+                        item4
                 )
 
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
@@ -268,6 +238,9 @@ public class MainActivity extends Activity {
                         } else if (position == 4) {
                             startAboutActivity();
                             Log.d("drawer", "Started about activity");
+                        } else if (position == 6) {
+                            Toast.makeText(MainActivity.this, "Not Available Yet", Toast.LENGTH_LONG).show();
+                            Log.d("RadioControl", "Feedback");
                         }
                         return false;
                     }
@@ -376,13 +349,26 @@ public class MainActivity extends Activity {
         TextView statusText = (TextView)findViewById(R.id.statusText);
         Switch toggle = (Switch) findViewById(R.id.enableSwitch);
 
+        if(rootInit() == false){
+            toggle.setClickable(false);
+            statusText.setText("couldn't get root");
+            statusText.setTextColor(getResources().getColor(R.color.status_deactivated));
+        }
+
         if(sharedPref.getInt("isActive",1) == 1){
-            statusText.setText("is Enabled");
-            statusText.setTextColor(getResources().getColor(R.color.status_activated));
-            toggle.setChecked(true);
+            if(rootInit() == false){
+                toggle.setClickable(false);
+                statusText.setText("couldn't get root");
+                statusText.setTextColor(getResources().getColor(R.color.status_deactivated));
+            }
+            else{
+                statusText.setText("is Enabled");
+                statusText.setTextColor(getResources().getColor(R.color.status_activated));
+                toggle.setChecked(true);
+            }
 
         }
-        else if(sharedPref.getInt("isActive",1) == 0){
+        else if(sharedPref.getInt("isActive",0) == 0){
             if(rootInit() == false){
                 toggle.setClickable(false);
                 statusText.setText("couldn't get root");

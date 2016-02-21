@@ -7,6 +7,8 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Set;
 
 
@@ -30,7 +32,8 @@ public class WifiReceiver extends BroadcastReceiver {
         SharedPreferences sp = context.getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
-        Set<String> selections = prefs.getStringSet("ssid", null);
+        Set<String> h = new HashSet<>(Arrays.asList("")); //Set default set for SSID check
+        Set<String> selections = prefs.getStringSet("ssid", h); //Gets stringset, if empty sets default
         boolean alertPriority = prefs.getBoolean("networkPriority", false);//Setting for network notifier
         boolean alertSounds = prefs.getBoolean("networkSound",false);
         boolean alertVibrate = prefs.getBoolean("networkVibrate",false);
