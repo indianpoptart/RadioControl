@@ -21,7 +21,7 @@ Latest Stable Release: [v2.0](https://github.com/indianpoptart/RadioControl/rele
 
 Current Alpha Release: [v2.1-alpha7](https://github.com/indianpoptart/RadioControl/releases/tag/v2.1-alpha7)
 
-Current Beta Release: [v3.0-beta4](https://github.com/indianpoptart/RadioControl/releases/tag/v3.0-beta4)
+Current Beta Release: [v3.0-beta5](https://github.com/indianpoptart/RadioControl/releases/tag/v3.0-beta5)
 
 # New Features
 ###### New network notification
@@ -35,6 +35,13 @@ Tested on the following devices
 - Moto X (2nd Gen.) ![Motorola](https://nikhilp.org/images/moto.png)
 
 # What's New?
+v3.0 - Beta5 (2/21/2016)
+- Fixed Developer Features
+- Check for internet before donating
+- Fixed buy, back, buy again crash
+- Donation toasts work now
+- Finally incrementing version code along with version name
+
 v3.0 - Beta4 (2/21/2016)
 - Added donate button in drawer
 - Donate has 4 tiers ($0.99, $2.99, $4.99, $9.99)

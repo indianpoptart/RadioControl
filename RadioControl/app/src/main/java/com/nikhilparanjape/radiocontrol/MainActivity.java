@@ -9,11 +9,13 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -129,11 +131,11 @@ public class MainActivity extends Activity {
         //LinkSpeed Button
         Button linkSpeedButton = (Button) findViewById(R.id.linkSpeedButton);
         //Check if the easter egg is NOT activated
-        if(!sharedPref.getBoolean("isEasterEgg",false)){
+        if(!sharedPref.getBoolean("isDeveloper",false)){
             linkSpeedButton.setVisibility(View.GONE);
             linkText.setVisibility(View.GONE);
         }
-        else if(sharedPref.getBoolean("isEasterEgg",false)){
+        else if(sharedPref.getBoolean("isDeveloper",false)){
             linkSpeedButton.setVisibility(View.VISIBLE);
             linkText.setVisibility(View.VISIBLE);
         }
@@ -157,11 +159,11 @@ public class MainActivity extends Activity {
         //Connection Test button (Dev Feature)
         Button conn = (Button) findViewById(R.id.pingTestButton);
         //Check if the easter egg is NOT activated
-        if(!sharedPref.getBoolean("isEasterEgg",false)){
+        if(!sharedPref.getBoolean("isDeveloper",false)){
             conn.setVisibility(View.GONE);
             connectionStatusText.setVisibility(View.GONE);
         }
-        else if(sharedPref.getBoolean("isEasterEgg",false)){
+        else if(sharedPref.getBoolean("isDeveloper",false)){
             conn.setVisibility(View.VISIBLE);
             connectionStatusText.setVisibility(View.VISIBLE);
         }
@@ -298,7 +300,7 @@ public class MainActivity extends Activity {
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
                     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
-                        Log.d("drawer", "The drawer is: " + drawerItem + " position is " + position);
+                        Log.d("RadioControl", "The drawer is at position " + position);
                         //About button
                         if (position == 3) {
                             startSettingsActivity();
@@ -307,9 +309,15 @@ public class MainActivity extends Activity {
                             startAboutActivity();
                             Log.d("drawer", "Started about activity");
                         } else if (position == 6) {
-                            //Toast.makeText(MainActivity.this, "Not Available Yet", Toast.LENGTH_LONG).show();
+                            //Donation
                             Log.d("RadioControl", "In-app");
-                            showDonateDialog();
+                            if(util.isConnected(getApplicationContext())){
+                                showDonateDialog();
+                            }
+                            else{
+                                showErrorDialog();
+                            }
+
 
                         } else if (position == 7) {
                             Toast.makeText(MainActivity.this, "Not Available Yet", Toast.LENGTH_LONG).show();
@@ -349,10 +357,10 @@ public class MainActivity extends Activity {
                 });
         builder.create().show();
     }
-    //whats new dialog
+    //donate dialog
     private void showDonateDialog() {
         LayoutInflater inflater = LayoutInflater.from(this);//Creates layout inflator for dialog
-        View view = inflater.inflate(R.layout.dialog_donate, null);//Initializes the view for whats new dialog
+        View view = inflater.inflate(R.layout.dialog_donate, null);//Initializes the view for donate dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(this);//creates alertdialog
 
 
@@ -360,7 +368,7 @@ public class MainActivity extends Activity {
                 .setPositiveButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Log.v("RadioControl", "Donate Cancelled");
+                        Log.v("RadioControl", "Donation Cancelled");
                         dialog.dismiss();
                     }
 
@@ -369,36 +377,61 @@ public class MainActivity extends Activity {
         final AlertDialog alert = builder.create();
         alert.show();
 
+        //Sets the purchase options
         Button oneButton = (Button) view.findViewById(R.id.oneDollar);
         oneButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                alert.cancel();
-                buyItem(0);
+                alert.cancel(); //Closes the donate dialog
+                buyItem(0); //Opens billing for set item
             }
         });
         Button threeButton = (Button) view.findViewById(R.id.threeDollar);
         threeButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                alert.cancel();
-                buyItem(1);
+                alert.cancel(); //Closes the donate dialog
+                buyItem(1); //Opens billing for set item
             }
         });
         Button fiveButton = (Button) view.findViewById(R.id.fiveDollar);
         fiveButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                alert.cancel();
-                buyItem(2);
+                alert.cancel(); //Closes the donate dialog
+                buyItem(2); //Opens billing for set item
             }
         });
         Button tenButton = (Button) view.findViewById(R.id.tenDollar);
         tenButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                alert.cancel();
-                buyItem(3);
+                alert.cancel(); //Closes the donate dialog
+                buyItem(3); //Opens billing for set item
             }
         });
 
 
+    }
+    //Internet Error dialog
+    private void showErrorDialog() {
+        LayoutInflater inflater = LayoutInflater.from(this);//Creates layout inflator for dialog
+        View view = inflater.inflate(R.layout.dialog_no_internet, null);//Initializes the view for error dialog
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);//creates alertdialog
+        TextView title = new TextView(this);
+        // You Can Customise your Title here
+        title.setText("No Internet Connection");
+        title.setBackgroundColor(Color.DKGRAY);
+        title.setPadding(10, 10, 10, 10);
+        title.setGravity(Gravity.CENTER);
+        title.setTextColor(Color.WHITE);
+        title.setTextSize(20);
+
+        builder.setCustomTitle(title);
+        builder.setView(view)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        builder.create().show();
     }
     //Grab device make and model for drawer
     public static String getDeviceName() {
@@ -449,11 +482,11 @@ public class MainActivity extends Activity {
         TextView connectionStatusText = (TextView) findViewById(R.id.pingStatus);
 
         //Check if the easter egg is NOT activated
-        if(!sharedPref.getBoolean("isEasterEgg",false)){
+        if(!sharedPref.getBoolean("isDeveloper",false)){
             conn.setVisibility(View.GONE);
             connectionStatusText.setVisibility(View.GONE);
         }
-        else if(sharedPref.getBoolean("isEasterEgg",false)){
+        else if(sharedPref.getBoolean("isDeveloper",false)){
             conn.setVisibility(View.VISIBLE);
             connectionStatusText.setVisibility(View.VISIBLE);
         }
@@ -462,11 +495,11 @@ public class MainActivity extends Activity {
         Button btn3 = (Button) findViewById(R.id.linkSpeedButton);
         final TextView linkText = (TextView)findViewById(R.id.linkSpeed);
         //LinkSpeed button and text
-        if(!sharedPref.getBoolean("isEasterEgg",false)){
+        if(!sharedPref.getBoolean("isDeveloper",false)){
             btn3.setVisibility(View.GONE);
             linkText.setVisibility(View.GONE);
         }
-        else if(sharedPref.getBoolean("isEasterEgg",false)){
+        else if(sharedPref.getBoolean("isDeveloper",false)){
             btn3.setVisibility(View.VISIBLE);
             linkText.setVisibility(View.VISIBLE);
         }
@@ -513,11 +546,13 @@ public class MainActivity extends Activity {
         {
             if (result.isFailure()) {
                 Toast.makeText(MainActivity.this, "Thanks for the thought, but the purchase failed", Toast.LENGTH_LONG).show();
+                Log.d("RadioControl","In-app purchase failed");
                 return;
             }
             else if (purchase.getSku().equals(ITEM_SKU)) {
-                //consumeItem();
+                consumeItem();
                 Toast.makeText(MainActivity.this, "Thanks for the donation :)", Toast.LENGTH_LONG).show();
+                Log.d("RadioControl","In-app purchase succeeded");
             }
 
         }
@@ -529,8 +564,10 @@ public class MainActivity extends Activity {
 
                     if (result.isSuccess()) {
                         Toast.makeText(MainActivity.this, "Thanks for the donation :)", Toast.LENGTH_LONG).show();
+                        Log.d("RadioControl","In-app purchase succeeded");
                     } else {
                         Toast.makeText(MainActivity.this, "Thanks for the thought, but the purchase failed", Toast.LENGTH_LONG).show();
+                        Log.d("RadioControl","In-app purchase failed");
                     }
                 }
             };
@@ -576,6 +613,18 @@ public class MainActivity extends Activity {
             }
         }
     };
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // Pass on the activity result to the helper for handling
+        if (!mHelper.handleActivityResult(requestCode, resultCode, data)) {
+            // not handled, so handle it ourselves (here's where you'd
+            // perform any handling of activity results not related to in-app
+            // billing...
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
     @Override
     public void onDestroy() {
         super.onDestroy();

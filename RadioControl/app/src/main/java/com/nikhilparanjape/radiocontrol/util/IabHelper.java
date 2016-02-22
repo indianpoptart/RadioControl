@@ -822,6 +822,9 @@ public class IabHelper {
         mAsyncInProgress = true;
         logDebug("Starting async operation: " + operation);
     }
+    public void stopAsync(){
+        mAsyncInProgress = false;
+    }
 
     void flagEndAsync() {
         logDebug("Ending async operation: " + mAsyncOperation);
