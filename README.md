@@ -35,6 +35,11 @@ Tested on the following devices
 - Moto X (2nd Gen.) ![Motorola](https://nikhilp.org/images/moto.png)
 
 # What's New?
+v3.0 - Beta6 (2/22/2016)
+- Optimized imports
+- Removed send feedback button for now
+- Close to stable release
+
 v3.0 - Beta5 (2/21/2016)
 - Fixed Developer Features
 - Check for internet before donating
