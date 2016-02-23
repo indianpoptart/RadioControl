@@ -30,7 +30,7 @@
         <item name="material_drawer_header_selection_text">@color/material_drawer_header_selection_text</item>
 
     </style>
-    <style name="MaterialDarkTheme" parent="android:ThemeOverlay.Material.Dark">
+    <style name="MaterialDarkTheme" parent="android:ThemeOverlay.Material.Dark.ActionBar">
         <!-- Main theme colors -->
         <!--   your app branding color for the app bar -->
         <item name="android:colorPrimary">@color/blue</item>

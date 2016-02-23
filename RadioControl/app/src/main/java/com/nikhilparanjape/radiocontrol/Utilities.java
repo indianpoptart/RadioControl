@@ -8,14 +8,13 @@ import android.content.Intent;
 import android.media.AudioManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.provider.Settings;
 import android.support.v7.app.NotificationCompat;
 import android.telephony.TelephonyManager;
 import android.util.Log;
-
-import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 
 import java.io.IOException;
 
@@ -35,7 +34,7 @@ public class Utilities {
 
             Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");
             int exitValue = ipProcess.waitFor();
-            Log.d("RadioControl", "Val: " + exitValue);
+            Log.d("RadioControl", "Ping test returned " + exitValue);
             return (exitValue == 0);
 
         }
@@ -73,6 +72,42 @@ public class Utilities {
         int linkSpeed = wifiManager.getConnectionInfo().getLinkSpeed();
         Log.d("RadioControl", "Link speed = " + linkSpeed + "Mbps");
         return linkSpeed;
+    }
+    public static int frequency(Context c){
+        WifiManager wifiManager = (WifiManager)c.getSystemService(Context.WIFI_SERVICE);
+        int freq = wifiManager.getConnectionInfo().getFrequency();
+        int GHz = freq/1000;
+        if(GHz == 2){
+            Log.d("RadioControl", "Frequency = " + freq + "MHz");
+            return 2;
+        }
+        else if(GHz == 5){
+            Log.d("RadioControl", "Frequency = " + freq + "MHz");
+            return 5;
+        }
+        else
+            return 0;
+
+    }
+    public static void getSecurity(Context c){
+        WifiManager wifiManager = (WifiManager)c.getSystemService(Context.WIFI_SERVICE);
+        WifiConfiguration netConfig = new WifiConfiguration();
+
+    }
+    public static String getFrequency(Context c){
+        WifiManager wifiManager = (WifiManager)c.getSystemService(Context.WIFI_SERVICE);
+        int freq = wifiManager.getConnectionInfo().getFrequency();
+        int GHz = freq/1000;
+        if(GHz == 2){
+            Log.d("RadioControl", "Frequency = " + freq + "MHz");
+            return "2.4 GHz";
+        }
+        else if(GHz == 5){
+            Log.d("RadioControl", "Frequency = " + freq + "MHz");
+            return "5 GHz";
+        }
+        else
+            return null;
     }
 
     /**

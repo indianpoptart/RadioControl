@@ -20,7 +20,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -90,25 +89,23 @@ public class MainActivity extends Activity {
         try{
             BufferedReader brTest = new BufferedReader(new FileReader(key));
             base64EncodedPublicKey = brTest.readLine();
-            Log.d("RadioControl", "key gotten");
+            Log.d("RadioControl", "key received");
         }catch (IOException e){
 
         }
 
         mHelper = new IabHelper(this, base64EncodedPublicKey);
 
-        mHelper.startSetup(new
-                                   IabHelper.OnIabSetupFinishedListener() {
-                                       public void onIabSetupFinished(IabResult result)
-                                       {
-                                           if (!result.isSuccess()) {
-                                               Log.d("RadioControl", "In-app Billing setup failed: " +
-                                                       result);
-                                           } else {
-                                               Log.d("RadioControl", "In-app Billing is set up OK");
-                                           }
-                                       }
-                                   });
+        mHelper.startSetup(new IabHelper.OnIabSetupFinishedListener() {
+            public void onIabSetupFinished(IabResult result)
+            {
+                if (!result.isSuccess()) {
+                    Log.d("RadioControl", "In-app Billing setup failed: " + result);
+                } else {
+                    Log.d("RadioControl", "In-app Billing is set up OK");
+                }
+            }
+        });
 
 
 
@@ -143,12 +140,20 @@ public class MainActivity extends Activity {
         linkSpeedButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //showWifiInfoDialog();
                 int linkspeed = util.linkSpeed(getApplicationContext());
+                int GHz = util.frequency(getApplicationContext());
                 if(linkspeed == -1){
                     linkText.setText("Unknown network detected");
                 }
                 else{
-                    linkText.setText("Link speed = " + linkspeed + "Mbps");
+                    if(GHz == 2){
+                        linkText.setText("Link speed = " + linkspeed + " Mbps @ 2.4 GHz");
+                    }
+                    else if(GHz == 5){
+                        linkText.setText("Link speed = " + linkspeed + " Mbps @ 5 GHz");
+                    }
+
                 }
 
 
@@ -280,7 +285,7 @@ public class MainActivity extends Activity {
         SecondaryDrawerItem item2 = new SecondaryDrawerItem().withName("Settings").withIcon(GoogleMaterial.Icon.gmd_settings);
         SecondaryDrawerItem item3 = new SecondaryDrawerItem().withName("About").withIcon(GoogleMaterial.Icon.gmd_info);
         SecondaryDrawerItem item4 = new SecondaryDrawerItem().withName("Donate").withIcon(GoogleMaterial.Icon.gmd_money);
-        SecondaryDrawerItem item5 = new SecondaryDrawerItem().withName("Send Feedback").withIcon(GoogleMaterial.Icon.gmd_mail_send);
+        //SecondaryDrawerItem item5 = new SecondaryDrawerItem().withName("Send Feedback").withIcon(GoogleMaterial.Icon.gmd_mail_send);
 
         //Create navigation drawer
         Drawer result = new DrawerBuilder()
@@ -293,8 +298,7 @@ public class MainActivity extends Activity {
                         item2,
                         item3,
                         new DividerDrawerItem(),
-                        item4,
-                        item5
+                        item4
                 )
 
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
@@ -310,7 +314,7 @@ public class MainActivity extends Activity {
                             Log.d("drawer", "Started about activity");
                         } else if (position == 6) {
                             //Donation
-                            Log.d("RadioControl", "In-app");
+                            Log.d("RadioControl", "Donation button pressed");
                             if(util.isConnected(getApplicationContext())){
                                 showDonateDialog();
                             }
@@ -357,6 +361,7 @@ public class MainActivity extends Activity {
                 });
         builder.create().show();
     }
+
     //donate dialog
     private void showDonateDialog() {
         LayoutInflater inflater = LayoutInflater.from(this);//Creates layout inflator for dialog
@@ -583,8 +588,8 @@ public class MainActivity extends Activity {
         }
         //Check if $2.99
         else if(bill == 1){
-                mHelper.launchPurchaseFlow(this, ITEM_THREE_DOLLAR, 10001,
-                        mPurchaseFinishedListener, "three");
+            mHelper.launchPurchaseFlow(this, ITEM_THREE_DOLLAR, 10001,
+                    mPurchaseFinishedListener, "three");
         }
         //Check if $4.99
         else if(bill == 2){
