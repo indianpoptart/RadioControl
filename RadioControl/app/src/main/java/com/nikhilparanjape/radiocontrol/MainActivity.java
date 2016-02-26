@@ -2,6 +2,7 @@ package com.nikhilparanjape.radiocontrol;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -251,6 +252,16 @@ public class MainActivity extends Activity {
         }
     }
 
+    //Start a new activity for sending a feedback email
+    private void sendFeedback() {
+        final Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
+        emailIntent.setType("text/html");
+        emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[]{ getString(R.string.mail_feedback_email) });
+        emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, getString(R.string.mail_feedback_subject));
+        emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, getString(R.string.mail_feedback_message));
+        startActivity(Intent.createChooser(emailIntent, getString(R.string.title_send_feedback)));
+    }
+
     //Method to create the Navigation Drawer
     public void drawerCreate(){
         //Drawable lg = getResources().getDrawable(R.mipmap.lg);
@@ -284,8 +295,7 @@ public class MainActivity extends Activity {
         PrimaryDrawerItem item1 = new PrimaryDrawerItem().withName("Home").withIcon(GoogleMaterial.Icon.gmd_wifi);
         SecondaryDrawerItem item2 = new SecondaryDrawerItem().withName("Settings").withIcon(GoogleMaterial.Icon.gmd_settings);
         SecondaryDrawerItem item3 = new SecondaryDrawerItem().withName("About").withIcon(GoogleMaterial.Icon.gmd_info);
-        SecondaryDrawerItem item4 = new SecondaryDrawerItem().withName("Donate").withIcon(GoogleMaterial.Icon.gmd_money);
-        //SecondaryDrawerItem item5 = new SecondaryDrawerItem().withName("Send Feedback").withIcon(GoogleMaterial.Icon.gmd_mail_send);
+        SecondaryDrawerItem item4 = new SecondaryDrawerItem().withName("Donate").withIcon(GoogleMaterial.Icon.gmd_money);SecondaryDrawerItem item5 = new SecondaryDrawerItem().withName("Send Feedback").withIcon(GoogleMaterial.Icon.gmd_mail_send);
 
         //Create navigation drawer
         Drawer result = new DrawerBuilder()
@@ -298,7 +308,8 @@ public class MainActivity extends Activity {
                         item2,
                         item3,
                         new DividerDrawerItem(),
-                        item4
+                        item4,
+                        item5
                 )
 
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
@@ -324,8 +335,9 @@ public class MainActivity extends Activity {
 
 
                         } else if (position == 7) {
-                            Toast.makeText(MainActivity.this, "Not Available Yet", Toast.LENGTH_LONG).show();
+                            //Toast.makeText(MainActivity.this, "Not Available Yet", Toast.LENGTH_LONG).show();
                             Log.d("RadioControl", "Feedback");
+                            sendFeedback();
                         }
                         return false;
                     }

@@ -21,7 +21,7 @@ Latest Stable Release: [v2.0](https://github.com/indianpoptart/RadioControl/rele
 
 Current Alpha Release: [v2.1-alpha7](https://github.com/indianpoptart/RadioControl/releases/tag/v2.1-alpha7)
 
-Current Beta Release: [v3.0-beta6](https://github.com/indianpoptart/RadioControl/releases/tag/v3.0-beta6)
+Current Beta Release: [v3.0-beta7](https://github.com/indianpoptart/RadioControl/releases/tag/v3.0-beta7)
 
 # New Features
 ###### New network notification
@@ -35,6 +35,10 @@ Tested on the following devices
 - Moto X (2nd Gen.) ![Motorola](https://nikhilp.org/images/moto.png)
 
 # What's New?
+v3.0 - Beta7 (2/26/2016)
+- Feedback button works
+- Small performance gain with disabled check
+
 v3.0 - Beta6 (2/22/2016)
 - Optimized imports
 - Removed send feedback button for now

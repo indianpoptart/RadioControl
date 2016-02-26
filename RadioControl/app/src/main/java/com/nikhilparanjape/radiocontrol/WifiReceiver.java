@@ -44,19 +44,19 @@ public class WifiReceiver extends BroadcastReceiver {
         if(sp.getInt("isActive",0) == 1){
             //Check if we just lost WiFi signal
             if(util.isConnectedWifi(context) == false){
-                Log.d("RadioControl","WIFI SIGNAL LOST");
+                Log.d("RadioControl","WiFi signal LOST");
                 if(util.isAirplaneMode(context)){
                     RootAccess.runCommands(airOffCmd2);
                     Log.d("RadioControl","Airplane mode has been turned off");
                 }
             }
 
-            //if network is connected and airplane mode is off
+            //If network is connected and airplane mode is off
             if (util.isConnectedWifi(context) && !util.isAirplaneMode(context)) {
                 //boolean isWiFi = activeNetwork.getType() == ConnectivityManager.TYPE_WIFI; //Boolean to check for an active WiFi connection
                 //Check the list of disabled networks
                 if(!selections.contains(util.getCurrentSsid(context))){
-                    Log.d("RadioControl",util.getCurrentSsid(context) + " was not found the following strings " + selections);
+                    Log.d("RadioControl",util.getCurrentSsid(context) + " was not found in the disabled list");
                     //Checks that user is not in call
                     if(!util.isCallActive(context)){
                         //Checks if the user doesnt' want network alerts
@@ -92,7 +92,7 @@ public class WifiReceiver extends BroadcastReceiver {
             }
 
         }
-        else if(sp.getInt("isActive",0) == 0){
+        if(sp.getInt("isActive",0) == 0){
             Log.d("RadioControl","RadioControl has been disabled");
             if(networkAlert){
                 //If the connection can reach Google
@@ -101,6 +101,7 @@ public class WifiReceiver extends BroadcastReceiver {
                 }
             }
         }
+
     }
     public void waitFor(long timer){
         try {
