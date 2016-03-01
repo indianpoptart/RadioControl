@@ -11,6 +11,7 @@ import android.net.NetworkInfo;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.os.AsyncTask;
 import android.provider.Settings;
 import android.support.v7.app.NotificationCompat;
 import android.telephony.TelephonyManager;
@@ -29,7 +30,10 @@ public class Utilities {
      * @return boolean
      */
 
-    public static boolean isOnline() {
+    public void isOnline() {
+        new AsyncBackgroundTask().execute("");
+    }
+    public boolean isOnlineTest(){
         Runtime runtime = Runtime.getRuntime();
         try {
             Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");
@@ -344,6 +348,28 @@ public class Utilities {
             }
         }else{
             return false;
+        }
+    }
+
+    private class AsyncBackgroundTask extends AsyncTask<String, Void, Boolean> {
+
+        @Override
+        protected Boolean doInBackground(String... params) {
+            Runtime runtime = Runtime.getRuntime();
+            try {
+                Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");
+                int exitValue = ipProcess.waitFor();
+                Log.d("RadioControl", "Ping test returned " + exitValue);
+                return (exitValue == 0);
+            }
+            catch (IOException e){ e.printStackTrace(); }
+            catch (InterruptedException e) { e.printStackTrace(); }
+
+            return false;
+        }
+        @Override
+        protected void onPostExecute(Boolean result) {
+
         }
     }
 }

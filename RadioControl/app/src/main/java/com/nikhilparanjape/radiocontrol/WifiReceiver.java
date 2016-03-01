@@ -4,9 +4,11 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -34,9 +36,6 @@ public class WifiReceiver extends BroadcastReceiver {
 
         Set<String> h = new HashSet<>(Arrays.asList("")); //Set default set for SSID check
         Set<String> selections = prefs.getStringSet("ssid", h); //Gets stringset, if empty sets default
-        boolean alertPriority = prefs.getBoolean("networkPriority", false);//Setting for network notifier
-        boolean alertSounds = prefs.getBoolean("networkSound",false);
-        boolean alertVibrate = prefs.getBoolean("networkVibrate",false);
         boolean networkAlert= prefs.getBoolean("isNetworkAlive",false);
 
 
@@ -66,15 +65,7 @@ public class WifiReceiver extends BroadcastReceiver {
                         }
                         //The user does want network alert notifications
                         else if(networkAlert){
-                            //If the connection can't reach Google
-                            if(!util.isOnline()){
-                                util.sendNote(context, "You are not connected to the internet",alertVibrate,alertSounds,alertPriority);
-                            }
-                            //If the network is alive
-                            else{
-                                RootAccess.runCommands(airCmd);
-                                Log.d("RadioControl", "Airplane mode has been turned on");
-                            }
+                            new AsyncBackgroundTask(context).execute("");
                         }
 
                     }
@@ -95,14 +86,72 @@ public class WifiReceiver extends BroadcastReceiver {
         if(sp.getInt("isActive",0) == 0){
             Log.d("RadioControl","RadioControl has been disabled");
             if(networkAlert){
-                //If the connection can reach Google
-                if(!util.isOnline()){
-                    util.sendNote(context, "You are not connected to the internet",alertVibrate,alertSounds,alertPriority);
-                }
+                new AsyncBackgroundTask(context).execute("");
             }
         }
 
     }
+    private class AsyncBackgroundTask extends AsyncTask<String, Void, Boolean> {
+        Context context;
+
+        public AsyncBackgroundTask(Context context) {
+            this.context = context;
+        }
+
+        @Override
+        protected Boolean doInBackground(String... params) {
+            try {
+                while(!util.isConnected(context)){
+                    Thread.sleep(1000);
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            Runtime runtime = Runtime.getRuntime();
+            try {
+                Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");
+                int exitValue = ipProcess.waitFor();
+                Log.d("RadioControl", "Ping test returned " + exitValue);
+                return (exitValue == 0);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            return false;
+        }
+        @Override
+        protected void onPostExecute(Boolean result) {
+            SharedPreferences sp = context.getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE);
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+
+            boolean alertPriority = prefs.getBoolean("networkPriority", false);//Setting for network notifier
+            boolean alertSounds = prefs.getBoolean("networkSound",false);
+            boolean alertVibrate = prefs.getBoolean("networkVibrate",false);
+
+
+            if(sp.getInt("isActive",0) == 0){
+                //If the connection can't reach Google
+                if(!result){
+                    util.sendNote(context, "You are not connected to the internet",alertVibrate,alertSounds,alertPriority);
+                }
+            }
+            else if(sp.getInt("isActive",0) == 1){
+                //If the connection can't reach Google
+                if(!result){
+                    util.sendNote(context, "You are not connected to the internet",alertVibrate,alertSounds,alertPriority);
+                }
+                else{
+                    RootAccess.runCommands(airCmd);
+                    Log.d("RadioControl", "Airplane mode has been turned on");
+                }
+            }
+
+
+        }
+    }
+
     public void waitFor(long timer){
         try {
             Thread.sleep(timer);

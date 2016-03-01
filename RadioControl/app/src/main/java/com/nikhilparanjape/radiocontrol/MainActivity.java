@@ -12,6 +12,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -21,6 +22,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.ProgressBar;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -84,6 +86,9 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        final ProgressBar dialog = (ProgressBar) findViewById(R.id.pingProgressBar);
+        dialog.setVisibility(View.GONE);
 
         File key = new File("res/key.txt");
         String base64EncodedPublicKey = null;
@@ -177,36 +182,8 @@ public class MainActivity extends Activity {
         conn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(Utilities.isOnline()){
-                    if(Utilities.isConnectedWifi(getApplicationContext())){
-                        connectionStatusText.setText("Connected to the internet thru WIFI");
-                        connectionStatusText.setTextColor(getResources().getColor(R.color.status_activated));
-                    }
-                    else if(Utilities.isConnectedMobile(getApplicationContext())){
-                        if(Utilities.isConnectedFast(getApplicationContext())){
-                            connectionStatusText.setText("Connected to the internet thru FAST CELL");
-                            connectionStatusText.setTextColor(getResources().getColor(R.color.status_activated));
-                        }
-                        else if(!Utilities.isConnectedFast(getApplicationContext())){
-                            connectionStatusText.setText("Connected to the internet thru SLOW CELL");
-                            connectionStatusText.setTextColor(getResources().getColor(R.color.status_activated));
-                        }
-
-                    }
-
-                }
-                else{
-                    if(Utilities.isAirplaneMode(getApplicationContext()) && !Utilities.isConnected(getApplicationContext())){
-                        connectionStatusText.setText("Airplane mode is on");
-                        connectionStatusText.setTextColor(getResources().getColor(R.color.status_deactivated));
-                    }
-                    else{
-                        connectionStatusText.setText("Unable to connect to the internet");
-                        connectionStatusText.setTextColor(getResources().getColor(R.color.status_deactivated));
-                    }
-
-                }
-
+                dialog.setVisibility(View.VISIBLE);
+                new AsyncBackgroundTask(getApplicationContext()).execute("");
             }
 
         });
@@ -295,7 +272,8 @@ public class MainActivity extends Activity {
         PrimaryDrawerItem item1 = new PrimaryDrawerItem().withName("Home").withIcon(GoogleMaterial.Icon.gmd_wifi);
         SecondaryDrawerItem item2 = new SecondaryDrawerItem().withName("Settings").withIcon(GoogleMaterial.Icon.gmd_settings);
         SecondaryDrawerItem item3 = new SecondaryDrawerItem().withName("About").withIcon(GoogleMaterial.Icon.gmd_info);
-        SecondaryDrawerItem item4 = new SecondaryDrawerItem().withName("Donate").withIcon(GoogleMaterial.Icon.gmd_money);SecondaryDrawerItem item5 = new SecondaryDrawerItem().withName("Send Feedback").withIcon(GoogleMaterial.Icon.gmd_mail_send);
+        SecondaryDrawerItem item4 = new SecondaryDrawerItem().withName("Donate").withIcon(GoogleMaterial.Icon.gmd_money);
+        SecondaryDrawerItem item5 = new SecondaryDrawerItem().withName("Send Feedback").withIcon(GoogleMaterial.Icon.gmd_mail_send);
 
         //Create navigation drawer
         Drawer result = new DrawerBuilder()
@@ -335,7 +313,7 @@ public class MainActivity extends Activity {
 
 
                         } else if (position == 7) {
-                            //Toast.makeText(MainActivity.this, "Not Available Yet", Toast.LENGTH_LONG).show();
+                            //Feedback Button, send as email
                             Log.d("RadioControl", "Feedback");
                             sendFeedback();
                         }
@@ -596,25 +574,86 @@ public class MainActivity extends Activity {
         //Check if $0.99
         if(bill == 0){
             mHelper.launchPurchaseFlow(this, ITEM_ONE_DOLLAR, 10001,
-                    mPurchaseFinishedListener, "one");
+                    mPurchaseFinishedListener, "supportOne");
         }
         //Check if $2.99
         else if(bill == 1){
             mHelper.launchPurchaseFlow(this, ITEM_THREE_DOLLAR, 10001,
-                    mPurchaseFinishedListener, "three");
+                    mPurchaseFinishedListener, "supportThree");
         }
         //Check if $4.99
         else if(bill == 2){
             mHelper.launchPurchaseFlow(this, ITEM_FIVE_DOLLAR, 10001,
-                    mPurchaseFinishedListener, "five");
+                    mPurchaseFinishedListener, "supportFive");
         }
         //Check if $9.99
         else if(bill == 3){
             mHelper.launchPurchaseFlow(this, ITEM_TEN_DOLLAR, 10001,
-                    mPurchaseFinishedListener, "ten");
+                    mPurchaseFinishedListener, "supportTen");
         }
 
 
+    }
+
+    private class AsyncBackgroundTask extends AsyncTask<String, Void, Boolean> {
+        Context context;
+        private ProgressBar dialog;
+
+        public AsyncBackgroundTask(MainActivity activity) {
+            dialog = (ProgressBar) findViewById(R.id.pingProgressBar);
+        }
+
+        public AsyncBackgroundTask(Context context) {
+            this.context = context;
+        }
+        @Override
+        protected Boolean doInBackground(String... params) {
+            Runtime runtime = Runtime.getRuntime();
+            try {
+                Process ipProcess = runtime.exec("/system/bin/ping -c 10 8.8.8.8");
+                int exitValue = ipProcess.waitFor();
+                Log.d("RadioControl", "Ping test returned " + exitValue);
+                return (exitValue == 0);
+            }
+            catch (IOException e){ e.printStackTrace(); }
+            catch (InterruptedException e) { e.printStackTrace(); }
+
+            return false;
+        }
+        @Override
+        protected void onPostExecute(Boolean result) {
+            dialog.setVisibility(View.GONE);
+            final TextView connectionStatusText = (TextView) findViewById(R.id.pingStatus);
+            if(result){
+                if(Utilities.isConnectedWifi(getApplicationContext())){
+                    connectionStatusText.setText("Connected to the internet thru WIFI");
+                    connectionStatusText.setTextColor(getResources().getColor(R.color.status_activated));
+                }
+                else if(Utilities.isConnectedMobile(getApplicationContext())){
+                    if(Utilities.isConnectedFast(getApplicationContext())){
+                        connectionStatusText.setText("Connected to the internet thru FAST CELL");
+                        connectionStatusText.setTextColor(getResources().getColor(R.color.status_activated));
+                    }
+                    else if(!Utilities.isConnectedFast(getApplicationContext())){
+                        connectionStatusText.setText("Connected to the internet thru SLOW CELL");
+                        connectionStatusText.setTextColor(getResources().getColor(R.color.status_activated));
+                    }
+
+                }
+
+            }
+            else{
+                if(Utilities.isAirplaneMode(getApplicationContext()) && !Utilities.isConnected(getApplicationContext())){
+                    connectionStatusText.setText("Airplane mode is on");
+                    connectionStatusText.setTextColor(getResources().getColor(R.color.status_deactivated));
+                }
+                else{
+                    connectionStatusText.setText("Unable to connect to the internet");
+                    connectionStatusText.setTextColor(getResources().getColor(R.color.status_deactivated));
+                }
+
+            }
+        }
     }
 
     IabHelper.QueryInventoryFinishedListener mReceivedInventoryListener

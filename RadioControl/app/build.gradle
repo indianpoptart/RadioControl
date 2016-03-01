@@ -7,10 +7,13 @@ android {
         applicationId "com.nikhilparanjape.radiocontrol"
         minSdkVersion 21
         targetSdkVersion 23
-        versionCode 11
-        versionName "3.0 - Beta7"
+        versionCode 12
+        versionName "3.0 - Beta8"
         // Enabling multidex support.
         multiDexEnabled true
+    }
+    dexOptions {
+        javaMaxHeapSize "14g"
     }
     buildTypes {
         release {
