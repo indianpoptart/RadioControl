@@ -21,7 +21,7 @@ Latest Stable Release: [v2.0](https://github.com/indianpoptart/RadioControl/rele
 
 Current Alpha Release: [v2.1-alpha7](https://github.com/indianpoptart/RadioControl/releases/tag/v2.1-alpha7)
 
-Current Beta Release: [v3.0-beta7](https://github.com/indianpoptart/RadioControl/releases/tag/v3.0-beta7)
+Current Beta Release: [v3.0-beta8](https://github.com/indianpoptart/RadioControl/releases/tag/v3.0-beta8)
 
 # New Features
 ###### New network notification
@@ -35,6 +35,11 @@ Tested on the following devices
 - Moto X (2nd Gen.) ![Motorola](https://nikhilp.org/images/moto.png)
 
 # What's New?
+v3.0 - Beta8 (2/29/2016)
+- Ping test now runs in an AsyncTask (Main screen one sends 3 packets now)
+- New progressbar(circle) for AsyncTask
+- Testing the disconnect from wifi with asynctask, might switch the main root commands to this method
+
 v3.0 - Beta7 (2/26/2016)
 - Feedback button works
 - Small performance gain with disabled check

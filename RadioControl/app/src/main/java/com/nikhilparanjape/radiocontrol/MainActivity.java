@@ -2,7 +2,6 @@ package com.nikhilparanjape.radiocontrol;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -182,6 +181,8 @@ public class MainActivity extends Activity {
         conn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                connectionStatusText.setText("Pinging...");
+                connectionStatusText.setTextColor(getResources().getColor(R.color.material_grey_50));
                 dialog.setVisibility(View.VISIBLE);
                 new AsyncBackgroundTask(getApplicationContext()).execute("");
             }
@@ -610,7 +611,7 @@ public class MainActivity extends Activity {
         protected Boolean doInBackground(String... params) {
             Runtime runtime = Runtime.getRuntime();
             try {
-                Process ipProcess = runtime.exec("/system/bin/ping -c 10 8.8.8.8");
+                Process ipProcess = runtime.exec("/system/bin/ping -c 3 8.8.8.8");
                 int exitValue = ipProcess.waitFor();
                 Log.d("RadioControl", "Ping test returned " + exitValue);
                 return (exitValue == 0);
@@ -622,6 +623,7 @@ public class MainActivity extends Activity {
         }
         @Override
         protected void onPostExecute(Boolean result) {
+            dialog = (ProgressBar)findViewById(R.id.pingProgressBar);
             dialog.setVisibility(View.GONE);
             final TextView connectionStatusText = (TextView) findViewById(R.id.pingStatus);
             if(result){

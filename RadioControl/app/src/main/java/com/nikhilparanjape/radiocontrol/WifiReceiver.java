@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -45,8 +46,9 @@ public class WifiReceiver extends BroadcastReceiver {
             if(util.isConnectedWifi(context) == false){
                 Log.d("RadioControl","WiFi signal LOST");
                 if(util.isAirplaneMode(context)){
-                    RootAccess.runCommands(airOffCmd2);
-                    Log.d("RadioControl","Airplane mode has been turned off");
+                    new AsyncDisconnectTask(context).execute("");
+                    //RootAccess.runCommands(airOffCmd2);
+                    //Log.d("RadioControl","Airplane mode has been turned off");
                 }
             }
 
@@ -65,7 +67,7 @@ public class WifiReceiver extends BroadcastReceiver {
                         }
                         //The user does want network alert notifications
                         else if(networkAlert){
-                            new AsyncBackgroundTask(context).execute("");
+                            new AsyncPingTask(context).execute("");
                         }
 
                     }
@@ -86,21 +88,22 @@ public class WifiReceiver extends BroadcastReceiver {
         if(sp.getInt("isActive",0) == 0){
             Log.d("RadioControl","RadioControl has been disabled");
             if(networkAlert){
-                new AsyncBackgroundTask(context).execute("");
+                new AsyncPingTask(context).execute("");
             }
         }
 
     }
-    private class AsyncBackgroundTask extends AsyncTask<String, Void, Boolean> {
+    private class AsyncPingTask extends AsyncTask<String, Void, Boolean> {
         Context context;
 
-        public AsyncBackgroundTask(Context context) {
+        public AsyncPingTask(Context context) {
             this.context = context;
         }
 
         @Override
         protected Boolean doInBackground(String... params) {
             try {
+                //Wait for network to be connected fully
                 while(!util.isConnected(context)){
                     Thread.sleep(1000);
                 }
@@ -109,7 +112,7 @@ public class WifiReceiver extends BroadcastReceiver {
             }
             Runtime runtime = Runtime.getRuntime();
             try {
-                Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");
+                Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");//Send 1 packet to google and check if it came back
                 int exitValue = ipProcess.waitFor();
                 Log.d("RadioControl", "Ping test returned " + exitValue);
                 return (exitValue == 0);
@@ -149,6 +152,38 @@ public class WifiReceiver extends BroadcastReceiver {
             }
 
 
+        }
+    }
+
+    private class AsyncDisconnectTask extends AsyncTask<String, Void, Boolean> {
+        Context context;
+
+        public AsyncDisconnectTask(Context context) {
+            this.context = context;
+        }
+
+        @Override
+        protected Boolean doInBackground(String... params) {
+            //RootAccess.runCommands(airOffCmd2);
+
+
+            Process p;
+            try {
+                p = Runtime.getRuntime().exec("su"); //Request SU
+                DataOutputStream os = new DataOutputStream(p.getOutputStream()); //Used for terminal
+                for (String tmpCmd : airOffCmd2) {
+                    os.writeBytes(tmpCmd + "\n"); //Sends commands to the terminal
+                }
+                os.writeBytes("exit\n"); //Quits the terminal session
+                os.flush(); //Ends datastream
+                Log.d("Root", "Commands Completed");
+                Log.d("RadioControl","Airplane mode has been turned off");
+            } catch (IOException e) {
+                Log.d("Root", "There was an error with root");
+            }
+            return true;
+        }
+        protected void onPostExecute(Boolean result){
         }
     }
 
