@@ -7,8 +7,8 @@ android {
         applicationId "com.nikhilparanjape.radiocontrol"
         minSdkVersion 21
         targetSdkVersion 23
-        versionCode 12
-        versionName "3.0 - Beta8"
+        versionCode 13
+        versionName "3.0 - Beta9"
         // Enabling multidex support.
         multiDexEnabled true
     }
@@ -30,9 +30,9 @@ dependencies {
     compile('com.mikepenz:materialdrawer:4.6.4@aar') {
         transitive = true
     }
-    compile 'com.android.support:appcompat-v7:23.1.1'
-    compile 'com.android.support:design:23.1.0'
+    compile 'com.android.support:appcompat-v7:23.2.0'
+    compile 'com.android.support:design:23.2.0'
     compile 'com.mikepenz:google-material-typeface:2.2.0.1.original@aar'
-    compile 'com.mikepenz:google-material-typeface:2.2.0.1@aar'
-    compile 'com.android.support:support-v4:23.1.1'
+    compile 'com.android.support:support-v4:23.2.0'
+    compile 'com.google.android.gms:play-services-ads:8.4.0'
 }

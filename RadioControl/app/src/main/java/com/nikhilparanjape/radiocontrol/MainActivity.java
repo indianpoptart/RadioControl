@@ -15,6 +15,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -27,6 +28,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.vending.billing.IInAppBillingService;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
@@ -42,6 +46,7 @@ import com.nikhilparanjape.radiocontrol.util.IabHelper;
 import com.nikhilparanjape.radiocontrol.util.IabResult;
 import com.nikhilparanjape.radiocontrol.util.Inventory;
 import com.nikhilparanjape.radiocontrol.util.Purchase;
+import com.google.android.gms.ads.InterstitialAd;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -61,10 +66,10 @@ public class MainActivity extends Activity {
     Utilities util = new Utilities();
     IInAppBillingService mService;
     static final String ITEM_SKU = "com.nikhilparanjape.radiocontrol.test_donate1";
-    static final String ITEM_ONE_DOLLAR = "com.nikhilparanjape.radiocontrol.donate.onedollar";
-    static final String ITEM_THREE_DOLLAR = "com.nikhilparanjape.radiocontrol.donate.threedollar";
-    static final String ITEM_FIVE_DOLLAR = "com.nikhilparanjape.radiocontrol.donate.fivedollar";
-    static final String ITEM_TEN_DOLLAR = "com.nikhilparanjape.radiocontrol.donate.tendollar";
+    static final String ITEM_ONE_DOLLAR = "com.nikhilparanjape.radiocontrol.donate.one";
+    static final String ITEM_THREE_DOLLAR = "com.nikhilparanjape.radiocontrol.donate.three";
+    static final String ITEM_FIVE_DOLLAR = "com.nikhilparanjape.radiocontrol.donate.five";
+    static final String ITEM_TEN_DOLLAR = "com.nikhilparanjape.radiocontrol.donate.ten";
 
 
     ServiceConnection mServiceConn = new ServiceConnection() {
@@ -85,6 +90,7 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         final ProgressBar dialog = (ProgressBar) findViewById(R.id.pingProgressBar);
         dialog.setVisibility(View.GONE);
@@ -122,6 +128,7 @@ public class MainActivity extends Activity {
         init();//initializes the whats new dialog
 
         final SharedPreferences sharedPref = getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE);
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         final SharedPreferences.Editor editor = sharedPref.edit();
         final TextView statusText = (TextView)findViewById(R.id.statusText);
         final TextView linkText = (TextView)findViewById(R.id.linkSpeed);
@@ -129,6 +136,12 @@ public class MainActivity extends Activity {
         Switch toggle = (Switch) findViewById(R.id.enableSwitch);
 
         rootInit();
+
+        if(!pref.getBoolean("disableAds",false)){
+            AdView mAdView = (AdView) findViewById(R.id.adView);
+            AdRequest adRequest = new AdRequest.Builder().build();
+            mAdView.loadAd(adRequest);
+        }
 
         //LinkSpeed Button
         Button linkSpeedButton = (Button) findViewById(R.id.linkSpeedButton);
@@ -273,8 +286,8 @@ public class MainActivity extends Activity {
         PrimaryDrawerItem item1 = new PrimaryDrawerItem().withName("Home").withIcon(GoogleMaterial.Icon.gmd_wifi);
         SecondaryDrawerItem item2 = new SecondaryDrawerItem().withName("Settings").withIcon(GoogleMaterial.Icon.gmd_settings);
         SecondaryDrawerItem item3 = new SecondaryDrawerItem().withName("About").withIcon(GoogleMaterial.Icon.gmd_info);
-        SecondaryDrawerItem item4 = new SecondaryDrawerItem().withName("Donate").withIcon(GoogleMaterial.Icon.gmd_money);
-        SecondaryDrawerItem item5 = new SecondaryDrawerItem().withName("Send Feedback").withIcon(GoogleMaterial.Icon.gmd_mail_send);
+        SecondaryDrawerItem item4 = new SecondaryDrawerItem().withName("Donate").withIcon(GoogleMaterial.Icon.gmd_attach_money);
+        SecondaryDrawerItem item5 = new SecondaryDrawerItem().withName("Send Feedback").withIcon(GoogleMaterial.Icon.gmd_send);
 
         //Create navigation drawer
         Drawer result = new DrawerBuilder()

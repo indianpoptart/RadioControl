@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Toast;
 
+
 /**
  * Created by Nikhil Paranjape on 12/16/2015.
  */
@@ -21,12 +22,12 @@ public class AboutActivity extends PreferenceActivity {
     private static final String PRIVATE_PREF = "prefs";
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         addPreferencesFromResource(R.xml.about);
+
 
         Preference versionPref = findPreference("version");
         CharSequence cs = versionName;
@@ -70,6 +71,7 @@ public class AboutActivity extends PreferenceActivity {
                 return false;
             }
         });
+
 
 
     }

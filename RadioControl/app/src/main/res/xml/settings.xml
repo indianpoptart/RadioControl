@@ -43,6 +43,13 @@
                 android:defaultValue="false" />
         </PreferenceScreen>
     </PreferenceCategory>
+    <PreferenceCategory android:title="Ad Settings">
+        <CheckBoxPreference
+            android:key="disableAds"
+            android:title="Disable Ads"
+            android:summary="Face it, we all hate ads"
+            android:defaultValue="false" />
+    </PreferenceCategory>
 
 
 
