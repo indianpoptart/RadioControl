@@ -17,11 +17,17 @@ Feel free to ask questions related to Android programming or this project in the
 
 # Versions
 
-Latest Stable Release: [v2.0](https://github.com/indianpoptart/RadioControl/releases/latest)
+Latest Stable Release: [v2.0](https://github.com/indianpoptart/RadioControl/releases/latest) (12/28/2015)
 
-Current Alpha Release: [v2.1-alpha7](https://github.com/indianpoptart/RadioControl/releases/tag/v2.1-alpha7)
+Current Release Candidate [v3.0-rc1](https://github.com/indianpoptart/RadioControl/releases/tag/v3.0-rc1) (3/7/2016)
 
-Current Beta Release: [v3.0-beta9](https://github.com/indianpoptart/RadioControl/releases/tag/v3.0-beta9)
+Current Beta Release: [v3.0-beta9](https://github.com/indianpoptart/RadioControl/releases/tag/v3.0-beta9) (3/3/2016)
+
+Current Alpha Release: [v2.1-alpha7](https://github.com/indianpoptart/RadioControl/releases/tag/v2.1-alpha7) (2/8/2016)
+
+
+
+
 
 # New Features
 ###### New network notification
