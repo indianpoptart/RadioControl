@@ -44,7 +44,7 @@ Tested on the following devices
 v3.0 - ReleaseCandidate 1 (3/7/2016)
 - Ads work now
 - Ads can be disabled in settings
-- Ads will be disabled when a donation is made
+- Ads will be disabled when a donation is made (Untested)
 
 v3.0 - Beta9 (3/2/2016)
 - Testing admob for extra revenue
