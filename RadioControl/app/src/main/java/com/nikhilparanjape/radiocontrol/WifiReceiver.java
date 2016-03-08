@@ -101,7 +101,7 @@ public class WifiReceiver extends BroadcastReceiver {
         }
 
         @Override
-        protected Boolean doInBackground(String... params) {
+        protected void onPreExecute(){
             try {
                 //Wait for network to be connected fully
                 while(!util.isConnected(context)){
@@ -110,8 +110,12 @@ public class WifiReceiver extends BroadcastReceiver {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+        }
+        protected Boolean doInBackground(String... params) {
+
             Runtime runtime = Runtime.getRuntime();
             try {
+                Thread.sleep(1000);
                 Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");//Send 1 packet to google and check if it came back
                 int exitValue = ipProcess.waitFor();
                 Log.d("RadioControl", "Ping test returned " + exitValue);
@@ -186,7 +190,6 @@ public class WifiReceiver extends BroadcastReceiver {
         protected void onPostExecute(Boolean result){
         }
     }
-
     public void waitFor(long timer){
         try {
             Thread.sleep(timer);

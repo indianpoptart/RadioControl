@@ -35,6 +35,11 @@ Tested on the following devices
 - Moto X (2nd Gen.) ![Motorola](https://nikhilp.org/images/moto.png)
 
 # What's New?
+v3.0 - ReleaseCandidate 1 (3/7/2016)
+- Ads work now
+- Ads can be disabled in settings
+- Ads will be disabled when a donation is made
+
 v3.0 - Beta9 (3/2/2016)
 - Testing admob for extra revenue
 - Allow user to disable ads because we all hate ads

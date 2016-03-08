@@ -29,8 +29,8 @@ import android.widget.Toast;
 
 import com.android.vending.billing.IInAppBillingService;
 import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.InterstitialAd;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
@@ -138,9 +138,18 @@ public class MainActivity extends Activity {
         rootInit();
 
         if(!pref.getBoolean("disableAds",false)){
-            AdView mAdView = (AdView) findViewById(R.id.adView);
-            AdRequest adRequest = new AdRequest.Builder().build();
-            mAdView.loadAd(adRequest);
+            if(!pref.getBoolean("isDonated",false)){
+                runOnUiThread(new Runnable() {
+                    public void run() {
+                        AdView mAdView = (AdView) findViewById(R.id.adView);
+                        AdRequest adRequest = new AdRequest.Builder().build();
+                        AdRequest adRequestTest = new AdRequest.Builder()
+                                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                                .build();
+                        mAdView.loadAd(adRequest);
+                    }
+                });
+            }
         }
 
         //LinkSpeed Button
@@ -162,7 +171,7 @@ public class MainActivity extends Activity {
                 int linkspeed = util.linkSpeed(getApplicationContext());
                 int GHz = util.frequency(getApplicationContext());
                 if(linkspeed == -1){
-                    linkText.setText("Unknown network detected");
+                    linkText.setText("Cell network detected");
                 }
                 else{
                     if(GHz == 2){
@@ -483,8 +492,25 @@ public class MainActivity extends Activity {
     protected void onResume() {
         super.onResume();
 
-        final SharedPreferences sharedPref = getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE);
 
+
+        final SharedPreferences sharedPref = getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE);
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+
+        if(!pref.getBoolean("disableAds",false)){
+            if(!pref.getBoolean("isDonated",false)){
+                runOnUiThread(new Runnable() {
+                    public void run() {
+                        AdView mAdView = (AdView) findViewById(R.id.adView);
+                        AdRequest adRequest = new AdRequest.Builder().build();
+                        AdRequest adRequestTest = new AdRequest.Builder()
+                                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                                .build();
+                        mAdView.loadAd(adRequest);
+                    }
+                });
+            }
+        }
         //Connection Test button
         Button conn = (Button) findViewById(R.id.pingTestButton);
         //Ping text
@@ -574,6 +600,11 @@ public class MainActivity extends Activity {
                     if (result.isSuccess()) {
                         Toast.makeText(MainActivity.this, "Thanks for the donation :)", Toast.LENGTH_LONG).show();
                         Log.d("RadioControl","In-app purchase succeeded");
+                        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                        SharedPreferences.Editor editor = pref.edit();
+                        editor.putBoolean("isDonated",true);
+                        editor.apply();
+
                     } else {
                         Toast.makeText(MainActivity.this, "Thanks for the thought, but the purchase failed", Toast.LENGTH_LONG).show();
                         Log.d("RadioControl","In-app purchase failed");
