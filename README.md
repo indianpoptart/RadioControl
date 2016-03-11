@@ -19,7 +19,7 @@ Feel free to ask questions related to Android programming or this project in the
 
 Latest Stable Release: [v2.0](https://github.com/indianpoptart/RadioControl/releases/latest) (12/28/2015)
 
-Current Release Candidate [v3.0-rc1](https://github.com/indianpoptart/RadioControl/releases/tag/v3.0-rc1) (3/7/2016)
+Current Release Candidate [v3.0-rc2](https://github.com/indianpoptart/RadioControl/releases/tag/v3.0-rc2) (3/11/2016)
 
 Current Beta Release: [v3.0-beta9](https://github.com/indianpoptart/RadioControl/releases/tag/v3.0-beta9) (3/3/2016)
 
@@ -41,6 +41,9 @@ Tested on the following devices
 - Moto X (2nd Gen.) ![Motorola](https://nikhilp.org/images/moto.png)
 
 # What's New?
+v3.0 - ReleaseCandidate 2 (3/11/2016)
+- Fixed IAPs
+
 v3.0 - ReleaseCandidate 1 (3/7/2016)
 - Ads work now
 - Ads can be disabled in settings

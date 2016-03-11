@@ -66,10 +66,11 @@ public class MainActivity extends Activity {
     Utilities util = new Utilities();
     IInAppBillingService mService;
     static final String ITEM_SKU = "com.nikhilparanjape.radiocontrol.test_donate1";
-    static final String ITEM_ONE_DOLLAR = "com.nikhilparanjape.radiocontrol.donate.one";
-    static final String ITEM_THREE_DOLLAR = "com.nikhilparanjape.radiocontrol.donate.three";
-    static final String ITEM_FIVE_DOLLAR = "com.nikhilparanjape.radiocontrol.donate.five";
-    static final String ITEM_TEN_DOLLAR = "com.nikhilparanjape.radiocontrol.donate.ten";
+    static final String ITEM_ONE_DOLLAR = "com.nikihlparanjape.radiocontrol.donate.one";
+    static final String ITEM_THREE_DOLLAR = "com.nikihlparanjape.radiocontrol.donate.three";
+    static final String ITEM_FIVE_DOLLAR = "com.nikihlparanjape.radiocontrol.donate.five";
+    static final String ITEM_TEN_DOLLAR = "com.nikihlparanjape.radiocontrol.donate.ten";
+    static final String ITEM_TEST_PURCHASE = "android.test.item_unavailable";
 
 
     ServiceConnection mServiceConn = new ServiceConnection() {
@@ -102,7 +103,7 @@ public class MainActivity extends Activity {
             base64EncodedPublicKey = brTest.readLine();
             Log.d("RadioControl", "key received");
         }catch (IOException e){
-
+            Log.d("RadioControl", "key receive failed");
         }
 
         mHelper = new IabHelper(this, base64EncodedPublicKey);
@@ -146,7 +147,7 @@ public class MainActivity extends Activity {
                         AdRequest adRequestTest = new AdRequest.Builder()
                                 .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
                                 .build();
-                        mAdView.loadAd(adRequest);
+                        mAdView.loadAd(adRequestTest);
                     }
                 });
             }
@@ -581,13 +582,17 @@ public class MainActivity extends Activity {
         {
             if (result.isFailure()) {
                 Toast.makeText(MainActivity.this, "Thanks for the thought, but the purchase failed", Toast.LENGTH_LONG).show();
-                Log.d("RadioControl","In-app purchase failed");
+                Log.d("RadioControl","In-app purchase failed: " + result);
                 return;
             }
-            else if (purchase.getSku().equals(ITEM_SKU)) {
+            else if (purchase.getSku().equals(ITEM_ONE_DOLLAR) || purchase.getSku().equals(ITEM_THREE_DOLLAR) || purchase.getSku().equals(ITEM_FIVE_DOLLAR) || purchase.getSku().equals(ITEM_TEN_DOLLAR) || purchase.getSku().equals(ITEM_TEST_PURCHASE)) {
                 consumeItem();
                 Toast.makeText(MainActivity.this, "Thanks for the donation :)", Toast.LENGTH_LONG).show();
                 Log.d("RadioControl","In-app purchase succeeded");
+                SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                SharedPreferences.Editor editor = pref.edit();
+                editor.putBoolean("isDonated",true);
+                editor.apply();
             }
 
         }
@@ -618,23 +623,23 @@ public class MainActivity extends Activity {
     public void buyItem(int bill){
         //Check if $0.99
         if(bill == 0){
-            mHelper.launchPurchaseFlow(this, ITEM_ONE_DOLLAR, 10001,
-                    mPurchaseFinishedListener, "supportOne");
+            mHelper.launchPurchaseFlow(this, ITEM_ONE_DOLLAR, 001,
+                    mPurchaseFinishedListener, "supportOneDollar");
         }
         //Check if $2.99
         else if(bill == 1){
-            mHelper.launchPurchaseFlow(this, ITEM_THREE_DOLLAR, 10001,
-                    mPurchaseFinishedListener, "supportThree");
+            mHelper.launchPurchaseFlow(this, ITEM_THREE_DOLLAR, 002,
+                    mPurchaseFinishedListener, "supportThreeDollar");
         }
         //Check if $4.99
         else if(bill == 2){
-            mHelper.launchPurchaseFlow(this, ITEM_FIVE_DOLLAR, 10001,
-                    mPurchaseFinishedListener, "supportFive");
+            mHelper.launchPurchaseFlow(this, ITEM_FIVE_DOLLAR, 003,
+                    mPurchaseFinishedListener, "supportFiveDollar");
         }
         //Check if $9.99
         else if(bill == 3){
-            mHelper.launchPurchaseFlow(this, ITEM_TEN_DOLLAR, 10001,
-                    mPurchaseFinishedListener, "supportTen");
+            mHelper.launchPurchaseFlow(this, ITEM_TEN_DOLLAR, 004,
+                    mPurchaseFinishedListener, "supportTenDollar");
         }
 
 
