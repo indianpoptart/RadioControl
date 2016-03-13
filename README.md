@@ -17,7 +17,7 @@ Feel free to ask questions related to Android programming or this project in the
 
 # Versions
 
-Latest Stable Release: [v2.0](https://github.com/indianpoptart/RadioControl/releases/latest) (12/28/2015)
+Latest Stable Release: [v3.0](https://github.com/indianpoptart/RadioControl/releases/latest) (3/16/2016)
 
 Current Release Candidate [v3.0-rc2](https://github.com/indianpoptart/RadioControl/releases/tag/v3.0-rc2) (3/11/2016)
 
