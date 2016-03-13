@@ -70,7 +70,7 @@ public class MainActivity extends Activity {
     static final String ITEM_THREE_DOLLAR = "com.nikihlparanjape.radiocontrol.donate.three";
     static final String ITEM_FIVE_DOLLAR = "com.nikihlparanjape.radiocontrol.donate.five";
     static final String ITEM_TEN_DOLLAR = "com.nikihlparanjape.radiocontrol.donate.ten";
-    static final String ITEM_TEST_PURCHASE = "android.test.item_unavailable";
+    static final String ITEM_TEST_PURCHASE = "com.nikhilparanjape.radiocontrol.donate.test_purchase2";
 
 
     ServiceConnection mServiceConn = new ServiceConnection() {
@@ -96,15 +96,15 @@ public class MainActivity extends Activity {
         final ProgressBar dialog = (ProgressBar) findViewById(R.id.pingProgressBar);
         dialog.setVisibility(View.GONE);
 
-        File key = new File("res/key.txt");
-        String base64EncodedPublicKey = null;
-        try{
-            BufferedReader brTest = new BufferedReader(new FileReader(key));
-            base64EncodedPublicKey = brTest.readLine();
-            Log.d("RadioControl", "key received");
-        }catch (IOException e){
-            Log.d("RadioControl", "key receive failed");
-        }
+        //File key = new File("/res/key.txt");
+        String base64EncodedPublicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxnZmUx4gqEFCsMW+/uPXIzJSaaoP4J/2RVaxYT9Be0jfga0qdGF+Vq56mzQ/LYEZgLvFelGdWwXJ5Izq5Wl/cEW8cExhQ/WDuJvYVaemuU+JnHP1zIZ2H28NtzrDH0hb59k9R8owSx7NPNITshuC4MPwwOQDgDaYk02Hgi4woSzbDtyrvwW1A1FWpftb78i8Pphr7bT14MjpNyNznk4BohLMncEVK22O1N08xrVrR66kcTgYs+EZnkRKk2uPZclsPq4KVKG8LbLcxmDdslDBnhQkSPe3ntAC8DxGhVdgJJDwulcepxWoCby1GcMZTUAC1OKCZlvGRGSwyfIqbqF2JQIDAQAB";
+        //try{
+            //BufferedReader brTest = new BufferedReader(new FileReader(key));
+            //base64EncodedPublicKey = brTest.readLine();
+            //Log.d("RadioControl", "key received");
+        //}catch (IOException e){
+            //Log.d("RadioControl", "key receive failed");
+        //}
 
         mHelper = new IabHelper(this, base64EncodedPublicKey);
 
@@ -147,7 +147,7 @@ public class MainActivity extends Activity {
                         AdRequest adRequestTest = new AdRequest.Builder()
                                 .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
                                 .build();
-                        mAdView.loadAd(adRequestTest);
+                        mAdView.loadAd(adRequest);
                     }
                 });
             }
@@ -581,18 +581,41 @@ public class MainActivity extends Activity {
                                           Purchase purchase)
         {
             if (result.isFailure()) {
-                Toast.makeText(MainActivity.this, "Thanks for the thought, but the purchase failed", Toast.LENGTH_LONG).show();
-                Log.d("RadioControl","In-app purchase failed: " + result);
-                return;
+                if(result.toString().contains("Purchase signature verification failed")){
+                    consumeItem();
+                    Toast.makeText(MainActivity.this, "Thanks for the donation :)", Toast.LENGTH_LONG).show();
+                    Log.d("RadioControl","In-app purchase succeeded, however verification failed");
+                    SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                    SharedPreferences.Editor editor = pref.edit();
+                    editor.putBoolean("isDonated",true);
+                    editor.apply();
+                }
+                else if(result.toString().contains("User cancelled")){
+                    Toast.makeText(MainActivity.this, "You cancelled the purchase", Toast.LENGTH_LONG).show();
+                    Log.d("RadioControl","Purchase Cancelled");
+                    return;
+                }
+                else if(result.toString().contains("Item Already Owned")){
+                    Toast.makeText(MainActivity.this, "You already donated", Toast.LENGTH_LONG).show();
+                    Log.d("RadioControl","Donation already purchased");
+                    return;
+                }
+                else{
+                    Toast.makeText(MainActivity.this, "Thanks for the thought, but the purchase failed: " + result, Toast.LENGTH_LONG).show();
+                    Log.d("RadioControl","In-app purchase failed: " + result + "Purchase: " + purchase);
+                    return;
+                }
+
             }
-            else if (purchase.getSku().equals(ITEM_ONE_DOLLAR) || purchase.getSku().equals(ITEM_THREE_DOLLAR) || purchase.getSku().equals(ITEM_FIVE_DOLLAR) || purchase.getSku().equals(ITEM_TEN_DOLLAR) || purchase.getSku().equals(ITEM_TEST_PURCHASE)) {
-                consumeItem();
+            else if(result.isSuccess()){
                 Toast.makeText(MainActivity.this, "Thanks for the donation :)", Toast.LENGTH_LONG).show();
                 Log.d("RadioControl","In-app purchase succeeded");
                 SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                 SharedPreferences.Editor editor = pref.edit();
                 editor.putBoolean("isDonated",true);
                 editor.apply();
+                //consumeItem();
+
             }
 
         }
@@ -610,8 +633,8 @@ public class MainActivity extends Activity {
                         editor.putBoolean("isDonated",true);
                         editor.apply();
 
-                    } else {
-                        Toast.makeText(MainActivity.this, "Thanks for the thought, but the purchase failed", Toast.LENGTH_LONG).show();
+                    } else if(result.isFailure()){
+                        //Toast.makeText(MainActivity.this, "Thanks for the thought, but the purchase failed", Toast.LENGTH_LONG).show();
                         Log.d("RadioControl","In-app purchase failed");
                     }
                 }
@@ -640,6 +663,7 @@ public class MainActivity extends Activity {
         else if(bill == 3){
             mHelper.launchPurchaseFlow(this, ITEM_TEN_DOLLAR, 004,
                     mPurchaseFinishedListener, "supportTenDollar");
+
         }
 
 

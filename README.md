@@ -41,6 +41,18 @@ Tested on the following devices
 - Moto X (2nd Gen.) ![Motorola](https://nikhilp.org/images/moto.png)
 
 # What's New?
+v3.0 - Release (3/13/2016)
+- New Icon
+- New settings menu
+- New on off switch
+- Network connection alerts
+- Better settings and about menu
+- Removed SSID disabler
+- Added developer mode
+- Sped up switching process
+- Added Donate feature
+- Various bug Fixes
+
 v3.0 - ReleaseCandidate 2 (3/11/2016)
 - Fixed IAPs
 
