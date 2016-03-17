@@ -5,11 +5,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.provider.DocumentsContract;
+import android.text.format.DateFormat;
 import android.util.Log;
 
 import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.security.Timestamp;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -32,6 +39,7 @@ public class WifiReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         intent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
 
+
         SharedPreferences sp = context.getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
@@ -45,10 +53,12 @@ public class WifiReceiver extends BroadcastReceiver {
             //Check if we just lost WiFi signal
             if(util.isConnectedWifi(context) == false){
                 Log.d("RadioControl","WiFi signal LOST");
+                writeLog("WiFi Signal lost");
                 if(util.isAirplaneMode(context)){
-                    new AsyncDisconnectTask(context).execute("");
-                    //RootAccess.runCommands(airOffCmd2);
-                    //Log.d("RadioControl","Airplane mode has been turned off");
+                    RootAccess.runCommands(airOffCmd2);
+                    Log.d("RadioControl","Airplane mode has been turned off");
+                    writeLog("Airplane mode has been turned off");
+
                 }
             }
 
@@ -64,6 +74,9 @@ public class WifiReceiver extends BroadcastReceiver {
                         if(!networkAlert){
                             RootAccess.runCommands(airCmd);
                             Log.d("RadioControl", "Airplane mode has been turned on");
+                            writeLog("Airplane mode has been turned on");
+
+
                         }
                         //The user does want network alert notifications
                         else if(networkAlert){
@@ -93,6 +106,23 @@ public class WifiReceiver extends BroadcastReceiver {
         }
 
     }
+    public void writeLog(String data){
+
+        try{
+            File log = new File(Environment.getDataDirectory().getPath() + "/RadioControl-log.txt");
+            log.createNewFile();
+            FileWriter writer = new FileWriter(log);
+
+            String h = DateFormat.format("yyyy-MM-dd HH:mm:ss", System.currentTimeMillis()).toString();
+            writer.append(h + ": " + data);
+            writer.flush();
+            writer.close();
+        } catch(IOException e){
+            Log.d("RadioControl", "There was an error saving the log: " + e);
+        }
+
+    }
+
     private class AsyncPingTask extends AsyncTask<String, Void, Boolean> {
         Context context;
 
@@ -152,6 +182,7 @@ public class WifiReceiver extends BroadcastReceiver {
                 else{
                     RootAccess.runCommands(airCmd);
                     Log.d("RadioControl", "Airplane mode has been turned on");
+                    writeLog("Airplane mode has been turned on");
                 }
             }
 
@@ -171,8 +202,13 @@ public class WifiReceiver extends BroadcastReceiver {
             //RootAccess.runCommands(airOffCmd2);
 
 
+
             Process p;
             try {
+                File log = new File(Environment.getExternalStorageDirectory(), "RadioControl-log");
+                File filepath = new File(log, ".txt");  // file path to save
+                FileWriter writer = new FileWriter(filepath);
+
                 p = Runtime.getRuntime().exec("su"); //Request SU
                 DataOutputStream os = new DataOutputStream(p.getOutputStream()); //Used for terminal
                 for (String tmpCmd : airOffCmd2) {
@@ -182,12 +218,19 @@ public class WifiReceiver extends BroadcastReceiver {
                 os.flush(); //Ends datastream
                 Log.d("Root", "Commands Completed");
                 Log.d("RadioControl","Airplane mode has been turned off");
+                String h = DateFormat.format("yyyy-MM-dd HH:mm:ss.nnnnnnnnn", System.currentTimeMillis()).toString();
+                writer.append(h + ": " + "Airplane mode has been turned off");
+                writer.flush();
+                writer.close();
+
+
             } catch (IOException e) {
                 Log.d("Root", "There was an error with root");
             }
             return true;
         }
         protected void onPostExecute(Boolean result){
+
         }
     }
     public void waitFor(long timer){

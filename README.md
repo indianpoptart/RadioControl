@@ -19,11 +19,11 @@ Feel free to ask questions related to Android programming or this project in the
 
 Latest Stable Release: [v3.0](https://github.com/indianpoptart/RadioControl/releases/latest) (3/16/2016)
 
-Current Release Candidate [v3.0-rc2](https://github.com/indianpoptart/RadioControl/releases/tag/v3.0-rc2) (3/11/2016)
+Current Release Candidate [v3.0-rc2](https://github.com/indianpoptart/RadioControl/releases/tag/v3.0-rc2) (3/11/2016) (OLD)
 
-Current Beta Release: [v3.0-beta9](https://github.com/indianpoptart/RadioControl/releases/tag/v3.0-beta9) (3/3/2016)
+Current Beta Release: [v3.0-beta9](https://github.com/indianpoptart/RadioControl/releases/tag/v3.0-beta9) (3/3/2016) (OLD)
 
-Current Alpha Release: [v2.1-alpha7](https://github.com/indianpoptart/RadioControl/releases/tag/v2.1-alpha7) (2/8/2016)
+Current Alpha Release: [v3.0.1-alpha1](https://github.com/indianpoptart/RadioControl/releases/tag/v3.0.1-alpha1) (3/17/2016)
 
 
 
@@ -41,6 +41,12 @@ Tested on the following devices
 - Moto X (2nd Gen.) ![Motorola](https://nikhilp.org/images/moto.png)
 
 # What's New?
+v3.0.1 - Alpha1 (3/17/2016)
+- Fixed a small bug when disconnecting, as well as a root bug
+- Added logs, no way to read them yet
+- Added carrier logo/name to drawer (cuz why not)
+- Added wifi logo/name to drawer (cuz why not)
+
 v3.0 - Release (3/13/2016)
 - New Icon
 - New settings menu

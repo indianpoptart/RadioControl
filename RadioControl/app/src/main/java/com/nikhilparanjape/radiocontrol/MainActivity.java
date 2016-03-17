@@ -16,6 +16,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -62,6 +63,8 @@ public class MainActivity extends Activity {
     private static final String VERSION_KEY = "version_number";
 
     Drawable icon;
+    Drawable carrierIcon;
+    Drawable wifiIcon;
     String versionName = BuildConfig.VERSION_NAME;
     Utilities util = new Utilities();
     IInAppBillingService mService;
@@ -92,6 +95,14 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //Request storage permissions if on MM or greater
+        if (Build.VERSION.SDK_INT >= 23) {
+            String[] perms = {"android.permission.READ_EXTERNAL_STORAGE", "android.permission.WRITE_EXTERNAL_STORAGE"};
+
+            int permsRequestCode = 200;
+
+            requestPermissions(perms, permsRequestCode);
+        }
 
         final ProgressBar dialog = (ProgressBar) findViewById(R.id.pingProgressBar);
         dialog.setVisibility(View.GONE);
@@ -265,6 +276,14 @@ public class MainActivity extends Activity {
 
     //Method to create the Navigation Drawer
     public void drawerCreate(){
+        // Get System TELEPHONY service reference
+        TelephonyManager tManager = (TelephonyManager) getBaseContext()
+                .getSystemService(Context.TELEPHONY_SERVICE);
+
+        // Get carrier name (Network Operator Name)
+        String carrierName = tManager.getSimOperatorName();
+        Log.d("RadioControl",carrierName);
+
         //Drawable lg = getResources().getDrawable(R.mipmap.lg);
         if(getDeviceName().contains("Nexus 6P")){
             icon = getResources().getDrawable(R.mipmap.huawei);
@@ -278,12 +297,47 @@ public class MainActivity extends Activity {
         else{
             icon = getResources().getDrawable(R.mipmap.ic_launcher);
         }
+
+        if(carrierName.contains("Fi Network")){
+            carrierIcon = getResources().getDrawable(R.mipmap.fi_logo);
+        }
+        else if(carrierName.contains("AT&T") || carrierName.contains("att")){
+            carrierIcon = getResources().getDrawable(R.mipmap.att_logo);
+        }
+        else if(carrierName.contains("Republic") || carrierName.contains("republic")){
+            carrierIcon = getResources().getDrawable(R.mipmap.republic_logo);
+        }
+        else if(carrierName.contains("sprint") || carrierName.contains("Sprint")){
+            carrierIcon = getResources().getDrawable(R.mipmap.sprint_logo);
+        }
+        else if(carrierName.contains("T-Mobile")){
+            carrierIcon = getResources().getDrawable(R.mipmap.tmobile_logo);
+        }
+        else if(carrierName.contains("Android") || carrierName.equals("")){
+            carrierIcon = getResources().getDrawable(R.mipmap.android_logo);
+            carrierName = "No Carrier";
+        }
+        else if(carrierName.contains("Vodafone")){
+            carrierIcon = getResources().getDrawable(R.mipmap.vodafone_logo);
+        }
+        else{
+            carrierIcon = getResources().getDrawable(R.mipmap.android_logo);
+        }
+        String ssid = util.getCurrentSsid(getApplicationContext());
+        if(!ssid.equals("Not Connected")){
+            wifiIcon = getResources().getDrawable(R.mipmap.wifi_on);
+        }
+        else{
+            wifiIcon = getResources().getDrawable(R.mipmap.wifi_off);
+        }
         //Creates navigation drawer header
         AccountHeader headerResult = new AccountHeaderBuilder()
                 .withActivity(this)
                 .withHeaderBackground(R.mipmap.header)
                 .addProfiles(
-                        new ProfileDrawerItem().withName(getDeviceName()).withEmail("v" + versionName).withIcon(icon)
+                        new ProfileDrawerItem().withName(getDeviceName()).withEmail("v" + versionName).withIcon(icon),
+                        new ProfileDrawerItem().withName("Network Operator").withEmail(carrierName).withIcon(carrierIcon),
+                        new ProfileDrawerItem().withName("WiFi Network").withEmail(ssid).withIcon(wifiIcon)
                 )
                 .withOnAccountHeaderListener(new AccountHeader.OnAccountHeaderListener() {
                     @Override
@@ -492,9 +546,7 @@ public class MainActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-
-
-
+        drawerCreate();
         final SharedPreferences sharedPref = getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE);
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 

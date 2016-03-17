@@ -62,6 +62,9 @@ public class Utilities {
             ssid = connectionInfo.getSSID();
             ssid = ssid.substring(1, ssid.length()-1);
         }
+        else if(!networkInfo.isConnected()){
+            ssid = "Not Connected";
+        }
         return ssid;
     }
 
