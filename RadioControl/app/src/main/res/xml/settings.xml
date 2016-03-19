@@ -2,15 +2,15 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory android:title="Experimental Features">
         <MultiSelectListPreference
-            android:key="ssid"
-            android:title="Network Settings"
+            android:key="ssid-curr"
+            android:title="Network Settings (Disabled)"
             android:dialogTitle="Network Settings (Experimental)"
             android:defaultValue="@array/empty_array"
             android:summary="Do not enable airplane mode when connected to the selected networks"
             />
         <Preference
             android:key="clear-ssid"
-            android:title="Clear Network Settings"
+            android:title="Clear Network Settings (Disabled)"
             android:defaultValue="@array/empty_array"
             android:summary="Clear the disabled networks list"
             />
@@ -42,6 +42,13 @@
                 android:summary="Enables heads-up notifications"
                 android:defaultValue="false" />
         </PreferenceScreen>
+    </PreferenceCategory>
+    <PreferenceCategory android:title="Logging Settings">
+        <CheckBoxPreference
+            android:key="enableLogs"
+            android:title="Enable Logging"
+            android:summary="This will log all wifi switching actions and place it into a text file"
+            android:defaultValue="false" />
     </PreferenceCategory>
     <PreferenceCategory android:title="Ad Settings">
         <CheckBoxPreference

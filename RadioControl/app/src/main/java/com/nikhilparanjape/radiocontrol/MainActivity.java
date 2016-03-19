@@ -95,14 +95,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //Request storage permissions if on MM or greater
-        if (Build.VERSION.SDK_INT >= 23) {
-            String[] perms = {"android.permission.READ_EXTERNAL_STORAGE", "android.permission.WRITE_EXTERNAL_STORAGE"};
 
-            int permsRequestCode = 200;
-
-            requestPermissions(perms, permsRequestCode);
-        }
 
         final ProgressBar dialog = (ProgressBar) findViewById(R.id.pingProgressBar);
         dialog.setVisibility(View.GONE);
@@ -297,7 +290,7 @@ public class MainActivity extends Activity {
         else{
             icon = getResources().getDrawable(R.mipmap.ic_launcher);
         }
-
+        // Carrier icon
         if(carrierName.contains("Fi Network")){
             carrierIcon = getResources().getDrawable(R.mipmap.fi_logo);
         }
@@ -313,6 +306,9 @@ public class MainActivity extends Activity {
         else if(carrierName.contains("T-Mobile")){
             carrierIcon = getResources().getDrawable(R.mipmap.tmobile_logo);
         }
+        else if(carrierName.contains("Verizon")){
+            carrierIcon = getResources().getDrawable(R.mipmap.verizon_logo);
+        }
         else if(carrierName.contains("Android") || carrierName.equals("")){
             carrierIcon = getResources().getDrawable(R.mipmap.android_logo);
             carrierName = "No Carrier";
@@ -323,6 +319,7 @@ public class MainActivity extends Activity {
         else{
             carrierIcon = getResources().getDrawable(R.mipmap.android_logo);
         }
+        //WiFi Icon
         String ssid = util.getCurrentSsid(getApplicationContext());
         if(!ssid.equals("Not Connected")){
             wifiIcon = getResources().getDrawable(R.mipmap.wifi_on);

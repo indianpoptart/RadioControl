@@ -13,9 +13,11 @@ import android.util.Log;
 
 import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.security.Timestamp;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -53,11 +55,11 @@ public class WifiReceiver extends BroadcastReceiver {
             //Check if we just lost WiFi signal
             if(util.isConnectedWifi(context) == false){
                 Log.d("RadioControl","WiFi signal LOST");
-                writeLog("WiFi Signal lost");
+                writeLog("WiFi Signal lost",context);
                 if(util.isAirplaneMode(context)){
                     RootAccess.runCommands(airOffCmd2);
                     Log.d("RadioControl","Airplane mode has been turned off");
-                    writeLog("Airplane mode has been turned off");
+                    writeLog("Airplane mode has been turned off",context);
 
                 }
             }
@@ -74,7 +76,7 @@ public class WifiReceiver extends BroadcastReceiver {
                         if(!networkAlert){
                             RootAccess.runCommands(airCmd);
                             Log.d("RadioControl", "Airplane mode has been turned on");
-                            writeLog("Airplane mode has been turned on");
+                            writeLog("Airplane mode has been turned on",context);
 
 
                         }
@@ -106,17 +108,20 @@ public class WifiReceiver extends BroadcastReceiver {
         }
 
     }
-    public void writeLog(String data){
+    public void writeLog(String data, Context c){
 
         try{
-            File log = new File(Environment.getDataDirectory().getPath() + "/RadioControl-log.txt");
-            log.createNewFile();
-            FileWriter writer = new FileWriter(log);
-
             String h = DateFormat.format("yyyy-MM-dd HH:mm:ss", System.currentTimeMillis()).toString();
-            writer.append(h + ": " + data);
-            writer.flush();
-            writer.close();
+            File log = new File("RadioControl-log.txt");
+            if(!log.exists()) {
+                log.createNewFile();
+            }
+            String logPath = "RadioControl-log.txt";
+            String string = h + ": " + data;
+
+            FileOutputStream fos = c.openFileOutput(logPath, Context.MODE_APPEND);
+            fos.write(string.getBytes());
+            fos.close();
         } catch(IOException e){
             Log.d("RadioControl", "There was an error saving the log: " + e);
         }
@@ -182,7 +187,7 @@ public class WifiReceiver extends BroadcastReceiver {
                 else{
                     RootAccess.runCommands(airCmd);
                     Log.d("RadioControl", "Airplane mode has been turned on");
-                    writeLog("Airplane mode has been turned on");
+                    writeLog("Airplane mode has been turned on",context);
                 }
             }
 

@@ -23,7 +23,7 @@ Current Release Candidate [v3.0-rc2](https://github.com/indianpoptart/RadioContr
 
 Current Beta Release: [v3.0-beta9](https://github.com/indianpoptart/RadioControl/releases/tag/v3.0-beta9) (3/3/2016) (OLD)
 
-Current Alpha Release: [v3.0.1-alpha1](https://github.com/indianpoptart/RadioControl/releases/tag/v3.0.1-alpha1) (3/17/2016)
+Current Alpha Release: [v3.0.1-alpha2](https://github.com/indianpoptart/RadioControl/releases/tag/v3.0.1-alpha2) (3/19/2016)
 
 
 
@@ -41,6 +41,11 @@ Tested on the following devices
 - Moto X (2nd Gen.) ![Motorola](https://nikhilp.org/images/moto.png)
 
 # What's New?
+v3.0.1 - Alpha2 (3/19/2016)
+- Added Verizon icon
+- Trying to fix network settings, its not going well
+- Disabled network settings for now. might not be useful anymore
+
 v3.0.1 - Alpha1 (3/17/2016)
 - Fixed a small bug when disconnecting, as well as a root bug
 - Added logs, no way to read them yet
