@@ -26,7 +26,8 @@ Current Beta Release: [v3.0-beta9](https://github.com/indianpoptart/RadioControl
 Current Alpha Release: [v3.0.1-alpha2](https://github.com/indianpoptart/RadioControl/releases/tag/v3.0.1-alpha2) (3/19/2016)
 
 
-
+# "How Do You Make Money?"
+Thru donations and ads (The ads can be disabled for free in the settings :smile:). I don't collect data, nor do I want to, it usually uses a bunch of data and battery, saving battery is the most important aspect of this app, so there will be no collection/selling of your data, its YOUR data, no one elses.
 
 
 # New Features
