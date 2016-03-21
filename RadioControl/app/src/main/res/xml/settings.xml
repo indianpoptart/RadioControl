@@ -2,15 +2,15 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory android:title="Experimental Features">
         <MultiSelectListPreference
-            android:key="ssid-curr"
-            android:title="Network Settings (Disabled)"
+            android:key="ssid"
+            android:title="Network Settings"
             android:dialogTitle="Network Settings (Experimental)"
             android:defaultValue="@array/empty_array"
             android:summary="Do not enable airplane mode when connected to the selected networks"
             />
         <Preference
             android:key="clear-ssid"
-            android:title="Clear Network Settings (Disabled)"
+            android:title="Clear Network Settings"
             android:defaultValue="@array/empty_array"
             android:summary="Clear the disabled networks list"
             />

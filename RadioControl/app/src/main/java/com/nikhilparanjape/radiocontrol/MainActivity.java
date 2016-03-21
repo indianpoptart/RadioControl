@@ -17,6 +17,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.telephony.TelephonyManager;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -51,6 +52,7 @@ import com.google.android.gms.ads.InterstitialAd;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 
@@ -225,12 +227,14 @@ public class MainActivity extends Activity {
                     statusText.setText("is Disabled");
                     statusText.setTextColor(getResources().getColor(R.color.status_deactivated));
                     editor.commit();
+                    writeLog("Radiocontrol was disabled",getApplicationContext());
 
                 } else if (isChecked){
                     editor.putInt("isActive",1);
                     statusText.setText("is Enabled");
                     statusText.setTextColor(getResources().getColor(R.color.status_activated));
                     editor.commit();
+                    writeLog("Radiocontrol was enabled",getApplicationContext());
                 }
             }
         });
@@ -265,6 +269,7 @@ public class MainActivity extends Activity {
         emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, getString(R.string.mail_feedback_subject));
         emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, getString(R.string.mail_feedback_message));
         startActivity(Intent.createChooser(emailIntent, getString(R.string.title_send_feedback)));
+        writeLog("Feedback sent",getApplicationContext());
     }
 
     //Method to create the Navigation Drawer
@@ -425,6 +430,7 @@ public class MainActivity extends Activity {
                     }
                 });
         builder.create().show();
+        writeLog("What's New displayed",getApplicationContext());
     }
 
     //donate dialog
@@ -544,6 +550,7 @@ public class MainActivity extends Activity {
     protected void onResume() {
         super.onResume();
         drawerCreate();
+        writeLog("App resumed",getApplicationContext());
         final SharedPreferences sharedPref = getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE);
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
@@ -718,6 +725,27 @@ public class MainActivity extends Activity {
 
     }
 
+    public void writeLog(String data, Context c){
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(c);
+        if(preferences.getBoolean("enableLogs", false)){
+            try{
+                String h = DateFormat.format("yyyy-MM-dd HH:mm:ss", System.currentTimeMillis()).toString();
+                File log = new File(c.getFilesDir(), "radiocontrol.log");
+                if(!log.exists()) {
+                    log.createNewFile();
+                }
+                String logPath = "radiocontrol.log";
+                String string = "\n" + h + ": " + data;
+
+                FileOutputStream fos = c.openFileOutput(logPath, Context.MODE_APPEND);
+                fos.write(string.getBytes());
+                fos.close();
+            } catch(IOException e){
+                Log.d("RadioControl", "There was an error saving the log: " + e);
+            }
+        }
+    }
+
     private class AsyncBackgroundTask extends AsyncTask<String, Void, Boolean> {
         Context context;
         private ProgressBar dialog;
@@ -752,15 +780,18 @@ public class MainActivity extends Activity {
                 if(Utilities.isConnectedWifi(getApplicationContext())){
                     connectionStatusText.setText("Connected to the internet thru WIFI");
                     connectionStatusText.setTextColor(getResources().getColor(R.color.status_activated));
+                    writeLog("Connected to the internet thru WIFI",context);
                 }
                 else if(Utilities.isConnectedMobile(getApplicationContext())){
                     if(Utilities.isConnectedFast(getApplicationContext())){
                         connectionStatusText.setText("Connected to the internet thru FAST CELL");
                         connectionStatusText.setTextColor(getResources().getColor(R.color.status_activated));
+                        writeLog("Connected to the internet thru FAST CELL",context);
                     }
                     else if(!Utilities.isConnectedFast(getApplicationContext())){
                         connectionStatusText.setText("Connected to the internet thru SLOW CELL");
                         connectionStatusText.setTextColor(getResources().getColor(R.color.status_activated));
+                        writeLog("Connected to the internet thru SLOW CELL",context);
                     }
 
                 }
@@ -774,6 +805,7 @@ public class MainActivity extends Activity {
                 else{
                     connectionStatusText.setText("Unable to connect to the internet");
                     connectionStatusText.setTextColor(getResources().getColor(R.color.status_deactivated));
+                    writeLog("Unable to connect to the internet",context);
                 }
 
             }

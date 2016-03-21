@@ -14,6 +14,17 @@
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                android:text="Version 3.0.1"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="- Added logging feature(Not readable yet)\n- Trying to fix network settings\n " />
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
                 android:text="Version 3.0"
                 android:textStyle="bold"/>
 

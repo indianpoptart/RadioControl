@@ -55,6 +55,7 @@ public class AboutActivity extends PreferenceActivity {
                         Log.d("RadioControl","Developer features deactivated");
 
 
+
                         editor.putBoolean("isDeveloper", false); //Puts the boolean into prefs.xml
                         editor.commit(); //Ends writing to prefs file
                     }

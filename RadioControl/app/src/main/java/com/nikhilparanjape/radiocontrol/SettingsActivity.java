@@ -14,6 +14,8 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -34,14 +36,12 @@ public class SettingsActivity extends PreferenceActivity {
         addPreferencesFromResource(R.xml.settings);
         Utilities util = new Utilities();
         Context c = getApplicationContext();
-        getPreferenceScreen().findPreference("ssid-curr").setEnabled(false);
-        getPreferenceScreen().findPreference("clear-ssid").setEnabled(false);
 
-        final MultiSelectListPreference listPreference = (MultiSelectListPreference) findPreference("ssid-curr");
+        final MultiSelectListPreference listPreference = (MultiSelectListPreference) findPreference("ssid");
         listPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             public boolean onPreferenceChange(Preference preference, Object o) {
                 SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-                Set<String> selections = preferences.getStringSet("ssid-curr", null);
+                Set<String> selections = preferences.getStringSet("ssid", null);
                 String[] selected= selections.toArray(new String[] {});
                 for (int j = 0; j < selected.length ; j++){
                     System.out.println("\ntest" + j +" : " + selected[j]);
@@ -58,13 +58,13 @@ public class SettingsActivity extends PreferenceActivity {
             }
         });
         if(util.isConnectedWifi(c)){
-            //getPreferenceScreen().findPreference("ssid-curr").setEnabled(true);
+            getPreferenceScreen().findPreference("ssid").setEnabled(true);
             //Listen for changes, I'm not sure if this is how it's meant to work, but it does :/
 
-            //setListPreferenceData(listPreference);
+            setListPreferenceData(listPreference);
         }
         else{
-            getPreferenceScreen().findPreference("ssid-curr").setEnabled(false);
+            getPreferenceScreen().findPreference("ssid").setEnabled(false);
         }
 
         Preference clearPref = findPreference("clear-ssid");
@@ -77,14 +77,34 @@ public class SettingsActivity extends PreferenceActivity {
         final CheckBoxPreference checkboxPref = (CheckBoxPreference) getPreferenceManager().findPreference("enableLogs");
         checkboxPref.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             public boolean onPreferenceChange(Preference preference, Object newValue) {
-                //Request storage permissions if on MM or greater
-                if (Build.VERSION.SDK_INT >= 23) {
-                    String[] perms = {"android.permission.READ_EXTERNAL_STORAGE", "android.permission.WRITE_EXTERNAL_STORAGE"};
+                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+                SharedPreferences.Editor editor = preferences.edit();
+                if(newValue.toString().equals("true")){
+                    //Request storage permissions if on MM or greater
+                    if (Build.VERSION.SDK_INT >= 23) {
+                        String[] perms = {"android.permission.READ_EXTERNAL_STORAGE", "android.permission.WRITE_EXTERNAL_STORAGE"};
 
-                    int permsRequestCode = 200;
+                        int permsRequestCode = 200;
 
-                    requestPermissions(perms, permsRequestCode);
+                        requestPermissions(perms, permsRequestCode);
+                        editor.putBoolean("enableLogs", true);
+                        Log.d("RadioControl", "Logging enabled");
+
+                    }
+                    else{
+                        editor.putBoolean("enableLogs", true);
+                        Log.d("RadioControl", "Logging enabled");
+                    }
                 }
+                else{
+                    editor.putBoolean("enableLogs", false);
+                    Log.d("RadioControl", "Logging disabled");
+                    File log = new File("radiocontrol.log");
+                    if (log.exists()) {
+                        log.delete();
+                    }
+                }
+
                 return true;
             }
         });
@@ -101,7 +121,6 @@ public class SettingsActivity extends PreferenceActivity {
         SharedPreferences.Editor editor = pref.edit();
         Set<String> valuesSet = new HashSet<>();
         Set<String> arrayString = pref.getStringSet("ssid", valuesSet);
-        Set<String> ssidCurrSet = pref.getStringSet("ssid-curr", valuesSet);
 
         List<WifiConfiguration> list = wifiManager.getConfiguredNetworks();
         if(list.isEmpty())
@@ -115,7 +134,7 @@ public class SettingsActivity extends PreferenceActivity {
                 ssid = ssid.substring(1, ssid.length()-1);
                 Log.e("RadioControl",ssid+" network listed");
                 //Check if the list contains the entered SSID
-                if (!ssidCurrSet.contains(ssid) && !arrayString.contains(ssid)) {
+                if (!arrayString.contains(ssid)) {
                     ssidList.add(ssid);
                     Collections.addAll(valuesSet, ssid);
                     // pair the value in text field with the key

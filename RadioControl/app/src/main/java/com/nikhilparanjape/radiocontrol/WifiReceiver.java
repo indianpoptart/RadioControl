@@ -96,6 +96,7 @@ public class WifiReceiver extends BroadcastReceiver {
                 //Pauses because WiFi network is in the list of disabled SSIDs
                 else if(selections.contains(util.getCurrentSsid(context))){
                     Log.d("RadioControl",util.getCurrentSsid(context) + " was blocked from list " + selections);
+                    writeLog(util.getCurrentSsid(context) + " was blocked from list " + selections,context);
                 }
             }
 
@@ -109,23 +110,24 @@ public class WifiReceiver extends BroadcastReceiver {
 
     }
     public void writeLog(String data, Context c){
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(c);
+        if(preferences.getBoolean("enableLogs", false)){
+            try{
+                String h = DateFormat.format("yyyy-MM-dd HH:mm:ss", System.currentTimeMillis()).toString();
+                File log = new File(c.getFilesDir(), "radiocontrol.log");
+                if(!log.exists()) {
+                    log.createNewFile();
+                }
+                String logPath = "radiocontrol.log";
+                String string = "\n" + h + ": " + data;
 
-        try{
-            String h = DateFormat.format("yyyy-MM-dd HH:mm:ss", System.currentTimeMillis()).toString();
-            File log = new File("RadioControl-log.txt");
-            if(!log.exists()) {
-                log.createNewFile();
+                FileOutputStream fos = c.openFileOutput(logPath, Context.MODE_APPEND);
+                fos.write(string.getBytes());
+                fos.close();
+            } catch(IOException e){
+                Log.d("RadioControl", "There was an error saving the log: " + e);
             }
-            String logPath = "RadioControl-log.txt";
-            String string = h + ": " + data;
-
-            FileOutputStream fos = c.openFileOutput(logPath, Context.MODE_APPEND);
-            fos.write(string.getBytes());
-            fos.close();
-        } catch(IOException e){
-            Log.d("RadioControl", "There was an error saving the log: " + e);
         }
-
     }
 
     private class AsyncPingTask extends AsyncTask<String, Void, Boolean> {
@@ -177,12 +179,14 @@ public class WifiReceiver extends BroadcastReceiver {
                 //If the connection can't reach Google
                 if(!result){
                     util.sendNote(context, "You are not connected to the internet",alertVibrate,alertSounds,alertPriority);
+                    writeLog("Not connected to the internet",context);
                 }
             }
             else if(sp.getInt("isActive",0) == 1){
                 //If the connection can't reach Google
                 if(!result){
                     util.sendNote(context, "You are not connected to the internet",alertVibrate,alertSounds,alertPriority);
+                    writeLog("Not connected to the internet",context);
                 }
                 else{
                     RootAccess.runCommands(airCmd);
@@ -191,50 +195,6 @@ public class WifiReceiver extends BroadcastReceiver {
                 }
             }
 
-
-        }
-    }
-
-    private class AsyncDisconnectTask extends AsyncTask<String, Void, Boolean> {
-        Context context;
-
-        public AsyncDisconnectTask(Context context) {
-            this.context = context;
-        }
-
-        @Override
-        protected Boolean doInBackground(String... params) {
-            //RootAccess.runCommands(airOffCmd2);
-
-
-
-            Process p;
-            try {
-                File log = new File(Environment.getExternalStorageDirectory(), "RadioControl-log");
-                File filepath = new File(log, ".txt");  // file path to save
-                FileWriter writer = new FileWriter(filepath);
-
-                p = Runtime.getRuntime().exec("su"); //Request SU
-                DataOutputStream os = new DataOutputStream(p.getOutputStream()); //Used for terminal
-                for (String tmpCmd : airOffCmd2) {
-                    os.writeBytes(tmpCmd + "\n"); //Sends commands to the terminal
-                }
-                os.writeBytes("exit\n"); //Quits the terminal session
-                os.flush(); //Ends datastream
-                Log.d("Root", "Commands Completed");
-                Log.d("RadioControl","Airplane mode has been turned off");
-                String h = DateFormat.format("yyyy-MM-dd HH:mm:ss.nnnnnnnnn", System.currentTimeMillis()).toString();
-                writer.append(h + ": " + "Airplane mode has been turned off");
-                writer.flush();
-                writer.close();
-
-
-            } catch (IOException e) {
-                Log.d("Root", "There was an error with root");
-            }
-            return true;
-        }
-        protected void onPostExecute(Boolean result){
 
         }
     }
