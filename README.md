@@ -23,7 +23,7 @@ Current Release Candidate [v3.0-rc2](https://github.com/indianpoptart/RadioContr
 
 Current Beta Release: [v3.0-beta9](https://github.com/indianpoptart/RadioControl/releases/tag/v3.0-beta9) (3/3/2016) (OLD)
 
-Current Alpha Release: [v3.0.1-alpha3](https://github.com/indianpoptart/RadioControl/releases/tag/v3.0.1-alpha3) (3/21/2016)
+Current Alpha Release: [v3.0.1-alpha4](https://github.com/indianpoptart/RadioControl/releases/tag/v3.0.1-alpha4) (3/21/2016)
 
 
 # "How Do You Make Money?"
@@ -42,6 +42,11 @@ Tested on the following devices
 - Moto X (2nd Gen.) ![Motorola](https://nikhilp.org/images/moto.png)
 
 # What's New?
+v3.0.1 - Alpha4 (3/21/2016)
+- Fixed drawer problems (No resource found)
+- Added working hamburger icon
+- Settings and about menu don’t have an actionable, weird
+
 v3.0.1 - Alpha3 (3/21/2016)
 - Logs are fixed (Still no way to read them yet)
 - Updated what's new

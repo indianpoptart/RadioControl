@@ -16,11 +16,19 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
+import android.support.v4.view.GravityCompat;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.graphics.drawable.DrawerArrowDrawable;
+import android.support.v7.widget.Toolbar;
 import android.telephony.TelephonyManager;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -34,6 +42,7 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
+import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
 import com.mikepenz.materialdrawer.Drawer;
@@ -60,13 +69,14 @@ import java.io.IOException;
  * Created by Nikhil Paranjape on 11/3/2015.
  */
 
-public class MainActivity extends Activity {
+public class MainActivity extends AppCompatActivity {
     private static final String PRIVATE_PREF = "prefs";
     private static final String VERSION_KEY = "version_number";
 
     Drawable icon;
     Drawable carrierIcon;
     Drawable wifiIcon;
+    Drawer result;
     String versionName = BuildConfig.VERSION_NAME;
     Utilities util = new Utilities();
     IInAppBillingService mService;
@@ -92,15 +102,22 @@ public class MainActivity extends Activity {
     };
     IabHelper mHelper;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-
         final ProgressBar dialog = (ProgressBar) findViewById(R.id.pingProgressBar);
         dialog.setVisibility(View.GONE);
+
+        final ActionBar actionBar = getSupportActionBar();
+
+        actionBar.setHomeAsUpIndicator(new IconicsDrawable(this, GoogleMaterial.Icon.gmd_menu).color(Color.WHITE).sizeDp(IconicsDrawable.ANDROID_ACTIONBAR_ICON_SIZE_DP).paddingDp(IconicsDrawable.ANDROID_ACTIONBAR_ICON_SIZE_PADDING_DP));
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        //result.getActionBarDrawerToggle().setHomeAsUpIndicator(new IconicsDrawable(this, GoogleMaterial.Icon.gmd_menu).color(Color.WHITE).sizeDp(IconicsDrawable.ANDROID_ACTIONBAR_ICON_SIZE_DP).paddingDp(IconicsDrawable.ANDROID_ACTIONBAR_ICON_SIZE_PADDING_DP));
+
 
         //File key = new File("/res/key.txt");
         String base64EncodedPublicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxnZmUx4gqEFCsMW+/uPXIzJSaaoP4J/2RVaxYT9Be0jfga0qdGF+Vq56mzQ/LYEZgLvFelGdWwXJ5Izq5Wl/cEW8cExhQ/WDuJvYVaemuU+JnHP1zIZ2H28NtzrDH0hb59k9R8owSx7NPNITshuC4MPwwOQDgDaYk02Hgi4woSzbDtyrvwW1A1FWpftb78i8Pphr7bT14MjpNyNznk4BohLMncEVK22O1N08xrVrR66kcTgYs+EZnkRKk2uPZclsPq4KVKG8LbLcxmDdslDBnhQkSPe3ntAC8DxGhVdgJJDwulcepxWoCby1GcMZTUAC1OKCZlvGRGSwyfIqbqF2JQIDAQAB";
@@ -356,10 +373,11 @@ public class MainActivity extends Activity {
         SecondaryDrawerItem item5 = new SecondaryDrawerItem().withName("Send Feedback").withIcon(GoogleMaterial.Icon.gmd_send);
 
         //Create navigation drawer
-        Drawer result = new DrawerBuilder()
+        result = new DrawerBuilder()
                 .withAccountHeader(headerResult)
                 .withActivity(this)
                 .withTranslucentStatusBar(false)
+                .withActionBarDrawerToggle(false)
                 .addDrawerItems(
                         item1,
                         new DividerDrawerItem(),
@@ -403,6 +421,25 @@ public class MainActivity extends Activity {
                 .build();
         result.setSelection(item1);
 
+
+
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                if(result.isDrawerOpen()){
+                    //result.getActionBarDrawerToggle().setHomeAsUpIndicator(new IconicsDrawable(this, GoogleMaterial.Icon.gmd_arrow_back).color(Color.WHITE).sizeDp(IconicsDrawable.ANDROID_ACTIONBAR_ICON_SIZE_DP).paddingDp(IconicsDrawable.ANDROID_ACTIONBAR_ICON_SIZE_PADDING_DP));
+                    result.closeDrawer();
+
+                }
+                else{
+                    //result.getActionBarDrawerToggle().setHomeAsUpIndicator(new IconicsDrawable(this, GoogleMaterial.Icon.gmd_menu).color(Color.WHITE).sizeDp(IconicsDrawable.ANDROID_ACTIONBAR_ICON_SIZE_DP).paddingDp(IconicsDrawable.ANDROID_ACTIONBAR_ICON_SIZE_PADDING_DP));
+                    result.openDrawer();
+                }
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     //starts about activity

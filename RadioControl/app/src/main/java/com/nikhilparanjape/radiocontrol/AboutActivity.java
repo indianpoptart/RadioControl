@@ -29,6 +29,7 @@ public class AboutActivity extends PreferenceActivity {
         addPreferencesFromResource(R.xml.about);
 
 
+
         Preference versionPref = findPreference("version");
         CharSequence cs = versionName;
         versionPref.setSummary("v" + cs);
