@@ -10,7 +10,9 @@ import android.preference.PreferenceActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 
 /**
@@ -27,8 +29,6 @@ public class AboutActivity extends PreferenceActivity {
         super.onCreate(savedInstanceState);
 
         addPreferencesFromResource(R.xml.about);
-
-
 
         Preference versionPref = findPreference("version");
         CharSequence cs = versionName;

@@ -5,10 +5,10 @@ android {
     buildToolsVersion "23.0.1"
     defaultConfig {
         applicationId "com.nikhilparanjape.radiocontrol"
-        minSdkVersion 21
+        minSdkVersion 19
         targetSdkVersion 23
-        versionCode 20
-        versionName "3.0.1 - Alpha4"
+        versionCode 21
+        versionName "3.0.1 - Alpha5"
         // Enabling multidex support.
         multiDexEnabled true
     }
