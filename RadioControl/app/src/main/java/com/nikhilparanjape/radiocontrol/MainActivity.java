@@ -1,6 +1,5 @@
 package com.nikhilparanjape.radiocontrol;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.Context;
@@ -16,13 +15,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
-import android.support.v4.view.GravityCompat;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.graphics.drawable.DrawerArrowDrawable;
-import android.support.v7.widget.Toolbar;
 import android.telephony.TelephonyManager;
 import android.text.format.DateFormat;
 import android.util.Log;
@@ -39,7 +33,6 @@ import android.widget.Toast;
 
 import com.android.vending.billing.IInAppBillingService;
 import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
@@ -57,12 +50,9 @@ import com.nikhilparanjape.radiocontrol.util.IabHelper;
 import com.nikhilparanjape.radiocontrol.util.IabResult;
 import com.nikhilparanjape.radiocontrol.util.Inventory;
 import com.nikhilparanjape.radiocontrol.util.Purchase;
-import com.google.android.gms.ads.InterstitialAd;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 
 /**
@@ -244,14 +234,12 @@ public class MainActivity extends AppCompatActivity {
                     statusText.setText("is Disabled");
                     statusText.setTextColor(getResources().getColor(R.color.status_deactivated));
                     editor.commit();
-                    writeLog("Radiocontrol was disabled",getApplicationContext());
 
                 } else if (isChecked){
                     editor.putInt("isActive",1);
                     statusText.setText("is Enabled");
                     statusText.setTextColor(getResources().getColor(R.color.status_activated));
                     editor.commit();
-                    writeLog("Radiocontrol was enabled",getApplicationContext());
                 }
             }
         });

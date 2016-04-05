@@ -20,7 +20,7 @@
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="- Added logging feature(Not readable yet)\n- Trying to fix network settings\n " />
+                android:text="- Added logging feature(Not readable yet)\n- Fixed network settings\n- Switched PreferenceActivity to Fragments" />
 
             <TextView
                 android:layout_width="fill_parent"

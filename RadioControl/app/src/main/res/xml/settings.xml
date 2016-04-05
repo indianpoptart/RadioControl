@@ -1,19 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory android:title="Experimental Features">
-        <MultiSelectListPreference
+        <Preference
             android:key="ssid"
             android:title="Network Settings"
             android:dialogTitle="Network Settings (Experimental)"
             android:defaultValue="@array/empty_array"
-            android:summary="Do not enable airplane mode when connected to the selected networks"
-            />
+            android:summary="Do not enable airplane mode when connected to the selected networks" >
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:targetPackage="com.nikhilparanjape.radiocontrol"
+                android:targetClass="com.nikhilparanjape.radiocontrol.NetworkListActivity" />
+        </Preference>
+
         <Preference
             android:key="clear-ssid"
             android:title="Clear Network Settings"
             android:defaultValue="@array/empty_array"
-            android:summary="Clear the disabled networks list"
-            />
+            android:summary="Clear the disabled networks list" />
     </PreferenceCategory>
     <PreferenceCategory android:title="Alert Settings">
         <CheckBoxPreference

@@ -19,11 +19,11 @@ Feel free to ask questions related to Android programming or this project in the
 
 Latest Stable Release: [v3.0](https://github.com/indianpoptart/RadioControl/releases/latest) (3/16/2016)
 
+Current Beta Release: [v3.0-beta9](https://github.com/indianpoptart/RadioControl/releases/tag/v3.0.1-beta1) (4/5/2016)
+
+Current Alpha Release: [v3.0.1-alpha6](https://github.com/indianpoptart/RadioControl/releases/tag/v3.0.1-alpha6) (4/4/2016) (OLD)
+
 Current Release Candidate [v3.0-rc2](https://github.com/indianpoptart/RadioControl/releases/tag/v3.0-rc2) (3/11/2016) (OLD)
-
-Current Beta Release: [v3.0-beta9](https://github.com/indianpoptart/RadioControl/releases/tag/v3.0-beta9) (3/3/2016) (OLD)
-
-Current Alpha Release: [v3.0.1-alpha6](https://github.com/indianpoptart/RadioControl/releases/tag/v3.0.1-alpha6) (4/4/2016)
 
 
 # "How Do You Make Money?"
@@ -42,6 +42,10 @@ Tested on the following devices
 - Moto X (2nd Gen.) ![Motorola](https://nikhilp.org/images/moto.png)
 
 # What's New?
+v3.0.1 - Beta1 (4/5/2016)
+- Fixed network settings
+- Changed to PreferenceFragment (Allows actionbar)
+
 v3.0.1 - Alpha6 (4/4/2016)
 - Stopped support for kitkat, too much work, sorry :(
   

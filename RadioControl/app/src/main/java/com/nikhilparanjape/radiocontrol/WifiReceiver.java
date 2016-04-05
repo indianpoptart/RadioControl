@@ -5,20 +5,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.os.Environment;
 import android.preference.PreferenceManager;
-import android.provider.DocumentsContract;
 import android.text.format.DateFormat;
 import android.util.Log;
 
-import java.io.DataOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.security.Timestamp;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -44,6 +37,7 @@ public class WifiReceiver extends BroadcastReceiver {
 
         SharedPreferences sp = context.getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        final SharedPreferences disabledPref = context.getSharedPreferences("disabled-networks", Context.MODE_PRIVATE);
 
         Set<String> h = new HashSet<>(Arrays.asList("")); //Set default set for SSID check
         Set<String> selections = prefs.getStringSet("ssid", h); //Gets stringset, if empty sets default
@@ -68,7 +62,7 @@ public class WifiReceiver extends BroadcastReceiver {
             if (util.isConnectedWifi(context) && !util.isAirplaneMode(context)) {
                 //boolean isWiFi = activeNetwork.getType() == ConnectivityManager.TYPE_WIFI; //Boolean to check for an active WiFi connection
                 //Check the list of disabled networks
-                if(!selections.contains(util.getCurrentSsid(context))){
+                if(!disabledPref.contains(util.getCurrentSsid(context))){
                     Log.d("RadioControl",util.getCurrentSsid(context) + " was not found in the disabled list");
                     //Checks that user is not in call
                     if(!util.isCallActive(context)){

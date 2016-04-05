@@ -4,94 +4,55 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 import android.widget.Toolbar;
+
+import com.mikepenz.google_material_typeface_library.GoogleMaterial;
+import com.mikepenz.iconics.IconicsDrawable;
+
+import java.util.ArrayList;
 
 
 /**
  * Created by Nikhil Paranjape on 12/16/2015.
  */
 
-public class AboutActivity extends PreferenceActivity {
-    String versionName = BuildConfig.VERSION_NAME;
-    private static final String PRIVATE_PREF = "prefs";
+public class AboutActivity extends AppCompatActivity {
 
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        addPreferencesFromResource(R.xml.about);
+        super.onPostCreate(savedInstanceState);
+        getFragmentManager().beginTransaction().replace(android.R.id.content, new AboutFragment()).commit();
 
-        Preference versionPref = findPreference("version");
-        CharSequence cs = versionName;
-        versionPref.setSummary("v" + cs);
-        versionPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            int z = 0;
-            public boolean onPreferenceClick(Preference preference) {
-                SharedPreferences sp = getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE); //Initializes prefs.xml
-                SharedPreferences.Editor editor = sp.edit();//Initializes xml editor
-                z++;
-                Log.d("RadioControl",(7-z)+ " steps away from easter egg");
-                if(z >= 7){
-                    if (!sp.getBoolean("isDeveloper",false)) {
-                        Toast.makeText(AboutActivity.this, "Enabled developer features", Toast.LENGTH_LONG).show();
-                        z=0;
-                        Log.d("RadioControl","Developer features activated");
+        final ActionBar actionBar = getSupportActionBar();
 
-
-                        editor.putBoolean("isDeveloper", true); //Puts the boolean into prefs.xml
-                        editor.commit(); //Ends writing to prefs file
-                    }
-                    else if(sp.getBoolean("isDeveloper",false)){
-                        Toast.makeText(AboutActivity.this, "Disabled developer features", Toast.LENGTH_LONG).show();
-                        z=0;
-                        Log.d("RadioControl","Developer features deactivated");
-
-
-
-                        editor.putBoolean("isDeveloper", false); //Puts the boolean into prefs.xml
-                        editor.commit(); //Ends writing to prefs file
-                    }
-
-                }
-                return false;
-            }
-        });
-
-        Preference myPref = findPreference("changelog");
-        myPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            public boolean onPreferenceClick(Preference preference) {
-                changelog();
-                return false;
-            }
-        });
-
+        actionBar.setHomeAsUpIndicator(new IconicsDrawable(this, GoogleMaterial.Icon.gmd_arrow_back).color(Color.WHITE).sizeDp(IconicsDrawable.ANDROID_ACTIONBAR_ICON_SIZE_DP).paddingDp(IconicsDrawable.ANDROID_ACTIONBAR_ICON_SIZE_PADDING_DP));
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setTitle("About");
 
 
     }
-
-    //whats new dialog
-    private void changelog() {
-        LayoutInflater inflater = LayoutInflater.from(this);//Creates layout inflator for dialog
-        View view = inflater.inflate(R.layout.dialog_whatsnew, null);//Initializes the view for whats new dialog
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);//creates alertdialog
-
-        builder.setView(view).setTitle("Changelog")//sets title
-                .setPositiveButton("DONE", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-        builder.create().show();
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 }
