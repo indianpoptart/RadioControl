@@ -8,6 +8,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 23
         versionCode 23
+        versionName "3.0.1 - Beta1"
         // Enabling multidex support.
         multiDexEnabled true
     }
