@@ -185,14 +185,15 @@ public class MainActivity extends AppCompatActivity {
                 int linkspeed = util.linkSpeed(getApplicationContext());
                 int GHz = util.frequency(getApplicationContext());
                 if(linkspeed == -1){
-                    linkText.setText("Cell network detected");
+                    linkText.setText(R.string.cellNetwork);
                 }
                 else{
                     if(GHz == 2){
-                        linkText.setText("Link speed = " + linkspeed + " Mbps @ 2.4 GHz");
+                        linkText.setText(R.string.linkspeed + linkspeed + R.string.twoGhz);
                     }
                     else if(GHz == 5){
-                        linkText.setText("Link speed = " + linkspeed + " Mbps @ 5 GHz");
+                        linkText.setText(R.string.linkspeed + linkspeed + R.string.fiveGhz);
+                        linkText.setText(R.string.linkspeed + linkspeed + R.string.fiveGhz);
                     }
 
                 }
@@ -217,7 +218,7 @@ public class MainActivity extends AppCompatActivity {
         conn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                connectionStatusText.setText("Pinging...");
+                connectionStatusText.setText(R.string.ping);
                 connectionStatusText.setTextColor(getResources().getColor(R.color.material_grey_50));
                 dialog.setVisibility(View.VISIBLE);
                 new AsyncBackgroundTask(getApplicationContext()).execute("");
@@ -343,8 +344,8 @@ public class MainActivity extends AppCompatActivity {
                 .withHeaderBackground(R.mipmap.header)
                 .addProfiles(
                         new ProfileDrawerItem().withName(getDeviceName()).withEmail("v" + versionName).withIcon(icon),
-                        new ProfileDrawerItem().withName("Network Operator").withEmail(carrierName).withIcon(carrierIcon),
-                        new ProfileDrawerItem().withName("WiFi Network").withEmail(ssid).withIcon(wifiIcon)
+                        new ProfileDrawerItem().withName(getString(R.string.netOperator)).withEmail(carrierName).withIcon(carrierIcon),
+                        new ProfileDrawerItem().withName(getString(R.string.wifiNetwork)).withEmail(ssid).withIcon(wifiIcon)
                 )
                 .withOnAccountHeaderListener(new AccountHeader.OnAccountHeaderListener() {
                     @Override
@@ -354,11 +355,11 @@ public class MainActivity extends AppCompatActivity {
                 })
                 .build();
         //Creates navigation drawer items
-        PrimaryDrawerItem item1 = new PrimaryDrawerItem().withName("Home").withIcon(GoogleMaterial.Icon.gmd_wifi);
-        SecondaryDrawerItem item2 = new SecondaryDrawerItem().withName("Settings").withIcon(GoogleMaterial.Icon.gmd_settings);
-        SecondaryDrawerItem item3 = new SecondaryDrawerItem().withName("About").withIcon(GoogleMaterial.Icon.gmd_info);
-        SecondaryDrawerItem item4 = new SecondaryDrawerItem().withName("Donate").withIcon(GoogleMaterial.Icon.gmd_attach_money);
-        SecondaryDrawerItem item5 = new SecondaryDrawerItem().withName("Send Feedback").withIcon(GoogleMaterial.Icon.gmd_send);
+        PrimaryDrawerItem item1 = new PrimaryDrawerItem().withName(R.string.home).withIcon(GoogleMaterial.Icon.gmd_wifi);
+        SecondaryDrawerItem item2 = new SecondaryDrawerItem().withName(R.string.settings).withIcon(GoogleMaterial.Icon.gmd_settings);
+        SecondaryDrawerItem item3 = new SecondaryDrawerItem().withName(R.string.about).withIcon(GoogleMaterial.Icon.gmd_info);
+        SecondaryDrawerItem item4 = new SecondaryDrawerItem().withName(R.string.donate).withIcon(GoogleMaterial.Icon.gmd_attach_money);
+        SecondaryDrawerItem item5 = new SecondaryDrawerItem().withName(R.string.sendFeedback).withIcon(GoogleMaterial.Icon.gmd_send);
 
         //Create navigation drawer
         result = new DrawerBuilder()
@@ -447,8 +448,8 @@ public class MainActivity extends AppCompatActivity {
         View view = inflater.inflate(R.layout.dialog_whatsnew, null);//Initializes the view for whats new dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(this);//creates alertdialog
 
-        builder.setView(view).setTitle("Whats New")//sets title
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+        builder.setView(view).setTitle(R.string.whatsNew)//sets title
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
@@ -465,8 +466,8 @@ public class MainActivity extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);//creates alertdialog
 
 
-        builder.setView(view).setTitle("Donate")//sets title
-                .setPositiveButton("Cancel", new DialogInterface.OnClickListener() {
+        builder.setView(view).setTitle(R.string.donate)//sets title
+                .setPositiveButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Log.v("RadioControl", "Donation Cancelled");
@@ -517,7 +518,7 @@ public class MainActivity extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);//creates alertdialog
         TextView title = new TextView(this);
         // You Can Customise your Title here
-        title.setText("No Internet Connection");
+        title.setText(R.string.noInternet);
         title.setBackgroundColor(Color.DKGRAY);
         title.setPadding(10, 10, 10, 10);
         title.setGravity(Gravity.CENTER);
@@ -625,18 +626,18 @@ public class MainActivity extends AppCompatActivity {
 
         if(rootInit() == false){
             toggle.setClickable(false);
-            statusText.setText("couldn't get root");
+            statusText.setText(R.string.noRoot);
             statusText.setTextColor(getResources().getColor(R.color.status_deactivated));
         }
 
         if(sharedPref.getInt("isActive",1) == 1){
             if(rootInit() == false){
                 toggle.setClickable(false);
-                statusText.setText("couldn't get root");
+                statusText.setText(R.string.noRoot);
                 statusText.setTextColor(getResources().getColor(R.color.status_deactivated));
             }
             else{
-                statusText.setText("is Enabled");
+                statusText.setText(R.string.rEnabled);
                 statusText.setTextColor(getResources().getColor(R.color.status_activated));
                 toggle.setChecked(true);
             }
@@ -645,11 +646,11 @@ public class MainActivity extends AppCompatActivity {
         else if(sharedPref.getInt("isActive",0) == 0){
             if(rootInit() == false){
                 toggle.setClickable(false);
-                statusText.setText("couldn't get root");
+                statusText.setText(R.string.noRoot);
                 statusText.setTextColor(getResources().getColor(R.color.status_deactivated));
             }
             else{
-                statusText.setText("is Disabled");
+                statusText.setText(R.string.rDisabled);
                 statusText.setTextColor(getResources().getColor(R.color.status_deactivated));
                 toggle.setChecked(false);
             }
@@ -664,7 +665,7 @@ public class MainActivity extends AppCompatActivity {
             if (result.isFailure()) {
                 if(result.toString().contains("Purchase signature verification failed")){
                     consumeItem();
-                    Toast.makeText(MainActivity.this, "Thanks for the donation :)", Toast.LENGTH_LONG).show();
+                    Toast.makeText(MainActivity.this, R.string.donationThanks, Toast.LENGTH_LONG).show();
                     Log.d("RadioControl","In-app purchase succeeded, however verification failed");
                     SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                     SharedPreferences.Editor editor = pref.edit();
@@ -672,24 +673,24 @@ public class MainActivity extends AppCompatActivity {
                     editor.apply();
                 }
                 else if(result.toString().contains("User cancelled")){
-                    Toast.makeText(MainActivity.this, "You cancelled the purchase", Toast.LENGTH_LONG).show();
+                    Toast.makeText(MainActivity.this, R.string.donationCancel, Toast.LENGTH_LONG).show();
                     Log.d("RadioControl","Purchase Cancelled");
                     return;
                 }
                 else if(result.toString().contains("Item Already Owned")){
-                    Toast.makeText(MainActivity.this, "You already donated", Toast.LENGTH_LONG).show();
+                    Toast.makeText(MainActivity.this, R.string.donationExists, Toast.LENGTH_LONG).show();
                     Log.d("RadioControl","Donation already purchased");
                     return;
                 }
                 else{
-                    Toast.makeText(MainActivity.this, "Thanks for the thought, but the purchase failed: " + result, Toast.LENGTH_LONG).show();
+                    Toast.makeText(MainActivity.this, getString(R.string.donationFailed) + result, Toast.LENGTH_LONG).show();
                     Log.d("RadioControl","In-app purchase failed: " + result + "Purchase: " + purchase);
                     return;
                 }
 
             }
             else if(result.isSuccess()){
-                Toast.makeText(MainActivity.this, "Thanks for the donation :)", Toast.LENGTH_LONG).show();
+                Toast.makeText(MainActivity.this, R.string.donationThanks, Toast.LENGTH_LONG).show();
                 Log.d("RadioControl","In-app purchase succeeded");
                 SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                 SharedPreferences.Editor editor = pref.edit();
@@ -707,7 +708,7 @@ public class MainActivity extends AppCompatActivity {
                                               IabResult result) {
 
                     if (result.isSuccess()) {
-                        Toast.makeText(MainActivity.this, "Thanks for the donation :)", Toast.LENGTH_LONG).show();
+                        Toast.makeText(MainActivity.this, R.string.donationThanks, Toast.LENGTH_LONG).show();
                         Log.d("RadioControl","In-app purchase succeeded");
                         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                         SharedPreferences.Editor editor = pref.edit();
@@ -803,20 +804,20 @@ public class MainActivity extends AppCompatActivity {
             final TextView connectionStatusText = (TextView) findViewById(R.id.pingStatus);
             if(result){
                 if(Utilities.isConnectedWifi(getApplicationContext())){
-                    connectionStatusText.setText("Connected to the internet thru WIFI");
+                    connectionStatusText.setText(R.string.connectedWifi);
                     connectionStatusText.setTextColor(getResources().getColor(R.color.status_activated));
-                    writeLog("Connected to the internet thru WIFI",context);
+                    writeLog(getString(R.string.connectedWifi),context);
                 }
                 else if(Utilities.isConnectedMobile(getApplicationContext())){
                     if(Utilities.isConnectedFast(getApplicationContext())){
-                        connectionStatusText.setText("Connected to the internet thru FAST CELL");
+                        connectionStatusText.setText(R.string.connectedFCell);
                         connectionStatusText.setTextColor(getResources().getColor(R.color.status_activated));
-                        writeLog("Connected to the internet thru FAST CELL",context);
+                        writeLog(getString(R.string.connectedFCell),context);
                     }
                     else if(!Utilities.isConnectedFast(getApplicationContext())){
-                        connectionStatusText.setText("Connected to the internet thru SLOW CELL");
+                        connectionStatusText.setText(R.string.connectedSCell);
                         connectionStatusText.setTextColor(getResources().getColor(R.color.status_activated));
-                        writeLog("Connected to the internet thru SLOW CELL",context);
+                        writeLog(getString(R.string.connectedSCell),context);
                     }
 
                 }
@@ -824,13 +825,13 @@ public class MainActivity extends AppCompatActivity {
             }
             else{
                 if(Utilities.isAirplaneMode(getApplicationContext()) && !Utilities.isConnected(getApplicationContext())){
-                    connectionStatusText.setText("Airplane mode is on");
+                    connectionStatusText.setText(R.string.airplaneOn);
                     connectionStatusText.setTextColor(getResources().getColor(R.color.status_deactivated));
                 }
                 else{
-                    connectionStatusText.setText("Unable to connect to the internet");
+                    connectionStatusText.setText(R.string.connectionUnable);
                     connectionStatusText.setTextColor(getResources().getColor(R.color.status_deactivated));
-                    writeLog("Unable to connect to the internet",context);
+                    writeLog(getString(R.string.connectionUnable),context);
                 }
 
             }

@@ -92,6 +92,6 @@ public class SettingsFragment extends PreferenceFragment {
         editor.clear();
         editor.commit();
         Toast.makeText(getActivity(),
-                "Disabled SSID list cleared", Toast.LENGTH_LONG).show();
+                R.string.reset_ssid, Toast.LENGTH_LONG).show();
     }
 }

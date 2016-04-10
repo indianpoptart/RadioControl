@@ -19,7 +19,7 @@ Feel free to ask questions related to Android programming or this project in the
 
 Latest Stable Release: [v3.0](https://github.com/indianpoptart/RadioControl/releases/latest) (3/16/2016)
 
-Current Beta Release: [v3.0-beta1](https://github.com/indianpoptart/RadioControl/releases/tag/v3.0.1-beta1) (4/5/2016)
+Current Beta Release: [v3.1-beta2](https://github.com/indianpoptart/RadioControl/releases/tag/v3.1-beta2) (4/10/2016)
 
 Current Alpha Release: [v3.0.1-alpha6](https://github.com/indianpoptart/RadioControl/releases/tag/v3.0.1-alpha6) (4/4/2016) (OLD)
 
@@ -42,6 +42,10 @@ Tested on the following devices
 - Moto X (2nd Gen.) ![Motorola](https://nikhilp.org/images/moto.png)
 
 # What's New?
+v3.0.1>v3.1 - Beta2 (4/10/2016)
+- Converted all hardcoded strings into resource strings
+- Localization is on its way
+
 v3.0.1 - Beta1 (4/5/2016)
 - Fixed network settings
 - Changed to PreferenceFragment (Allows actionbar)

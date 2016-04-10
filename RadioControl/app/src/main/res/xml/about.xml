@@ -2,25 +2,25 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <Preference
         android:key="version"
-        android:title="RadioControl version"
+        android:title="@string/radiocontrol_version"
         android:defaultValue="@array/empty_array"
         android:summary="null"
         />
     <Preference
         android:key="changelog"
-        android:title="Changelog"
+        android:title="@string/changelog"
         android:defaultValue="@array/empty_array"
-        android:summary="View the current changelog"
+        android:summary="@string/changelog_summary"
         />
     <Preference
-        android:title="Support Website">
+        android:title="@string/support_website">
         <intent
             android:action="android.intent.action.VIEW"
             android:data="https://nikhilp.org/support"
             />
     </Preference>
     <Preference
-        android:title="Help Wiki">
+        android:title="@string/help_wiki">
         <intent
             android:action="android.intent.action.VIEW"
             android:data="https://github.com/indianpoptart/RadioControl/wiki"

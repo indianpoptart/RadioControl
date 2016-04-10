@@ -37,23 +37,23 @@ public class AboutFragment extends PreferenceFragment {
                 Log.d("RadioControl",(7-z)+ " steps away from easter egg");
                 if(z >= 7){
                     if (!sp.getBoolean("isDeveloper",false)) {
-                        Toast.makeText(getActivity(), "Enabled developer features", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), R.string.dev_activated, Toast.LENGTH_LONG).show();
                         z=0;
                         Log.d("RadioControl","Developer features activated");
 
 
                         editor.putBoolean("isDeveloper", true); //Puts the boolean into prefs.xml
-                        editor.commit(); //Ends writing to prefs file
+                        editor.apply(); //Ends writing to prefs file
                     }
                     else if(sp.getBoolean("isDeveloper",false)){
-                        Toast.makeText(getActivity(), "Disabled developer features", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), R.string.dev_deactivated, Toast.LENGTH_LONG).show();
                         z=0;
-                        Log.d("RadioControl","Developer features deactivated");
+                        Log.d("RadioControl",c.getString(R.string.dev_deactivated));
 
 
 
                         editor.putBoolean("isDeveloper", false); //Puts the boolean into prefs.xml
-                        editor.commit(); //Ends writing to prefs file
+                        editor.apply(); //Ends writing to prefs file
                     }
 
                 }
@@ -80,8 +80,8 @@ public class AboutFragment extends PreferenceFragment {
         View view = inflater.inflate(R.layout.dialog_whatsnew, null);//Initializes the view for whats new dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());//creates alertdialog
 
-        builder.setView(view).setTitle("Changelog")//sets title
-                .setPositiveButton("DONE", new DialogInterface.OnClickListener() {
+        builder.setView(view).setTitle(R.string.changelog)//sets title
+                .setPositiveButton(R.string.done, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();

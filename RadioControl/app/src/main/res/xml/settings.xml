@@ -3,10 +3,10 @@
     <PreferenceCategory android:title="Experimental Features">
         <Preference
             android:key="ssid"
-            android:title="Network Settings"
-            android:dialogTitle="Network Settings (Experimental)"
+            android:title="@string/title_activity_settings"
+            android:dialogTitle="@string/title_activity_settings"
             android:defaultValue="@array/empty_array"
-            android:summary="Do not enable airplane mode when connected to the selected networks" >
+            android:summary="@string/netSettingsSum" >
             <intent
                 android:action="android.intent.action.VIEW"
                 android:targetPackage="com.nikhilparanjape.radiocontrol"
@@ -15,50 +15,50 @@
 
         <Preference
             android:key="clear-ssid"
-            android:title="Clear Network Settings"
+            android:title="@string/resetNetSettings"
             android:defaultValue="@array/empty_array"
-            android:summary="Clear the disabled networks list" />
+            android:summary="@string/resetSummary" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="Alert Settings">
+    <PreferenceCategory android:title="@string/alertSettings">
         <CheckBoxPreference
             android:key="isNetworkAlive"
-            android:title="Enable internet access alert"
-            android:summary="Shows a notification when the current WiFi network is not connected to the internet (EXPERIMENTAL)"
+            android:title="@string/enableAlert"
+            android:summary="@string/alertSum"
             android:defaultValue="false" />
         <PreferenceScreen
             android:key="button_network_key"
-            android:title="Notification Settings"
+            android:title="@string/notificationSettings"
             android:persistent="false">
 
             <CheckBoxPreference
                 android:key="networkVibrate"
-                android:title="Enable vibrate"
-                android:summary="Enables vibrate on alerts"
+                android:title="@string/eVibrate"
+                android:summary="@string/vibeSum"
                 android:defaultValue="false" />
             <CheckBoxPreference
                 android:key="networkSound"
-                android:title="Enable sounds"
-                android:summary="Enables sounds on alert"
+                android:title="@string/eSound"
+                android:summary="@string/soundSum"
                 android:defaultValue="false" />
             <CheckBoxPreference
                 android:key="networkPriority"
-                android:title="Enable Heads-up"
-                android:summary="Enables heads-up notifications"
+                android:title="@string/enable_heads_up"
+                android:summary="@string/heads_up_summary"
                 android:defaultValue="false" />
         </PreferenceScreen>
     </PreferenceCategory>
-    <PreferenceCategory android:title="Logging Settings">
+    <PreferenceCategory android:title="@string/logging_settings">
         <CheckBoxPreference
             android:key="enableLogs"
-            android:title="Enable Logging"
-            android:summary="This will log all wifi switching actions and place it into a text file"
+            android:title="@string/enable_logging"
+            android:summary="@string/log_summary"
             android:defaultValue="false" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="Ad Settings">
+    <PreferenceCategory android:title="@string/ad_settings">
         <CheckBoxPreference
             android:key="disableAds"
-            android:title="Disable Ads"
-            android:summary="Face it, we all hate ads"
+            android:title="@string/disable_ads"
+            android:summary="@string/ad_summary"
             android:defaultValue="false" />
     </PreferenceCategory>
 
