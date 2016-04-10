@@ -15,6 +15,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.telephony.TelephonyManager;
@@ -189,11 +190,11 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else{
                     if(GHz == 2){
-                        linkText.setText(R.string.linkspeed + linkspeed + R.string.twoGhz);
+                        linkText.setText("Link speed: " + linkspeed + "Mbps @ 2.4 GHz");
                     }
                     else if(GHz == 5){
-                        linkText.setText(R.string.linkspeed + linkspeed + R.string.fiveGhz);
-                        linkText.setText(R.string.linkspeed + linkspeed + R.string.fiveGhz);
+                        linkText.setText("Link speed: " + linkspeed + "Mbps @ 5 GHz");
+                        linkText.setText("Link speed: " + linkspeed + "Mbps @ 5 GHz");
                     }
 
                 }
@@ -673,7 +674,9 @@ public class MainActivity extends AppCompatActivity {
                     editor.apply();
                 }
                 else if(result.toString().contains("User cancelled")){
-                    Toast.makeText(MainActivity.this, R.string.donationCancel, Toast.LENGTH_LONG).show();
+                    //Toast.makeText(MainActivity.this, R.string.donationCancel, Toast.LENGTH_LONG).show();
+                    Snackbar.make(findViewById(android.R.id.content), R.string.donationCancel, Snackbar.LENGTH_LONG)
+                            .show();
                     Log.d("RadioControl","Purchase Cancelled");
                     return;
                 }

@@ -9,15 +9,12 @@ import android.view.MenuItem;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
 
-import java.util.ArrayList;
 
 /**
  * Created by Nikhil Paranjape on 12/16/2015.
  */
 
 public class SettingsActivity extends AppCompatActivity {
-    private static final String PRIVATE_PREF = "prefs";
-    public static ArrayList<String> ssidList = new ArrayList<String>();
 
 
     protected void onCreate(final Bundle savedInstanceState) {
@@ -31,6 +28,7 @@ public class SettingsActivity extends AppCompatActivity {
         actionBar.setHomeAsUpIndicator(new IconicsDrawable(this, GoogleMaterial.Icon.gmd_arrow_back).color(Color.WHITE).sizeDp(IconicsDrawable.ANDROID_ACTIONBAR_ICON_SIZE_DP).paddingDp(IconicsDrawable.ANDROID_ACTIONBAR_ICON_SIZE_PADDING_DP));
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle(R.string.title_activity_settings);
+
 
 
     }

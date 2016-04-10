@@ -8,14 +8,6 @@
     android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MainActivity">
 
 
-
-    <TextView android:text="Swipe from the left for the drawer" android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/textView"
-        android:layout_below="@+id/enableSwitch"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="31dp" />
-
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -50,7 +42,7 @@
         android:id="@+id/linkSpeedButton"
         android:layout_alignParentStart="true"
         android:layout_marginTop="113dp"
-        android:layout_below="@+id/textView" />
+        android:layout_below="@+id/enableSwitch" />
 
     <TextView
         android:layout_width="wrap_content"

@@ -18,7 +18,7 @@
     <string name="mail_feedback_subject">RadioControl Feedback</string>
     <string name="mail_feedback_message"></string>
     <string name="banner_ad_unit_id">ca-app-pub-3619025631742887/9691733456</string>
-    <string name="linkspeed">Link speed: </string>
+    <string name="linkspeed">Link speed:</string>
     <string name="cellNetwork">Cell network detected</string>
     <string name="twoGhz">Mbps @ 2.4 GHz</string>
     <string name="fiveGhz">Mbps @ 5 GHz</string>
@@ -37,7 +37,7 @@
     <string name="rEnabled">is Enabled</string>
     <string name="rDisabled">is Disabled</string>
     <string name="donationThanks">Thanks for the donation :)</string>
-    <string name="donationCancel">You cancelled the purchase</string>
+    <string name="donationCancel">Donation cancelled</string>
     <string name="donationExists">You already donated</string>
     <string name="donationFailed">Thanks for the thought, but the purchase failed :(</string>
     <string name="connectedWifi">Connected to the internet thru WIFI</string>
