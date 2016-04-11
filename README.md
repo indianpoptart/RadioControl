@@ -30,9 +30,8 @@ Current Release Candidate [v3.0-rc2](https://github.com/indianpoptart/RadioContr
 Through optional donations and ads (The ads can be disabled for free in the settings :smile:). I don't collect data, nor do I want to, it usually uses a bunch of data and battery, saving battery is the most important aspect of this app, so there will be no collection/selling of your data, its YOUR data, no one elses.
 
 
-# New Features
-###### New network notification
-<img src="https://nikhilp.org/images/notificationPic.png" width="384">
+# Help me translate
+https://crowdin.com/project/radiocontrol/invite
 
 # Compatibility
 Tested on the following devices
