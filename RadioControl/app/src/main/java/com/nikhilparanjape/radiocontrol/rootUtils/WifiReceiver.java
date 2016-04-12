@@ -1,4 +1,4 @@
-package com.nikhilparanjape.radiocontrol;
+package com.nikhilparanjape.radiocontrol.rootUtils;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -70,7 +70,7 @@ public class WifiReceiver extends BroadcastReceiver {
                         if(!networkAlert){
                             RootAccess.runCommands(airCmd);
                             Log.d("RadioControl", "Airplane mode has been turned on");
-                            writeLog("Airplane mode has been turned on",context);
+                            writeLog("Airplane mode has been turned on, SSID: " + util.getCurrentSsid(context),context);
 
 
                         }
@@ -185,7 +185,7 @@ public class WifiReceiver extends BroadcastReceiver {
                 else{
                     RootAccess.runCommands(airCmd);
                     Log.d("RadioControl", "Airplane mode has been turned on");
-                    writeLog("Airplane mode has been turned on",context);
+                    writeLog("Airplane mode has been turned on, SSID: " + util.getCurrentSsid(context),context);
                 }
             }
 

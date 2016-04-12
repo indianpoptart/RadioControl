@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <PreferenceCategory android:title="Experimental Features">
+    <PreferenceCategory android:title="@string/title_activity_network">
         <Preference
             android:key="ssid"
-            android:title="@string/title_activity_settings"
+            android:title="@string/title_activity_network"
             android:dialogTitle="@string/title_activity_settings"
             android:defaultValue="@array/empty_array"
             android:summary="@string/netSettingsSum" >

@@ -1,4 +1,4 @@
-package com.nikhilparanjape.radiocontrol;
+package com.nikhilparanjape.radiocontrol.fragments;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -10,6 +10,9 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
+
+import com.nikhilparanjape.radiocontrol.R;
+import com.nikhilparanjape.radiocontrol.rootUtils.Utilities;
 
 import java.io.File;
 

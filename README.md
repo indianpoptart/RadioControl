@@ -19,7 +19,7 @@ Feel free to ask questions related to Android programming or this project in the
 
 Latest Stable Release: [v3.0](https://github.com/indianpoptart/RadioControl/releases/latest) (3/16/2016)
 
-Current Beta Release: [v3.1-beta2](https://github.com/indianpoptart/RadioControl/releases/tag/v3.1-beta2) (4/10/2016)
+Current Beta Release: [v4.0-beta3](https://github.com/indianpoptart/RadioControl/releases/tag/v4.0-beta3) (4/11/2016)
 
 Current Alpha Release: [v3.0.1-alpha6](https://github.com/indianpoptart/RadioControl/releases/tag/v3.0.1-alpha6) (4/4/2016) (OLD)
 
@@ -41,6 +41,12 @@ Tested on the following devices
 - Moto X (2nd Gen.) ![Motorola](https://nikhilp.org/images/moto.png)
 
 # What's New?
+v3.1>v4.0 - Beta3 (4/11/2016)
+- Rebuilt changelog from the ground up
+- Put activities and fragements into their own packages
+- Removed spanish translations for now
+- Logs spew out less garbage
+
 v3.0.1>v3.1 - Beta2 (4/10/2016)
 - Converted all hardcoded strings into resource strings
 - Localization is on its way
@@ -51,7 +57,7 @@ v3.0.1 - Beta1 (4/5/2016)
 
 v3.0.1 - Alpha6 (4/4/2016)
 - Stopped support for kitkat, too much work, sorry :(
-  
+
 v3.0.1 - Alpha5 (4/4/2016)
 - (EXPERIMENTAL) Added support for android 4.4+ (API19)
 

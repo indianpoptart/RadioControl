@@ -1,4 +1,4 @@
-package com.nikhilparanjape.radiocontrol;
+package com.nikhilparanjape.radiocontrol.activities;
 
 import android.app.AlertDialog;
 import android.content.ComponentName;
@@ -47,6 +47,9 @@ import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IProfile;
+import com.nikhilparanjape.radiocontrol.BuildConfig;
+import com.nikhilparanjape.radiocontrol.R;
+import com.nikhilparanjape.radiocontrol.rootUtils.Utilities;
 import com.nikhilparanjape.radiocontrol.util.IabHelper;
 import com.nikhilparanjape.radiocontrol.util.IabResult;
 import com.nikhilparanjape.radiocontrol.util.Inventory;
@@ -55,6 +58,8 @@ import com.nikhilparanjape.radiocontrol.util.Purchase;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+
+import it.gmariotti.changelibs.library.view.ChangeLogRecyclerView;
 
 /**
  * Created by Nikhil Paranjape on 11/3/2015.
@@ -107,18 +112,9 @@ public class MainActivity extends AppCompatActivity {
 
         actionBar.setHomeAsUpIndicator(new IconicsDrawable(this, GoogleMaterial.Icon.gmd_menu).color(Color.WHITE).sizeDp(IconicsDrawable.ANDROID_ACTIONBAR_ICON_SIZE_DP).paddingDp(IconicsDrawable.ANDROID_ACTIONBAR_ICON_SIZE_PADDING_DP));
         actionBar.setDisplayHomeAsUpEnabled(true);
-        //result.getActionBarDrawerToggle().setHomeAsUpIndicator(new IconicsDrawable(this, GoogleMaterial.Icon.gmd_menu).color(Color.WHITE).sizeDp(IconicsDrawable.ANDROID_ACTIONBAR_ICON_SIZE_DP).paddingDp(IconicsDrawable.ANDROID_ACTIONBAR_ICON_SIZE_PADDING_DP));
 
-
-        //File key = new File("/res/key.txt");
         String base64EncodedPublicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxnZmUx4gqEFCsMW+/uPXIzJSaaoP4J/2RVaxYT9Be0jfga0qdGF+Vq56mzQ/LYEZgLvFelGdWwXJ5Izq5Wl/cEW8cExhQ/WDuJvYVaemuU+JnHP1zIZ2H28NtzrDH0hb59k9R8owSx7NPNITshuC4MPwwOQDgDaYk02Hgi4woSzbDtyrvwW1A1FWpftb78i8Pphr7bT14MjpNyNznk4BohLMncEVK22O1N08xrVrR66kcTgYs+EZnkRKk2uPZclsPq4KVKG8LbLcxmDdslDBnhQkSPe3ntAC8DxGhVdgJJDwulcepxWoCby1GcMZTUAC1OKCZlvGRGSwyfIqbqF2JQIDAQAB";
-        //try{
-            //BufferedReader brTest = new BufferedReader(new FileReader(key));
-            //base64EncodedPublicKey = brTest.readLine();
-            //Log.d("RadioControl", "key received");
-        //}catch (IOException e){
-            //Log.d("RadioControl", "key receive failed");
-        //}
+
 
         mHelper = new IabHelper(this, base64EncodedPublicKey);
 
@@ -446,10 +442,11 @@ public class MainActivity extends AppCompatActivity {
     //whats new dialog
     private void showWhatsNewDialog() {
         LayoutInflater inflater = LayoutInflater.from(this);//Creates layout inflator for dialog
+        ChangeLogRecyclerView chgList= (ChangeLogRecyclerView) inflater.inflate(R.layout.dialog_whats_new, null);
         View view = inflater.inflate(R.layout.dialog_whatsnew, null);//Initializes the view for whats new dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(this);//creates alertdialog
 
-        builder.setView(view).setTitle(R.string.whatsNew)//sets title
+        builder.setView(chgList).setTitle(R.string.whatsNew)//sets title
                 .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -457,9 +454,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
         builder.create().show();
-        writeLog("What's New displayed",getApplicationContext());
     }
-
     //donate dialog
     private void showDonateDialog() {
         LayoutInflater inflater = LayoutInflater.from(this);//Creates layout inflator for dialog
@@ -577,7 +572,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         drawerCreate();
-        writeLog("App resumed",getApplicationContext());
         final SharedPreferences sharedPref = getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE);
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 

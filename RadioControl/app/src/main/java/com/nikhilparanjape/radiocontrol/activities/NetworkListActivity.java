@@ -1,4 +1,4 @@
-package com.nikhilparanjape.radiocontrol;
+package com.nikhilparanjape.radiocontrol.activities;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
+import com.nikhilparanjape.radiocontrol.R;
 
 import java.util.List;
 

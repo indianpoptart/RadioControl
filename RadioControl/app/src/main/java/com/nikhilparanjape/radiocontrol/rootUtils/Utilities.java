@@ -1,4 +1,4 @@
-package com.nikhilparanjape.radiocontrol;
+package com.nikhilparanjape.radiocontrol.rootUtils;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -16,6 +16,8 @@ import android.provider.Settings;
 import android.support.v7.app.NotificationCompat;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+
+import com.nikhilparanjape.radiocontrol.R;
 
 import java.io.IOException;
 

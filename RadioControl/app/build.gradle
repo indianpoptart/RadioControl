@@ -7,8 +7,8 @@ android {
         applicationId "com.nikhilparanjape.radiocontrol"
         minSdkVersion 21
         targetSdkVersion 23
-        versionCode 24
-        versionName "3.1 - Beta2"
+        versionCode 25
+        versionName "4.0 - Beta3"
         // Enabling multidex support.
         multiDexEnabled true
     }
@@ -33,6 +33,7 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.2.0'
     compile 'com.android.support:design:23.2.0'
     compile 'com.mikepenz:google-material-typeface:2.2.0.1.original@aar'
+    compile 'com.github.gabrielemariotti.changeloglib:changelog:2.0.1-SNAPSHOT'
     compile 'com.android.support:support-v4:23.2.0'
     compile 'com.google.android.gms:play-services-ads:8.4.0'
 }

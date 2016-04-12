@@ -1,4 +1,4 @@
-package com.nikhilparanjape.radiocontrol;
+package com.nikhilparanjape.radiocontrol.activities;
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -8,27 +8,26 @@ import android.view.MenuItem;
 
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
+import com.nikhilparanjape.radiocontrol.fragments.AboutFragment;
 
 
 /**
  * Created by Nikhil Paranjape on 12/16/2015.
  */
 
-public class SettingsActivity extends AppCompatActivity {
-
+public class AboutActivity extends AppCompatActivity {
 
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         super.onPostCreate(savedInstanceState);
-        getFragmentManager().beginTransaction().replace(android.R.id.content, new SettingsFragment()).commit();
+        getFragmentManager().beginTransaction().replace(android.R.id.content, new AboutFragment()).commit();
 
         final ActionBar actionBar = getSupportActionBar();
 
         actionBar.setHomeAsUpIndicator(new IconicsDrawable(this, GoogleMaterial.Icon.gmd_arrow_back).color(Color.WHITE).sizeDp(IconicsDrawable.ANDROID_ACTIONBAR_ICON_SIZE_DP).paddingDp(IconicsDrawable.ANDROID_ACTIONBAR_ICON_SIZE_PADDING_DP));
         actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setTitle(R.string.title_activity_settings);
-
+        actionBar.setTitle("About");
 
 
     }
@@ -42,4 +41,5 @@ public class SettingsActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
 }
