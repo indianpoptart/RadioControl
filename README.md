@@ -14,6 +14,7 @@ Feel free to ask questions related to Android programming or this project in the
 
 [![Join the chat at https://gitter.im/indianpoptart/RadioControl](https://badges.gitter.im/indianpoptart/RadioControl.svg)](https://gitter.im/indianpoptart/RadioControl?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
+[![Build Status](https://travis-ci.org/indianpoptart/RadioControl.svg?branch=master)](https://travis-ci.org/indianpoptart/RadioControl)
 
 # Versions
 
