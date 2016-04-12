@@ -9,6 +9,8 @@ import android.preference.PreferenceManager;
 import android.text.format.DateFormat;
 import android.util.Log;
 
+import com.nikhilparanjape.radiocontrol.R;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -146,7 +148,7 @@ public class WifiReceiver extends BroadcastReceiver {
 
             Runtime runtime = Runtime.getRuntime();
             try {
-                Thread.sleep(1000);
+                Thread.sleep(5000);
                 Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");//Send 1 packet to google and check if it came back
                 int exitValue = ipProcess.waitFor();
                 Log.d("RadioControl", "Ping test returned " + exitValue);
@@ -172,14 +174,14 @@ public class WifiReceiver extends BroadcastReceiver {
             if(sp.getInt("isActive",0) == 0){
                 //If the connection can't reach Google
                 if(!result){
-                    util.sendNote(context, "You are not connected to the internet",alertVibrate,alertSounds,alertPriority);
+                    util.sendNote(context, context.getString(R.string.not_connected_alert),alertVibrate,alertSounds,alertPriority);
                     writeLog("Not connected to the internet",context);
                 }
             }
             else if(sp.getInt("isActive",0) == 1){
                 //If the connection can't reach Google
                 if(!result){
-                    util.sendNote(context, "You are not connected to the internet",alertVibrate,alertSounds,alertPriority);
+                    util.sendNote(context, context.getString(R.string.not_connected_alert),alertVibrate,alertSounds,alertPriority);
                     writeLog("Not connected to the internet",context);
                 }
                 else{

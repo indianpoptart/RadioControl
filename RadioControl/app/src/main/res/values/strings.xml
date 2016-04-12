@@ -79,5 +79,6 @@
     <string name="version_3_1">Version 3.1</string>
     <string name="open_source_title">Open source software licenses</string>
     <string name="open_source_summary">Details about open source licenses</string>
+    <string name="not_connected_alert">You are not connected to the internet</string>
 
 </resources>
