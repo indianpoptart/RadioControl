@@ -20,7 +20,7 @@ Feel free to ask questions related to Android programming or this project in the
 
 Latest Stable Release: [v3.0](https://github.com/indianpoptart/RadioControl/releases/latest) (3/16/2016)
 
-Current Beta Release: [v4.0-beta4](https://github.com/indianpoptart/RadioControl/releases/tag/v4.0-beta4) (4/12/2016)
+Current Beta Release: [v4.0-beta5](https://github.com/indianpoptart/RadioControl/releases/tag/v4.0-beta5) (4/14/2016)
 
 Current Alpha Release: [v3.0.1-alpha6](https://github.com/indianpoptart/RadioControl/releases/tag/v3.0.1-alpha6) (4/4/2016) (OLD)
 
@@ -42,6 +42,11 @@ Tested on the following devices
 - Moto X (2nd Gen.) ![Motorola](https://nikhilp.org/images/moto.png)
 
 # What's New?
+v4.0 - Beta5 (4/14/2016)
+- Fixed network list bug from last beta
+- Updated grade finally
+- Added a snackbar that shows ping in ms
+
 v4.0 - Beta4 (4/12/2016)
 - Testing longer ping times. This should alleviate any issues that the network connectivity tester has when switching to a wifi network and immediately throwing a not connected alert.
 
