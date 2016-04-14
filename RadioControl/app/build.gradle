@@ -2,13 +2,13 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.1"
+    buildToolsVersion '23.0.2'
     defaultConfig {
         applicationId "com.nikhilparanjape.radiocontrol"
         minSdkVersion 21
         targetSdkVersion 23
-        versionCode 26
-        versionName "4.0 - Beta4"
+        versionCode 27
+        versionName "4.0 - Beta5"
         // Enabling multidex support.
         multiDexEnabled true
     }

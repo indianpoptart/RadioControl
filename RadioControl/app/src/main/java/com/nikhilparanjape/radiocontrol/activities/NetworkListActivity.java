@@ -102,9 +102,9 @@ public class NetworkListActivity extends AppCompatActivity {
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                         if(isChecked) {
-                            prefs.edit().putBoolean(ssid, true).commit();
+                            prefs.edit().putBoolean(ssid, true).apply();
                         } else {
-                            prefs.edit().remove(ssid).commit();
+                            prefs.edit().remove(ssid).apply();
                         }
                     }
                 });

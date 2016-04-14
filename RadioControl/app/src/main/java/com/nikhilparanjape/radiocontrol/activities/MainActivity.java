@@ -1,5 +1,6 @@
 package com.nikhilparanjape.radiocontrol.activities;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.Context;
@@ -49,15 +50,19 @@ import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 import com.nikhilparanjape.radiocontrol.BuildConfig;
 import com.nikhilparanjape.radiocontrol.R;
+import com.nikhilparanjape.radiocontrol.rootUtils.PingWrapper;
 import com.nikhilparanjape.radiocontrol.rootUtils.Utilities;
 import com.nikhilparanjape.radiocontrol.util.IabHelper;
 import com.nikhilparanjape.radiocontrol.util.IabResult;
 import com.nikhilparanjape.radiocontrol.util.Inventory;
 import com.nikhilparanjape.radiocontrol.util.Purchase;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.sql.Wrapper;
 
 import it.gmariotti.changelibs.library.view.ChangeLogRecyclerView;
 
@@ -769,7 +774,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private class AsyncBackgroundTask extends AsyncTask<String, Void, Boolean> {
+    private class AsyncBackgroundTask extends AsyncTask<String, Void, PingWrapper> {
         Context context;
         private ProgressBar dialog;
 
@@ -781,24 +786,63 @@ public class MainActivity extends AppCompatActivity {
             this.context = context;
         }
         @Override
-        protected Boolean doInBackground(String... params) {
+        protected PingWrapper doInBackground(String... params) {
             Runtime runtime = Runtime.getRuntime();
+            PingWrapper w = new PingWrapper();
+            StringBuffer echo = new StringBuffer();
+            String s = "";
             try {
                 Process ipProcess = runtime.exec("/system/bin/ping -c 3 8.8.8.8");
                 int exitValue = ipProcess.waitFor();
                 Log.d("RadioControl", "Ping test returned " + exitValue);
-                return (exitValue == 0);
+                if(exitValue == 0){
+                    InputStreamReader reader = new InputStreamReader(ipProcess.getInputStream());
+                    BufferedReader buf = new BufferedReader(reader);
+                    String line = "";
+                    while((line = buf.readLine()) != null){
+                        echo.append(line + "\n");
+                    }
+                    s = util.getPingStats(echo.toString());
+                }
+
+                if(exitValue == 0){
+                    w.exitCode = true;
+                }
+                w.status = s;
+
             }
             catch (IOException e){ e.printStackTrace(); }
             catch (InterruptedException e) { e.printStackTrace(); }
-
-            return false;
+            return w;
         }
         @Override
-        protected void onPostExecute(Boolean result) {
+        protected void onPostExecute(PingWrapper w) {
             dialog = (ProgressBar)findViewById(R.id.pingProgressBar);
             dialog.setVisibility(View.GONE);
             final TextView connectionStatusText = (TextView) findViewById(R.id.pingStatus);
+            Log.d("RadioControl","Status: " + w.status);
+            double status;
+            try{
+                status = Double.parseDouble(w.status);
+
+                if(status <= 50){
+                    Snackbar.make(findViewById(android.R.id.content), "Excellent Ping: " + status + " ms", Snackbar.LENGTH_LONG).show();
+                }
+                else if(status >= 51 && status <= 100){
+                    Snackbar.make(findViewById(android.R.id.content), "Average Ping: " + status + " ms", Snackbar.LENGTH_LONG).show();
+                }
+                else if(status >= 101 && status <= 200){
+                    Snackbar.make(findViewById(android.R.id.content), "Poor Ping: " + status + " ms", Snackbar.LENGTH_LONG).show();
+                }
+                else if(status >= 201){
+                    Snackbar.make(findViewById(android.R.id.content), "Poor Ping. VOIP and online gaming may suffer: " + status + " ms", Snackbar.LENGTH_LONG).show();
+                }
+            } catch(Exception e){
+                Snackbar.make(findViewById(android.R.id.content), "An error has occurred", Snackbar.LENGTH_LONG).show();
+            }
+
+            boolean result = w.exitCode;
+
             if(result){
                 if(Utilities.isConnectedWifi(getApplicationContext())){
                     connectionStatusText.setText(R.string.connectedWifi);
@@ -859,6 +903,7 @@ public class MainActivity extends AppCompatActivity {
             super.onActivityResult(requestCode, resultCode, data);
         }
     }
+
 
     @Override
     public void onDestroy() {

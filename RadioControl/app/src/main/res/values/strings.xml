@@ -80,5 +80,9 @@
     <string name="open_source_title">Open source software licenses</string>
     <string name="open_source_summary">Details about open source licenses</string>
     <string name="not_connected_alert">You are not connected to the internet</string>
+    <string name="ping_excellent">Excellent Ping: </string>
+    <string name="ping_average">Average Ping: </string>
+    <string name="ping_poor">Poor Ping: </string>
+    <string name="ping_horrible">Poor Ping. VOIP and online gaming may suffer: </string>
 
 </resources>
