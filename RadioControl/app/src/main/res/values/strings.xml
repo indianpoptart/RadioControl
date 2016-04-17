@@ -84,5 +84,6 @@
     <string name="ping_average">Average Ping: </string>
     <string name="ping_poor">Poor Ping: </string>
     <string name="ping_horrible">Poor Ping. VOIP and online gaming may suffer: </string>
+    <string name="stats">Stats (Experimental)</string>
 
 </resources>

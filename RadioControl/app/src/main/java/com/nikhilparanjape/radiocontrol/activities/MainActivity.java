@@ -362,6 +362,7 @@ public class MainActivity extends AppCompatActivity {
         SecondaryDrawerItem item3 = new SecondaryDrawerItem().withName(R.string.about).withIcon(GoogleMaterial.Icon.gmd_info);
         SecondaryDrawerItem item4 = new SecondaryDrawerItem().withName(R.string.donate).withIcon(GoogleMaterial.Icon.gmd_attach_money);
         SecondaryDrawerItem item5 = new SecondaryDrawerItem().withName(R.string.sendFeedback).withIcon(GoogleMaterial.Icon.gmd_send);
+        SecondaryDrawerItem item6 = new SecondaryDrawerItem().withName(R.string.stats).withIcon(GoogleMaterial.Icon.gmd_timeline);
 
         //Create navigation drawer
         result = new DrawerBuilder()
@@ -373,6 +374,7 @@ public class MainActivity extends AppCompatActivity {
                         item1,
                         new DividerDrawerItem(),
                         item2,
+                        item6,
                         item3,
                         new DividerDrawerItem(),
                         item4,
@@ -387,10 +389,13 @@ public class MainActivity extends AppCompatActivity {
                         if (position == 3) {
                             startSettingsActivity();
                             Log.d("drawer", "Started settings activity");
-                        } else if (position == 4) {
+                        }else if(position == 4){
+                            startStatsActivity();
+                        }
+                        else if (position == 5) {
                             startAboutActivity();
                             Log.d("drawer", "Started about activity");
-                        } else if (position == 6) {
+                        } else if (position == 7) {
                             //Donation
                             Log.d("RadioControl", "Donation button pressed");
                             if(util.isConnected(getApplicationContext())){
@@ -401,7 +406,7 @@ public class MainActivity extends AppCompatActivity {
                             }
 
 
-                        } else if (position == 7) {
+                        } else if (position == 8) {
                             //Feedback Button, send as email
                             Log.d("RadioControl", "Feedback");
                             sendFeedback();
@@ -441,6 +446,11 @@ public class MainActivity extends AppCompatActivity {
     //starts settings activity
     public void startSettingsActivity() {
         Intent intent = new Intent(this, SettingsActivity.class);
+        startActivity(intent);
+    }
+    //starts settings activity
+    public void startStatsActivity() {
+        Intent intent = new Intent(this, StatsActivity.class);
         startActivity(intent);
     }
 
