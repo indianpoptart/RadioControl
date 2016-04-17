@@ -9,6 +9,25 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.nikhilparanjape.radiocontrol.activities.StatsActivity">
 
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="WiFi Signal lost: "
+        android:id="@+id/textView4"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="null"
+        android:id="@+id/wifiLostText"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/textView4" />
+
     <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/chart"
         android:layout_width="match_parent"

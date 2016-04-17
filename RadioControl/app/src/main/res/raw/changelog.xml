@@ -6,6 +6,7 @@
         <changelogtext>[b]New![/b] Better changelog</changelogtext>
         <changelogtext>[b]New![/b] Localization support</changelogtext>
         <changelogtext>[b]New![/b] Open source licenses</changelogtext>
+        <changelogtext>[b]New![/b] Statistics</changelogtext>
         <changelogbug>Fixed network settings</changelogbug>
         <changelogtext>Switched PreferenceActivity to Fragments</changelogtext>
     </changelogversion>

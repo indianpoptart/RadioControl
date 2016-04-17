@@ -7,6 +7,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.LimitLine;
@@ -63,6 +64,13 @@ public class StatsActivity extends AppCompatActivity {
         xAxis.addLimitLine(ll);
         int wifiLost = getWifiLost();
         Log.d("RadioControl","Lost Signal " + wifiLost + " times");
+        TextView wifiLostText = (TextView) findViewById(R.id.wifiLostText);
+        if(wifiLost == 1){
+            wifiLostText.setText("1 time");
+        }
+        else{
+            wifiLostText.setText(wifiLost + " times");
+        }
 
 
     }

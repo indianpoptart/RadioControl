@@ -20,7 +20,7 @@ Feel free to ask questions related to Android programming or this project in the
 
 Latest Stable Release: [v3.0](https://github.com/indianpoptart/RadioControl/releases/latest) (3/16/2016)
 
-Current Beta Release: [v4.0-beta5](https://github.com/indianpoptart/RadioControl/releases/tag/v4.0-beta5) (4/14/2016)
+Current Beta Release: [v4.0-beta6](https://github.com/indianpoptart/RadioControl/releases/tag/v4.0-beta6) (4/17/2016)
 
 Current Alpha Release: [v3.0.1-alpha6](https://github.com/indianpoptart/RadioControl/releases/tag/v3.0.1-alpha6) (4/4/2016) (OLD)
 
@@ -36,12 +36,20 @@ https://crowdin.com/project/radiocontrol/invite
 
 # Compatibility
 Tested on the following devices
+- Moto X (2nd Gen.) ![Motorola](https://nikhilp.org/images/moto.png)
 - Nexus 6 ![Motorola](https://nikhilp.org/images/moto.png)
 - Nexus 6P ![Huawei](https://nikhilp.org/images/huawei.png)
 - Nexus 5X ![LG](https://nikhilp.org/images/lg.png)
-- Moto X (2nd Gen.) ![Motorola](https://nikhilp.org/images/moto.png)
+- Nexus 5 ![LG](https://nikhilp.org/images/lg.png)
+- OnePlus 1
+- OnePlus 2
+- Samsung Galaxy S7
+
 
 # What's New?
+v4.0 - Beta6 (4/17/2016)
+- Added experimental stats graph(Doesn't do anything yet)
+
 v4.0 - Beta5 (4/14/2016)
 - Fixed network list bug from last beta
 - Updated grade finally
