@@ -20,7 +20,7 @@ Feel free to ask questions related to Android programming or this project in the
 
 Latest Stable Release: [v3.0](https://github.com/indianpoptart/RadioControl/releases/latest) (3/16/2016)
 
-Current Beta Release: [v4.0-beta6](https://github.com/indianpoptart/RadioControl/releases/tag/v4.0-beta6) (4/17/2016)
+Current Beta Release: [v4.0-beta7](https://github.com/indianpoptart/RadioControl/releases/tag/v4.0-beta7) (4/18/2016)
 
 Current Alpha Release: [v3.0.1-alpha6](https://github.com/indianpoptart/RadioControl/releases/tag/v3.0.1-alpha6) (4/4/2016) (OLD)
 
@@ -47,6 +47,9 @@ Tested on the following devices
 
 
 # What's New?
+v4.0 - Beta7 (4/18/2016)
+- Wifi Lost stats work
+
 v4.0 - Beta6 (4/17/2016)
 - Added experimental stats graph(Doesn't do anything yet)
 

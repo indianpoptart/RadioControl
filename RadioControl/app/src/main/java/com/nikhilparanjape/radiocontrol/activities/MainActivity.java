@@ -300,6 +300,12 @@ public class MainActivity extends AppCompatActivity {
         else if(getDeviceName().contains("LG")){
             icon = getResources().getDrawable(R.mipmap.lg);
         }
+        else if(getDeviceName().contains("Samsung")){
+            icon = getResources().getDrawable(R.mipmap.samsung);
+        }
+        else if(getDeviceName().contains("OnePlus")){
+            icon = getResources().getDrawable(R.mipmap.oneplus);
+        }
         else{
             icon = getResources().getDrawable(R.mipmap.ic_launcher);
         }

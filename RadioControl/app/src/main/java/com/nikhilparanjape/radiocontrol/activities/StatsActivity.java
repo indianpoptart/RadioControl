@@ -28,7 +28,7 @@ import java.util.Arrays;
 
 
 public class StatsActivity extends AppCompatActivity {
-
+    int wifiSigLost = 0;
 
 
     @Override
@@ -37,6 +37,7 @@ public class StatsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_stats);
 
         final ActionBar actionBar = getSupportActionBar();
+
 
         actionBar.setHomeAsUpIndicator(new IconicsDrawable(this, GoogleMaterial.Icon.gmd_arrow_back).color(Color.WHITE).sizeDp(IconicsDrawable.ANDROID_ACTIONBAR_ICON_SIZE_DP).paddingDp(IconicsDrawable.ANDROID_ACTIONBAR_ICON_SIZE_PADDING_DP));
         actionBar.setDisplayHomeAsUpEnabled(true);
@@ -62,25 +63,25 @@ public class StatsActivity extends AppCompatActivity {
         // .. and more styling options
 
         xAxis.addLimitLine(ll);
-        int wifiLost = getWifiLost();
-        Log.d("RadioControl","Lost Signal " + wifiLost + " times");
+        getWifiLost();
+        Log.d("RadioControl","Lost Signal " + wifiSigLost + " times");
         TextView wifiLostText = (TextView) findViewById(R.id.wifiLostText);
-        if(wifiLost == 1){
+        if(wifiSigLost == 1){
             wifiLostText.setText("1 time");
         }
         else{
-            wifiLostText.setText(wifiLost + " times");
+            wifiLostText.setText(wifiSigLost + " times");
         }
 
 
     }
 
-    public int getWifiLost(){
+    public void getWifiLost(){
         File log = new File(getApplicationContext().getFilesDir(), "radiocontrol.log");
 
         FileInputStream is;
         BufferedReader reader;
-        int wifiSigLost = 0;
+        int count=0;
         try {
             if (log.exists()) {
                 is = new FileInputStream(log);
@@ -89,34 +90,38 @@ public class StatsActivity extends AppCompatActivity {
 
                 while (line != null) {
                     line = reader.readLine();
-                    wifiSigLost = countMatches(line,"lost");
+                    if(countMatches(line,"lost") == 1){
+                        wifiSigLost++;
+                    }
+                    Log.d("RadioControl","LINE: " + line + " contains " + wifiSigLost);
                 }
-                return wifiSigLost;
+
             }
             else{
                 Snackbar.make(findViewById(android.R.id.content), "No log file found", Snackbar.LENGTH_LONG)
                         .show();
-                return 0;
+                wifiSigLost = 0;
             }
         } catch(IOException e){
             Log.d("RadioControl", "Error: " + e);
             Snackbar.make(findViewById(android.R.id.content), "Error: " + e, Snackbar.LENGTH_LONG)
                     .show();
         }
-        return 0;
     }
 
-    public static int countMatches(String str, String sub) {
-        if (isEmpty(str) || isEmpty(sub)) {
-            return 0;
+    public int countMatches(String str, String sub) {
+        try{
+            if (str.contains(sub)) {
+                return 1;
+
+            } else {
+                return 0;
+            }
+        } catch(NullPointerException e){
+
         }
-        int count = 0;
-        int idx = 0;
-        while ((idx = str.indexOf(sub, idx)) != -1) {
-            count++;
-            idx += sub.length();
-        }
-        return count;
+        return 0;
+
     }
 
     public static boolean isEmpty(String str) {
