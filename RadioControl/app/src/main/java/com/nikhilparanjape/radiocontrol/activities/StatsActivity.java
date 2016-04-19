@@ -24,24 +24,39 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 
 
 public class StatsActivity extends AppCompatActivity {
     int wifiSigLost = 0;
-    float jan = 0;
-    float feb = 0;
-    float mar = 0;
-    float apr = 0;
-    float may = 0;
-    float jun = 0;
-    float jul = 0;
-    float aug = 0;
-    float sep = 0;
-    float oct = 0;
-    float nov = 0;
-    float dec = 0;
+    float janWifiLost = 0;
+    float febWifiLost = 0;
+    float marWifiLost = 0;
+    float aprWifiLost = 0;
+    float mayWifiLost = 0;
+    float junWifiLost = 0;
+    float julWifiLost = 0;
+    float augWifiLost = 0;
+    float sepWifiLost = 0;
+    float octWifiLost = 0;
+    float novWifiLost = 0;
+    float decWifiLost = 0;
+
+    int airplaneOn = 0;
+    float janAirOn = 0;
+    float febAirOn = 0;
+    float marAirOn = 0;
+    float aprAirOn = 0;
+    float mayAirOn = 0;
+    float junAirOn = 0;
+    float julAirOn = 0;
+    float augAirOn = 0;
+    float sepAirOn = 0;
+    float octAirOn = 0;
+    float novAirOn = 0;
+    float decAirOn = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +70,11 @@ public class StatsActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle("Statistics");
 
+        wifiLostGraph();
+        airplaneOnGraph();
+
+    }
+    public void wifiLostGraph(){
         //Initiate chart
         LineChartView chart = (LineChartView) findViewById(R.id.linechart);
         //Initiate dataset for chart
@@ -66,44 +86,85 @@ public class StatsActivity extends AppCompatActivity {
 
         //Set chart defaults
         chart.addData(dataset);
-        chart.setAxisColor(Color.WHITE);
-        chart.setLabelsColor(Color.WHITE);
+        chart.setAxisColor(Color.BLACK);
+        chart.setLabelsColor(Color.BLACK);
         chart.setXAxis(true);
         chart.setYAxis(true);
         chart.setYLabels(AxisController.LabelPosition.OUTSIDE);
 
 
-        dataset.setColor(Color.WHITE);
+        dataset.setColor(Color.BLACK);
 
         getWifiLost();
 
 
-        dataset.addPoint("Jan", jan);
-        dataset.addPoint("Feb", feb);
-        dataset.addPoint("Mar", mar);
-        dataset.addPoint("Apr", apr);
-        dataset.addPoint("May", may);
-        dataset.addPoint("Jun", jun);
-        dataset.addPoint("Jul", jul);
-        dataset.addPoint("Aug", aug);
-        dataset.addPoint("Sep", sep);
-        dataset.addPoint("Oct", oct);
-        dataset.addPoint("Nov", nov);
-        dataset.addPoint("Dec", dec);
+        dataset.addPoint("Jan", janWifiLost);
+        dataset.addPoint("Feb", febWifiLost);
+        dataset.addPoint("Mar", marWifiLost);
+        dataset.addPoint("Apr", aprWifiLost);
+        dataset.addPoint("May", mayWifiLost);
+        dataset.addPoint("Jun", junWifiLost);
+        dataset.addPoint("Jul", julWifiLost);
+        dataset.addPoint("Aug", augWifiLost);
+        dataset.addPoint("Sep", sepWifiLost);
+        dataset.addPoint("Oct", octWifiLost);
+        dataset.addPoint("Nov", novWifiLost);
+        dataset.addPoint("Dec", decWifiLost);
+
+        float largest = Collections.max(Arrays.asList(janWifiLost, febWifiLost, marWifiLost, aprWifiLost, mayWifiLost, junWifiLost, julWifiLost, augWifiLost, sepWifiLost, octWifiLost, novWifiLost, decWifiLost));
+        int max = (int) largest;
+        chart.setAxisBorderValues(0, 0, max);
 
         Log.d("RadioControl","Lost Signal " + wifiSigLost + " times");
-        TextView wifiLostText = (TextView) findViewById(R.id.wifiLostText);
-        if(wifiSigLost == 1){
-            wifiLostText.setText("1 time");
-        }
-        else{
-            wifiLostText.setText(wifiSigLost + " times");
-        }
 
         chart.show(anim);
-
     }
+    //Airplane on graph
+    public void airplaneOnGraph(){
+        //Initiate chart
+        LineChartView chart = (LineChartView) findViewById(R.id.linechart_airplane_on);
+        //Initiate dataset for chart
+        LineSet dataset = new LineSet();
 
+        Animation anim = new Animation();
+        anim.setDuration(1000);
+        anim.setEasing(new BounceEase());
+
+        //Set chart defaults
+        chart.addData(dataset);
+        chart.setAxisColor(Color.BLACK);
+        chart.setLabelsColor(Color.BLACK);
+        chart.setXAxis(true);
+        chart.setYAxis(true);
+        chart.setYLabels(AxisController.LabelPosition.OUTSIDE);
+
+
+        dataset.setColor(Color.BLACK);
+
+        getAirplaneModeOn();
+
+
+        dataset.addPoint("Jan", janAirOn);
+        dataset.addPoint("Feb", febAirOn);
+        dataset.addPoint("Mar", marAirOn);
+        dataset.addPoint("Apr", aprAirOn);
+        dataset.addPoint("May", mayAirOn);
+        dataset.addPoint("Jun", junAirOn);
+        dataset.addPoint("Jul", julAirOn);
+        dataset.addPoint("Aug", augAirOn);
+        dataset.addPoint("Sep", sepAirOn);
+        dataset.addPoint("Oct", octAirOn);
+        dataset.addPoint("Nov", novAirOn);
+        dataset.addPoint("Dec", decAirOn);
+
+        float largest = Collections.max(Arrays.asList(janAirOn, febAirOn, marAirOn, aprAirOn, mayAirOn, junAirOn, julAirOn, augAirOn, sepAirOn, octAirOn, novAirOn, decAirOn));
+        int max = (int) largest;
+        chart.setAxisBorderValues(0, 0, max);
+
+        Log.d("RadioControl","Lost Signal " + airplaneOn + " times");
+
+        chart.show(anim);
+    }
     public void getWifiLost(){
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy");
         String year = formatter.format(new Date());
@@ -122,40 +183,40 @@ public class StatsActivity extends AppCompatActivity {
                     line = reader.readLine();
                     if(countMatches(line,"lost") == 1){
                         if(line.contains(year+"-01")){
-                            jan++;
+                            janWifiLost++;
                         }
                         else if(line.contains(year+"-02")){
-                            feb++;
+                            febWifiLost++;
                         }
                         else if(line.contains(year+"-03")){
-                            mar++;
+                            marWifiLost++;
                         }
                         else if(line.contains(year+"-04")){
-                            apr++;
+                            aprWifiLost++;
                         }
                         else if(line.contains(year+"-05")){
-                            may++;
+                            mayWifiLost++;
                         }
                         else if(line.contains(year+"-06")){
-                            jun++;
+                            junWifiLost++;
                         }
                         else if(line.contains(year+"-07")){
-                            jul++;
+                            julWifiLost++;
                         }
                         else if(line.contains(year+"-08")){
-                            aug++;
+                            augWifiLost++;
                         }
                         else if(line.contains(year+"-09")){
-                            sep++;
+                            sepWifiLost++;
                         }
                         else if(line.contains(year+"-10")){
-                            oct++;
+                            octWifiLost++;
                         }
                         else if(line.contains(year+"-11")){
-                            nov++;
+                            novWifiLost++;
                         }
                         else if(line.contains(year+"-12")){
-                            dec++;
+                            decWifiLost++;
                         }
                         wifiSigLost++;
                     }
@@ -173,7 +234,75 @@ public class StatsActivity extends AppCompatActivity {
                     .show();
         }
     }
+    public void getAirplaneModeOn(){
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy");
+        String year = formatter.format(new Date());
+        File log = new File(getApplicationContext().getFilesDir(), "radiocontrol.log");
 
+        FileInputStream is;
+        BufferedReader reader;
+        int count=0;
+        try {
+            if (log.exists()) {
+                is = new FileInputStream(log);
+                reader = new BufferedReader(new InputStreamReader(is));
+                String line = reader.readLine();
+
+                while (line != null) {
+                    line = reader.readLine();
+                    if(countMatches(line,"Airplane mode has been turned off") == 1){
+                        if(line.contains(year+"-01")){
+                            janAirOn++;
+                        }
+                        else if(line.contains(year+"-02")){
+                            febAirOn++;
+                        }
+                        else if(line.contains(year+"-03")){
+                            marAirOn++;
+                        }
+                        else if(line.contains(year+"-04")){
+                            aprAirOn++;
+                        }
+                        else if(line.contains(year+"-05")){
+                            mayAirOn++;
+                        }
+                        else if(line.contains(year+"-06")){
+                            junAirOn++;
+                        }
+                        else if(line.contains(year+"-07")){
+                            julAirOn++;
+                        }
+                        else if(line.contains(year+"-08")){
+                            augAirOn++;
+                        }
+                        else if(line.contains(year+"-09")){
+                            sepAirOn++;
+                        }
+                        else if(line.contains(year+"-10")){
+                            octAirOn++;
+                        }
+                        else if(line.contains(year+"-11")){
+                            novAirOn++;
+                        }
+                        else if(line.contains(year+"-12")){
+                            decAirOn++;
+                        }
+                        airplaneOn++;
+                    }
+                    Log.d("RadioControl","LINE: " + line + " contains " + airplaneOn);
+                }
+
+            }
+            else{
+                Snackbar.make(findViewById(android.R.id.content), "No log file found", Snackbar.LENGTH_LONG)
+                        .show();
+            }
+        } catch(IOException e){
+            Log.d("RadioControl", "Error: " + e);
+            Snackbar.make(findViewById(android.R.id.content), "Error: " + e, Snackbar.LENGTH_LONG)
+                    .show();
+        }
+    }
     public int countMatches(String str, String sub) {
         try{
             if (str.contains(sub)) {
@@ -187,10 +316,6 @@ public class StatsActivity extends AppCompatActivity {
         }
         return 0;
 
-    }
-
-    public static boolean isEmpty(String str) {
-        return str == null || str.length() == 0;
     }
 
     @Override

@@ -83,7 +83,7 @@
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/dependency-cache" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.android.support/animated-vector-drawable/23.2.0/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.2.0/jars" />
-      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.android.support/cardview-v7/24.0.0-alpha2/jars" />
+      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.android.support/cardview-v7/24.0.0-alpha1/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.android.support/design/23.2.0/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.android.support/recyclerview-v7/23.2.0/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.android.support/support-v4/23.2.0/jars" />
@@ -115,21 +115,21 @@
     </content>
     <orderEntry type="jdk" jdkName="Android API 23 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" exported="" name="play-services-ads-8.4.0" level="project" />
+    <orderEntry type="library" exported="" name="iconics-core-2.5.4" level="project" />
+    <orderEntry type="library" exported="" name="materialize-0.5.1" level="project" />
+    <orderEntry type="library" exported="" name="google-material-typeface-2.2.0.1.original" level="project" />
+    <orderEntry type="library" exported="" name="cardview-v7-24.0.0-alpha1" level="project" />
+    <orderEntry type="library" exported="" name="design-23.2.0" level="project" />
+    <orderEntry type="library" exported="" name="recyclerview-v7-23.2.0" level="project" />
     <orderEntry type="library" exported="" name="support-v4-23.2.0" level="project" />
+    <orderEntry type="library" exported="" name="williamchart-2.2" level="project" />
+    <orderEntry type="library" exported="" name="changelog-2.0.1-SNAPSHOT" level="project" />
+    <orderEntry type="library" exported="" name="support-annotations-23.2.0" level="project" />
+    <orderEntry type="library" exported="" name="appcompat-v7-23.2.0" level="project" />
+    <orderEntry type="library" exported="" name="animated-vector-drawable-23.2.0" level="project" />
+    <orderEntry type="library" exported="" name="support-vector-drawable-23.2.0" level="project" />
     <orderEntry type="library" exported="" name="play-services-basement-8.4.0" level="project" />
     <orderEntry type="library" exported="" name="materialdrawer-4.6.4" level="project" />
-    <orderEntry type="library" exported="" name="materialize-0.5.1" level="project" />
-    <orderEntry type="library" exported="" name="changelog-2.0.1-SNAPSHOT" level="project" />
-    <orderEntry type="library" exported="" name="williamchart-2.2" level="project" />
-    <orderEntry type="library" exported="" name="design-23.2.0" level="project" />
-    <orderEntry type="library" exported="" name="play-services-ads-8.4.0" level="project" />
-    <orderEntry type="library" exported="" name="animated-vector-drawable-23.2.0" level="project" />
-    <orderEntry type="library" exported="" name="recyclerview-v7-23.2.0" level="project" />
-    <orderEntry type="library" exported="" name="cardview-v7-24.0.0-alpha2" level="project" />
-    <orderEntry type="library" exported="" name="support-vector-drawable-23.2.0" level="project" />
-    <orderEntry type="library" exported="" name="google-material-typeface-2.2.0.1.original" level="project" />
-    <orderEntry type="library" exported="" name="appcompat-v7-23.2.0" level="project" />
-    <orderEntry type="library" exported="" name="iconics-core-2.5.4" level="project" />
-    <orderEntry type="library" exported="" name="support-annotations-24.0.0-alpha2" level="project" />
   </component>
 </module>
