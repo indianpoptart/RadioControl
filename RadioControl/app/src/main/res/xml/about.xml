@@ -13,6 +13,12 @@
         android:summary="@string/changelog_summary"
         />
     <Preference
+        android:key="tutorial"
+        android:title="@string/tutorial_title"
+        android:defaultValue="@array/empty_array"
+        android:summary="@string/tutorial_summary"
+        />
+    <Preference
         android:key="source"
         android:title="@string/open_source_title"
         android:defaultValue="@array/empty_array"

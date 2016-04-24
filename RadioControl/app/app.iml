@@ -90,6 +90,7 @@
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.android.support/support-vector-drawable/23.2.0/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.diogobernardino/williamchart/2.2/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.github.gabrielemariotti.changeloglib/changelog/2.0.1-SNAPSHOT/jars" />
+      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.github.paolorotolo/appintro/3.4.0/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.google.android.gms/play-services-ads/8.4.0/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/8.4.0/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.mikepenz/google-material-typeface/2.2.0.1.original/jars" />
@@ -119,6 +120,7 @@
     <orderEntry type="library" exported="" name="iconics-core-2.5.4" level="project" />
     <orderEntry type="library" exported="" name="materialize-0.5.1" level="project" />
     <orderEntry type="library" exported="" name="google-material-typeface-2.2.0.1.original" level="project" />
+    <orderEntry type="library" exported="" name="appintro-3.4.0" level="project" />
     <orderEntry type="library" exported="" name="cardview-v7-24.0.0-alpha1" level="project" />
     <orderEntry type="library" exported="" name="design-23.2.0" level="project" />
     <orderEntry type="library" exported="" name="recyclerview-v7-23.2.0" level="project" />

@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.nikhilparanjape.radiocontrol.BuildConfig;
 import com.nikhilparanjape.radiocontrol.activities.ChangeLogActivity;
 import com.nikhilparanjape.radiocontrol.R;
+import com.nikhilparanjape.radiocontrol.activities.TutorialActivity;
 import com.nikhilparanjape.radiocontrol.rootUtils.Utilities;
 
 import it.gmariotti.changelibs.library.view.ChangeLogRecyclerView;
@@ -91,6 +92,14 @@ public class AboutFragment extends PreferenceFragment {
             }
         });
 
+        Preference tutorialPref = findPreference("tutorial");
+        tutorialPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            public boolean onPreferenceClick(Preference preference) {
+                tutorial(c);
+                return false;
+            }
+        });
+
         Preference openSource = findPreference("source");
         openSource.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             public boolean onPreferenceClick(Preference preference) {
@@ -122,6 +131,11 @@ public class AboutFragment extends PreferenceFragment {
     //whats new dialog
     private void changelog(Context c) {
         Intent i = new Intent(c, ChangeLogActivity.class);
+        startActivity(i);
+    }
+    //whats new dialog
+    private void tutorial(Context c) {
+        Intent i = new Intent(c, TutorialActivity.class);
         startActivity(i);
     }
 

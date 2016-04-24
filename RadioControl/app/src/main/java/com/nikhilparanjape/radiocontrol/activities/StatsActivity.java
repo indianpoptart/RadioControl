@@ -7,13 +7,12 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
-import android.widget.TextView;
 
 import com.db.chart.model.LineSet;
 import com.db.chart.view.AxisController;
 import com.db.chart.view.LineChartView;
 import com.db.chart.view.animation.Animation;
-import com.db.chart.view.animation.easing.BounceEase;
+import com.db.chart.view.animation.easing.ExpoEase;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.nikhilparanjape.radiocontrol.R;
@@ -58,6 +57,8 @@ public class StatsActivity extends AppCompatActivity {
     float novAirOn = 0;
     float decAirOn = 0;
 
+    boolean logFilePresent = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,7 +71,9 @@ public class StatsActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle("Statistics");
 
+
         wifiLostGraph();
+
         airplaneOnGraph();
 
     }
@@ -81,8 +84,11 @@ public class StatsActivity extends AppCompatActivity {
         LineSet dataset = new LineSet();
 
         Animation anim = new Animation();
-        anim.setDuration(1000);
-        anim.setEasing(new BounceEase());
+        anim.setDuration(2000);
+        anim.setEasing(new ExpoEase());
+        int[] ovLap = {0,1,2,3,4,5,6,7,8,9,10,11};
+        anim.setOverlap(0.5f, ovLap);
+        anim.setAlpha(1);
 
         //Set chart defaults
         chart.addData(dataset);
@@ -110,10 +116,15 @@ public class StatsActivity extends AppCompatActivity {
         dataset.addPoint("Oct", octWifiLost);
         dataset.addPoint("Nov", novWifiLost);
         dataset.addPoint("Dec", decWifiLost);
+        if(janWifiLost == 0 && febWifiLost == 0 && marWifiLost == 0 && aprWifiLost == 0 && mayWifiLost == 0 && junWifiLost == 0 && julWifiLost == 0 && augWifiLost == 0 &&
+                sepWifiLost == 0 && octWifiLost == 0 && novWifiLost == 0 && decWifiLost == 0){
 
-        float largest = Collections.max(Arrays.asList(janWifiLost, febWifiLost, marWifiLost, aprWifiLost, mayWifiLost, junWifiLost, julWifiLost, augWifiLost, sepWifiLost, octWifiLost, novWifiLost, decWifiLost));
-        int max = (int) largest;
-        chart.setAxisBorderValues(0, 0, max);
+        } else{
+            float largest = Collections.max(Arrays.asList(janWifiLost, febWifiLost, marWifiLost, aprWifiLost, mayWifiLost, junWifiLost, julWifiLost, augWifiLost, sepWifiLost, octWifiLost, novWifiLost, decWifiLost));
+            int max = (int) largest;
+
+            chart.setAxisBorderValues(0, 0, max);
+        }
 
         Log.d("RadioControl","Lost Signal " + wifiSigLost + " times");
 
@@ -127,8 +138,11 @@ public class StatsActivity extends AppCompatActivity {
         LineSet dataset = new LineSet();
 
         Animation anim = new Animation();
-        anim.setDuration(1000);
-        anim.setEasing(new BounceEase());
+        anim.setDuration(2000);
+        anim.setEasing(new ExpoEase());
+        int[] ovLap = {0,1,2,3,4,5,6,7,8,9,10,11};
+        anim.setOverlap(0.5f, ovLap);
+        anim.setAlpha(1);
 
         //Set chart defaults
         chart.addData(dataset);
@@ -156,10 +170,15 @@ public class StatsActivity extends AppCompatActivity {
         dataset.addPoint("Oct", octAirOn);
         dataset.addPoint("Nov", novAirOn);
         dataset.addPoint("Dec", decAirOn);
+        if(janAirOn == 0 && febAirOn == 0 && marAirOn == 0 && aprAirOn == 0 && mayAirOn == 0 && junAirOn == 0 && julAirOn == 0 && augAirOn == 0 &&
+                sepAirOn == 0 && octAirOn == 0 && novAirOn == 0 && decAirOn == 0){
 
-        float largest = Collections.max(Arrays.asList(janAirOn, febAirOn, marAirOn, aprAirOn, mayAirOn, junAirOn, julAirOn, augAirOn, sepAirOn, octAirOn, novAirOn, decAirOn));
-        int max = (int) largest;
-        chart.setAxisBorderValues(0, 0, max);
+        } else{
+            float largest = Collections.max(Arrays.asList(janAirOn, febAirOn, marAirOn, aprAirOn, mayAirOn, junAirOn, julAirOn, augAirOn, sepAirOn, octAirOn, novAirOn, decAirOn));
+            int max = (int) largest;
+            chart.setAxisBorderValues(0, 0, max);
+        }
+
 
         Log.d("RadioControl","Lost Signal " + airplaneOn + " times");
 

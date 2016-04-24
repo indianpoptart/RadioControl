@@ -85,5 +85,10 @@
     <string name="ping_poor">Poor Ping: </string>
     <string name="ping_horrible">Poor Ping. VOIP and online gaming may suffer: </string>
     <string name="stats">Stats (Experimental)</string>
+    <string name="tutorial_summary">View the app\'s tutorial screen</string>
+    <string name="tutorial_title">Tutorial</string>
+    <string name="network_alert">Network Alert</string>
+    <string name="welcome_to_radiocontrol">Welcome to RadioControl</string>
+    <string name="intro_summary_1">This app saves your battery by switching off the cell radio when connected to a WiFi network</string>
 
 </resources>

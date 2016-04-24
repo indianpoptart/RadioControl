@@ -110,6 +110,39 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //  Declare a new thread to do a preference check
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //  Initialize SharedPreferences
+                SharedPreferences getPrefs = PreferenceManager
+                        .getDefaultSharedPreferences(getBaseContext());
+
+                //  Create a new boolean and preference and set it to true
+                boolean isFirstStart = getPrefs.getBoolean("firstStart", true);
+
+                //  If the activity has never started before...
+                if (isFirstStart) {
+
+                    //  Launch app intro
+                    Intent i = new Intent(MainActivity.this, TutorialActivity.class);
+                    startActivity(i);
+
+                    //  Make a new preferences editor
+                    SharedPreferences.Editor e = getPrefs.edit();
+
+                    //  Edit preference to make it false because we don't want this to run again
+                    e.putBoolean("firstStart", false);
+
+                    //  Apply changes
+                    e.apply();
+                }
+            }
+        });
+
+        // Start the thread
+        t.start();
+
         final ProgressBar dialog = (ProgressBar) findViewById(R.id.pingProgressBar);
         dialog.setVisibility(View.GONE);
 
@@ -396,7 +429,15 @@ public class MainActivity extends AppCompatActivity {
                             startSettingsActivity();
                             Log.d("drawer", "Started settings activity");
                         }else if(position == 4){
-                            startStatsActivity();
+                            File log = new File(getApplicationContext().getFilesDir(), "radiocontrol.log");
+                            if(log.exists() && log.canRead()) {
+                                Log.d("RadioControl", "Log Exists");
+                                startStatsActivity();
+                            } else{
+                                Snackbar.make(findViewById(android.R.id.content), "No log file found", Snackbar.LENGTH_LONG)
+                                        .show();
+                            }
+
                         }
                         else if (position == 5) {
                             startAboutActivity();
@@ -796,6 +837,7 @@ public class MainActivity extends AppCompatActivity {
 
         public AsyncBackgroundTask(MainActivity activity) {
             dialog = (ProgressBar) findViewById(R.id.pingProgressBar);
+            dialog.setIndeterminate(true);
         }
 
         public AsyncBackgroundTask(Context context) {
