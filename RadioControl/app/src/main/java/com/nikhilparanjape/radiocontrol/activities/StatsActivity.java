@@ -2,16 +2,21 @@ package com.nikhilparanjape.radiocontrol.activities;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.db.chart.model.LineSet;
 import com.db.chart.view.AxisController;
 import com.db.chart.view.LineChartView;
 import com.db.chart.view.animation.Animation;
+import com.db.chart.view.animation.easing.BounceEase;
 import com.db.chart.view.animation.easing.ExpoEase;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
@@ -57,6 +62,9 @@ public class StatsActivity extends AppCompatActivity {
     float novAirOn = 0;
     float decAirOn = 0;
 
+    LineChartView chart;
+    LineChartView chart1;
+
     boolean logFilePresent = false;
 
     @Override
@@ -66,10 +74,23 @@ public class StatsActivity extends AppCompatActivity {
 
         final ActionBar actionBar = getSupportActionBar();
 
+        final CoordinatorLayout clayout = (CoordinatorLayout) findViewById(R.id.clayout);
 
         actionBar.setHomeAsUpIndicator(new IconicsDrawable(this, GoogleMaterial.Icon.gmd_arrow_back).color(Color.WHITE).sizeDp(IconicsDrawable.ANDROID_ACTIONBAR_ICON_SIZE_DP).paddingDp(IconicsDrawable.ANDROID_ACTIONBAR_ICON_SIZE_PADDING_DP));
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle("Statistics");
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        assert fab != null;
+        fab.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_refresh_white_48dp));
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Snackbar.make(clayout, "I don't do anything yet!", Snackbar.LENGTH_LONG)
+                        .show();
+            }
+        });
 
 
         wifiLostGraph();
@@ -79,15 +100,15 @@ public class StatsActivity extends AppCompatActivity {
     }
     public void wifiLostGraph(){
         //Initiate chart
-        LineChartView chart = (LineChartView) findViewById(R.id.linechart);
+        chart = (LineChartView) findViewById(R.id.linechart);
         //Initiate dataset for chart
         LineSet dataset = new LineSet();
 
         Animation anim = new Animation();
-        anim.setDuration(2000);
+        anim.setDuration(1000);
         anim.setEasing(new ExpoEase());
         int[] ovLap = {0,1,2,3,4,5,6,7,8,9,10,11};
-        anim.setOverlap(0.5f, ovLap);
+        anim.setOverlap(1.0f, ovLap);
         anim.setAlpha(1);
 
         //Set chart defaults
@@ -128,29 +149,30 @@ public class StatsActivity extends AppCompatActivity {
 
         Log.d("RadioControl","Lost Signal " + wifiSigLost + " times");
 
+
         chart.show(anim);
     }
     //Airplane on graph
     public void airplaneOnGraph(){
         //Initiate chart
-        LineChartView chart = (LineChartView) findViewById(R.id.linechart_airplane_on);
+        chart1 = (LineChartView) findViewById(R.id.linechart_airplane_on);
         //Initiate dataset for chart
         LineSet dataset = new LineSet();
 
         Animation anim = new Animation();
-        anim.setDuration(2000);
+        anim.setDuration(1000);
         anim.setEasing(new ExpoEase());
         int[] ovLap = {0,1,2,3,4,5,6,7,8,9,10,11};
-        anim.setOverlap(0.5f, ovLap);
+        anim.setOverlap(1.0f, ovLap);
         anim.setAlpha(1);
 
         //Set chart defaults
-        chart.addData(dataset);
-        chart.setAxisColor(Color.BLACK);
-        chart.setLabelsColor(Color.BLACK);
-        chart.setXAxis(true);
-        chart.setYAxis(true);
-        chart.setYLabels(AxisController.LabelPosition.OUTSIDE);
+        chart1.addData(dataset);
+        chart1.setAxisColor(Color.BLACK);
+        chart1.setLabelsColor(Color.BLACK);
+        chart1.setXAxis(true);
+        chart1.setYAxis(true);
+        chart1.setYLabels(AxisController.LabelPosition.OUTSIDE);
 
 
         dataset.setColor(Color.BLACK);
@@ -176,13 +198,13 @@ public class StatsActivity extends AppCompatActivity {
         } else{
             float largest = Collections.max(Arrays.asList(janAirOn, febAirOn, marAirOn, aprAirOn, mayAirOn, junAirOn, julAirOn, augAirOn, sepAirOn, octAirOn, novAirOn, decAirOn));
             int max = (int) largest;
-            chart.setAxisBorderValues(0, 0, max);
+            chart1.setAxisBorderValues(0, 0, max);
         }
 
 
         Log.d("RadioControl","Lost Signal " + airplaneOn + " times");
 
-        chart.show(anim);
+        chart1.show(anim);
     }
     public void getWifiLost(){
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy");

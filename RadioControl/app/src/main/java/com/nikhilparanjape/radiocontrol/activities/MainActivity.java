@@ -1,6 +1,5 @@
 package com.nikhilparanjape.radiocontrol.activities;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.Context;
@@ -62,7 +61,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.sql.Wrapper;
 
 import it.gmariotti.changelibs.library.view.ChangeLogRecyclerView;
 
@@ -852,7 +850,7 @@ public class MainActivity extends AppCompatActivity {
             try {
                 Process ipProcess = runtime.exec("/system/bin/ping -c 3 8.8.8.8");
                 int exitValue = ipProcess.waitFor();
-                Log.d("RadioControl", "Ping test returned " + exitValue);
+                Log.d("RadioControl", "Latency Test returned " + exitValue);
                 if(exitValue == 0){
                     InputStreamReader reader = new InputStreamReader(ipProcess.getInputStream());
                     BufferedReader buf = new BufferedReader(reader);
@@ -884,16 +882,16 @@ public class MainActivity extends AppCompatActivity {
                 status = Double.parseDouble(w.status);
 
                 if(status <= 50){
-                    Snackbar.make(findViewById(android.R.id.content), "Excellent Ping: " + status + " ms", Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(findViewById(android.R.id.content), "Excellent Latency: " + status + " ms", Snackbar.LENGTH_LONG).show();
                 }
                 else if(status >= 51 && status <= 100){
-                    Snackbar.make(findViewById(android.R.id.content), "Average Ping: " + status + " ms", Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(findViewById(android.R.id.content), "Average Latency: " + status + " ms", Snackbar.LENGTH_LONG).show();
                 }
                 else if(status >= 101 && status <= 200){
-                    Snackbar.make(findViewById(android.R.id.content), "Poor Ping: " + status + " ms", Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(findViewById(android.R.id.content), "Poor Latency: " + status + " ms", Snackbar.LENGTH_LONG).show();
                 }
                 else if(status >= 201){
-                    Snackbar.make(findViewById(android.R.id.content), "Poor Ping. VOIP and online gaming may suffer: " + status + " ms", Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(findViewById(android.R.id.content), "Poor Latency. VOIP and online gaming may suffer: " + status + " ms", Snackbar.LENGTH_LONG).show();
                 }
             } catch(Exception e){
                 Snackbar.make(findViewById(android.R.id.content), "An error has occurred", Snackbar.LENGTH_LONG).show();

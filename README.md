@@ -24,7 +24,7 @@ Current Beta Release: [v4.0-beta10](https://github.com/indianpoptart/RadioContro
 
 Current Alpha Release: [v3.0.1-alpha6](https://github.com/indianpoptart/RadioControl/releases/tag/v3.0.1-alpha6) (4/4/2016) (OLD)
 
-Current Release Candidate [v3.0-rc2](https://github.com/indianpoptart/RadioControl/releases/tag/v3.0-rc2) (3/11/2016) (OLD)
+Current Release Candidate [v4.0-rc1](https://github.com/indianpoptart/RadioControl/releases/tag/v4.0-rc1) (4/25/2016)
 
 
 # "How Do You Make Money?"
@@ -47,6 +47,12 @@ Tested on the following devices
 
 
 # What's New?
+v4.0 - RC 1 (4/25/2016)
+- Changed Ping to Latency
+- Fixed graph animation
+- Fixed licenses not showing on cell data
+- Added fab button to stat view
+
 v4.0 - Beta10 (4/24/2016)
 - Added app intro
 - Added splash screen

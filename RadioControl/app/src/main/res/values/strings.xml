@@ -45,7 +45,7 @@
     <string name="connectedSCell">Connected to the internet thru SLOW CELL</string>
     <string name="airplaneOn">Airplane mode is on</string>
     <string name="connectionUnable">Unable to connect to the internet</string>
-    <string name="ping">Pinging...</string>
+    <string name="ping">Testing...</string>
     <string name="netSettingsSum">Do not enable airplane mode when connected to the selected networks</string>
     <string name="resetNetSettings">Reset Network Settings</string>
     <string name="resetSummary">Reset the disabled networks list</string>
@@ -80,10 +80,10 @@
     <string name="open_source_title">Open source software licenses</string>
     <string name="open_source_summary">Details about open source licenses</string>
     <string name="not_connected_alert">You are not connected to the internet</string>
-    <string name="ping_excellent">Excellent Ping: </string>
-    <string name="ping_average">Average Ping: </string>
-    <string name="ping_poor">Poor Ping: </string>
-    <string name="ping_horrible">Poor Ping. VOIP and online gaming may suffer: </string>
+    <string name="ping_excellent">Excellent Latency: </string>
+    <string name="ping_average">Average Latency: </string>
+    <string name="ping_poor">Poor Latency: </string>
+    <string name="ping_horrible">Poor Latency. VOIP and online gaming may suffer: </string>
     <string name="stats">Stats (Experimental)</string>
     <string name="tutorial_summary">View the app\'s tutorial screen</string>
     <string name="tutorial_title">Tutorial</string>

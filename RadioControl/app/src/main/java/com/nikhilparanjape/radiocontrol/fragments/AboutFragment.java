@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
+import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,7 +42,7 @@ public class AboutFragment extends PreferenceFragment {
 
         final Context c = getActivity();
 
-        if(util.isConnectedWifi(c)){
+        if(util.isConnected(c)){
             getPreferenceScreen().findPreference("source").setEnabled(true);
         }
         else{
@@ -114,18 +115,24 @@ public class AboutFragment extends PreferenceFragment {
 
     }
     private void displayLicensesAlertDialog(Context c) {
-        LayoutInflater inflater = LayoutInflater.from(c);//Creates layout inflator for dialog
-        WebView view = (WebView) inflater.inflate(R.layout.dialog_licenses, null);//Initializes the view for whats new dialog
-        AlertDialog.Builder builder = new AlertDialog.Builder(c);//creates alertdialog
-        view.loadUrl("https://nikhilp.org/radiocontrol/opensource/index.html");
-        builder.setView(view).setTitle(R.string.open_source_title)//sets title
-                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-        builder.create().show();
+        if(new Utilities().isConnected(c)){
+            LayoutInflater inflater = LayoutInflater.from(c);//Creates layout inflator for dialog
+            WebView view = (WebView) inflater.inflate(R.layout.dialog_licenses, null);//Initializes the view for whats new dialog
+            AlertDialog.Builder builder = new AlertDialog.Builder(c);//creates alertdialog
+            view.loadUrl("https://nikhilp.org/radiocontrol/opensource/index.html");
+            builder.setView(view).setTitle(R.string.open_source_title)//sets title
+                    .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+            builder.create().show();
+        } else{
+            Snackbar.make(getView(), "No internet connection found", Snackbar.LENGTH_LONG)
+                    .show();
+        }
+
     }
 
     //whats new dialog

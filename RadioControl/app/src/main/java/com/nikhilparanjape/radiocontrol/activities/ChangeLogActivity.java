@@ -1,6 +1,5 @@
 package com.nikhilparanjape.radiocontrol.activities;
 
-import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
