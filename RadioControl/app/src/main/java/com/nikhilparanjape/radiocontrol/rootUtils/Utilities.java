@@ -115,7 +115,7 @@ public class Utilities {
             return status;
         } else if (s.contains("% packet loss")) {
             status = "partial packet loss";
-            return status;
+            return s;
         } else if (s.contains("unknown host")) {
             status = "unknown host";
             return status;

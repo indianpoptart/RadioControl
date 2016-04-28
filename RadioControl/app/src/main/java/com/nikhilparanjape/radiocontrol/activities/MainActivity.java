@@ -878,8 +878,10 @@ public class MainActivity extends AppCompatActivity {
             final TextView connectionStatusText = (TextView) findViewById(R.id.pingStatus);
             Log.d("RadioControl","Status: " + w.status);
             double status;
+            String pStatus;
             try{
                 status = Double.parseDouble(w.status);
+                pStatus = w.status;
 
                 if(status <= 50){
                     Snackbar.make(findViewById(android.R.id.content), "Excellent Latency: " + status + " ms", Snackbar.LENGTH_LONG).show();
@@ -892,6 +894,16 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else if(status >= 201){
                     Snackbar.make(findViewById(android.R.id.content), "Poor Latency. VOIP and online gaming may suffer: " + status + " ms", Snackbar.LENGTH_LONG).show();
+                }
+                //Check for packet loss stuff
+                if(pStatus.contains("100% packet loss")){
+                    Snackbar.make(findViewById(android.R.id.content), "100% packet loss detected", Snackbar.LENGTH_LONG).show();
+                }
+                else if(pStatus.contains("% packet loss")){
+                    Snackbar.make(findViewById(android.R.id.content), pStatus + " detected", Snackbar.LENGTH_LONG).show();
+                }
+                else if(pStatus.contains("unknown host")){
+                    Snackbar.make(findViewById(android.R.id.content), "Unknown host", Snackbar.LENGTH_LONG).show();
                 }
             } catch(Exception e){
                 Snackbar.make(findViewById(android.R.id.content), "An error has occurred", Snackbar.LENGTH_LONG).show();
