@@ -21,7 +21,7 @@ before_install:
   - export TERM=dumb
 
   # environment info
-  - ./gradlew -v
+  - ./RadioControl/gradlew -v
   - uname -a
 
 # Let's try to build...
