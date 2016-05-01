@@ -15,22 +15,20 @@ branches:
 notifications:
   email: false
   
-before_cache:
-  - rm -f ./RadioControl/gradle/caches/modules-2/modules-2.lock
 cache:
   directories:
     - ./RadioControl/gradle/caches/
     - ./RadioControl/gradle/wrapper/
     
 before_install:
-
+  before_install: cd /RadioControl/
   # for gradle output style
   - export TERM=dumb
 
   # environment info
-  - ./RadioControl/gradlew -v
+  - ./gradlew -v
   - uname -a
 
 # Let's try to build...
 #install: ./gradlew clean build
-script: ./RadioControl/gradlew check
+script: ./gradlew check
