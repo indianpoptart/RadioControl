@@ -15,11 +15,6 @@ branches:
 notifications:
   email: false
   
-cache:
-  directories:
-    - ./RadioControl/gradle/caches/
-    - ./RadioControl/gradle/wrapper/
-    
 before_install:
   before_install: cd /RadioControl/
   # for gradle output style
