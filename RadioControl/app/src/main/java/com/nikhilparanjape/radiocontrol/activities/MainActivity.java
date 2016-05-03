@@ -341,7 +341,7 @@ public class MainActivity extends AppCompatActivity {
             icon = getResources().getDrawable(R.mipmap.ic_launcher);
         }
         // Carrier icon
-        if(carrierName.contains("Fi Network")){
+        if(carrierName.contains("Fi Network") || carrierName.contains("Project Fi")){
             carrierIcon = getResources().getDrawable(R.mipmap.fi_logo);
         }
         else if(carrierName.contains("AT&T") || carrierName.contains("att")){
@@ -878,33 +878,47 @@ public class MainActivity extends AppCompatActivity {
             final TextView connectionStatusText = (TextView) findViewById(R.id.pingStatus);
             Log.d("RadioControl","Status: " + w.status);
             double status;
+            boolean isDouble = true;
             String pStatus;
+            try{
+                status = Double.parseDouble(w.status);
+            } catch(Exception e){
+                isDouble = false;
+            }
             try{
                 status = Double.parseDouble(w.status);
                 pStatus = w.status;
 
-                if(status <= 50){
-                    Snackbar.make(findViewById(android.R.id.content), "Excellent Latency: " + status + " ms", Snackbar.LENGTH_LONG).show();
+                if(isDouble){
+                    if(status <= 50){
+                        Snackbar.make(findViewById(android.R.id.content), "Excellent Latency: " + status + " ms", Snackbar.LENGTH_LONG).show();
+                    }
+                    else if(status >= 51 && status <= 100){
+                        Snackbar.make(findViewById(android.R.id.content), "Average Latency: " + status + " ms", Snackbar.LENGTH_LONG).show();
+                    }
+                    else if(status >= 101 && status <= 200){
+                        Snackbar.make(findViewById(android.R.id.content), "Poor Latency: " + status + " ms", Snackbar.LENGTH_LONG).show();
+                    }
+                    else if(status >= 201){
+                        Snackbar.make(findViewById(android.R.id.content), "Poor Latency. VOIP and online gaming may suffer: " + status + " ms", Snackbar.LENGTH_LONG).show();
+                    }
                 }
-                else if(status >= 51 && status <= 100){
-                    Snackbar.make(findViewById(android.R.id.content), "Average Latency: " + status + " ms", Snackbar.LENGTH_LONG).show();
+                else if(!isDouble){
+                    //Check for packet loss stuff
+                    if(pStatus.contains("100% packet loss")){
+                        Snackbar.make(findViewById(android.R.id.content), "100% packet loss detected", Snackbar.LENGTH_LONG).show();
+                    }
+                    else if(pStatus.contains("33% packet loss")){
+                        Snackbar.make(findViewById(android.R.id.content), "33% Packet loss detected", Snackbar.LENGTH_LONG).show();
+                    }
+                    else if(pStatus.contains("66% packet loss")){
+                        Snackbar.make(findViewById(android.R.id.content), "66% Packet loss detected", Snackbar.LENGTH_LONG).show();
+                    }
+                    else if(pStatus.contains("unknown host")){
+                        Snackbar.make(findViewById(android.R.id.content), "Unknown host", Snackbar.LENGTH_LONG).show();
+                    }
                 }
-                else if(status >= 101 && status <= 200){
-                    Snackbar.make(findViewById(android.R.id.content), "Poor Latency: " + status + " ms", Snackbar.LENGTH_LONG).show();
-                }
-                else if(status >= 201){
-                    Snackbar.make(findViewById(android.R.id.content), "Poor Latency. VOIP and online gaming may suffer: " + status + " ms", Snackbar.LENGTH_LONG).show();
-                }
-                //Check for packet loss stuff
-                if(pStatus.contains("100% packet loss")){
-                    Snackbar.make(findViewById(android.R.id.content), "100% packet loss detected", Snackbar.LENGTH_LONG).show();
-                }
-                else if(pStatus.contains("% packet loss")){
-                    Snackbar.make(findViewById(android.R.id.content), pStatus + " detected", Snackbar.LENGTH_LONG).show();
-                }
-                else if(pStatus.contains("unknown host")){
-                    Snackbar.make(findViewById(android.R.id.content), "Unknown host", Snackbar.LENGTH_LONG).show();
-                }
+
             } catch(Exception e){
                 Snackbar.make(findViewById(android.R.id.content), "An error has occurred", Snackbar.LENGTH_LONG).show();
             }

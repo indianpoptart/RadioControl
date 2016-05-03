@@ -24,7 +24,7 @@ Current Beta Release: [v4.0-beta10](https://github.com/indianpoptart/RadioContro
 
 Current Alpha Release: [v3.0.1-alpha6](https://github.com/indianpoptart/RadioControl/releases/tag/v3.0.1-alpha6) (4/4/2016) (OLD)
 
-Current Release Candidate [v4.0-rc2](https://github.com/indianpoptart/RadioControl/releases/tag/v4.0-rc2) (4/28/2016)
+Current Release Candidate [v4.0-rc3](https://github.com/indianpoptart/RadioControl/releases/tag/v4.0-rc3) (5/3/2016)
 
 
 # "How Do You Make Money?"
@@ -47,7 +47,11 @@ Tested on the following devices
 
 
 # What's New?
-v4.0 - RC 2 (4/28/2015)
+v4.0 - RC 3 (5/3/2016)
+- Actually fixed the ping test snackbar
+- Fixed carrier logo
+
+v4.0 - RC 2 (4/28/2016)
 - Fixed latency test snackbar
 
 v4.0 - RC 1 (4/25/2016)
