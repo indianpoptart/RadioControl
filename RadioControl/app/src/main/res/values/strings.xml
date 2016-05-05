@@ -90,5 +90,7 @@
     <string name="network_alert">Network Alert</string>
     <string name="welcome_to_radiocontrol">Welcome to RadioControl</string>
     <string name="intro_summary_1">This app saves your battery by switching off the cell radio when connected to a WiFi network</string>
+    <string name="airplane_mode_turned_off">Airplane mode turned off</string>
+    <string name="wifi_signal_lost">WiFi Signal Lost</string>
 
 </resources>

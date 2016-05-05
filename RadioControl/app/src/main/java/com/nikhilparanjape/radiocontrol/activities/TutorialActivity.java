@@ -29,6 +29,7 @@ public class TutorialActivity extends AppIntro2 {
         //addSlide(AppIntroFragment.newInstance("Welcome to RadioControl", "Use this app to auto toggle the cell radio when you join a WiFi network", R.mipmap.ic_launcher, R.color.colorPrimary));
 
         // SHOW or HIDE the statusbar
+
         showStatusBar(false);
         setDepthAnimation();
     }

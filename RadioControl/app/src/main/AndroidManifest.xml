@@ -42,7 +42,7 @@
             android:label="app_intro" />
 
         <!-- Receive Wi-Fi connection state changes -->
-        <receiver android:name=".rootUtils.WifiReceiver">
+        <receiver android:name=".receivers.WifiReceiver">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>

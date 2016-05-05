@@ -42,7 +42,7 @@ public class AboutFragment extends PreferenceFragment {
 
         final Context c = getActivity();
 
-        if(util.isConnected(c)){
+        if(Utilities.isConnected(c)){
             getPreferenceScreen().findPreference("source").setEnabled(true);
         }
         else{
@@ -115,7 +115,7 @@ public class AboutFragment extends PreferenceFragment {
 
     }
     private void displayLicensesAlertDialog(Context c) {
-        if(new Utilities().isConnected(c)){
+        if(Utilities.isConnected(c)){
             LayoutInflater inflater = LayoutInflater.from(c);//Creates layout inflator for dialog
             WebView view = (WebView) inflater.inflate(R.layout.dialog_licenses, null);//Initializes the view for whats new dialog
             AlertDialog.Builder builder = new AlertDialog.Builder(c);//creates alertdialog

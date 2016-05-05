@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
     static final String ITEM_THREE_DOLLAR = "com.nikihlparanjape.radiocontrol.donate.three";
     static final String ITEM_FIVE_DOLLAR = "com.nikihlparanjape.radiocontrol.donate.five";
     static final String ITEM_TEN_DOLLAR = "com.nikihlparanjape.radiocontrol.donate.ten";
-    static final String ITEM_TEST_PURCHASE = "com.nikhilparanjape.radiocontrol.donate.test_purchase2";
+    //static final String ITEM_TEST_PURCHASE = "com.nikhilparanjape.radiocontrol.donate.test_purchase2";
 
 
     ServiceConnection mServiceConn = new ServiceConnection() {
@@ -146,8 +146,11 @@ public class MainActivity extends AppCompatActivity {
 
         final ActionBar actionBar = getSupportActionBar();
 
-        actionBar.setHomeAsUpIndicator(new IconicsDrawable(this, GoogleMaterial.Icon.gmd_menu).color(Color.WHITE).sizeDp(IconicsDrawable.ANDROID_ACTIONBAR_ICON_SIZE_DP).paddingDp(IconicsDrawable.ANDROID_ACTIONBAR_ICON_SIZE_PADDING_DP));
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        if (actionBar != null) {
+            actionBar.setHomeAsUpIndicator(new IconicsDrawable(this, GoogleMaterial.Icon.gmd_menu).color(Color.WHITE).sizeDp(IconicsDrawable.ANDROID_ACTIONBAR_ICON_SIZE_DP).paddingDp(IconicsDrawable.ANDROID_ACTIONBAR_ICON_SIZE_PADDING_DP));
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+
 
         String base64EncodedPublicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxnZmUx4gqEFCsMW+/uPXIzJSaaoP4J/2RVaxYT9Be0jfga0qdGF+Vq56mzQ/LYEZgLvFelGdWwXJ5Izq5Wl/cEW8cExhQ/WDuJvYVaemuU+JnHP1zIZ2H28NtzrDH0hb59k9R8owSx7NPNITshuC4MPwwOQDgDaYk02Hgi4woSzbDtyrvwW1A1FWpftb78i8Pphr7bT14MjpNyNznk4BohLMncEVK22O1N08xrVrR66kcTgYs+EZnkRKk2uPZclsPq4KVKG8LbLcxmDdslDBnhQkSPe3ntAC8DxGhVdgJJDwulcepxWoCby1GcMZTUAC1OKCZlvGRGSwyfIqbqF2JQIDAQAB";
 
@@ -190,9 +193,6 @@ public class MainActivity extends AppCompatActivity {
                     public void run() {
                         AdView mAdView = (AdView) findViewById(R.id.adView);
                         AdRequest adRequest = new AdRequest.Builder().build();
-                        AdRequest adRequestTest = new AdRequest.Builder()
-                                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-                                .build();
                         mAdView.loadAd(adRequest);
                     }
                 });
@@ -215,8 +215,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //showWifiInfoDialog();
-                int linkspeed = util.linkSpeed(getApplicationContext());
-                int GHz = util.frequency(getApplicationContext());
+                int linkspeed = Utilities.linkSpeed(getApplicationContext());
+                int GHz = Utilities.frequency(getApplicationContext());
                 if(linkspeed == -1){
                     linkText.setText(R.string.cellNetwork);
                 }
@@ -267,13 +267,13 @@ public class MainActivity extends AppCompatActivity {
                     editor.putInt("isActive",0);
                     statusText.setText("is Disabled");
                     statusText.setTextColor(getResources().getColor(R.color.status_deactivated));
-                    editor.commit();
+                    editor.apply();
 
-                } else if (isChecked){
+                } else {
                     editor.putInt("isActive",1);
                     statusText.setText("is Enabled");
                     statusText.setTextColor(getResources().getColor(R.color.status_activated));
-                    editor.commit();
+                    editor.apply();
                 }
             }
         });
@@ -291,12 +291,14 @@ public class MainActivity extends AppCompatActivity {
         try {
             PackageInfo pi = getPackageManager().getPackageInfo(getPackageName(), 0);
             currentVersionNumber = pi.versionCode;
-        } catch (Exception e) {}
+        } catch (Exception e) {
+            Log.d("RadioControl","Unable to get version name");
+        }
 
         if (currentVersionNumber > savedVersionNumber) {
             showWhatsNewDialog();
             editor.putInt(VERSION_KEY, currentVersionNumber);
-            editor.commit();
+            editor.apply();
         }
     }
 
@@ -679,14 +681,14 @@ public class MainActivity extends AppCompatActivity {
         TextView statusText = (TextView)findViewById(R.id.statusText);
         Switch toggle = (Switch) findViewById(R.id.enableSwitch);
 
-        if(rootInit() == false){
+        if(!rootInit()){
             toggle.setClickable(false);
             statusText.setText(R.string.noRoot);
             statusText.setTextColor(getResources().getColor(R.color.status_deactivated));
         }
 
         if(sharedPref.getInt("isActive",1) == 1){
-            if(rootInit() == false){
+            if(!rootInit()){
                 toggle.setClickable(false);
                 statusText.setText(R.string.noRoot);
                 statusText.setTextColor(getResources().getColor(R.color.status_deactivated));
@@ -699,7 +701,7 @@ public class MainActivity extends AppCompatActivity {
 
         }
         else if(sharedPref.getInt("isActive",0) == 0){
-            if(rootInit() == false){
+            if(!rootInit()){
                 toggle.setClickable(false);
                 statusText.setText(R.string.noRoot);
                 statusText.setTextColor(getResources().getColor(R.color.status_deactivated));
@@ -732,17 +734,14 @@ public class MainActivity extends AppCompatActivity {
                     Snackbar.make(findViewById(android.R.id.content), R.string.donationCancel, Snackbar.LENGTH_LONG)
                             .show();
                     Log.d("RadioControl","Purchase Cancelled");
-                    return;
                 }
                 else if(result.toString().contains("Item Already Owned")){
                     Toast.makeText(MainActivity.this, R.string.donationExists, Toast.LENGTH_LONG).show();
                     Log.d("RadioControl","Donation already purchased");
-                    return;
                 }
                 else{
                     Toast.makeText(MainActivity.this, getString(R.string.donationFailed) + result, Toast.LENGTH_LONG).show();
                     Log.d("RadioControl","In-app purchase failed: " + result + "Purchase: " + purchase);
-                    return;
                 }
 
             }
@@ -848,7 +847,7 @@ public class MainActivity extends AppCompatActivity {
             StringBuffer echo = new StringBuffer();
             String s = "";
             try {
-                Process ipProcess = runtime.exec("/system/bin/ping -c 3 8.8.8.8");
+                Process ipProcess = runtime.exec("/system/bin/ping -c 4 8.8.8.8");
                 int exitValue = ipProcess.waitFor();
                 Log.d("RadioControl", "Latency Test returned " + exitValue);
                 if(exitValue == 0){
@@ -881,15 +880,16 @@ public class MainActivity extends AppCompatActivity {
             boolean isDouble = true;
             String pStatus;
             try{
-                status = Double.parseDouble(w.status);
+                Double.parseDouble(w.status);
             } catch(Exception e){
                 isDouble = false;
+                Log.d("RadioControl", "Not a double");
             }
             try{
-                status = Double.parseDouble(w.status);
                 pStatus = w.status;
 
                 if(isDouble){
+                    status = Double.parseDouble(w.status);
                     if(status <= 50){
                         Snackbar.make(findViewById(android.R.id.content), "Excellent Latency: " + status + " ms", Snackbar.LENGTH_LONG).show();
                     }
@@ -903,16 +903,19 @@ public class MainActivity extends AppCompatActivity {
                         Snackbar.make(findViewById(android.R.id.content), "Poor Latency. VOIP and online gaming may suffer: " + status + " ms", Snackbar.LENGTH_LONG).show();
                     }
                 }
-                else if(!isDouble){
+                else {
                     //Check for packet loss stuff
                     if(pStatus.contains("100% packet loss")){
                         Snackbar.make(findViewById(android.R.id.content), "100% packet loss detected", Snackbar.LENGTH_LONG).show();
                     }
-                    else if(pStatus.contains("33% packet loss")){
-                        Snackbar.make(findViewById(android.R.id.content), "33% Packet loss detected", Snackbar.LENGTH_LONG).show();
+                    else if(pStatus.contains("25% packet loss")){
+                        Snackbar.make(findViewById(android.R.id.content), "25% packet loss detected", Snackbar.LENGTH_LONG).show();
                     }
-                    else if(pStatus.contains("66% packet loss")){
-                        Snackbar.make(findViewById(android.R.id.content), "66% Packet loss detected", Snackbar.LENGTH_LONG).show();
+                    else if(pStatus.contains("50% packet loss")){
+                        Snackbar.make(findViewById(android.R.id.content), "50% packet loss detected", Snackbar.LENGTH_LONG).show();
+                    }
+                    else if(pStatus.contains("75% packet loss")){
+                        Snackbar.make(findViewById(android.R.id.content), "75% packet loss detected", Snackbar.LENGTH_LONG).show();
                     }
                     else if(pStatus.contains("unknown host")){
                         Snackbar.make(findViewById(android.R.id.content), "Unknown host", Snackbar.LENGTH_LONG).show();
@@ -967,7 +970,7 @@ public class MainActivity extends AppCompatActivity {
                                              Inventory inventory) {
 
             if (result.isFailure()) {
-                // Handle failure
+                Log.d("RadioControl","QueryInventoryFinished Error");
             } else {
                 mHelper.consumeAsync(inventory.getPurchase(ITEM_SKU),
                         mConsumeFinishedListener);

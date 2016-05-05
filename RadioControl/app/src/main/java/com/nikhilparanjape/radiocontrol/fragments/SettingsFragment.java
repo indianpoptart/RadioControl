@@ -27,10 +27,9 @@ public class SettingsFragment extends PreferenceFragment {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.settings);
 
-        Utilities util = new Utilities();
         final Context c = getActivity();
 
-        if(util.isConnectedWifi(c)){
+        if(Utilities.isConnectedWifi(c)){
             getPreferenceScreen().findPreference("ssid").setEnabled(true);
             //Listen for changes, I'm not sure if this is how it's meant to work, but it does :/
 
@@ -83,7 +82,7 @@ public class SettingsFragment extends PreferenceFragment {
                         log.delete();
                     }
                 }
-
+                editor.apply();
                 return true;
             }
         });
@@ -94,7 +93,7 @@ public class SettingsFragment extends PreferenceFragment {
         final SharedPreferences pref = c.getSharedPreferences("disabled-networks", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = pref.edit();
         editor.clear();
-        editor.commit();
+        editor.apply();
         Toast.makeText(getActivity(),
                 R.string.reset_ssid, Toast.LENGTH_LONG).show();
     }

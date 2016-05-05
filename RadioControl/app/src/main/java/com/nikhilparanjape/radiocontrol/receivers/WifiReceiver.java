@@ -1,4 +1,4 @@
-package com.nikhilparanjape.radiocontrol.rootUtils;
+package com.nikhilparanjape.radiocontrol.receivers;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -10,6 +10,8 @@ import android.text.format.DateFormat;
 import android.util.Log;
 
 import com.nikhilparanjape.radiocontrol.R;
+import com.nikhilparanjape.radiocontrol.rootUtils.RootAccess;
+import com.nikhilparanjape.radiocontrol.rootUtils.Utilities;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -49,10 +51,10 @@ public class WifiReceiver extends BroadcastReceiver {
         //Check if user wants the app on
         if(sp.getInt("isActive",0) == 1){
             //Check if we just lost WiFi signal
-            if(util.isConnectedWifi(context) == false){
+            if(!Utilities.isConnectedWifi(context)){
                 Log.d("RadioControl","WiFi signal LOST");
                 writeLog("WiFi Signal lost",context);
-                if(util.isAirplaneMode(context)){
+                if(Utilities.isAirplaneMode(context)){
                     RootAccess.runCommands(airOffCmd2);
                     Log.d("RadioControl","Airplane mode has been turned off");
                     writeLog("Airplane mode has been turned off",context);
@@ -61,23 +63,23 @@ public class WifiReceiver extends BroadcastReceiver {
             }
 
             //If network is connected and airplane mode is off
-            if (util.isConnectedWifi(context) && !util.isAirplaneMode(context)) {
+            if (Utilities.isConnectedWifi(context) && !Utilities.isAirplaneMode(context)) {
                 //boolean isWiFi = activeNetwork.getType() == ConnectivityManager.TYPE_WIFI; //Boolean to check for an active WiFi connection
                 //Check the list of disabled networks
-                if(!disabledPref.contains(util.getCurrentSsid(context))){
-                    Log.d("RadioControl",util.getCurrentSsid(context) + " was not found in the disabled list");
+                if(!disabledPref.contains(Utilities.getCurrentSsid(context))){
+                    Log.d("RadioControl",Utilities.getCurrentSsid(context) + " was not found in the disabled list");
                     //Checks that user is not in call
                     if(!util.isCallActive(context)){
                         //Checks if the user doesnt' want network alerts
                         if(!networkAlert){
                             RootAccess.runCommands(airCmd);
                             Log.d("RadioControl", "Airplane mode has been turned on");
-                            writeLog("Airplane mode has been turned on, SSID: " + util.getCurrentSsid(context),context);
+                            writeLog("Airplane mode has been turned on, SSID: " + Utilities.getCurrentSsid(context),context);
 
 
                         }
                         //The user does want network alert notifications
-                        else if(networkAlert){
+                        else {
                             new AsyncPingTask(context).execute("");
                         }
 
@@ -90,9 +92,9 @@ public class WifiReceiver extends BroadcastReceiver {
                     }
                 }
                 //Pauses because WiFi network is in the list of disabled SSIDs
-                else if(selections.contains(util.getCurrentSsid(context))){
-                    Log.d("RadioControl",util.getCurrentSsid(context) + " was blocked from list " + selections);
-                    writeLog(util.getCurrentSsid(context) + " was blocked from list " + selections,context);
+                else if(selections.contains(Utilities.getCurrentSsid(context))){
+                    Log.d("RadioControl",Utilities.getCurrentSsid(context) + " was blocked from list " + selections);
+                    writeLog(Utilities.getCurrentSsid(context) + " was blocked from list " + selections,context);
                 }
             }
 
@@ -101,6 +103,11 @@ public class WifiReceiver extends BroadcastReceiver {
             Log.d("RadioControl","RadioControl has been disabled");
             if(networkAlert){
                 new AsyncPingTask(context).execute("");
+            }
+            //Adds wifi signal lost log for nonrooters
+            if(!Utilities.isConnectedWifi(context)) {
+                Log.d("RadioControl", "WiFi signal LOST");
+                writeLog("WiFi Signal lost", context);
             }
         }
 
@@ -137,7 +144,7 @@ public class WifiReceiver extends BroadcastReceiver {
         protected void onPreExecute(){
             try {
                 //Wait for network to be connected fully
-                while(!util.isConnected(context)){
+                while(!Utilities.isConnected(context)){
                     Thread.sleep(1000);
                 }
             } catch (InterruptedException e) {
@@ -174,20 +181,20 @@ public class WifiReceiver extends BroadcastReceiver {
             if(sp.getInt("isActive",0) == 0){
                 //If the connection can't reach Google
                 if(!result){
-                    util.sendNote(context, context.getString(R.string.not_connected_alert),alertVibrate,alertSounds,alertPriority);
+                    Utilities.sendNote(context, context.getString(R.string.not_connected_alert),alertVibrate,alertSounds,alertPriority);
                     writeLog("Not connected to the internet",context);
                 }
             }
             else if(sp.getInt("isActive",0) == 1){
                 //If the connection can't reach Google
                 if(!result){
-                    util.sendNote(context, context.getString(R.string.not_connected_alert),alertVibrate,alertSounds,alertPriority);
+                    Utilities.sendNote(context, context.getString(R.string.not_connected_alert),alertVibrate,alertSounds,alertPriority);
                     writeLog("Not connected to the internet",context);
                 }
                 else{
                     RootAccess.runCommands(airCmd);
                     Log.d("RadioControl", "Airplane mode has been turned on");
-                    writeLog("Airplane mode has been turned on, SSID: " + util.getCurrentSsid(context),context);
+                    writeLog("Airplane mode has been turned on, SSID: " + Utilities.getCurrentSsid(context),context);
                 }
             }
 
@@ -201,4 +208,4 @@ public class WifiReceiver extends BroadcastReceiver {
             e.printStackTrace();
         }
     }
-};
+}

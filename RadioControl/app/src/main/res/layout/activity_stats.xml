@@ -33,11 +33,11 @@
                 android:id="@+id/title_wifi_off"
                 android:layout_width="match_parent"
                 android:layout_height="20dp"
-                android:text="WiFi Signal Lost"
+                android:text="@string/wifi_signal_lost"
                 android:gravity="center_vertical"
                 android:paddingLeft="20dp"
                 android:textColor="@android:color/black"
-                android:textSize="14dp"/>
+                android:textSize="14sp"/>
 
             <com.db.chart.view.LineChartView
                 xmlns:chart="http://schemas.android.com/apk/res-auto"
@@ -70,11 +70,11 @@
                 android:id="@+id/title_airplane_on"
                 android:layout_width="match_parent"
                 android:layout_height="20dp"
-                android:text="Airplane mode turned off"
+                android:text="@string/airplane_mode_turned_off"
                 android:gravity="center_vertical"
                 android:paddingLeft="20dp"
                 android:textColor="@android:color/black"
-                android:textSize="14dp"/>
+                android:textSize="14sp"/>
 
             <com.db.chart.view.LineChartView
                 xmlns:chart="http://schemas.android.com/apk/res-auto"
@@ -100,9 +100,9 @@
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|right"
+        android:layout_gravity="bottom|end"
         android:layout_marginBottom="16dp"
-        android:layout_marginRight="16dp"
+        android:layout_marginEnd="16dp"
         android:src="@drawable/ic_refresh_white_48dp"/>
 
 </android.support.design.widget.CoordinatorLayout>

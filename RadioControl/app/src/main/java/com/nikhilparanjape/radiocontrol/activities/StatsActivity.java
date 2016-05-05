@@ -1,6 +1,7 @@
 package com.nikhilparanjape.radiocontrol.activities;
 
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -12,12 +13,17 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.db.chart.model.ChartSet;
 import com.db.chart.model.LineSet;
 import com.db.chart.view.AxisController;
 import com.db.chart.view.LineChartView;
 import com.db.chart.view.animation.Animation;
-import com.db.chart.view.animation.easing.BounceEase;
 import com.db.chart.view.animation.easing.ExpoEase;
+import com.db.chart.view.animation.style.BaseStyleAnimation;
+import com.db.chart.view.animation.style.DashAnimation;
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.nikhilparanjape.radiocontrol.R;
@@ -64,8 +70,11 @@ public class StatsActivity extends AppCompatActivity {
 
     LineChartView chart;
     LineChartView chart1;
-
-    boolean logFilePresent = false;
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,9 +85,18 @@ public class StatsActivity extends AppCompatActivity {
 
         final CoordinatorLayout clayout = (CoordinatorLayout) findViewById(R.id.clayout);
 
-        actionBar.setHomeAsUpIndicator(new IconicsDrawable(this, GoogleMaterial.Icon.gmd_arrow_back).color(Color.WHITE).sizeDp(IconicsDrawable.ANDROID_ACTIONBAR_ICON_SIZE_DP).paddingDp(IconicsDrawable.ANDROID_ACTIONBAR_ICON_SIZE_PADDING_DP));
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setTitle("Statistics");
+        if (actionBar != null) {
+            actionBar.setHomeAsUpIndicator(new IconicsDrawable(this, GoogleMaterial.Icon.gmd_arrow_back).color(Color.WHITE).sizeDp(IconicsDrawable.ANDROID_ACTIONBAR_ICON_SIZE_DP).paddingDp(IconicsDrawable.ANDROID_ACTIONBAR_ICON_SIZE_PADDING_DP));
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setTitle("Statistics");
+        }
+
+        final Animation anim = new Animation();
+        anim.setDuration(1000);
+        anim.setEasing(new ExpoEase());
+        int[] ovLap = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
+        anim.setOverlap(1.0f, ovLap);
+        anim.setAlpha(1);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         assert fab != null;
@@ -97,8 +115,12 @@ public class StatsActivity extends AppCompatActivity {
 
         airplaneOnGraph();
 
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
-    public void wifiLostGraph(){
+
+    public void wifiLostGraph() {
         //Initiate chart
         chart = (LineChartView) findViewById(R.id.linechart);
         //Initiate dataset for chart
@@ -107,7 +129,7 @@ public class StatsActivity extends AppCompatActivity {
         Animation anim = new Animation();
         anim.setDuration(1000);
         anim.setEasing(new ExpoEase());
-        int[] ovLap = {0,1,2,3,4,5,6,7,8,9,10,11};
+        int[] ovLap = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
         anim.setOverlap(1.0f, ovLap);
         anim.setAlpha(1);
 
@@ -120,7 +142,10 @@ public class StatsActivity extends AppCompatActivity {
         chart.setYLabels(AxisController.LabelPosition.OUTSIDE);
 
 
-        dataset.setColor(Color.BLACK);
+        dataset.setColor(Color.BLACK)
+                .setDotsColor(Color.parseColor("#758cbb"))
+                .setDashed(new float[]{10f,10f})
+                .beginAt(0);
 
         getWifiLost();
 
@@ -137,23 +162,23 @@ public class StatsActivity extends AppCompatActivity {
         dataset.addPoint("Oct", octWifiLost);
         dataset.addPoint("Nov", novWifiLost);
         dataset.addPoint("Dec", decWifiLost);
-        if(janWifiLost == 0 && febWifiLost == 0 && marWifiLost == 0 && aprWifiLost == 0 && mayWifiLost == 0 && junWifiLost == 0 && julWifiLost == 0 && augWifiLost == 0 &&
-                sepWifiLost == 0 && octWifiLost == 0 && novWifiLost == 0 && decWifiLost == 0){
-
-        } else{
+        if (janWifiLost == 0 && febWifiLost == 0 && marWifiLost == 0 && aprWifiLost == 0 && mayWifiLost == 0 && junWifiLost == 0 && julWifiLost == 0 && augWifiLost == 0 &&
+                sepWifiLost == 0 && octWifiLost == 0 && novWifiLost == 0 && decWifiLost == 0) {
+            Log.d("RadioControl", "No log data");
+        } else {
             float largest = Collections.max(Arrays.asList(janWifiLost, febWifiLost, marWifiLost, aprWifiLost, mayWifiLost, junWifiLost, julWifiLost, augWifiLost, sepWifiLost, octWifiLost, novWifiLost, decWifiLost));
             int max = (int) largest;
 
             chart.setAxisBorderValues(0, 0, max);
         }
 
-        Log.d("RadioControl","Lost Signal " + wifiSigLost + " times");
-
+        Log.d("RadioControl", "Lost Signal " + wifiSigLost + " times");
 
         chart.show(anim);
     }
+
     //Airplane on graph
-    public void airplaneOnGraph(){
+    public void airplaneOnGraph() {
         //Initiate chart
         chart1 = (LineChartView) findViewById(R.id.linechart_airplane_on);
         //Initiate dataset for chart
@@ -162,7 +187,7 @@ public class StatsActivity extends AppCompatActivity {
         Animation anim = new Animation();
         anim.setDuration(1000);
         anim.setEasing(new ExpoEase());
-        int[] ovLap = {0,1,2,3,4,5,6,7,8,9,10,11};
+        int[] ovLap = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
         anim.setOverlap(1.0f, ovLap);
         anim.setAlpha(1);
 
@@ -175,7 +200,10 @@ public class StatsActivity extends AppCompatActivity {
         chart1.setYLabels(AxisController.LabelPosition.OUTSIDE);
 
 
-        dataset.setColor(Color.BLACK);
+        dataset.setColor(Color.BLACK)
+                .setDotsColor(Color.parseColor("#758cbb"))
+                .setDashed(new float[]{10f,10f})
+                .beginAt(0);
 
         getAirplaneModeOn();
 
@@ -192,28 +220,28 @@ public class StatsActivity extends AppCompatActivity {
         dataset.addPoint("Oct", octAirOn);
         dataset.addPoint("Nov", novAirOn);
         dataset.addPoint("Dec", decAirOn);
-        if(janAirOn == 0 && febAirOn == 0 && marAirOn == 0 && aprAirOn == 0 && mayAirOn == 0 && junAirOn == 0 && julAirOn == 0 && augAirOn == 0 &&
-                sepAirOn == 0 && octAirOn == 0 && novAirOn == 0 && decAirOn == 0){
-
-        } else{
+        if (janAirOn == 0 && febAirOn == 0 && marAirOn == 0 && aprAirOn == 0 && mayAirOn == 0 && junAirOn == 0 && julAirOn == 0 && augAirOn == 0 &&
+                sepAirOn == 0 && octAirOn == 0 && novAirOn == 0 && decAirOn == 0) {
+            Log.d("RadioControl", "No log data");
+        } else {
             float largest = Collections.max(Arrays.asList(janAirOn, febAirOn, marAirOn, aprAirOn, mayAirOn, junAirOn, julAirOn, augAirOn, sepAirOn, octAirOn, novAirOn, decAirOn));
             int max = (int) largest;
             chart1.setAxisBorderValues(0, 0, max);
         }
 
 
-        Log.d("RadioControl","Lost Signal " + airplaneOn + " times");
+        Log.d("RadioControl", "Lost Signal " + airplaneOn + " times");
 
         chart1.show(anim);
     }
-    public void getWifiLost(){
+
+    public void getWifiLost() {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy");
         String year = formatter.format(new Date());
         File log = new File(getApplicationContext().getFilesDir(), "radiocontrol.log");
 
         FileInputStream is;
         BufferedReader reader;
-        int count=0;
         try {
             if (log.exists()) {
                 is = new FileInputStream(log);
@@ -222,67 +250,55 @@ public class StatsActivity extends AppCompatActivity {
 
                 while (line != null) {
                     line = reader.readLine();
-                    if(countMatches(line,"lost") == 1){
-                        if(line.contains(year+"-01")){
+                    if (countMatches(line, "lost") == 1) {
+                        if (line.contains(year + "-01")) {
                             janWifiLost++;
-                        }
-                        else if(line.contains(year+"-02")){
+                        } else if (line.contains(year + "-02")) {
                             febWifiLost++;
-                        }
-                        else if(line.contains(year+"-03")){
+                        } else if (line.contains(year + "-03")) {
                             marWifiLost++;
-                        }
-                        else if(line.contains(year+"-04")){
+                        } else if (line.contains(year + "-04")) {
                             aprWifiLost++;
-                        }
-                        else if(line.contains(year+"-05")){
+                        } else if (line.contains(year + "-05")) {
                             mayWifiLost++;
-                        }
-                        else if(line.contains(year+"-06")){
+                        } else if (line.contains(year + "-06")) {
                             junWifiLost++;
-                        }
-                        else if(line.contains(year+"-07")){
+                        } else if (line.contains(year + "-07")) {
                             julWifiLost++;
-                        }
-                        else if(line.contains(year+"-08")){
+                        } else if (line.contains(year + "-08")) {
                             augWifiLost++;
-                        }
-                        else if(line.contains(year+"-09")){
+                        } else if (line.contains(year + "-09")) {
                             sepWifiLost++;
-                        }
-                        else if(line.contains(year+"-10")){
+                        } else if (line.contains(year + "-10")) {
                             octWifiLost++;
-                        }
-                        else if(line.contains(year+"-11")){
+                        } else if (line.contains(year + "-11")) {
                             novWifiLost++;
-                        }
-                        else if(line.contains(year+"-12")){
+                        } else if (line.contains(year + "-12")) {
                             decWifiLost++;
                         }
                         wifiSigLost++;
                     }
-                    Log.d("RadioControl","LINE: " + line + " contains " + wifiSigLost);
+                    Log.d("RadioControl", "LINE: " + line + " contains " + wifiSigLost);
                 }
 
-            }
-            else{
+            } else {
                 Snackbar.make(findViewById(android.R.id.content), "No log file found", Snackbar.LENGTH_LONG)
                         .show();
             }
-        } catch(IOException e){
+        } catch (IOException e) {
             Log.d("RadioControl", "Error: " + e);
             Snackbar.make(findViewById(android.R.id.content), "Error: " + e, Snackbar.LENGTH_LONG)
                     .show();
         }
     }
-    public void getAirplaneModeOn(){
+
+    public void getAirplaneModeOn() {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy");
         String year = formatter.format(new Date());
         File log = new File(getApplicationContext().getFilesDir(), "radiocontrol.log");
 
         FileInputStream is;
         BufferedReader reader;
-        int count=0;
         try {
             if (log.exists()) {
                 is = new FileInputStream(log);
@@ -291,69 +307,58 @@ public class StatsActivity extends AppCompatActivity {
 
                 while (line != null) {
                     line = reader.readLine();
-                    if(countMatches(line,"Airplane mode has been turned off") == 1){
-                        if(line.contains(year+"-01")){
+                    if (countMatches(line, "Airplane mode has been turned off") == 1) {
+                        if (line.contains(year + "-01")) {
                             janAirOn++;
-                        }
-                        else if(line.contains(year+"-02")){
+                        } else if (line.contains(year + "-02")) {
                             febAirOn++;
-                        }
-                        else if(line.contains(year+"-03")){
+                        } else if (line.contains(year + "-03")) {
                             marAirOn++;
-                        }
-                        else if(line.contains(year+"-04")){
+                        } else if (line.contains(year + "-04")) {
                             aprAirOn++;
-                        }
-                        else if(line.contains(year+"-05")){
+                        } else if (line.contains(year + "-05")) {
                             mayAirOn++;
-                        }
-                        else if(line.contains(year+"-06")){
+                        } else if (line.contains(year + "-06")) {
                             junAirOn++;
-                        }
-                        else if(line.contains(year+"-07")){
+                        } else if (line.contains(year + "-07")) {
                             julAirOn++;
-                        }
-                        else if(line.contains(year+"-08")){
+                        } else if (line.contains(year + "-08")) {
                             augAirOn++;
-                        }
-                        else if(line.contains(year+"-09")){
+                        } else if (line.contains(year + "-09")) {
                             sepAirOn++;
-                        }
-                        else if(line.contains(year+"-10")){
+                        } else if (line.contains(year + "-10")) {
                             octAirOn++;
-                        }
-                        else if(line.contains(year+"-11")){
+                        } else if (line.contains(year + "-11")) {
                             novAirOn++;
-                        }
-                        else if(line.contains(year+"-12")){
+                        } else if (line.contains(year + "-12")) {
                             decAirOn++;
                         }
                         airplaneOn++;
                     }
-                    Log.d("RadioControl","LINE: " + line + " contains " + airplaneOn);
+                    Log.d("RadioControl", "LINE: " + line + " contains " + airplaneOn);
                 }
 
-            }
-            else{
+            } else {
                 Snackbar.make(findViewById(android.R.id.content), "No log file found", Snackbar.LENGTH_LONG)
                         .show();
             }
-        } catch(IOException e){
+        } catch (IOException e) {
             Log.d("RadioControl", "Error: " + e);
             Snackbar.make(findViewById(android.R.id.content), "Error: " + e, Snackbar.LENGTH_LONG)
                     .show();
         }
     }
+
     public int countMatches(String str, String sub) {
-        try{
+        try {
             if (str.contains(sub)) {
                 return 1;
 
             } else {
                 return 0;
             }
-        } catch(NullPointerException e){
-
+        } catch (NullPointerException e) {
+            Log.d("RadioControl", "Counting returned null");
         }
         return 0;
 
@@ -369,6 +374,4 @@ public class StatsActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
-
 }
