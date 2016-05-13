@@ -24,7 +24,7 @@ Current Beta Release: [v4.0-beta10](https://github.com/indianpoptart/RadioContro
 
 Current Alpha Release: [v3.0.1-alpha6](https://github.com/indianpoptart/RadioControl/releases/tag/v3.0.1-alpha6) (4/4/2016) (OLD)
 
-Current Release Candidate [v4.0-rc4](https://github.com/indianpoptart/RadioControl/releases/tag/v4.0-rc4) (5/4/2016)
+Current Release Candidate [v4.0-rc5](https://github.com/indianpoptart/RadioControl/releases/tag/v4.0-rc5) (5/13/2016)
 
 
 # "How Do You Make Money?"
@@ -47,6 +47,10 @@ Tested on the following devices
 
 
 # What's New?
+v4.0 - RC 5 (5/13/2016)
+- FAB Button for latency test
+- Snackbars now use coordinator layout
+
 v4.0 - RC 4 (5/4/2016)
 - Cleaned up code
 - Completely fixed latency snackbar, I swear, it's the last time

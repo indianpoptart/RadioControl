@@ -8,14 +8,21 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.telephony.TelephonyManager;
@@ -25,14 +32,20 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.android.vending.billing.IInAppBillingService;
+import com.github.jorgecastilloprz.FABProgressCircle;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
@@ -49,6 +62,7 @@ import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 import com.nikhilparanjape.radiocontrol.BuildConfig;
 import com.nikhilparanjape.radiocontrol.R;
+import com.nikhilparanjape.radiocontrol.rootUtils.DrawerArrowDrawable;
 import com.nikhilparanjape.radiocontrol.rootUtils.PingWrapper;
 import com.nikhilparanjape.radiocontrol.rootUtils.Utilities;
 import com.nikhilparanjape.radiocontrol.util.IabHelper;
@@ -56,11 +70,16 @@ import com.nikhilparanjape.radiocontrol.util.IabResult;
 import com.nikhilparanjape.radiocontrol.util.Inventory;
 import com.nikhilparanjape.radiocontrol.util.Purchase;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.URL;
+import java.net.URLConnection;
 
 import it.gmariotti.changelibs.library.view.ChangeLogRecyclerView;
 
@@ -79,6 +98,7 @@ public class MainActivity extends AppCompatActivity {
     String versionName = BuildConfig.VERSION_NAME;
     Utilities util = new Utilities();
     IInAppBillingService mService;
+    CoordinatorLayout clayout;
     static final String ITEM_SKU = "com.nikhilparanjape.radiocontrol.test_donate1";
     static final String ITEM_ONE_DOLLAR = "com.nikihlparanjape.radiocontrol.donate.one";
     static final String ITEM_THREE_DOLLAR = "com.nikihlparanjape.radiocontrol.donate.three";
@@ -107,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        clayout = (CoordinatorLayout) findViewById(R.id.clayout);
         //  Declare a new thread to do a preference check
         Thread t = new Thread(new Runnable() {
             @Override
@@ -140,6 +160,10 @@ public class MainActivity extends AppCompatActivity {
 
         // Start the thread
         t.start();
+
+
+
+
 
         final ProgressBar dialog = (ProgressBar) findViewById(R.id.pingProgressBar);
         dialog.setVisibility(View.GONE);
@@ -230,8 +254,6 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                 }
-
-
             }
 
         });
@@ -257,6 +279,23 @@ public class MainActivity extends AppCompatActivity {
                 new AsyncBackgroundTask(getApplicationContext()).execute("");
             }
 
+        });
+
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        assert fab != null;
+        //CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams)fab.getLayoutParams();
+        //params.setMargins(0, 85, 16, 85); //substitute parameters for left, top, right, bottom
+        //fab.setLayoutParams(params);
+
+        fab.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_network_check_white_48dp));
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.setVisibility(View.VISIBLE);
+                new AsyncBackgroundTask(getApplicationContext()).execute("");
+
+            }
         });
 
         drawerCreate(); //Initalizes Drawer
@@ -296,7 +335,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (currentVersionNumber > savedVersionNumber) {
-            showWhatsNewDialog();
+            showUpdated();
             editor.putInt(VERSION_KEY, currentVersionNumber);
             editor.apply();
         }
@@ -434,7 +473,7 @@ public class MainActivity extends AppCompatActivity {
                                 Log.d("RadioControl", "Log Exists");
                                 startStatsActivity();
                             } else{
-                                Snackbar.make(findViewById(android.R.id.content), "No log file found", Snackbar.LENGTH_LONG)
+                                Snackbar.make(clayout, "No log file found", Snackbar.LENGTH_LONG)
                                         .show();
                             }
 
@@ -464,9 +503,8 @@ public class MainActivity extends AppCompatActivity {
                 .build();
         result.setSelection(item1);
 
-
-
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -500,7 +538,10 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, StatsActivity.class);
         startActivity(intent);
     }
-
+    public void startChangelogActivity(){
+        Intent intent = new Intent(this, ChangeLogActivity.class);
+        startActivity(intent);
+    }
     //whats new dialog
     private void showWhatsNewDialog() {
         LayoutInflater inflater = LayoutInflater.from(this);//Creates layout inflator for dialog
@@ -516,6 +557,34 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
         builder.create().show();
+    }
+    public void showLatencyDialog(){
+        new MaterialDialog.Builder(this)
+                .title("Testing")
+                .content("Please wait...")
+                .progress(true, 0)
+                .progressIndeterminateStyle(false)
+                .show();
+    }
+    public void showUpdated() {
+        new MaterialDialog.Builder(this)
+                .title("RadioControl has been updated")
+                .positiveText("GOT IT")
+                .negativeText("WHAT'S NEW")
+                .onAny(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        String chk = which.name();
+                        Log.d("RadioControl", "Updated: " + chk);
+                        if(chk.equals("POSITIVE")){
+                            dialog.dismiss();
+                        }
+                        else if(chk.equals("NEGATIVE")){
+                            startChangelogActivity();
+                        }
+                    }
+                })
+                .show();
     }
     //donate dialog
     private void showDonateDialog() {
@@ -891,34 +960,34 @@ public class MainActivity extends AppCompatActivity {
                 if(isDouble){
                     status = Double.parseDouble(w.status);
                     if(status <= 50){
-                        Snackbar.make(findViewById(android.R.id.content), "Excellent Latency: " + status + " ms", Snackbar.LENGTH_LONG).show();
+                        Snackbar.make(clayout, "Excellent Latency: " + status + " ms", Snackbar.LENGTH_LONG).show();
                     }
                     else if(status >= 51 && status <= 100){
-                        Snackbar.make(findViewById(android.R.id.content), "Average Latency: " + status + " ms", Snackbar.LENGTH_LONG).show();
+                        Snackbar.make(clayout, "Average Latency: " + status + " ms", Snackbar.LENGTH_LONG).show();
                     }
                     else if(status >= 101 && status <= 200){
-                        Snackbar.make(findViewById(android.R.id.content), "Poor Latency: " + status + " ms", Snackbar.LENGTH_LONG).show();
+                        Snackbar.make(clayout, "Poor Latency: " + status + " ms", Snackbar.LENGTH_LONG).show();
                     }
                     else if(status >= 201){
-                        Snackbar.make(findViewById(android.R.id.content), "Poor Latency. VOIP and online gaming may suffer: " + status + " ms", Snackbar.LENGTH_LONG).show();
+                        Snackbar.make(clayout, "Poor Latency. VOIP and online gaming may suffer: " + status + " ms", Snackbar.LENGTH_LONG).show();
                     }
                 }
                 else {
                     //Check for packet loss stuff
                     if(pStatus.contains("100% packet loss")){
-                        Snackbar.make(findViewById(android.R.id.content), "100% packet loss detected", Snackbar.LENGTH_LONG).show();
+                        Snackbar.make(clayout, "100% packet loss detected", Snackbar.LENGTH_LONG).show();
                     }
                     else if(pStatus.contains("25% packet loss")){
-                        Snackbar.make(findViewById(android.R.id.content), "25% packet loss detected", Snackbar.LENGTH_LONG).show();
+                        Snackbar.make(clayout, "25% packet loss detected", Snackbar.LENGTH_LONG).show();
                     }
                     else if(pStatus.contains("50% packet loss")){
-                        Snackbar.make(findViewById(android.R.id.content), "50% packet loss detected", Snackbar.LENGTH_LONG).show();
+                        Snackbar.make(clayout, "50% packet loss detected", Snackbar.LENGTH_LONG).show();
                     }
                     else if(pStatus.contains("75% packet loss")){
-                        Snackbar.make(findViewById(android.R.id.content), "75% packet loss detected", Snackbar.LENGTH_LONG).show();
+                        Snackbar.make(clayout, "75% packet loss detected", Snackbar.LENGTH_LONG).show();
                     }
                     else if(pStatus.contains("unknown host")){
-                        Snackbar.make(findViewById(android.R.id.content), "Unknown host", Snackbar.LENGTH_LONG).show();
+                        Snackbar.make(clayout, "Unknown host", Snackbar.LENGTH_LONG).show();
                     }
                 }
 
