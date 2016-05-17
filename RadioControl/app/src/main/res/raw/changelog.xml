@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog bulletedList="true">
 
-    <changelogversion versionName="4.0" changeDate="May 14, 2016">
+    <changelogversion versionName="4.0" changeDate="May 17, 2016">
         <changelogtext>[b]New![/b] First-time user experience (FTUX)</changelogtext>
         <changelogtext>[b]New![/b] Easy to access navigation drawer</changelogtext>
         <changelogtext>[b]New![/b] Logging feature</changelogtext>

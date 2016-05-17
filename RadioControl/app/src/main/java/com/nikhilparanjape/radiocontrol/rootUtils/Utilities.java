@@ -103,26 +103,31 @@ public class Utilities {
 
     }
     public static String getPingStats(String s) {
-        String status = "";
-        if (s.contains("0% packet loss")) {
-            int start = s.indexOf("/mdev = ");
-            int end = s.indexOf(" ms\n", start);
-            s = s.substring(start + 8, end);
-            String stats[] = s.split("/");
-            return stats[2];
-        } else if (s.contains("100% packet loss")) {
-            status = "100% packet loss";
-            return status;
-        } else if (s.contains("% packet loss")) {
-            status = "partial packet loss";
-            return s;
-        } else if (s.contains("unknown host")) {
-            status = "unknown host";
-            return status;
-        } else {
-            status = "unknown error in getPingStats";
-            return status;
+        try{
+            String status = "";
+            if (s.contains("0% packet loss")) {
+                int start = s.indexOf("/mdev = ");
+                int end = s.indexOf(" ms\n", start);
+                s = s.substring(start + 8, end);
+                String stats[] = s.split("/");
+                return stats[2];
+            } else if (s.contains("100% packet loss")) {
+                status = "100% packet loss";
+                return status;
+            } else if (s.contains("% packet loss")) {
+                status = "partial packet loss";
+                return s;
+            } else if (s.contains("unknown host")) {
+                status = "unknown host";
+                return status;
+            } else {
+                status = "unknown error in getPingStats";
+                return status;
+            }
+        }catch(StringIndexOutOfBoundsException e){
+            return "An error occured";
         }
+
     }
 
     public static String getFrequency(Context c){

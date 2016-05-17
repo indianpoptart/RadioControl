@@ -32,10 +32,6 @@ public class SettingsActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setTitle(R.string.title_activity_settings);
         }
-
-
-
-
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

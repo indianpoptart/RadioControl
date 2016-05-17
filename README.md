@@ -18,13 +18,13 @@ Feel free to ask questions related to Android programming or this project in the
 
 # Versions
 
-Latest Stable Release: [v3.0](https://github.com/indianpoptart/RadioControl/releases/latest) (3/16/2016)
+Latest Stable Release: [v4.0](https://github.com/indianpoptart/RadioControl/releases/latest) (5/17/2016)
 
-Current Beta Release: [v4.0-beta10](https://github.com/indianpoptart/RadioControl/releases/tag/v4.0-beta10) (4/24/2016)
+Current Beta Release: [v4.0-beta10](https://github.com/indianpoptart/RadioControl/releases/tag/v4.0-beta10) (4/24/2016) (OLD)
 
 Current Alpha Release: [v3.0.1-alpha6](https://github.com/indianpoptart/RadioControl/releases/tag/v3.0.1-alpha6) (4/4/2016) (OLD)
 
-Current Release Candidate [v4.0-rc5](https://github.com/indianpoptart/RadioControl/releases/tag/v4.0-rc5) (5/13/2016)
+Current Release Candidate [v4.0-rc5](https://github.com/indianpoptart/RadioControl/releases/tag/v4.0-rc5) (5/13/2016) (OLD)
 
 
 # "How Do You Make Money?"
@@ -47,6 +47,18 @@ Tested on the following devices
 
 
 # What's New?
+v4.0 - Release (5/17/2016)
+- Logging feature
+- Better changelog
+- Localization support
+- Open source licenses
+- Statistics
+- FloatingActionButtons
+- Fixed network settings
+- Switched PreferenceActivity to Fragments
+- Easier UI with tutorial screen
+- Splash screen to cover up long loading time on slower devices
+
 v4.0 - RC 5 (5/13/2016)
 - FAB Button for latency test
 - Snackbars now use coordinator layout

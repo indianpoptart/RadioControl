@@ -1,4 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="empty_array"/>
+
+    <string-array name="preference_values">
+        <item>Full Gridlines</item>
+        <item>Horizontal Gridlines</item>
+        <item>Vertical Gridlines</item>
+        <item>Off</item>
+    </string-array>
+
+    <string-array name="easing">
+        <item>Bounce Ease</item>
+        <item>Circ Ease</item>
+        <item>Cubic Ease</item>
+        <item>Elastic Ease</item>
+        <item>Expo Ease</item>
+        <item>Linear Ease</item>
+        <item>Quad Ease</item>
+        <item>Quart Ease</item>
+        <item>Quint Ease</item>
+        <item>Sine Ease</item>
+    </string-array>
 </resources>

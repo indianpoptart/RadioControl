@@ -128,6 +128,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         clayout = (CoordinatorLayout) findViewById(R.id.clayout);
+        final ProgressBar dialog = (ProgressBar) findViewById(R.id.pingProgressBar);
+        final ActionBar actionBar = getSupportActionBar();
+
         //  Declare a new thread to do a preference check
         Thread t = new Thread(new Runnable() {
             @Override
@@ -160,16 +163,10 @@ public class MainActivity extends AppCompatActivity {
 
         // Start the thread
         t.start();
-
-
-
-
-
-        final ProgressBar dialog = (ProgressBar) findViewById(R.id.pingProgressBar);
+        //Hides the progress dialog
         dialog.setVisibility(View.GONE);
 
-        final ActionBar actionBar = getSupportActionBar();
-
+        //Sets the actionbar with hamburger
         if (actionBar != null) {
             actionBar.setHomeAsUpIndicator(new IconicsDrawable(this, GoogleMaterial.Icon.gmd_menu).color(Color.WHITE).sizeDp(IconicsDrawable.ANDROID_ACTIONBAR_ICON_SIZE_DP).paddingDp(IconicsDrawable.ANDROID_ACTIONBAR_ICON_SIZE_PADDING_DP));
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -178,7 +175,7 @@ public class MainActivity extends AppCompatActivity {
 
         String base64EncodedPublicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxnZmUx4gqEFCsMW+/uPXIzJSaaoP4J/2RVaxYT9Be0jfga0qdGF+Vq56mzQ/LYEZgLvFelGdWwXJ5Izq5Wl/cEW8cExhQ/WDuJvYVaemuU+JnHP1zIZ2H28NtzrDH0hb59k9R8owSx7NPNITshuC4MPwwOQDgDaYk02Hgi4woSzbDtyrvwW1A1FWpftb78i8Pphr7bT14MjpNyNznk4BohLMncEVK22O1N08xrVrR66kcTgYs+EZnkRKk2uPZclsPq4KVKG8LbLcxmDdslDBnhQkSPe3ntAC8DxGhVdgJJDwulcepxWoCby1GcMZTUAC1OKCZlvGRGSwyfIqbqF2JQIDAQAB";
 
-
+        //initializes iab helper
         mHelper = new IabHelper(this, base64EncodedPublicKey);
 
         mHelper.startSetup(new IabHelper.OnIabSetupFinishedListener() {
@@ -193,7 +190,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-
+        //Checks for IAB support
         Intent serviceIntent =
                 new Intent("com.android.vending.billing.InAppBillingService.BIND");
         serviceIntent.setPackage("com.android.vending");
@@ -209,8 +206,10 @@ public class MainActivity extends AppCompatActivity {
         final TextView connectionStatusText = (TextView) findViewById(R.id.pingStatus);
         Switch toggle = (Switch) findViewById(R.id.enableSwitch);
 
+        //Checks for root
         rootInit();
 
+        //checks if ads should be enabled
         if(!pref.getBoolean("disableAds",false)){
             if(!pref.getBoolean("isDonated",false)){
                 runOnUiThread(new Runnable() {
@@ -381,6 +380,7 @@ public class MainActivity extends AppCompatActivity {
         else{
             icon = getResources().getDrawable(R.mipmap.ic_launcher);
         }
+
         // Carrier icon
         if(carrierName.contains("Fi Network") || carrierName.contains("Project Fi")){
             carrierIcon = getResources().getDrawable(R.mipmap.fi_logo);
@@ -410,6 +410,7 @@ public class MainActivity extends AppCompatActivity {
         else{
             carrierIcon = getResources().getDrawable(R.mipmap.android_logo);
         }
+
         //WiFi Icon
         String ssid = util.getCurrentSsid(getApplicationContext());
         if(!ssid.equals("Not Connected")){
@@ -458,7 +459,6 @@ public class MainActivity extends AppCompatActivity {
                         item4,
                         item5
                 )
-
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
                     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
@@ -476,7 +476,6 @@ public class MainActivity extends AppCompatActivity {
                                 Snackbar.make(clayout, "No log file found", Snackbar.LENGTH_LONG)
                                         .show();
                             }
-
                         }
                         else if (position == 5) {
                             startAboutActivity();
@@ -490,8 +489,6 @@ public class MainActivity extends AppCompatActivity {
                             else{
                                 showErrorDialog();
                             }
-
-
                         } else if (position == 8) {
                             //Feedback Button, send as email
                             Log.d("RadioControl", "Feedback");
@@ -510,12 +507,9 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case android.R.id.home:
                 if(result.isDrawerOpen()){
-                    //result.getActionBarDrawerToggle().setHomeAsUpIndicator(new IconicsDrawable(this, GoogleMaterial.Icon.gmd_arrow_back).color(Color.WHITE).sizeDp(IconicsDrawable.ANDROID_ACTIONBAR_ICON_SIZE_DP).paddingDp(IconicsDrawable.ANDROID_ACTIONBAR_ICON_SIZE_PADDING_DP));
                     result.closeDrawer();
-
                 }
                 else{
-                    //result.getActionBarDrawerToggle().setHomeAsUpIndicator(new IconicsDrawable(this, GoogleMaterial.Icon.gmd_menu).color(Color.WHITE).sizeDp(IconicsDrawable.ANDROID_ACTIONBAR_ICON_SIZE_DP).paddingDp(IconicsDrawable.ANDROID_ACTIONBAR_ICON_SIZE_PADDING_DP));
                     result.openDrawer();
                 }
                 return true;
@@ -702,6 +696,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
         drawerCreate();
         final SharedPreferences sharedPref = getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE);
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
