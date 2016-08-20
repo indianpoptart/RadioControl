@@ -92,5 +92,8 @@
     <string name="intro_summary_1">This app saves your battery by switching off the cell radio when connected to a WiFi network</string>
     <string name="airplane_mode_turned_off">Airplane mode turned off</string>
     <string name="wifi_signal_lost">WiFi Signal Lost</string>
+    <string name="animation_text_box">Animation</string>
+    <string name="gridline_text_box">Gridlines</string>
+    <string name="title_do_not_disturb">Do Not Disturb</string>
 
 </resources>

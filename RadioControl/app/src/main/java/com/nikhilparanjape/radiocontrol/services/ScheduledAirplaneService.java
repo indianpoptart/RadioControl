@@ -53,6 +53,7 @@ public class ScheduledAirplaneService extends Service
     public void onCreate()
     {
         super.onCreate();
+        Log.d("RadioControl", "Service Started");
         Context context = getApplicationContext();
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences sp = context.getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE);
@@ -243,6 +244,7 @@ public class ScheduledAirplaneService extends Service
     public void onDestroy()
     {
         super.onDestroy();
+        Log.d("RadioControl", "Service destroyed");
     }
 
 }

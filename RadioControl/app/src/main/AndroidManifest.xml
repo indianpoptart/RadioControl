@@ -33,7 +33,7 @@
         </activity>
         <activity
             android:name=".activities.MainActivity"
-            android:label="@string/app_name"></activity>
+            android:label="@string/app_name" />
 
         <!-- Tutorial Activity -->
         <activity
@@ -44,7 +44,7 @@
         <receiver android:name=".receivers.WifiReceiver">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
-                <action android:name="com.nikhilparanjape.radiocontrol.android.action.broadcast"/>
+                <action android:name="com.nikhilparanjape.radiocontrol.android.action.broadcast" />
             </intent-filter>
         </receiver>
 
@@ -76,7 +76,16 @@
             android:theme="@android:style/Theme.Translucent" />
         <activity android:name=".activities.ChangeLogActivity" />
         <activity android:name=".activities.StatsActivity" />
+        <activity android:name=".activities.DoNotDisturbActivity" />
 
+        <service
+            android:name=".services.DoNotDisturbService"
+            android:enabled="true"
+            android:icon="@drawable/ic_do_not_disturb_on_black_48dp"
+            android:exported="true"
+            android:label="AirplaneService" >
+
+        </service>
     </application>
 
 </manifest>

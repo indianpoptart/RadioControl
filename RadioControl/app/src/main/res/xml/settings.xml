@@ -30,6 +30,24 @@
             android:title="Service Settings"
             android:entries="@array/settings_intervaldata_listpreference"
             android:entryValues="@array/settings_intervaldata_backend"/>
+        <Preference
+            android:key="night-mode-service"
+            android:title="Night Mode"
+            android:defaultValue="@array/empty_array"
+            android:summary="Night mode can be used to disable the airplane service at a given time" />
+        <Preference
+            android:key="do_not_disturb"
+            android:title="Do Not Disturb"
+            android:summary="This will disable the service for a custom amount of hours if you are going on an airplane"
+            android:defaultValue="false" >
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:targetPackage="com.nikhilparanjape.radiocontrol"
+                android:targetClass="com.nikhilparanjape.radiocontrol.activities.DoNotDisturbActivity" />
+
+        </Preference>
+
+
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/alertSettings">
         <CheckBoxPreference

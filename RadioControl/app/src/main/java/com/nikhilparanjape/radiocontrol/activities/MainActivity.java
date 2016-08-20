@@ -38,6 +38,7 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.afollestad.materialdialogs.Theme;
 import com.android.vending.billing.IInAppBillingService;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -572,6 +573,7 @@ public class MainActivity extends AppCompatActivity {
     public void showUpdated() {
         new MaterialDialog.Builder(this)
                 .title("RadioControl has been updated")
+                .theme(Theme.LIGHT)
                 .positiveText("GOT IT")
                 .negativeText("WHAT'S NEW")
                 .onAny(new MaterialDialog.SingleButtonCallback() {

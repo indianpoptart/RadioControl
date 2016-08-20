@@ -1,8 +1,11 @@
 package com.nikhilparanjape.radiocontrol.fragments;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
@@ -11,19 +14,30 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.appeaser.sublimepickerlibrary.SublimePicker;
+import com.appeaser.sublimepickerlibrary.datepicker.SelectedDate;
+import com.appeaser.sublimepickerlibrary.helpers.SublimeListenerAdapter;
+import com.appeaser.sublimepickerlibrary.recurrencepicker.SublimeRecurrencePicker;
+import com.appyvet.rangebar.RangeBar;
+import com.borax12.materialdaterangepicker.time.RadialPickerLayout;
+import com.borax12.materialdaterangepicker.time.TimePickerDialog;
 import com.nikhilparanjape.radiocontrol.R;
 import com.nikhilparanjape.radiocontrol.rootUtils.Utilities;
 import com.nikhilparanjape.radiocontrol.services.ScheduledAirplaneService;
 
 import java.io.File;
+import java.util.Calendar;
 
 /**
  * Created by Nikhil on 4/5/2016.
  */
-public class SettingsFragment extends PreferenceFragment {
+public class SettingsFragment extends PreferenceFragment implements TimePickerDialog.OnTimeSetListener{
 
     @Override
 
@@ -121,7 +135,38 @@ public class SettingsFragment extends PreferenceFragment {
             getPreferenceScreen().findPreference("interval_prefs").setEnabled(true);
         }
 
+        //Initialize time picker
+        Calendar now = Calendar.getInstance();
+        final TimePickerDialog tpd = TimePickerDialog.newInstance(
+                SettingsFragment.this,
+                now.get(Calendar.HOUR_OF_DAY),
+                now.get(Calendar.MINUTE),
+                false
+        );
+        tpd.setThemeDark(true);
+        tpd.setAccentColor(R.color.mdtp_accent_color);
+
+        Preference night_mode = findPreference("night-mode-service");
+        night_mode.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            public boolean onPreferenceClick(Preference preference) {
+                tpd.show(getFragmentManager(), "Timepickerdialog");
+                return false;
+            }
+        });
+
+
+
     }
+    @Override
+    public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute, int hourOfDayEnd, int minuteEnd) {
+        String hourString = hourOfDay < 10 ? "0"+hourOfDay : ""+hourOfDay;
+        String minuteString = minute < 10 ? "0"+minute : ""+minute;
+        String hourStringEnd = hourOfDayEnd < 10 ? "0"+hourOfDayEnd : ""+hourOfDayEnd;
+        String minuteStringEnd = minuteEnd < 10 ? "0"+minuteEnd : ""+minuteEnd;
+        String time = "You picked the following time: From - "+hourString+"h"+minuteString+" To - "+hourStringEnd+"h"+minuteStringEnd;
+        Log.d("RadioControl", "Night Mode: " + time);
+    }
+
     //Method for the ssid list clear button
     public void ssidClearButton(){
         Context c = getActivity();

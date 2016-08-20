@@ -19,7 +19,7 @@ Feel free to ask questions related to Android programming or this project in the
 
 Latest Stable Release: [v4.0](https://github.com/indianpoptart/RadioControl/releases/latest) (5/17/2016)
 
-Current Beta Release: [v4.1-beta1](https://github.com/indianpoptart/RadioControl/releases/tag/v4.1-beta1) (8/20/2016)
+Current Beta Release: [v4.1-beta2](https://github.com/indianpoptart/RadioControl/releases/tag/v4.1-beta2) (8/20/2016)
 
 Current Alpha Release: [v3.0.1-alpha6](https://github.com/indianpoptart/RadioControl/releases/tag/v3.0.1-alpha6) (4/4/2016) (OLD)
 
@@ -46,6 +46,12 @@ Tested on the following devices
 
 
 # What's New?
+v4.1 - Beta2 (8/20/2016)
+- Fixed statistics loading bug from last update (app index problem)
+- Added time picker(Theme is kinda broken)
+- Added do not disturb option(Not working)
+- Nothing new with the wear app
+
 v4.1 - Beta1 (8/20/2016)
 - Added scheduled service to check if airplane mode is on or not(with list for choosing minutes)
 - Added support for Wear app(Will add voice actions for latency test, etc.)

@@ -19,6 +19,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.afollestad.materialdialogs.Theme;
 import com.db.chart.model.ChartSet;
 import com.db.chart.model.LineSet;
 import com.db.chart.view.AxisController;
@@ -56,6 +57,8 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
+
+import me.grantland.widget.AutofitHelper;
 
 
 public class StatsActivity extends AppCompatActivity {
@@ -143,6 +146,7 @@ public class StatsActivity extends AppCompatActivity {
         });
 
         TextView btn1 = (TextView) findViewById(R.id.fab_sheet_item_easing);
+        AutofitHelper.create(btn1);
         assert btn1 != null;
         btn1.setOnClickListener(new View.OnClickListener() {
 
@@ -159,7 +163,7 @@ public class StatsActivity extends AppCompatActivity {
 
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+        //client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
     public void showColorChooserPrimary() {
     }
@@ -169,6 +173,7 @@ public class StatsActivity extends AppCompatActivity {
 
         new MaterialDialog.Builder(this)
                 .title("Easing Animation")
+                .theme(Theme.LIGHT)
                 .items(R.array.easing)
                 .itemsCallback(new MaterialDialog.ListCallback() {
                     @Override
@@ -208,6 +213,7 @@ public class StatsActivity extends AppCompatActivity {
 
         new MaterialDialog.Builder(this)
                 .title("Gridlines")
+                .theme(Theme.LIGHT)
                 .items(R.array.preference_values)
                 .itemsCallbackSingleChoice(2, new MaterialDialog.ListCallbackSingleChoice() {
                     @Override
@@ -326,7 +332,28 @@ public class StatsActivity extends AppCompatActivity {
 
         Animation anim = new Animation();
         anim.setDuration(1000);
-        anim.setEasing(new ExpoEase());
+        if(prefs.getInt("easing",4) == 0){
+            anim.setEasing(new BounceEase());
+        } else if(prefs.getInt("easing",4) == 1){
+            anim.setEasing(new CircEase());
+        } else if(prefs.getInt("easing",4) == 2){
+            anim.setEasing(new CubicEase());
+        } else if(prefs.getInt("easing",4) == 3){
+            anim.setEasing(new ElasticEase());
+        } else if(prefs.getInt("easing",4) == 4){
+            anim.setEasing(new ExpoEase());
+        } else if(prefs.getInt("easing",4) == 5){
+            anim.setEasing(new LinearEase());
+        } else if(prefs.getInt("easing",4) == 6){
+            anim.setEasing(new QuadEase());
+        } else if(prefs.getInt("easing",4) == 7){
+            anim.setEasing(new QuartEase());
+        } else if(prefs.getInt("easing",4) == 8){
+            anim.setEasing(new QuintEase());
+        } else if(prefs.getInt("easing",4) == 9){
+            anim.setEasing(new SineEase());
+        }
+
         int[] ovLap = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
         anim.setOverlap(1.0f, ovLap);
         anim.setAlpha(1);
