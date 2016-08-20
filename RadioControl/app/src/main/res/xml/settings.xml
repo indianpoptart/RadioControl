@@ -19,6 +19,18 @@
             android:defaultValue="@array/empty_array"
             android:summary="@string/resetSummary" />
     </PreferenceCategory>
+    <PreferenceCategory android:title="Service Settings">
+        <CheckBoxPreference
+            android:key="isAirplaneService"
+            android:title="Enable Airplane Service"
+            android:summary="This will check if airplane mode is on when connected to WiFi"
+            android:defaultValue="false" />
+        <ListPreference
+            android:key="interval_prefs"
+            android:title="Service Settings"
+            android:entries="@array/settings_intervaldata_listpreference"
+            android:entryValues="@array/settings_intervaldata_backend"/>
+    </PreferenceCategory>
     <PreferenceCategory android:title="@string/alertSettings">
         <CheckBoxPreference
             android:key="isNetworkAlive"

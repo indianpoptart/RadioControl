@@ -8,13 +8,11 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
-import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
@@ -22,7 +20,6 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.telephony.TelephonyManager;
@@ -32,12 +29,9 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -45,7 +39,6 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.android.vending.billing.IInAppBillingService;
-import com.github.jorgecastilloprz.FABProgressCircle;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
@@ -62,24 +55,19 @@ import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 import com.nikhilparanjape.radiocontrol.BuildConfig;
 import com.nikhilparanjape.radiocontrol.R;
-import com.nikhilparanjape.radiocontrol.rootUtils.DrawerArrowDrawable;
 import com.nikhilparanjape.radiocontrol.rootUtils.PingWrapper;
 import com.nikhilparanjape.radiocontrol.rootUtils.Utilities;
+import com.nikhilparanjape.radiocontrol.services.ScheduledAirplaneService;
 import com.nikhilparanjape.radiocontrol.util.IabHelper;
 import com.nikhilparanjape.radiocontrol.util.IabResult;
 import com.nikhilparanjape.radiocontrol.util.Inventory;
 import com.nikhilparanjape.radiocontrol.util.Purchase;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.URL;
-import java.net.URLConnection;
 
 import it.gmariotti.changelibs.library.view.ChangeLogRecyclerView;
 
@@ -157,6 +145,14 @@ public class MainActivity extends AppCompatActivity {
 
                     //  Apply changes
                     e.apply();
+                }
+                String intervalTime = getPrefs.getString("interval_prefs","10");
+                boolean airplaneService = getPrefs.getBoolean("isAirplaneService", false);
+
+                if(!intervalTime.equals("0") && airplaneService){
+                    Intent i= new Intent(getApplicationContext(), ScheduledAirplaneService.class);
+                    getBaseContext().startService(i);
+                    Log.d("RadioControl", "Service launched");
                 }
             }
         });
@@ -259,13 +255,16 @@ public class MainActivity extends AppCompatActivity {
 
         //Connection Test button (Dev Feature)
         Button conn = (Button) findViewById(R.id.pingTestButton);
+        Button serviceTest = (Button) findViewById(R.id.airplane_service_test);
         //Check if the easter egg is NOT activated
         if(!sharedPref.getBoolean("isDeveloper",false)){
             conn.setVisibility(View.GONE);
+            serviceTest.setVisibility(View.GONE);
             connectionStatusText.setVisibility(View.GONE);
         }
         else if(sharedPref.getBoolean("isDeveloper",false)){
             conn.setVisibility(View.VISIBLE);
+            serviceTest.setVisibility(View.VISIBLE);
             connectionStatusText.setVisibility(View.VISIBLE);
         }
 
@@ -276,6 +275,16 @@ public class MainActivity extends AppCompatActivity {
                 connectionStatusText.setTextColor(getResources().getColor(R.color.material_grey_50));
                 dialog.setVisibility(View.VISIBLE);
                 new AsyncBackgroundTask(getApplicationContext()).execute("");
+            }
+
+        });
+        SharedPreferences.Editor editor2 = sharedPref.edit();
+        serviceTest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i= new Intent(getApplicationContext(), ScheduledAirplaneService.class);
+                getBaseContext().startService(i);
+                Log.d("RadioControl", "Service started");
             }
 
         });

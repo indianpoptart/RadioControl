@@ -1,1 +1,1 @@
-include ':app', ':com.android.vending.billing'
+include ':app', ':com.android.vending.billing', ':app_wear'

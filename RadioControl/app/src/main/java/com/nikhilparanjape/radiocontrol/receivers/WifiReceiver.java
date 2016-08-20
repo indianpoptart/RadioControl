@@ -25,6 +25,7 @@ import java.util.Set;
  * Created by Nikhil Paranjape on 11/8/2015.
  */
 public class WifiReceiver extends BroadcastReceiver {
+
     private static final String PRIVATE_PREF = "prefs";
 
     //Root commands which disable cell only
@@ -34,7 +35,6 @@ public class WifiReceiver extends BroadcastReceiver {
 
     Utilities util = new Utilities(); //Network and other related utilities
 
-    @Override
     public void onReceive(Context context, Intent intent) {
         intent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
 

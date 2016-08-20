@@ -1,18 +1,22 @@
 package com.nikhilparanjape.radiocontrol.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
+import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.appeaser.sublimepickerlibrary.SublimePicker;
 import com.nikhilparanjape.radiocontrol.R;
 import com.nikhilparanjape.radiocontrol.rootUtils.Utilities;
+import com.nikhilparanjape.radiocontrol.services.ScheduledAirplaneService;
 
 import java.io.File;
 
@@ -86,6 +90,37 @@ public class SettingsFragment extends PreferenceFragment {
                 return true;
             }
         });
+
+        final CheckBoxPreference serviceCheckbox = (CheckBoxPreference) getPreferenceManager().findPreference("isAirplaneService");
+        serviceCheckbox.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(c);
+                SharedPreferences.Editor editor = preferences.edit();
+
+                editor.putString("interval_prefs", "120");
+                editor.apply();
+
+                String intervalTimeString = preferences.getString("interval_prefs","10");
+                int intervalTime = Integer.parseInt(intervalTimeString);
+                boolean airplaneService = preferences.getBoolean("isAirplaneService", false);
+
+                if(intervalTime != 0 && airplaneService){
+                    Intent i= new Intent(c, ScheduledAirplaneService.class);
+                    c.startService(i);
+                    Log.d("RadioControl", "Service launched");
+                }
+
+                return true;
+            }
+        });
+
+        if(!getPreferenceScreen().findPreference("isAirplaneService").isEnabled()){
+            getPreferenceScreen().findPreference("interval_prefs").setEnabled(false);
+        }
+        else{
+            getPreferenceScreen().findPreference("interval_prefs").setEnabled(true);
+        }
+
     }
     //Method for the ssid list clear button
     public void ssidClearButton(){
@@ -97,4 +132,6 @@ public class SettingsFragment extends PreferenceFragment {
         Toast.makeText(getActivity(),
                 R.string.reset_ssid, Toast.LENGTH_LONG).show();
     }
+
+
 }
