@@ -95,5 +95,12 @@
     <string name="animation_text_box">Animation</string>
     <string name="gridline_text_box">Gridlines</string>
     <string name="title_do_not_disturb">Do Not Disturb</string>
+    <string name="title_night_mode_experimental">Night Mode (Experimental)</string>
+    <string name="summary_do_not_disturb">This will disable the service for a custom amount of hours if you are going on an airplane</string>
+    <string name="summary_night_mode">Night mode can be used to disable the airplane service at a specified time frame</string>
+    <string name="title_airplane_service_toggle">Enable Airplane Service</string>
+    <string name="summary_airplane_service">This will check if airplane mode is on when connected to WiFi</string>
+    <string name="title_service_settings">Service Settings</string>
+    <string name="summary_service_settings">Run the service every interval specified</string>
 
 </resources>

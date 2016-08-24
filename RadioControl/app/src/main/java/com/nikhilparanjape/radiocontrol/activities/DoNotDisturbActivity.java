@@ -13,12 +13,15 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.appyvet.rangebar.RangeBar;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.nikhilparanjape.radiocontrol.R;
 import com.nikhilparanjape.radiocontrol.rootUtils.Utilities;
+
+import it.gmariotti.changelibs.library.Util;
 
 public class DoNotDisturbActivity extends AppCompatActivity {
 
@@ -30,6 +33,7 @@ public class DoNotDisturbActivity extends AppCompatActivity {
         setContentView(R.layout.activity_do_not_disturb);
 
         final ActionBar actionBar = getSupportActionBar();
+        final Utilities util = new Utilities();
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         final SharedPreferences.Editor editor = pref.edit();
 
@@ -38,16 +42,19 @@ public class DoNotDisturbActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setTitle(R.string.title_do_not_disturb);
         }
-        ImageView status = (ImageView) findViewById(R.id.dnd_status);
+        final ImageView status = (ImageView) findViewById(R.id.dnd_status);
         final TextView hourStatus = (TextView) findViewById(R.id.hour_text);
+        final Button cancelButton = (Button) findViewById(R.id.cancel_button);
 
         if(pref.getBoolean("isNoDisturbEnabled",false)){
             status.setImageDrawable(getResources().getDrawable(R.drawable.ic_do_not_disturb_on_white_48px));
             hourStatus.setText("set for " + pref.getInt("dndHours", 0) + " hour(s)");
+            cancelButton.setVisibility(View.VISIBLE);
         }
         else{
             hourStatus.setText("not set");
             status.setImageDrawable(getResources().getDrawable(R.drawable.ic_do_not_disturb_off_white_48px));
+            cancelButton.setVisibility(View.GONE);
         }
 
         RangeBar rangebar = (RangeBar) findViewById(R.id.rangebar);
@@ -63,7 +70,6 @@ public class DoNotDisturbActivity extends AppCompatActivity {
         });
 
         //Initialize set button
-        //LinkSpeed Button
         Button set_button = (Button) findViewById(R.id.set_button);
 
         set_button.setOnClickListener(new View.OnClickListener() {
@@ -75,6 +81,10 @@ public class DoNotDisturbActivity extends AppCompatActivity {
                     editor.apply();
                     hourStatus.setText("set for " + hours + " hour(s)");
                     Log.d("RadioControl", "I've set do not disturb on for " + hours + " hours");
+                    util.cancelAlarm(getApplicationContext()); // Cancels the recurring alarm that starts airplane service
+                    util.scheduleWakeupAlarm(getApplicationContext(),hours);
+                    Toast.makeText(DoNotDisturbActivity.this, "Do not disturb set for "  + hours + " hours", Toast.LENGTH_LONG).show();
+                    onBackPressed();
                 }
                 else{
                     editor.putBoolean("isNoDisturbEnabled", false);
@@ -82,7 +92,22 @@ public class DoNotDisturbActivity extends AppCompatActivity {
                     hourStatus.setText("not set");
                 }
 
-                onBackPressed();
+
+            }
+
+        });
+
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editor.putBoolean("isNoDisturbEnabled", false);
+                editor.apply();
+                hourStatus.setText("not set");
+                status.setImageDrawable(getResources().getDrawable(R.drawable.ic_do_not_disturb_off_white_48px));
+                cancelButton.setVisibility(View.GONE);
+                util.cancelWakeupAlarm(getApplicationContext());
+                Toast.makeText(DoNotDisturbActivity.this, "Do not disturb cancelled", Toast.LENGTH_LONG).show();
+
             }
 
         });

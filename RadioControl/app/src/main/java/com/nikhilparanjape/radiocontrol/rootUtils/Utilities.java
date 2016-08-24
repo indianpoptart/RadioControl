@@ -1,10 +1,12 @@
 package com.nikhilparanjape.radiocontrol.rootUtils;
 
+import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -12,14 +14,26 @@ import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.v7.app.NotificationCompat;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import com.nikhilparanjape.radiocontrol.R;
+import com.nikhilparanjape.radiocontrol.receivers.NightModeReceiver;
+import com.nikhilparanjape.radiocontrol.receivers.TimedAlarmReceiver;
+import com.nikhilparanjape.radiocontrol.receivers.WakeupReceiver;
 
 import java.io.IOException;
+import java.sql.Time;
+import java.util.Calendar;
+
+import static android.app.AlarmManager.INTERVAL_DAY;
+import static android.app.AlarmManager.INTERVAL_FIFTEEN_MINUTES;
+import static android.app.AlarmManager.INTERVAL_HALF_HOUR;
+import static android.app.AlarmManager.INTERVAL_HOUR;
+import static android.app.AlarmManager.RTC_WAKEUP;
 
 /**
  * Created by Nikhil on 2/3/2016.
@@ -80,6 +94,101 @@ public class Utilities {
         int linkSpeed = wifiManager.getConnectionInfo().getLinkSpeed();
         Log.d("RadioControl", "Link speed = " + linkSpeed + "Mbps");
         return linkSpeed;
+    }
+    public void scheduleWakeupAlarm(Context c, int hour) {
+        Calendar cal = Calendar.getInstance();
+        // start 30 seconds after boot completed
+        cal.add(Calendar.HOUR, hour);
+        // Construct an intent that will execute the AlarmReceiver
+        Intent intent = new Intent(c, WakeupReceiver.class);
+        // Create a PendingIntent to be triggered when the alarm goes off
+        final PendingIntent pIntent = PendingIntent.getBroadcast(c, WakeupReceiver.REQUEST_CODE,
+                intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        // Setup periodic alarm every 5 seconds
+        long firstMillis = System.currentTimeMillis(); // alarm is set right away
+        AlarmManager alarm = (AlarmManager) c.getSystemService(Context.ALARM_SERVICE);
+        // First parameter is the type: ELAPSED_REALTIME, ELAPSED_REALTIME_WAKEUP, RTC_WAKEUP
+        // Interval can be INTERVAL_FIFTEEN_MINUTES, INTERVAL_HALF_HOUR, INTERVAL_HOUR, INTERVAL_DAY
+        alarm.setRepeating(RTC_WAKEUP, firstMillis,
+                cal.getTimeInMillis(), pIntent);
+
+    }
+    public void scheduleNightWakeupAlarm(Context c, int hourofDay, int minute) {
+        Calendar cal = Calendar.getInstance();
+        // start 30 seconds after boot completed
+        cal.add(Calendar.HOUR_OF_DAY, hourofDay);
+        cal.add(Calendar.MINUTE, minute);
+        // Construct an intent that will execute the AlarmReceiver
+        Intent intent = new Intent(c, TimedAlarmReceiver.class);
+        // Create a PendingIntent to be triggered when the alarm goes off
+        final PendingIntent pIntent = PendingIntent.getBroadcast(c, TimedAlarmReceiver.REQUEST_CODE,
+                intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        // Setup periodic alarm every 5 seconds
+        long firstMillis = System.currentTimeMillis(); // alarm is set right away
+        AlarmManager alarm = (AlarmManager) c.getSystemService(Context.ALARM_SERVICE);
+        // First parameter is the type: ELAPSED_REALTIME, ELAPSED_REALTIME_WAKEUP, RTC_WAKEUP
+        // Interval can be INTERVAL_FIFTEEN_MINUTES, INTERVAL_HALF_HOUR, INTERVAL_HOUR, INTERVAL_DAY
+        alarm.setRepeating(RTC_WAKEUP, firstMillis,
+                cal.getTimeInMillis(), pIntent);
+
+    }
+
+    // Setup a recurring alarm every 15,30,60 minutes
+    public void scheduleAlarm(Context c) {
+
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(c);
+        String intervalTimeString = preferences.getString("interval_prefs","10");
+        int intervalTime = Integer.parseInt(intervalTimeString);
+        Calendar cal = Calendar.getInstance();
+        // start 30 seconds after boot completed
+        cal.add(Calendar.MINUTE, intervalTime);
+
+        // Construct an intent that will execute the AlarmReceiver
+        Intent intent = new Intent(c, TimedAlarmReceiver.class);
+        // Create a PendingIntent to be triggered when the alarm goes off
+        final PendingIntent pIntent = PendingIntent.getBroadcast(c, TimedAlarmReceiver.REQUEST_CODE,
+                intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        // Setup periodic alarm every 5 seconds
+        long firstMillis = System.currentTimeMillis(); // alarm is set right away
+        AlarmManager alarm = (AlarmManager) c.getSystemService(Context.ALARM_SERVICE);
+        // First parameter is the type: ELAPSED_REALTIME, ELAPSED_REALTIME_WAKEUP, RTC_WAKEUP
+        // Interval can be INTERVAL_FIFTEEN_MINUTES, INTERVAL_HALF_HOUR, INTERVAL_HOUR, INTERVAL_DAY
+        alarm.setRepeating(RTC_WAKEUP, firstMillis,
+                cal.getTimeInMillis(), pIntent);
+
+    }
+    public void cancelAlarm(Context c) {
+        Intent intent = new Intent(c, TimedAlarmReceiver.class);
+        final PendingIntent pIntent = PendingIntent.getBroadcast(c, TimedAlarmReceiver.REQUEST_CODE,
+                intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        AlarmManager alarm = (AlarmManager) c.getSystemService(Context.ALARM_SERVICE);
+        alarm.cancel(pIntent);
+    }
+    public void cancelNightAlarm(Context c, int hourofDay, int minute) {
+        Calendar cal = Calendar.getInstance();
+        // start 30 seconds after boot completed
+        cal.add(Calendar.HOUR_OF_DAY, hourofDay);
+        cal.add(Calendar.MINUTE, minute);
+        // Construct an intent that will execute the AlarmReceiver
+        Intent intent = new Intent(c, NightModeReceiver.class);
+        // Create a PendingIntent to be triggered when the alarm goes off
+        final PendingIntent pIntent = PendingIntent.getBroadcast(c, NightModeReceiver.REQUEST_CODE,
+                intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        // Setup periodic alarm every 5 seconds
+        long firstMillis = System.currentTimeMillis(); // alarm is set right away
+        AlarmManager alarm = (AlarmManager) c.getSystemService(Context.ALARM_SERVICE);
+        // First parameter is the type: ELAPSED_REALTIME, ELAPSED_REALTIME_WAKEUP, RTC_WAKEUP
+        // Interval can be INTERVAL_FIFTEEN_MINUTES, INTERVAL_HALF_HOUR, INTERVAL_HOUR, INTERVAL_DAY
+        alarm.setRepeating(RTC_WAKEUP, firstMillis,
+                cal.getTimeInMillis(), pIntent);
+    }
+
+    public void cancelWakeupAlarm(Context c) {
+        Intent intent = new Intent(c, WakeupReceiver.class);
+        final PendingIntent pIntent = PendingIntent.getBroadcast(c, WakeupReceiver.REQUEST_CODE,
+                intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        AlarmManager alarm = (AlarmManager) c.getSystemService(Context.ALARM_SERVICE);
+        alarm.cancel(pIntent);
     }
     public static int frequency(Context c){
         WifiManager wifiManager = (WifiManager)c.getSystemService(Context.WIFI_SERVICE);

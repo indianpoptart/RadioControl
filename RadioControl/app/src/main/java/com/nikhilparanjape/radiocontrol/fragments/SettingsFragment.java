@@ -1,6 +1,8 @@
 package com.nikhilparanjape.radiocontrol.fragments;
 
+import android.app.AlarmManager;
 import android.app.AlertDialog;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -13,6 +15,7 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
+import android.preference.TwoStatePreference;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -28,11 +31,18 @@ import com.appyvet.rangebar.RangeBar;
 import com.borax12.materialdaterangepicker.time.RadialPickerLayout;
 import com.borax12.materialdaterangepicker.time.TimePickerDialog;
 import com.nikhilparanjape.radiocontrol.R;
+import com.nikhilparanjape.radiocontrol.receivers.TimedAlarmReceiver;
 import com.nikhilparanjape.radiocontrol.rootUtils.Utilities;
 import com.nikhilparanjape.radiocontrol.services.ScheduledAirplaneService;
 
 import java.io.File;
 import java.util.Calendar;
+
+import static android.app.AlarmManager.INTERVAL_DAY;
+import static android.app.AlarmManager.INTERVAL_FIFTEEN_MINUTES;
+import static android.app.AlarmManager.INTERVAL_HALF_HOUR;
+import static android.app.AlarmManager.INTERVAL_HOUR;
+import static android.app.AlarmManager.RTC_WAKEUP;
 
 /**
  * Created by Nikhil on 4/5/2016.
@@ -46,6 +56,7 @@ public class SettingsFragment extends PreferenceFragment implements TimePickerDi
         addPreferencesFromResource(R.xml.settings);
 
         final Context c = getActivity();
+        final Utilities util = new Utilities();
 
         if(Utilities.isConnectedWifi(c)){
             getPreferenceScreen().findPreference("ssid").setEnabled(true);
@@ -111,18 +122,24 @@ public class SettingsFragment extends PreferenceFragment implements TimePickerDi
                 SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(c);
                 SharedPreferences.Editor editor = preferences.edit();
 
-                editor.putString("interval_prefs", "120");
-                editor.apply();
+                if(newValue.toString().equals("true")){
+                    editor.putBoolean("isAirplaneService", true);
+                    editor.apply();
 
-                String intervalTimeString = preferences.getString("interval_prefs","10");
-                int intervalTime = Integer.parseInt(intervalTimeString);
-                boolean airplaneService = preferences.getBoolean("isAirplaneService", false);
+                    String intervalTimeString = preferences.getString("interval_prefs","60");
+                    int intervalTime = Integer.parseInt(intervalTimeString);
+                    boolean airplaneService = preferences.getBoolean("isAirplaneService", false);
 
-                if(intervalTime != 0 && airplaneService){
-                    Intent i= new Intent(c, ScheduledAirplaneService.class);
-                    c.startService(i);
-                    Log.d("RadioControl", "Service launched");
+                    if(intervalTime != 0 && airplaneService){
+                        Log.d("RadioControl", "Alarm Scheduled");
+                        util.scheduleAlarm(c);
+                    }
                 }
+                else{
+                    Log.d("RadioControl", "Alarm Cancelled");
+                    util.cancelAlarm(c);
+                }
+
 
                 return true;
             }
@@ -159,12 +176,21 @@ public class SettingsFragment extends PreferenceFragment implements TimePickerDi
     }
     @Override
     public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute, int hourOfDayEnd, int minuteEnd) {
+        final Utilities util = new Utilities();
+        Context c = getActivity();
         String hourString = hourOfDay < 10 ? "0"+hourOfDay : ""+hourOfDay;
         String minuteString = minute < 10 ? "0"+minute : ""+minute;
         String hourStringEnd = hourOfDayEnd < 10 ? "0"+hourOfDayEnd : ""+hourOfDayEnd;
         String minuteStringEnd = minuteEnd < 10 ? "0"+minuteEnd : ""+minuteEnd;
         String time = "You picked the following time: From - "+hourString+"h"+minuteString+" To - "+hourStringEnd+"h"+minuteStringEnd;
+
+        int currHour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+
+        util.cancelNightAlarm(c,hourOfDay, minute);
+
+        util.scheduleNightWakeupAlarm(c, hourOfDayEnd, minuteEnd);
         Log.d("RadioControl", "Night Mode: " + time);
+        Toast.makeText(getActivity(), "Night mode set from " + hourOfDay + ":" + minuteString + " to " + hourOfDayEnd + ":" + minuteStringEnd, Toast.LENGTH_LONG).show();
     }
 
     //Method for the ssid list clear button

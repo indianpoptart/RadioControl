@@ -1,6 +1,8 @@
 package com.nikhilparanjape.radiocontrol.activities;
 
+import android.app.AlarmManager;
 import android.app.AlertDialog;
+import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -56,6 +58,8 @@ import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 import com.nikhilparanjape.radiocontrol.BuildConfig;
 import com.nikhilparanjape.radiocontrol.R;
+import com.nikhilparanjape.radiocontrol.receivers.NightModeReceiver;
+import com.nikhilparanjape.radiocontrol.receivers.TimedAlarmReceiver;
 import com.nikhilparanjape.radiocontrol.rootUtils.PingWrapper;
 import com.nikhilparanjape.radiocontrol.rootUtils.Utilities;
 import com.nikhilparanjape.radiocontrol.services.ScheduledAirplaneService;
@@ -71,6 +75,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 import it.gmariotti.changelibs.library.view.ChangeLogRecyclerView;
+
+import static android.app.AlarmManager.*;
 
 /**
  * Created by Nikhil Paranjape on 11/3/2015.
@@ -255,17 +261,20 @@ public class MainActivity extends AppCompatActivity {
         });
 
         //Connection Test button (Dev Feature)
-        Button conn = (Button) findViewById(R.id.pingTestButton);
+        final Button conn = (Button) findViewById(R.id.pingTestButton);
         Button serviceTest = (Button) findViewById(R.id.airplane_service_test);
+        Button nightCancel = (Button) findViewById(R.id.night_mode_cancel);
         //Check if the easter egg is NOT activated
         if(!sharedPref.getBoolean("isDeveloper",false)){
             conn.setVisibility(View.GONE);
             serviceTest.setVisibility(View.GONE);
+            nightCancel.setVisibility(View.GONE);
             connectionStatusText.setVisibility(View.GONE);
         }
         else if(sharedPref.getBoolean("isDeveloper",false)){
             conn.setVisibility(View.VISIBLE);
             serviceTest.setVisibility(View.VISIBLE);
+            nightCancel.setVisibility(View.VISIBLE);
             connectionStatusText.setVisibility(View.VISIBLE);
         }
 
@@ -285,7 +294,19 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent i= new Intent(getApplicationContext(), ScheduledAirplaneService.class);
                 getBaseContext().startService(i);
+                util.scheduleAlarm(getApplicationContext());
                 Log.d("RadioControl", "Service started");
+            }
+
+        });
+        nightCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), NightModeReceiver.class);
+                final PendingIntent pIntent = PendingIntent.getBroadcast(getApplicationContext(), NightModeReceiver.REQUEST_CODE,
+                        intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                AlarmManager alarm = (AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
+                alarm.cancel(pIntent);
             }
 
         });
@@ -360,6 +381,7 @@ public class MainActivity extends AppCompatActivity {
         startActivity(Intent.createChooser(emailIntent, getString(R.string.title_send_feedback)));
         writeLog("Feedback sent",getApplicationContext());
     }
+
 
     //Method to create the Navigation Drawer
     public void drawerCreate(){

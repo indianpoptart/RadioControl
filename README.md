@@ -19,7 +19,7 @@ Feel free to ask questions related to Android programming or this project in the
 
 Latest Stable Release: [v4.0](https://github.com/indianpoptart/RadioControl/releases/latest) (5/17/2016)
 
-Current Beta Release: [v4.1-beta2](https://github.com/indianpoptart/RadioControl/releases/tag/v4.1-beta2) (8/20/2016)
+Current Beta Release: [v4.1-beta3](https://github.com/indianpoptart/RadioControl/releases/tag/v4.1-beta3) (8/24/2016)
 
 Current Alpha Release: [v3.0.1-alpha6](https://github.com/indianpoptart/RadioControl/releases/tag/v3.0.1-alpha6) (4/4/2016) (OLD)
 
@@ -46,6 +46,12 @@ Tested on the following devices
 
 
 # What's New?
+v4.1 - Beta3 (8/24/2016)
+- Changed scheduled service to have alarmmanager
+- Added TimedAlarmReceiver to start the airplane service at a specified interval
+- Do Not Disturb will stop all alarms and wake them back up in the specified hours
+- Night mode should work(Still experimental as there is no way to turn it off, besides from developer options on main screen)
+
 v4.1 - Beta2 (8/20/2016)
 - Fixed statistics loading bug from last update (app index problem)
 - Added time picker(Theme is kinda broken)

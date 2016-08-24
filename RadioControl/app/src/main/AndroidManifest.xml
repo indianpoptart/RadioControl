@@ -81,11 +81,25 @@
         <service
             android:name=".services.DoNotDisturbService"
             android:enabled="true"
-            android:icon="@drawable/ic_do_not_disturb_on_black_48dp"
             android:exported="true"
-            android:label="AirplaneService" >
+            android:icon="@drawable/ic_do_not_disturb_on_black_48dp"
+            android:label="AirplaneService" />
 
-        </service>
+        <receiver
+            android:name=".receivers.TimedAlarmReceiver"
+            android:enabled="true"
+            android:exported="true"
+            android:process=":remote" />
+        <receiver
+            android:name=".receivers.WakeupReceiver"
+            android:enabled="true"
+            android:exported="true"
+            android:process=":remote"/>
+        <receiver
+            android:name=".receivers.NightModeReceiver"
+            android:enabled="true"
+            android:exported="true"
+            android:process=":remote"></receiver>
     </application>
 
 </manifest>

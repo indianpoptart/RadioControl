@@ -19,26 +19,27 @@
             android:defaultValue="@array/empty_array"
             android:summary="@string/resetSummary" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="Service Settings">
+    <PreferenceCategory android:title="@string/title_service_settings">
         <CheckBoxPreference
             android:key="isAirplaneService"
-            android:title="Enable Airplane Service"
-            android:summary="This will check if airplane mode is on when connected to WiFi"
+            android:title="@string/title_airplane_service_toggle"
+            android:summary="@string/summary_airplane_service"
             android:defaultValue="false" />
         <ListPreference
             android:key="interval_prefs"
-            android:title="Service Settings"
+            android:title="@string/title_service_settings"
+            android:summary="@string/summary_service_settings"
             android:entries="@array/settings_intervaldata_listpreference"
             android:entryValues="@array/settings_intervaldata_backend"/>
         <Preference
             android:key="night-mode-service"
-            android:title="Night Mode"
+            android:title="@string/title_night_mode_experimental"
             android:defaultValue="@array/empty_array"
-            android:summary="Night mode can be used to disable the airplane service at a given time" />
+            android:summary="@string/summary_night_mode" />
         <Preference
             android:key="do_not_disturb"
-            android:title="Do Not Disturb"
-            android:summary="This will disable the service for a custom amount of hours if you are going on an airplane"
+            android:title="@string/title_do_not_disturb"
+            android:summary="@string/summary_do_not_disturb"
             android:defaultValue="false" >
             <intent
                 android:action="android.intent.action.VIEW"

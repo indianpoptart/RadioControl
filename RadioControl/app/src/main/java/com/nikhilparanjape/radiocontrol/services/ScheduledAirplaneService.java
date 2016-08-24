@@ -1,5 +1,6 @@
 package com.nikhilparanjape.radiocontrol.services;
 
+import android.app.IntentService;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -28,7 +29,7 @@ import java.util.TimerTask;
 /**
  * Created by admin on 8/20/2016.
  */
-public class ScheduledAirplaneService extends Service
+public class ScheduledAirplaneService extends IntentService
 {
 
     private Timer timer = new Timer();
@@ -42,6 +43,9 @@ public class ScheduledAirplaneService extends Service
 
     Utilities util = new Utilities(); //Network and other related utilities
 
+    public ScheduledAirplaneService() {
+        super("ScheduledAirplaneService");
+    }
 
     @Override
     public IBinder onBind(Intent intent)
@@ -53,94 +57,87 @@ public class ScheduledAirplaneService extends Service
     public void onCreate()
     {
         super.onCreate();
-        Log.d("RadioControl", "Service Started");
+    }
+
+    protected void onHandleIntent(Intent intent) {
+        // Start Alarm Task
+        Log.d("RadioControl", "Service running");
         Context context = getApplicationContext();
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences sp = context.getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE);
         String timeString = prefs.getString("interval_prefs","60");
         int time = Integer.parseInt(timeString);
         boolean airplaneService = prefs.getBoolean("isAirplaneService", false);
+        final SharedPreferences disabledPref = context.getSharedPreferences("disabled-networks", Context.MODE_PRIVATE);
 
-        if(!timeString.equals("0") && airplaneService){
-            timer.scheduleAtFixedRate(new TimerTask() {
-                @Override
-                public void run() {
-                    Context context = getApplicationContext();
-                    SharedPreferences sp = context.getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE);
-                    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-                    final SharedPreferences disabledPref = context.getSharedPreferences("disabled-networks", Context.MODE_PRIVATE);
-
-                    Set<String> h = new HashSet<>(Arrays.asList("")); //Set default set for SSID check
-                    Set<String> selections = prefs.getStringSet("ssid", h); //Gets stringset, if empty sets default
-                    boolean networkAlert= prefs.getBoolean("isNetworkAlive",false);
+        Set<String> h = new HashSet<>(Arrays.asList("")); //Set default set for SSID check
+        Set<String> selections = prefs.getStringSet("ssid", h); //Gets stringset, if empty sets default
+        boolean networkAlert= prefs.getBoolean("isNetworkAlive",false);
 
 
-                    //Check if user wants the app on
-                    if(sp.getInt("isActive",0) == 1){
-                        //Check if we just lost WiFi signal
-                        if(!Utilities.isConnectedWifi(context)){
-                            Log.d("RadioControl","WiFi signal LOST");
-                            writeLog("WiFi Signal lost",context);
-                            if(Utilities.isAirplaneMode(context)){
-                                RootAccess.runCommands(airOffCmd2);
-                                Log.d("RadioControl","Airplane mode has been turned off");
-                                writeLog("Airplane mode has been turned off",context);
-
-                            }
-                        }
-
-                        //If network is connected and airplane mode is off
-                        if (Utilities.isConnectedWifi(context) && !Utilities.isAirplaneMode(context)) {
-                            //boolean isWiFi = activeNetwork.getType() == ConnectivityManager.TYPE_WIFI; //Boolean to check for an active WiFi connection
-                            //Check the list of disabled networks
-                            if(!disabledPref.contains(Utilities.getCurrentSsid(context))){
-                                Log.d("RadioControl",Utilities.getCurrentSsid(context) + " was not found in the disabled list");
-                                //Checks that user is not in call
-                                if(!util.isCallActive(context)){
-                                    //Checks if the user doesnt' want network alerts
-                                    if(!networkAlert){
-                                        RootAccess.runCommands(airCmd);
-                                        Log.d("RadioControl", "Airplane mode has been turned on");
-                                        writeLog("Airplane mode has been turned on, SSID: " + Utilities.getCurrentSsid(context),context);
-
-
-                                    }
-                                    //The user does want network alert notifications
-                                    else {
-                                        new AsyncPingTask(context).execute("");
-                                    }
-
-                                }
-                                //Checks that user is currently in call and pauses execution till the call ends
-                                else if(util.isCallActive(context)){
-                                    while(util.isCallActive(context)){
-                                        waitFor(1000);//Wait for call to end
-                                    }
-                                }
-                            }
-                            //Pauses because WiFi network is in the list of disabled SSIDs
-                            else if(selections.contains(Utilities.getCurrentSsid(context))){
-                                Log.d("RadioControl",Utilities.getCurrentSsid(context) + " was blocked from list " + selections);
-                                writeLog(Utilities.getCurrentSsid(context) + " was blocked from list " + selections,context);
-                            }
-                        }
-
-                    }
-                    if(sp.getInt("isActive",0) == 0){
-                        Log.d("RadioControl","RadioControl has been disabled");
-                        if(networkAlert){
-                            new AsyncPingTask(context).execute("");
-                        }
-                        //Adds wifi signal lost log for nonrooters
-                        if(!Utilities.isConnectedWifi(context)) {
-                            Log.d("RadioControl", "WiFi signal LOST");
-                            writeLog("WiFi Signal lost", context);
-                        }
-                    }
+        //Check if user wants the app on
+        if(sp.getInt("isActive",0) == 1){
+            //Check if we just lost WiFi signal
+            if(!Utilities.isConnectedWifi(context)){
+                Log.d("RadioControl","WiFi signal LOST");
+                writeLog("WiFi Signal lost",context);
+                if(Utilities.isAirplaneMode(context)){
+                    RootAccess.runCommands(airOffCmd2);
+                    Log.d("RadioControl","Airplane mode has been turned off");
+                    writeLog("Airplane mode has been turned off",context);
 
                 }
-            }, 0, time*60*1000);//X Minutes
+            }
+
+            //If network is connected and airplane mode is off
+            if (Utilities.isConnectedWifi(context) && !Utilities.isAirplaneMode(context)) {
+                //boolean isWiFi = activeNetwork.getType() == ConnectivityManager.TYPE_WIFI; //Boolean to check for an active WiFi connection
+                //Check the list of disabled networks
+                if(!disabledPref.contains(Utilities.getCurrentSsid(context))){
+                    Log.d("RadioControl",Utilities.getCurrentSsid(context) + " was not found in the disabled list");
+                    //Checks that user is not in call
+                    if(!util.isCallActive(context)){
+                        //Checks if the user doesnt' want network alerts
+                        if(!networkAlert){
+                            RootAccess.runCommands(airCmd);
+                            Log.d("RadioControl", "Airplane mode has been turned on");
+                            writeLog("Airplane mode has been turned on, SSID: " + Utilities.getCurrentSsid(context),context);
+
+
+                        }
+                        //The user does want network alert notifications
+                        else {
+                            new AsyncPingTask(context).execute("");
+                        }
+
+                    }
+                    //Checks that user is currently in call and pauses execution till the call ends
+                    else if(util.isCallActive(context)){
+                        while(util.isCallActive(context)){
+                            waitFor(1000);//Wait for call to end
+                        }
+                    }
+                }
+                //Pauses because WiFi network is in the list of disabled SSIDs
+                else if(selections.contains(Utilities.getCurrentSsid(context))){
+                    Log.d("RadioControl",Utilities.getCurrentSsid(context) + " was blocked from list " + selections);
+                    writeLog(Utilities.getCurrentSsid(context) + " was blocked from list " + selections,context);
+                }
+            }
+
         }
+        if(sp.getInt("isActive",0) == 0){
+            Log.d("RadioControl","RadioControl has been disabled");
+            if(networkAlert){
+                new AsyncPingTask(context).execute("");
+            }
+            //Adds wifi signal lost log for nonrooters
+            if(!Utilities.isConnectedWifi(context)) {
+                Log.d("RadioControl", "WiFi signal LOST");
+                writeLog("WiFi Signal lost", context);
+            }
+        }
+
     }
 
     public void writeLog(String data, Context c){
@@ -232,6 +229,7 @@ public class ScheduledAirplaneService extends Service
 
         }
     }
+
     public void waitFor(long timer){
         try {
             Thread.sleep(timer);
@@ -239,6 +237,8 @@ public class ScheduledAirplaneService extends Service
             e.printStackTrace();
         }
     }
+
+
 
     @Override
     public void onDestroy()
