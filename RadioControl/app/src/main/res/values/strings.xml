@@ -102,5 +102,8 @@
     <string name="summary_airplane_service">This will check if airplane mode is on when connected to WiFi</string>
     <string name="title_service_settings">Service Settings</string>
     <string name="summary_service_settings">Run the service every interval specified</string>
+    <string name="title_root_command_alt">Use alternate root command</string>
+    <string name="summary_root_command_alt">This disables just the cell radio. Use this if you are having problems with bluetooth disconnects.</string>
+    <string name="title_root_mode">Root Mode</string>
 
 </resources>

@@ -84,6 +84,12 @@
             android:exported="true"
             android:icon="@drawable/ic_do_not_disturb_on_black_48dp"
             android:label="AirplaneService" />
+        <service
+            android:name=".services.CellRadioService"
+            android:enabled="true"
+            android:exported="true"
+            android:icon="@drawable/ic_network_cell"
+            android:label="CellRadioService" />
 
         <receiver
             android:name=".receivers.TimedAlarmReceiver"
@@ -95,6 +101,7 @@
             android:enabled="true"
             android:exported="true"
             android:process=":remote"/>
+
         <receiver
             android:name=".receivers.NightModeReceiver"
             android:enabled="true"

@@ -19,6 +19,14 @@
             android:defaultValue="@array/empty_array"
             android:summary="@string/resetSummary" />
     </PreferenceCategory>
+    <PreferenceCategory android:title="@string/title_root_mode">
+        <CheckBoxPreference
+            android:key="altRootCommand"
+            android:title="@string/title_root_command_alt"
+            android:summary="@string/summary_root_command_alt"
+            android:defaultValue="false" />
+
+    </PreferenceCategory>
     <PreferenceCategory android:title="@string/title_service_settings">
         <CheckBoxPreference
             android:key="isAirplaneService"

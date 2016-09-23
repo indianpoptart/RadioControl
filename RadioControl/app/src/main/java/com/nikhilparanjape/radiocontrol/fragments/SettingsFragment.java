@@ -145,6 +145,7 @@ public class SettingsFragment extends PreferenceFragment implements TimePickerDi
             }
         });
 
+
         if(!getPreferenceScreen().findPreference("isAirplaneService").isEnabled()){
             getPreferenceScreen().findPreference("interval_prefs").setEnabled(false);
         }

@@ -61,6 +61,7 @@ import com.nikhilparanjape.radiocontrol.R;
 import com.nikhilparanjape.radiocontrol.receivers.NightModeReceiver;
 import com.nikhilparanjape.radiocontrol.receivers.TimedAlarmReceiver;
 import com.nikhilparanjape.radiocontrol.rootUtils.PingWrapper;
+import com.nikhilparanjape.radiocontrol.rootUtils.RootAccess;
 import com.nikhilparanjape.radiocontrol.rootUtils.Utilities;
 import com.nikhilparanjape.radiocontrol.services.ScheduledAirplaneService;
 import com.nikhilparanjape.radiocontrol.util.IabHelper;
@@ -227,6 +228,7 @@ public class MainActivity extends AppCompatActivity {
 
         //LinkSpeed Button
         Button linkSpeedButton = (Button) findViewById(R.id.linkSpeedButton);
+
         //Check if the easter egg is NOT activated
         if(!sharedPref.getBoolean("isDeveloper",false)){
             linkSpeedButton.setVisibility(View.GONE);
@@ -264,18 +266,21 @@ public class MainActivity extends AppCompatActivity {
         final Button conn = (Button) findViewById(R.id.pingTestButton);
         Button serviceTest = (Button) findViewById(R.id.airplane_service_test);
         Button nightCancel = (Button) findViewById(R.id.night_mode_cancel);
+        Button radioOffButton = (Button) findViewById(R.id.cellRadioOff);
         //Check if the easter egg is NOT activated
         if(!sharedPref.getBoolean("isDeveloper",false)){
             conn.setVisibility(View.GONE);
             serviceTest.setVisibility(View.GONE);
             nightCancel.setVisibility(View.GONE);
             connectionStatusText.setVisibility(View.GONE);
+            radioOffButton.setVisibility(View.GONE);
         }
         else if(sharedPref.getBoolean("isDeveloper",false)){
             conn.setVisibility(View.VISIBLE);
             serviceTest.setVisibility(View.VISIBLE);
             nightCancel.setVisibility(View.VISIBLE);
             connectionStatusText.setVisibility(View.VISIBLE);
+            radioOffButton.setVisibility(View.VISIBLE);
         }
 
         conn.setOnClickListener(new View.OnClickListener() {
@@ -310,7 +315,14 @@ public class MainActivity extends AppCompatActivity {
             }
 
         });
+        radioOffButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String[] cellOffCmd = {"service call phone 27","service call phone 14 s16"};
+                RootAccess.runCommands(cellOffCmd);
+            }
 
+        });
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         assert fab != null;
