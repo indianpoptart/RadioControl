@@ -22,6 +22,7 @@ import android.util.Log;
 
 import com.nikhilparanjape.radiocontrol.R;
 import com.nikhilparanjape.radiocontrol.receivers.NightModeReceiver;
+import com.nikhilparanjape.radiocontrol.receivers.RootServiceReceiver;
 import com.nikhilparanjape.radiocontrol.receivers.TimedAlarmReceiver;
 import com.nikhilparanjape.radiocontrol.receivers.WakeupReceiver;
 
@@ -156,6 +157,35 @@ public class Utilities {
         alarm.setRepeating(RTC_WAKEUP, firstMillis,
                 cal.getTimeInMillis(), pIntent);
 
+    }
+    public void scheduleRootAlarm(Context c) {
+        Calendar cal = Calendar.getInstance();
+        // start 10 seconds
+        cal.add(Calendar.SECOND, 30);
+
+        // Construct an intent that will execute the AlarmReceiver
+        Intent intent = new Intent(c, RootServiceReceiver.class);
+        // Create a PendingIntent to be triggered when the alarm goes off
+        final PendingIntent pIntent = PendingIntent.getBroadcast(c, RootServiceReceiver.REQUEST_CODE,
+                intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        // Setup periodic alarm every X seconds
+        long firstMillis = System.currentTimeMillis(); // alarm is set right away
+        AlarmManager alarm = (AlarmManager) c.getSystemService(Context.ALARM_SERVICE);
+        // First parameter is the type: ELAPSED_REALTIME, ELAPSED_REALTIME_WAKEUP, RTC_WAKEUP
+        // Interval can be INTERVAL_FIFTEEN_MINUTES, INTERVAL_HALF_HOUR, INTERVAL_HOUR, INTERVAL_DAY
+
+        alarm.setRepeating(RTC_WAKEUP, firstMillis,
+                cal.getTimeInMillis(), pIntent);
+        Log.d("RadioControl","RootClock enabled for " + cal.getTime());
+
+    }
+    public void cancelRootAlarm(Context c) {
+        Intent intent = new Intent(c, RootServiceReceiver.class);
+        final PendingIntent pIntent = PendingIntent.getBroadcast(c, RootServiceReceiver.REQUEST_CODE,
+                intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        AlarmManager alarm = (AlarmManager) c.getSystemService(Context.ALARM_SERVICE);
+        alarm.cancel(pIntent);
+        Log.d("RadioControl","RootClock cancelled");
     }
     public void cancelAlarm(Context c) {
         Intent intent = new Intent(c, TimedAlarmReceiver.class);

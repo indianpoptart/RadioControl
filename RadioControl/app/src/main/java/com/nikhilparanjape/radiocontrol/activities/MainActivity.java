@@ -63,6 +63,7 @@ import com.nikhilparanjape.radiocontrol.receivers.TimedAlarmReceiver;
 import com.nikhilparanjape.radiocontrol.rootUtils.PingWrapper;
 import com.nikhilparanjape.radiocontrol.rootUtils.RootAccess;
 import com.nikhilparanjape.radiocontrol.rootUtils.Utilities;
+import com.nikhilparanjape.radiocontrol.services.CellRadioService;
 import com.nikhilparanjape.radiocontrol.services.ScheduledAirplaneService;
 import com.nikhilparanjape.radiocontrol.util.IabHelper;
 import com.nikhilparanjape.radiocontrol.util.IabResult;
@@ -318,8 +319,11 @@ public class MainActivity extends AppCompatActivity {
         radioOffButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String[] cellOffCmd = {"service call phone 27","service call phone 14 s16"};
-                RootAccess.runCommands(cellOffCmd);
+                //String[] cellOffCmd = {"service call phone 27","service call phone 14 s16"};
+                //RootAccess.runCommands(cellOffCmd);
+                Intent cellIntent = new Intent(getApplicationContext(), CellRadioService.class);
+                startService(cellIntent);
+                util.scheduleRootAlarm(getApplicationContext());
             }
 
         });

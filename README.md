@@ -19,7 +19,7 @@ Feel free to ask questions related to Android programming or this project in the
 
 Latest Stable Release: [v4.0](https://github.com/indianpoptart/RadioControl/releases/latest) (5/17/2016)
 
-Current Beta Release: [v4.1-beta3](https://github.com/indianpoptart/RadioControl/releases/tag/v4.1-beta3) (8/24/2016)
+Current Beta Release: [v4.1-beta4](https://github.com/indianpoptart/RadioControl/releases/tag/v4.1-beta4) (9/24/2016)
 
 Current Alpha Release: [v3.0.1-alpha6](https://github.com/indianpoptart/RadioControl/releases/tag/v3.0.1-alpha6) (4/4/2016) (OLD)
 
@@ -46,6 +46,9 @@ Tested on the following devices
 
 
 # What's New?
+v4.1 - Beta4 (9/24/2016)
+- Alternate root mode added. This explicitly disables the cell radio and is not related to Airplane mode. If you run into problems please toggle airplane mode or contact me
+
 v4.1 - Beta3 (8/24/2016)
 - Changed scheduled service to have alarmmanager
 - Added TimedAlarmReceiver to start the airplane service at a specified interval

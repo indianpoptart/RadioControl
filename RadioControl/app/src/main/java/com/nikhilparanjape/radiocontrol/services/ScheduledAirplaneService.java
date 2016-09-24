@@ -63,11 +63,8 @@ public class ScheduledAirplaneService extends IntentService
         // Start Alarm Task
         Log.d("RadioControl", "Service running");
         Context context = getApplicationContext();
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences sp = context.getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE);
-        String timeString = prefs.getString("interval_prefs","60");
-        int time = Integer.parseInt(timeString);
-        boolean airplaneService = prefs.getBoolean("isAirplaneService", false);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         final SharedPreferences disabledPref = context.getSharedPreferences("disabled-networks", Context.MODE_PRIVATE);
 
         Set<String> h = new HashSet<>(Arrays.asList("")); //Set default set for SSID check
@@ -81,10 +78,20 @@ public class ScheduledAirplaneService extends IntentService
             if(!Utilities.isConnectedWifi(context)){
                 Log.d("RadioControl","WiFi signal LOST");
                 writeLog("WiFi Signal lost",context);
-                if(Utilities.isAirplaneMode(context)){
-                    RootAccess.runCommands(airOffCmd2);
-                    Log.d("RadioControl","Airplane mode has been turned off");
-                    writeLog("Airplane mode has been turned off",context);
+                if(Utilities.isAirplaneMode(context) || !Utilities.isConnectedMobile(context)){
+                    //Runs the alternate root command
+                    if(prefs.getBoolean("altRootCommand", false)){
+                        Intent cellIntent = new Intent(context, CellRadioService.class);
+                        context.startService(cellIntent);
+                        util.scheduleRootAlarm(context);
+                        Log.d("RadioControl", "Cell Radio has been turned on");
+                        writeLog("Cell radio has been turned on",context);
+                    }
+                    else{
+                        RootAccess.runCommands(airOffCmd2);
+                        Log.d("RadioControl","Airplane mode has been turned off");
+                        writeLog("Airplane mode has been turned off",context);
+                    }
 
                 }
             }
@@ -99,9 +106,20 @@ public class ScheduledAirplaneService extends IntentService
                     if(!util.isCallActive(context)){
                         //Checks if the user doesnt' want network alerts
                         if(!networkAlert){
-                            RootAccess.runCommands(airCmd);
-                            Log.d("RadioControl", "Airplane mode has been turned on");
-                            writeLog("Airplane mode has been turned on, SSID: " + Utilities.getCurrentSsid(context),context);
+                            //Runs the alternate root command
+                            if(prefs.getBoolean("altRootCommand", false)){
+                                Intent cellIntent = new Intent(context, CellRadioService.class);
+                                context.startService(cellIntent);
+                                util.scheduleRootAlarm(context);
+                                Log.d("RadioControl", "Cell Radio has been turned off");
+                                writeLog("Cell radio has been turned off, SSID: " + Utilities.getCurrentSsid(context),context);
+                            }
+                            else{
+                                RootAccess.runCommands(airCmd);
+                                Log.d("RadioControl", "Airplane mode has been turned on");
+                                writeLog("Airplane mode has been turned on, SSID: " + Utilities.getCurrentSsid(context),context);
+                            }
+
 
 
                         }
@@ -139,7 +157,6 @@ public class ScheduledAirplaneService extends IntentService
         }
 
     }
-
     public void writeLog(String data, Context c){
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(c);
         if(preferences.getBoolean("enableLogs", false)){
@@ -220,16 +237,25 @@ public class ScheduledAirplaneService extends IntentService
                     writeLog("Not connected to the internet",context);
                 }
                 else{
-                    RootAccess.runCommands(airCmd);
-                    Log.d("RadioControl", "Airplane mode has been turned on");
-                    writeLog("Airplane mode has been turned on, SSID: " + Utilities.getCurrentSsid(context),context);
+                    //Runs the alternate root command
+                    if(prefs.getBoolean("altRootCommand", false)){
+                        Intent cellIntent = new Intent(context, CellRadioService.class);
+                        context.startService(cellIntent);
+                        util.scheduleRootAlarm(context);
+                        Log.d("RadioControl", "Cell Radio has been turned off");
+                        writeLog("Cell radio has been turned off, SSID: " + Utilities.getCurrentSsid(context),context);
+                    }
+                    else if(!prefs.getBoolean("altRootCommand", false)){
+                        RootAccess.runCommands(airCmd);
+                        Log.d("RadioControl", "Airplane mode has been turned on");
+                        writeLog("Airplane mode has been turned on, SSID: " + Utilities.getCurrentSsid(context),context);
+                    }
                 }
             }
 
 
         }
     }
-
     public void waitFor(long timer){
         try {
             Thread.sleep(timer);
