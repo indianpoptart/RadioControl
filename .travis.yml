@@ -26,4 +26,4 @@ before_install:
 
 # Let's try to build...
 #install: ./gradlew clean build
-script: ./gradlew check
+gradle build connectedCheck
