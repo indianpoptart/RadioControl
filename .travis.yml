@@ -16,7 +16,7 @@ notifications:
   email: false
   
 before_install:
-  cd /RadioControl/
+  cd RadioControl/
   # for gradle output style
   - export TERM=dumb
 
