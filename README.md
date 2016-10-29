@@ -19,7 +19,7 @@ Feel free to ask questions related to Android programming or this project in the
 
 Latest Stable Release: [v4.0](https://github.com/indianpoptart/RadioControl/releases/latest) (5/17/2016)
 
-Current Beta Release: [v4.1-beta4](https://github.com/indianpoptart/RadioControl/releases/tag/v4.1-beta4) (9/24/2016)
+Current Beta Release: [v4.1-beta5](https://github.com/indianpoptart/RadioControl/releases/tag/v4.1-beta5) (10/29/2016)
 
 Current Alpha Release: [v3.0.1-alpha6](https://github.com/indianpoptart/RadioControl/releases/tag/v3.0.1-alpha6) (4/4/2016) (OLD)
 
@@ -46,6 +46,10 @@ Tested on the following devices
 
 
 # What's New?
+v4.1 - Beta5 (10/29/2016)
+- Cell Radio fix should work better
+- Added Pixel support
+
 v4.1 - Beta4 (9/24/2016)
 - Alternate root mode added. This explicitly disables the cell radio and is not related to Airplane mode. If you run into problems please toggle airplane mode or contact me
 

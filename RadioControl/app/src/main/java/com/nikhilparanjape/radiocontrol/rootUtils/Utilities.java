@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.net.ConnectivityManager;
+import android.net.Network;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiInfo;
@@ -27,6 +28,7 @@ import com.nikhilparanjape.radiocontrol.receivers.TimedAlarmReceiver;
 import com.nikhilparanjape.radiocontrol.receivers.WakeupReceiver;
 
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.sql.Time;
 import java.util.Calendar;
 
@@ -83,6 +85,18 @@ public class Utilities {
             ssid = "Not Connected";
         }
         return ssid;
+    }
+    public static NetworkInfo.State getMobileState(Context c){
+        ConnectivityManager cm = (ConnectivityManager) c.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo.State mobile = cm.getNetworkInfo(0).getState();
+        NetworkInfo.State mob = cm.getActiveNetworkInfo().getState();
+
+        return mob;
+    }
+    public static Network[] getMobState(Context c){
+        ConnectivityManager cm = (ConnectivityManager) c.getSystemService(Context.CONNECTIVITY_SERVICE);
+        Network[] mobile = cm.getAllNetworks();
+        return mobile;
     }
 
     /**
@@ -415,55 +429,60 @@ public class Utilities {
     }
 
     public static String getNetworkType(Context context){
-        NetworkInfo info = getNetworkInfo(context);
-        int type = info.getType();
-        int subType = info.getSubtype();
+        try {
+            NetworkInfo info = getNetworkInfo(context);
+            int type = info.getType();
+            int subType = info.getSubtype();
 
-        if(type==ConnectivityManager.TYPE_WIFI){
-            return "WIFI";
-        }else if(type == ConnectivityManager.TYPE_MOBILE){
-            switch(subType){
-                case TelephonyManager.NETWORK_TYPE_1xRTT:
-                    return "1xRTT"; // ~ 50-100 kbps
-                case TelephonyManager.NETWORK_TYPE_CDMA:
-                    return "CDMA"; // ~ 14-64 kbps
-                case TelephonyManager.NETWORK_TYPE_EDGE:
-                    return "EDGE"; // ~ 50-100 kbps
-                case TelephonyManager.NETWORK_TYPE_EVDO_0:
-                    return "EVDO_0"; // ~ 400-1000 kbps
-                case TelephonyManager.NETWORK_TYPE_EVDO_A:
-                    return "EVDO_A"; // ~ 600-1400 kbps
-                case TelephonyManager.NETWORK_TYPE_GPRS:
-                    return "GPRS"; // ~ 100 kbps
-                case TelephonyManager.NETWORK_TYPE_HSDPA:
-                    return "HSDPA"; // ~ 2-14 Mbps
-                case TelephonyManager.NETWORK_TYPE_HSPA:
-                    return "HSPA"; // ~ 700-1700 kbps
-                case TelephonyManager.NETWORK_TYPE_HSUPA:
-                    return "HSUPA"; // ~ 1-23 Mbps
-                case TelephonyManager.NETWORK_TYPE_UMTS:
-                    return "UMTS"; // ~ 400-7000 kbps
+            if (type == ConnectivityManager.TYPE_WIFI) {
+                return "WIFI";
+            } else if (type == ConnectivityManager.TYPE_MOBILE) {
+                switch (subType) {
+                    case TelephonyManager.NETWORK_TYPE_1xRTT:
+                        return "1xRTT"; // ~ 50-100 kbps
+                    case TelephonyManager.NETWORK_TYPE_CDMA:
+                        return "CDMA"; // ~ 14-64 kbps
+                    case TelephonyManager.NETWORK_TYPE_EDGE:
+                        return "EDGE"; // ~ 50-100 kbps
+                    case TelephonyManager.NETWORK_TYPE_EVDO_0:
+                        return "EVDO_0"; // ~ 400-1000 kbps
+                    case TelephonyManager.NETWORK_TYPE_EVDO_A:
+                        return "EVDO_A"; // ~ 600-1400 kbps
+                    case TelephonyManager.NETWORK_TYPE_GPRS:
+                        return "GPRS"; // ~ 100 kbps
+                    case TelephonyManager.NETWORK_TYPE_HSDPA:
+                        return "HSDPA"; // ~ 2-14 Mbps
+                    case TelephonyManager.NETWORK_TYPE_HSPA:
+                        return "HSPA"; // ~ 700-1700 kbps
+                    case TelephonyManager.NETWORK_TYPE_HSUPA:
+                        return "HSUPA"; // ~ 1-23 Mbps
+                    case TelephonyManager.NETWORK_TYPE_UMTS:
+                        return "UMTS"; // ~ 400-7000 kbps
             /*
              * Above API level 7, make sure to set android:targetSdkVersion
              * to appropriate level to use these
              */
-                case TelephonyManager.NETWORK_TYPE_EHRPD: // API level 11
-                    return "EHRPD"; // ~ 1-2 Mbps
-                case TelephonyManager.NETWORK_TYPE_EVDO_B: // API level 9
-                    return "EVDO_B"; // ~ 5 Mbps
-                case TelephonyManager.NETWORK_TYPE_HSPAP: // API level 13
-                    return "HSPAP"; // ~ 10-20 Mbps
-                case TelephonyManager.NETWORK_TYPE_IDEN: // API level 8
-                    return "IDEN"; // ~25 kbps
-                case TelephonyManager.NETWORK_TYPE_LTE: // API level 11
-                    return "LTE"; // ~ 10+ Mbps
-                // Unknown
-                case TelephonyManager.NETWORK_TYPE_UNKNOWN:
-                default:
-                    return "UNKNOWN";
+                    case TelephonyManager.NETWORK_TYPE_EHRPD: // API level 11
+                        return "EHRPD"; // ~ 1-2 Mbps
+                    case TelephonyManager.NETWORK_TYPE_EVDO_B: // API level 9
+                        return "EVDO_B"; // ~ 5 Mbps
+                    case TelephonyManager.NETWORK_TYPE_HSPAP: // API level 13
+                        return "HSPAP"; // ~ 10-20 Mbps
+                    case TelephonyManager.NETWORK_TYPE_IDEN: // API level 8
+                        return "IDEN"; // ~25 kbps
+                    case TelephonyManager.NETWORK_TYPE_LTE: // API level 11
+                        return "LTE"; // ~ 10+ Mbps
+                    // Unknown
+                    case TelephonyManager.NETWORK_TYPE_UNKNOWN:
+                    default:
+                        return "UNKNOWN";
+                }
+            } else {
+                return "UNKNOWN";
             }
-        }else{
-            return "UNKNOWN";
+        }
+        catch(NullPointerException e){
+            return "CELL";
         }
 
     }

@@ -7,8 +7,8 @@ android {
         applicationId "com.nikhilparanjape.radiocontrol"
         minSdkVersion 21
         targetSdkVersion 23
-        versionCode 42
-        versionName "4.1 - Beta4"
+        versionCode 43
+        versionName "4.1 - Beta5"
         // Enabling multidex support.
         multiDexEnabled true
     }

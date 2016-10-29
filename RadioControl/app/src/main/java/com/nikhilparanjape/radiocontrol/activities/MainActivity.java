@@ -12,6 +12,8 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.net.Network;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -75,7 +77,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 
+import it.gmariotti.changelibs.library.Util;
 import it.gmariotti.changelibs.library.view.ChangeLogRecyclerView;
 
 import static android.app.AlarmManager.*;
@@ -246,16 +250,25 @@ public class MainActivity extends AppCompatActivity {
                 //showWifiInfoDialog();
                 int linkspeed = Utilities.linkSpeed(getApplicationContext());
                 int GHz = Utilities.frequency(getApplicationContext());
+                NetworkInfo test = Utilities.getNetworkInfo(getApplicationContext());
+                NetworkInfo.State b = Utilities.getMobileState(getApplicationContext());
+                Network[] c = Utilities.getMobState(getApplicationContext());
+                String d = Utilities.getNetworkType(getApplicationContext());
+                Log.d("RadioControl","Test: " + test);
+                Log.d("RadioControl","Test2: " + b);
+                Log.d("RadioControl","Test3:" + Arrays.toString(c));
+                Log.d("RadioControl","Test4:" + d);
                 if(linkspeed == -1){
                     linkText.setText(R.string.cellNetwork);
                 }
                 else{
                     if(GHz == 2){
                         linkText.setText("Link speed: " + linkspeed + "Mbps @ 2.4 GHz");
+
                     }
                     else if(GHz == 5){
                         linkText.setText("Link speed: " + linkspeed + "Mbps @ 5 GHz");
-                        linkText.setText("Link speed: " + linkspeed + "Mbps @ 5 GHz");
+
                     }
 
                 }
@@ -415,6 +428,9 @@ public class MainActivity extends AppCompatActivity {
         }
         else if(getDeviceName().contains("Motorola")){
             icon = getResources().getDrawable(R.mipmap.moto2);
+        }
+        else if(getDeviceName().contains("Pixel")){
+            icon = getResources().getDrawable(R.mipmap.google);
         }
         else if(getDeviceName().contains("LG")){
             icon = getResources().getDrawable(R.mipmap.lg);

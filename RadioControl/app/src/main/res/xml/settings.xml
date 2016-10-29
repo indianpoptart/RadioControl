@@ -27,6 +27,14 @@
             android:defaultValue="false" />
 
     </PreferenceCategory>
+    <PreferenceCategory android:title="@string/title_experimental_settings">
+        <CheckBoxPreference
+            android:key="altBTCommand"
+            android:title="@string/title_bt_fix"
+            android:summary="@string/summary_bt_fix"
+            android:defaultValue="false" />
+
+    </PreferenceCategory>
     <PreferenceCategory android:title="@string/title_service_settings">
         <CheckBoxPreference
             android:key="isAirplaneService"

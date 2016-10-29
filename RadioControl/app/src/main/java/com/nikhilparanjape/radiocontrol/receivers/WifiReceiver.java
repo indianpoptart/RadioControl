@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.text.format.DateFormat;
@@ -33,8 +34,8 @@ public class WifiReceiver extends BroadcastReceiver {
     String[] airCmd = {"su", "settings put global airplane_mode_radios  \"cell\"", "content update --uri content://settings/global --bind value:s:'cell' --where \"name='airplane_mode_radios'\"", "settings put global airplane_mode_on 1", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state true"};
     //runs command to disable airplane mode on wifi loss, while restoring previous airplane settings
     String[] airOffCmd2 = {"su", "settings put global airplane_mode_on 0", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state false", "settings put global airplane_mode_radios  \"cell,bluetooth,nfc,wimax\"", "content update --uri content://settings/global --bind value:s:'cell,bluetooth,nfc,wimax' --where \"name='airplane_mode_radios'\""};
+    String[] airOffCmd3 = {"su", "settings put global airplane_mode_on 0", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state false"};
 
-    String[] cellOffCmd = {"service call phone 27","service call phone 14 s16"};
 
     Utilities util = new Utilities(); //Network and other related utilities
 
@@ -60,15 +61,26 @@ public class WifiReceiver extends BroadcastReceiver {
                 if(Utilities.isAirplaneMode(context) || !Utilities.isConnectedMobile(context)){
                     //Runs the alternate root command
                     if(prefs.getBoolean("altRootCommand", false)){
-                        Intent cellIntent = new Intent(context, CellRadioService.class);
-                        context.startService(cellIntent);
-                        Log.d("RadioControl", "Cell Radio has been turned on");
-                        writeLog("Cell radio has been turned on",context);
+                        String d = Utilities.getNetworkType(context);
+                        if(d.equals("CELL")){
+                            Intent cellIntent = new Intent(context, CellRadioService.class);
+                            context.startService(cellIntent);
+                            Log.d("RadioControl", "Cell Radio has been turned on");
+                            writeLog("Cell radio has been turned off, SSID: " + Utilities.getCurrentSsid(context),context);
+                        }
                     }
                     else{
-                        RootAccess.runCommands(airOffCmd2);
-                        Log.d("RadioControl","Airplane mode has been turned off");
-                        writeLog("Airplane mode has been turned off",context);
+                        if(prefs.getBoolean("altBTCommand", false)){
+                            RootAccess.runCommands(airOffCmd3);
+                            Log.d("RadioControl","Airplane mode has been turned off(with bt cmd)");
+                            writeLog("Airplane mode has been turned off",context);
+                        }
+                        else{
+                            RootAccess.runCommands(airOffCmd2);
+                            Log.d("RadioControl","Airplane mode has been turned off");
+                            writeLog("Airplane mode has been turned off",context);
+                        }
+
                     }
 
                 }
@@ -82,22 +94,27 @@ public class WifiReceiver extends BroadcastReceiver {
                     Log.d("RadioControl",Utilities.getCurrentSsid(context) + " was not found in the disabled list");
                     //Checks that user is not in call
                     if(!util.isCallActive(context)){
-                        //Checks if the user doesnt' want network alerts
+                        //Checks if the user doesn't want network alerts
                         if(!networkAlert){
                             //Runs the alternate root command
                             if(prefs.getBoolean("altRootCommand", false)){
-                                Intent cellIntent = new Intent(context, CellRadioService.class);
-                                context.startService(cellIntent);
-                                Log.d("RadioControl", "Cell Radio has been turned off");
-                                writeLog("Cell radio has been turned off, SSID: " + Utilities.getCurrentSsid(context),context);
+                                String d = Utilities.getNetworkType(context);
+                                if(d.equals("WIFI")){
+                                    Intent cellIntent = new Intent(context, CellRadioService.class);
+                                    context.startService(cellIntent);
+                                    Log.d("RadioControl", "Cell Radio has been turned off");
+                                    writeLog("Cell radio has been turned off, SSID: " + Utilities.getCurrentSsid(context),context);
+                                }
+                                else if(!d.equals("WIFI")){
+                                    Log.d("RadioControl", "Cell Radio is already off");
+                                }
+
                             }
                             else{
                                 RootAccess.runCommands(airCmd);
                                 Log.d("RadioControl", "Airplane mode has been turned on");
                                 writeLog("Airplane mode has been turned on, SSID: " + Utilities.getCurrentSsid(context),context);
                             }
-
-
 
                         }
                         //The user does want network alert notifications
@@ -216,10 +233,17 @@ public class WifiReceiver extends BroadcastReceiver {
                 else{
                     //Runs the alternate root command
                     if(prefs.getBoolean("altRootCommand", false)){
-                        Intent cellIntent = new Intent(context, CellRadioService.class);
-                        context.startService(cellIntent);
-                        Log.d("RadioControl", "Cell Radio has been turned off");
-                        writeLog("Cell radio has been turned off, SSID: " + Utilities.getCurrentSsid(context),context);
+                        String d = Utilities.getNetworkType(context);
+                        if(d.equals("WIFI")){
+                            Intent cellIntent = new Intent(context, CellRadioService.class);
+                            context.startService(cellIntent);
+                            Log.d("RadioControl", "Cell Radio has been turned off");
+                            writeLog("Cell radio has been turned off, SSID: " + Utilities.getCurrentSsid(context),context);
+                        }
+                        else if(!d.equals("WIFI")){
+                            Log.d("RadioControl", "Cell Radio is already off");
+                        }
+
                     }
                     else if(!prefs.getBoolean("altRootCommand", false)){
                         RootAccess.runCommands(airCmd);
