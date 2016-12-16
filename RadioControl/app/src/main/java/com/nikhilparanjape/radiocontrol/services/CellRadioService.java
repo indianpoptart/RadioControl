@@ -39,6 +39,7 @@ public class CellRadioService extends Service {
             Utilities util = new Utilities();
             Context context = getApplicationContext();
             String[] cellOffCmd = {"service call phone 27","service call phone 14 s16"};
+
             RootAccess.runCommands(cellOffCmd);
             final Handler handler = new Handler();
             handler.postDelayed(new Runnable() {

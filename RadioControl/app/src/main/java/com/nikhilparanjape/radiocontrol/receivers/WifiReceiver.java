@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
+import android.telephony.ServiceState;
 import android.text.format.DateFormat;
 import android.util.Log;
 
@@ -61,8 +62,7 @@ public class WifiReceiver extends BroadcastReceiver {
                 if(Utilities.isAirplaneMode(context) || !Utilities.isConnectedMobile(context)){
                     //Runs the alternate root command
                     if(prefs.getBoolean("altRootCommand", false)){
-                        String d = Utilities.getNetworkType(context);
-                        if(d.equals("CELL")){
+                        if(util.getCellStrength().equals("Out Of Service") || util.getCellStrength().equals("Off")){
                             Intent cellIntent = new Intent(context, CellRadioService.class);
                             context.startService(cellIntent);
                             Log.d("RadioControl", "Cell Radio has been turned on");
@@ -98,14 +98,13 @@ public class WifiReceiver extends BroadcastReceiver {
                         if(!networkAlert){
                             //Runs the alternate root command
                             if(prefs.getBoolean("altRootCommand", false)){
-                                String d = Utilities.getNetworkType(context);
-                                if(d.equals("WIFI")){
+                                if(util.getCellStrength().equals("In Service")){
                                     Intent cellIntent = new Intent(context, CellRadioService.class);
                                     context.startService(cellIntent);
                                     Log.d("RadioControl", "Cell Radio has been turned off");
                                     writeLog("Cell radio has been turned off, SSID: " + Utilities.getCurrentSsid(context),context);
                                 }
-                                else if(!d.equals("WIFI")){
+                                else if(util.getCellStrength().equals("Out Of Service") || util.getCellStrength().equals("Off")){
                                     Log.d("RadioControl", "Cell Radio is already off");
                                 }
 

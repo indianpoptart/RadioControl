@@ -18,6 +18,9 @@ import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.v7.app.NotificationCompat;
+import android.telephony.CellInfoGsm;
+import android.telephony.CellSignalStrengthGsm;
+import android.telephony.ServiceState;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
@@ -87,11 +90,33 @@ public class Utilities {
         return ssid;
     }
     public static NetworkInfo.State getMobileState(Context c){
-        ConnectivityManager cm = (ConnectivityManager) c.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo.State mobile = cm.getNetworkInfo(0).getState();
-        NetworkInfo.State mob = cm.getActiveNetworkInfo().getState();
+        try{
+            ConnectivityManager cm = (ConnectivityManager) c.getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo.State mobile = cm.getNetworkInfo(0).getState();
+            NetworkInfo.State mob = cm.getActiveNetworkInfo().getState();
 
-        return mob;
+            return mob;
+        } catch (NullPointerException e){
+            return null;
+        }
+    }
+    public static String getCellStrength(){
+        ServiceState state = new ServiceState();
+        if(state.getState() == ServiceState.STATE_POWER_OFF){
+            return "Off";
+        }
+        else if(state.getState() == ServiceState.STATE_IN_SERVICE){
+            return "In Service";
+        }
+        else if(state.getState() == ServiceState.STATE_EMERGENCY_ONLY){
+            return "Emergency";
+        }
+        else if(state.getState() == ServiceState.STATE_OUT_OF_SERVICE){
+            return "Out Of Service";
+        }
+        else{
+            return "Unknown";
+        }
     }
     public static Network[] getMobState(Context c){
         ConnectivityManager cm = (ConnectivityManager) c.getSystemService(Context.CONNECTIVITY_SERVICE);

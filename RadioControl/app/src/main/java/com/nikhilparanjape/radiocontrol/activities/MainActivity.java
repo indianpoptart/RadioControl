@@ -26,6 +26,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.telephony.ServiceState;
 import android.telephony.TelephonyManager;
 import android.text.format.DateFormat;
 import android.util.Log;
@@ -254,10 +255,12 @@ public class MainActivity extends AppCompatActivity {
                 NetworkInfo.State b = Utilities.getMobileState(getApplicationContext());
                 Network[] c = Utilities.getMobState(getApplicationContext());
                 String d = Utilities.getNetworkType(getApplicationContext());
+                ServiceState state = new ServiceState();
                 Log.d("RadioControl","Test: " + test);
                 Log.d("RadioControl","Test2: " + b);
-                Log.d("RadioControl","Test3:" + Arrays.toString(c));
-                Log.d("RadioControl","Test4:" + d);
+                Log.d("RadioControl","Test3: " + Arrays.toString(c));
+                Log.d("RadioControl","Test4: " + d);
+                Log.d("RadioControl","Test5: " + util.getCellStrength());
                 if(linkspeed == -1){
                     linkText.setText(R.string.cellNetwork);
                 }
