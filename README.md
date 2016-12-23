@@ -19,12 +19,7 @@ Feel free to ask questions related to Android programming or this project in the
 
 Latest Stable Release: [v4.0](https://github.com/indianpoptart/RadioControl/releases/latest) (5/17/2016)
 
-Current Beta Release: [v4.1-beta6](https://github.com/indianpoptart/RadioControl/releases/tag/v4.1-beta6) (12/16/2016)
-
-Current Alpha Release: [v3.0.1-alpha6](https://github.com/indianpoptart/RadioControl/releases/tag/v3.0.1-alpha6) (4/4/2016) (OLD)
-
-Current Release Candidate [v4.0-rc5](https://github.com/indianpoptart/RadioControl/releases/tag/v4.0-rc5) (5/13/2016) (OLD)
-
+Latest Beta Release: [v4.1-beta6](https://github.com/indianpoptart/RadioControl/releases/tag/v4.1-beta6) (12/16/2016)
 
 # "How Do You Make Money?"
 Through optional donations and ads (The ads can be disabled for free in the settings :smile:). I don't collect data, nor do I want to, it usually uses a bunch of data and battery, saving battery is the most important aspect of this app, so there will be no collection/selling of your data, its YOUR data, no one elses.
