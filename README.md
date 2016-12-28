@@ -31,6 +31,7 @@ https://crowdin.com/project/radiocontrol/invite
 # Compatibility
 Tested on the following devices
 - Google Pixel
+- LG V10 ![LG](https://nikhilp.org/images/lg.png)
 - Moto X (2nd Gen.) ![Motorola](https://nikhilp.org/images/moto.png)
 - Nexus 6 ![Motorola](https://nikhilp.org/images/moto.png)
 - Nexus 6P ![Huawei](https://nikhilp.org/images/huawei.png)
@@ -38,7 +39,10 @@ Tested on the following devices
 - Nexus 5 ![LG](https://nikhilp.org/images/lg.png)
 - OnePlus 1
 - OnePlus 2
+- OnePlus 3
+- OnePlus 3T
 - Samsung Galaxy S7
+- Samsung Galaxy S7 Edge
 
 # Changelog
 [Check here for the new changelog](https://github.com/indianpoptart/RadioControl/blob/master/CHANGELOG.md)
