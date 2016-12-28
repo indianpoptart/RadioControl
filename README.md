@@ -21,10 +21,6 @@ Latest Stable Release: [v4.0](https://github.com/indianpoptart/RadioControl/rele
 
 Latest Beta Release: [v4.1-beta6](https://github.com/indianpoptart/RadioControl/releases/tag/v4.1-beta6) (12/16/2016)
 
-# "How Do You Make Money?"
-Through optional donations and ads (The ads can be disabled for free in the settings :smile:). I don't collect data, nor do I want to, it usually uses a bunch of data and battery, saving battery is the most important aspect of this app, so there will be no collection/selling of your data, its YOUR data, no one elses.
-
-
 # Help me translate to your native language
 https://crowdin.com/project/radiocontrol/invite
 
