@@ -45,7 +45,7 @@ Tested on the following devices
 
 # Upcoming Features
 - [Alternate cellular mode](https://github.com/indianpoptart/RadioControl/issues/35)
-- Android Wear support
+- Android Wear support (Maybe, it's only use would be to do a latency test, or to enable/disable cell radios)
 
 # Credits
 Thanks to [Mike Penz](https://github.com/mikepenz) for the Material Drawer design
