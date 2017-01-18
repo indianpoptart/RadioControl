@@ -12,6 +12,8 @@ This could work for Republic Wireless users, but your device must be rooted, and
 
 Feel free to ask questions related to Android programming or this project in the public Gitter chat room. The issues page should be primarily used for bug reports and enhancement ideas.
 
+This project sometimes follows [Semantic Versioning](http://semver.org/) but not all the time.
+
 [![Join the chat at https://gitter.im/indianpoptart/RadioControl](https://badges.gitter.im/indianpoptart/RadioControl.svg)](https://gitter.im/indianpoptart/RadioControl?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 
