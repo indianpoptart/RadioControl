@@ -1,4 +1,6 @@
 # RadioControl
+
+[![Join the chat at https://gitter.im/indianpoptart/RadioControl](https://badges.gitter.im/indianpoptart/RadioControl.svg)](https://gitter.im/indianpoptart/RadioControl?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 ![icon](https://nikhilp.org/images/ic_launcher.png)
 
 **Root Required!**
