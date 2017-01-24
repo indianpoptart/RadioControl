@@ -18,6 +18,7 @@ import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.v7.app.NotificationCompat;
+import android.telephony.CellInfo;
 import android.telephony.CellInfoGsm;
 import android.telephony.CellSignalStrengthGsm;
 import android.telephony.ServiceState;
@@ -34,6 +35,7 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.sql.Time;
 import java.util.Calendar;
+import java.util.List;
 
 import static android.app.AlarmManager.INTERVAL_DAY;
 import static android.app.AlarmManager.INTERVAL_FIFTEEN_MINUTES;
@@ -99,6 +101,16 @@ public class Utilities {
         } catch (NullPointerException e){
             return null;
         }
+    }
+    public int getCellStatus(Context c){
+        TelephonyManager tm = (TelephonyManager) c.getSystemService(Context.TELEPHONY_SERVICE);
+        List<CellInfo> cellInfoList = tm.getAllCellInfo();
+        int z = 0;
+        //This means cell is off
+        if(cellInfoList.isEmpty()){
+            z = 1;
+        }
+        return z;
     }
     public static String getCellStrength(){
         ServiceState state = new ServiceState();

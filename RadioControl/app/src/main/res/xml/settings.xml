@@ -12,26 +12,22 @@
                 android:targetPackage="com.nikhilparanjape.radiocontrol"
                 android:targetClass="com.nikhilparanjape.radiocontrol.activities.NetworkListActivity" />
         </Preference>
-
         <Preference
             android:key="clear-ssid"
             android:title="@string/resetNetSettings"
             android:defaultValue="@array/empty_array"
             android:summary="@string/resetSummary" />
+        <Preference
+            android:key="reset-airplane"
+            android:title="@string/resetAirplaneSettings"
+            android:defaultValue="@array/empty_array"
+            android:summary="@string/summaryAirplaneReset" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/title_root_mode">
         <CheckBoxPreference
             android:key="altRootCommand"
             android:title="@string/title_root_command_alt"
             android:summary="@string/summary_root_command_alt"
-            android:defaultValue="false" />
-
-    </PreferenceCategory>
-    <PreferenceCategory android:title="@string/title_experimental_settings">
-        <CheckBoxPreference
-            android:key="altBTCommand"
-            android:title="@string/title_bt_fix"
-            android:summary="@string/summary_bt_fix"
             android:defaultValue="false" />
 
     </PreferenceCategory>
@@ -100,6 +96,11 @@
             android:title="@string/enable_logging"
             android:summary="@string/log_summary"
             android:defaultValue="false" />
+        <Preference
+            android:key="logDir"
+            android:title="@string/LogTitle"
+            android:defaultValue="@array/empty_array"
+            android:summary="@string/LogDirSummary" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/ad_settings">
         <CheckBoxPreference

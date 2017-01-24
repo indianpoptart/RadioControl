@@ -26,6 +26,8 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.telephony.CellInfo;
+import android.telephony.CellInfoLte;
 import android.telephony.ServiceState;
 import android.telephony.TelephonyManager;
 import android.text.format.DateFormat;
@@ -44,6 +46,7 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
+import com.afollestad.materialdialogs.folderselector.FolderChooserDialog;
 import com.android.vending.billing.IInAppBillingService;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -79,6 +82,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
+import java.util.List;
 
 import it.gmariotti.changelibs.library.Util;
 import it.gmariotti.changelibs.library.view.ChangeLogRecyclerView;
@@ -89,7 +93,7 @@ import static android.app.AlarmManager.*;
  * Created by Nikhil Paranjape on 11/3/2015.
  */
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements FolderChooserDialog.FolderCallback{
     private static final String PRIVATE_PREF = "prefs";
     private static final String VERSION_KEY = "version_number";
 
@@ -249,6 +253,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //showWifiInfoDialog();
+                TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+                List<CellInfo> cellInfoList = tm.getAllCellInfo();
+                String z = cellInfoList.toString();
+
                 int linkspeed = Utilities.linkSpeed(getApplicationContext());
                 int GHz = Utilities.frequency(getApplicationContext());
                 NetworkInfo test = Utilities.getNetworkInfo(getApplicationContext());
@@ -261,6 +269,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("RadioControl","Test3: " + Arrays.toString(c));
                 Log.d("RadioControl","Test4: " + d);
                 Log.d("RadioControl","Test5: " + util.getCellStrength());
+                Log.d("RadioControl","Test6: " + z);
                 if(linkspeed == -1){
                     linkText.setText(R.string.cellNetwork);
                 }
@@ -958,6 +967,11 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("RadioControl", "There was an error saving the log: " + e);
             }
         }
+    }
+
+    @Override
+    public void onFolderSelection(@NonNull FolderChooserDialog dialog, @NonNull File folder) {
+
     }
 
     private class AsyncBackgroundTask extends AsyncTask<String, Void, PingWrapper> {

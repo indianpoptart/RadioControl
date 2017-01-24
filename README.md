@@ -19,7 +19,7 @@ Feel free to ask questions related to Android programming or this project in the
 
 Latest Stable Release: [v4.0](https://github.com/indianpoptart/RadioControl/releases/latest) (5/17/2016)
 
-Current Beta Release: [v4.1-beta6](https://github.com/indianpoptart/RadioControl/releases/tag/v4.1-beta6) (12/16/2016)
+Current Beta Release: [v4.1-beta7](https://github.com/indianpoptart/RadioControl/releases/tag/v4.1-beta7) (1/23/2017)
 
 Current Alpha Release: [v3.0.1-alpha6](https://github.com/indianpoptart/RadioControl/releases/tag/v3.0.1-alpha6) (4/4/2016) (OLD)
 
@@ -46,6 +46,10 @@ Tested on the following devices
 
 
 # What's New?
+v4.1 - Beta7 (1/23/2017)
+- Removed android wear module (Will rework when AW 2.0 is released)
+- Finally fixed cell radio detection, should work flawlessly
+- Working on log directory so it's more user accessible
 v4.1 - Beta 6 (12/16/2016)
 - Working on cell radio check
 - New splash screen, should work on any device and not stretch

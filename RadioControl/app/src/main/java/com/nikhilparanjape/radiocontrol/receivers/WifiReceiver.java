@@ -62,7 +62,7 @@ public class WifiReceiver extends BroadcastReceiver {
                 if(Utilities.isAirplaneMode(context) || !Utilities.isConnectedMobile(context)){
                     //Runs the alternate root command
                     if(prefs.getBoolean("altRootCommand", false)){
-                        if(util.getCellStrength().equals("Out Of Service") || util.getCellStrength().equals("Off")){
+                        if(util.getCellStatus(context) == 1){
                             Intent cellIntent = new Intent(context, CellRadioService.class);
                             context.startService(cellIntent);
                             Log.d("RadioControl", "Cell Radio has been turned on");
@@ -98,13 +98,14 @@ public class WifiReceiver extends BroadcastReceiver {
                         if(!networkAlert){
                             //Runs the alternate root command
                             if(prefs.getBoolean("altRootCommand", false)){
-                                if(util.getCellStrength().equals("In Service")){
+
+                                if(util.getCellStatus(context) == 0){
                                     Intent cellIntent = new Intent(context, CellRadioService.class);
                                     context.startService(cellIntent);
                                     Log.d("RadioControl", "Cell Radio has been turned off");
                                     writeLog("Cell radio has been turned off, SSID: " + Utilities.getCurrentSsid(context),context);
                                 }
-                                else if(util.getCellStrength().equals("Out Of Service") || util.getCellStrength().equals("Off")){
+                                else if(util.getCellStatus(context) == 1){
                                     Log.d("RadioControl", "Cell Radio is already off");
                                 }
 

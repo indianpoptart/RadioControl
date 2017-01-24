@@ -4,7 +4,6 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/RadioControl.iml" filepath="$PROJECT_DIR$/RadioControl.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app_wear/app_wear.iml" filepath="$PROJECT_DIR$/app_wear/app_wear.iml" />
       <module fileurl="file://$PROJECT_DIR$/com.android.vending.billing/com.android.vending.billing.iml" filepath="$PROJECT_DIR$/com.android.vending.billing/com.android.vending.billing.iml" />
     </modules>
   </component>

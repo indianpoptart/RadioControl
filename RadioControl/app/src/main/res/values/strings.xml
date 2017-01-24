@@ -105,8 +105,9 @@
     <string name="title_root_command_alt">Alternate root command(Experimental)</string>
     <string name="summary_root_command_alt">This disables just the cell radio. Use this if you are having problems with bluetooth disconnects.</string>
     <string name="title_root_mode">Root Mode</string>
-    <string name="title_experimental_settings">Experimental Settings</string>
-    <string name="summary_bt_fix">This is a useful option if you use a smartwatch if it keeps getting disconnected. (Cannot be used with alternate root command)</string>
-    <string name="title_bt_fix">Bluetooth Always On Fix</string>
+    <string name="summaryAirplaneReset">Use this if you are having issues with manual airplane mode operation</string>
+    <string name="resetAirplaneSettings">Reset Airplane Mode</string>
+    <string name="LogTitle">Log Directory</string>
+    <string name="LogDirSummary">Change where logs are saved</string>
 
 </resources>

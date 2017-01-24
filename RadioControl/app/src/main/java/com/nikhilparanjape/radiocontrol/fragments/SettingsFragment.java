@@ -18,6 +18,7 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.TwoStatePreference;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -27,6 +28,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.folderselector.FolderChooserDialog;
 import com.appeaser.sublimepickerlibrary.SublimePicker;
 import com.appeaser.sublimepickerlibrary.datepicker.SelectedDate;
 import com.appeaser.sublimepickerlibrary.helpers.SublimeListenerAdapter;
@@ -35,7 +37,10 @@ import com.appyvet.rangebar.RangeBar;
 import com.borax12.materialdaterangepicker.time.RadialPickerLayout;
 import com.borax12.materialdaterangepicker.time.TimePickerDialog;
 import com.nikhilparanjape.radiocontrol.R;
+import com.nikhilparanjape.radiocontrol.activities.MainActivity;
+import com.nikhilparanjape.radiocontrol.activities.SettingsActivity;
 import com.nikhilparanjape.radiocontrol.receivers.TimedAlarmReceiver;
+import com.nikhilparanjape.radiocontrol.rootUtils.RootAccess;
 import com.nikhilparanjape.radiocontrol.rootUtils.Utilities;
 import com.nikhilparanjape.radiocontrol.services.ScheduledAirplaneService;
 
@@ -51,15 +56,14 @@ import static android.app.AlarmManager.RTC_WAKEUP;
 /**
  * Created by Nikhil on 4/5/2016.
  */
-public class SettingsFragment extends PreferenceFragment implements TimePickerDialog.OnTimeSetListener{
+public class SettingsFragment extends PreferenceFragment implements TimePickerDialog.OnTimeSetListener, FolderChooserDialog.FolderCallback {
 
-    @Override
-
+    Context c;
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.settings);
 
-        final Context c = getActivity();
+        c = getActivity();
         final Utilities util = new Utilities();
 
         if(Utilities.isConnectedWifi(c)){
@@ -82,6 +86,24 @@ public class SettingsFragment extends PreferenceFragment implements TimePickerDi
         clearPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             public boolean onPreferenceClick(Preference preference) {
                 ssidClearButton();
+                return false;
+            }
+        });
+        Preference airplaneResetPref = findPreference("reset-airplane");
+        airplaneResetPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            public boolean onPreferenceClick(Preference preference) {
+                String[] airOffCmd2 = {"su", "settings put global airplane_mode_radios  \"cell,bluetooth,nfc,wimax\"", "content update --uri content://settings/global --bind value:s:'cell,bluetooth,nfc,wimax' --where \"name='airplane_mode_radios'\""};
+                RootAccess.runCommands(airOffCmd2);
+                Toast.makeText(getActivity(),
+                        "Airplane mode reset", Toast.LENGTH_LONG).show();
+                return false;
+            }
+        });
+
+        final Preference logDirPref = findPreference("logDir");
+        logDirPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            public boolean onPreferenceClick(Preference preference) {
+                logDirectoryButton();
                 return false;
             }
         });
@@ -223,6 +245,17 @@ public class SettingsFragment extends PreferenceFragment implements TimePickerDi
         Toast.makeText(getActivity(),
                 R.string.reset_ssid, Toast.LENGTH_LONG).show();
     }
+    public void logDirectoryButton(){
+        Toast.makeText(getActivity(),
+                "Coming Soon!", Toast.LENGTH_LONG).show();
+    }
 
 
+    @Override
+    public void onFolderSelection(@NonNull FolderChooserDialog dialog, @NonNull File folder) {
+        // TODO
+        final String tag = dialog.getTag(); // gets tag set from Builder, if you use multiple dialogs
+        Toast.makeText(getActivity(),
+                tag, Toast.LENGTH_LONG).show();
+    }
 }
