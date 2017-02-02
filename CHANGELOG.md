@@ -1,4 +1,9 @@
 # Changelog
+v4.1 - Beta 7 (1/23/2017)
+- Removed android wear module (Will rework when AW 2.0 is released)
+- Finally fixed cell radio detection, should work flawlessly
+- Working on log directory so it's more user accessible
+
 v4.1 - Beta 6 (12/16/2016)
 - Working on cell radio check
 - New splash screen, should work on any device and not stretch
