@@ -36,11 +36,8 @@ import com.db.chart.view.animation.easing.QuadEase;
 import com.db.chart.view.animation.easing.QuartEase;
 import com.db.chart.view.animation.easing.QuintEase;
 import com.db.chart.view.animation.easing.SineEase;
-import com.db.chart.view.animation.style.BaseStyleAnimation;
-import com.db.chart.view.animation.style.DashAnimation;
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.firebase.crash.FirebaseCrash;
 import com.gordonwong.materialsheetfab.MaterialSheetFab;
 import com.gordonwong.materialsheetfab.MaterialSheetFabEventListener;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
@@ -454,7 +451,8 @@ public class StatsActivity extends AppCompatActivity {
                         .show();
             }
         } catch (IOException e) {
-            Log.d("RadioControl", "Error: " + e);
+            FirebaseCrash.logcat(Log.ERROR, "RadioControl", "Unable to get version name");
+            FirebaseCrash.report(e);
             Snackbar.make(findViewById(android.R.id.content), "Error: " + e, Snackbar.LENGTH_LONG)
                     .show();
         }

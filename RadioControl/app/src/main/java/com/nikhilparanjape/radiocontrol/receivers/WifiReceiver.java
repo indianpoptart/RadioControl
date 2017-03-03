@@ -11,6 +11,7 @@ import android.telephony.ServiceState;
 import android.text.format.DateFormat;
 import android.util.Log;
 
+import com.google.firebase.crash.FirebaseCrash;
 import com.nikhilparanjape.radiocontrol.R;
 import com.nikhilparanjape.radiocontrol.rootUtils.RootAccess;
 import com.nikhilparanjape.radiocontrol.rootUtils.Utilities;
@@ -167,7 +168,8 @@ public class WifiReceiver extends BroadcastReceiver {
                 fos.write(string.getBytes());
                 fos.close();
             } catch(IOException e){
-                Log.d("RadioControl", "There was an error saving the log: " + e);
+                FirebaseCrash.logcat(Log.ERROR, "RadioControl", "Error with log");
+                FirebaseCrash.report(e);
             }
         }
     }

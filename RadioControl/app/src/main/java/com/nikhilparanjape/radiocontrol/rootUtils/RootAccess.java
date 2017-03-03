@@ -2,6 +2,8 @@ package com.nikhilparanjape.radiocontrol.rootUtils;
 
 import android.util.Log;
 
+import com.google.firebase.crash.FirebaseCrash;
+
 import java.io.DataOutputStream;
 import java.io.IOException;
 
@@ -22,6 +24,8 @@ public class RootAccess{
         }
         catch (IOException e){
             e.printStackTrace();
+            FirebaseCrash.logcat(Log.ERROR, "RadioControl", "Root Error");
+            FirebaseCrash.report(e);
         }
     }
 }

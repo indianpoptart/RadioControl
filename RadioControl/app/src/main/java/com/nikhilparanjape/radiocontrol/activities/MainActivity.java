@@ -11,6 +11,7 @@ import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.net.Network;
 import android.net.NetworkInfo;
@@ -48,8 +49,11 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
 import com.afollestad.materialdialogs.folderselector.FolderChooserDialog;
 import com.android.vending.billing.IInAppBillingService;
+import com.getkeepsafe.taptargetview.TapTarget;
+import com.getkeepsafe.taptargetview.TapTargetView;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.firebase.crash.FirebaseCrash;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.materialdrawer.AccountHeader;
@@ -93,7 +97,7 @@ import static android.app.AlarmManager.*;
  * Created by Nikhil Paranjape on 11/3/2015.
  */
 
-public class MainActivity extends AppCompatActivity implements FolderChooserDialog.FolderCallback{
+public class MainActivity extends AppCompatActivity {
     private static final String PRIVATE_PREF = "prefs";
     private static final String VERSION_KEY = "version_number";
 
@@ -163,6 +167,8 @@ public class MainActivity extends AppCompatActivity implements FolderChooserDial
 
                     //  Apply changes
                     e.apply();
+
+
                 }
                 String intervalTime = getPrefs.getString("interval_prefs","10");
                 boolean airplaneService = getPrefs.getBoolean("isAirplaneService", false);
@@ -234,6 +240,33 @@ public class MainActivity extends AppCompatActivity implements FolderChooserDial
                     }
                 });
             }
+        }
+
+        if(pref.getBoolean("firstStart",false)){
+            TapTargetView.showFor(this,                 // `this` is an Activity
+                    TapTarget.forView(findViewById(R.id.enableSwitch), "This is a target", "We have the best targets, believe me")
+                            // All options below are optional
+                            .outerCircleColor(R.color.colorPrimary)      // Specify a color for the outer circle
+                            .targetCircleColor(R.color.white)   // Specify a color for the target circle
+                            .titleTextSize(25)                  // Specify the size (in sp) of the title text
+                            .titleTextColor(R.color.white)      // Specify the color of the title text
+                            .descriptionTextSize(17)            // Specify the size (in sp) of the description text
+                            .descriptionTextColor(R.color.md_red_900)  // Specify the color of the description text
+                            .textColor(R.color.blue)            // Specify a color for both the title and description text
+                            .textTypeface(Typeface.SANS_SERIF)  // Specify a typeface for the text
+                            .dimColor(R.color.md_black_1000)            // If set, will dim behind the view with 30% opacity of the given color
+                            .drawShadow(true)                   // Whether to draw a drop shadow or not
+                            .cancelable(false)                  // Whether tapping outside the outer circle dismisses the view
+                            .tintTarget(true)                   // Whether to tint the target view's color
+                            .transparentTarget(false)           // Specify whether the target is transparent (displays the content underneath)
+                            .targetRadius(60),                  // Specify the target radius (in dp)
+                    new TapTargetView.Listener() {          // The listener can listen for regular clicks, long clicks or cancels
+                        @Override
+                        public void onTargetClick(TapTargetView view) {
+                            super.onTargetClick(view);      // This call is optional
+                            //doSomething();
+                        }
+                    });
         }
 
         //LinkSpeed Button
@@ -402,7 +435,8 @@ public class MainActivity extends AppCompatActivity implements FolderChooserDial
             PackageInfo pi = getPackageManager().getPackageInfo(getPackageName(), 0);
             currentVersionNumber = pi.versionCode;
         } catch (Exception e) {
-            Log.d("RadioControl","Unable to get version name");
+            FirebaseCrash.logcat(Log.ERROR, "RadioControl", "Unable to get version name");
+            FirebaseCrash.report(e);
         }
 
         if (currentVersionNumber > savedVersionNumber) {
@@ -964,14 +998,10 @@ public class MainActivity extends AppCompatActivity implements FolderChooserDial
                 fos.write(string.getBytes());
                 fos.close();
             } catch(IOException e){
-                Log.d("RadioControl", "There was an error saving the log: " + e);
+                FirebaseCrash.logcat(Log.ERROR, "RadioControl", "There was an error saving the log");
+                FirebaseCrash.report(e);
             }
         }
-    }
-
-    @Override
-    public void onFolderSelection(@NonNull FolderChooserDialog dialog, @NonNull File folder) {
-
     }
 
     private class AsyncBackgroundTask extends AsyncTask<String, Void, PingWrapper> {
@@ -1069,6 +1099,8 @@ public class MainActivity extends AppCompatActivity implements FolderChooserDial
                 }
 
             } catch(Exception e){
+                FirebaseCrash.logcat(Log.ERROR, "RadioControl", "Status Check Error");
+                FirebaseCrash.report(e);
                 Snackbar.make(findViewById(android.R.id.content), "An error has occurred", Snackbar.LENGTH_LONG).show();
             }
 

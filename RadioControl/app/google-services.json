@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "1087279988045",
+    "firebase_url": "https://radiocontrol-7322a.firebaseio.com",
+    "project_id": "radiocontrol-7322a",
+    "storage_bucket": "radiocontrol-7322a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1087279988045:android:c14b9ba2cd0856af",
+        "android_client_info": {
+          "package_name": "com.nikhilparanjape.radiocontrol"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1087279988045-3a3t148hld9o9g7qomalg24t00756crm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.nikhilparanjape.radiocontrol",
+            "certificate_hash": "76bf27dafc716e1d1acfb264424c0d8095eb07a6"
+          }
+        },
+        {
+          "client_id": "1087279988045-l2q8lc6ec6aib9fb0h93oeq9a10vatei.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAdR15TVFC0WSdJbqxQjbSwNVK-Rh4O--A"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1087279988045-l2q8lc6ec6aib9fb0h93oeq9a10vatei.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

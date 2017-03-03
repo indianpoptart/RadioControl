@@ -46,7 +46,7 @@ public class NetworkListActivity extends AppCompatActivity {
     }
 
     private void listWifiNetworks(ListView lv) {
-        WifiManager wm = (WifiManager) this.getSystemService(Context.WIFI_SERVICE);
+        WifiManager wm = (WifiManager) this.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         final List<WifiConfiguration> networks = wm.getConfiguredNetworks();
         final SharedPreferences prefs = getSharedPreferences("disabled-networks", Context.MODE_PRIVATE);
 

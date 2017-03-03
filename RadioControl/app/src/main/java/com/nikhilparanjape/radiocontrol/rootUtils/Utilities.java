@@ -65,8 +65,7 @@ public class Utilities {
             Log.d("RadioControl", "Ping test returned " + exitValue);
             return (exitValue == 0);
         }
-        catch (IOException e){ e.printStackTrace(); }
-        catch (InterruptedException e) { e.printStackTrace(); }
+        catch (IOException | InterruptedException e){ e.printStackTrace(); }
 
         return false;
     }
