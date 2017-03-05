@@ -4,9 +4,11 @@ import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.media.AudioManager;
 import android.net.ConnectivityManager;
 import android.net.Network;
@@ -24,12 +26,15 @@ import android.telephony.CellSignalStrengthGsm;
 import android.telephony.ServiceState;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+import android.view.View;
+import android.widget.Toast;
 
 import com.nikhilparanjape.radiocontrol.R;
 import com.nikhilparanjape.radiocontrol.receivers.NightModeReceiver;
 import com.nikhilparanjape.radiocontrol.receivers.RootServiceReceiver;
 import com.nikhilparanjape.radiocontrol.receivers.TimedAlarmReceiver;
 import com.nikhilparanjape.radiocontrol.receivers.WakeupReceiver;
+import com.nikhilparanjape.radiocontrol.receivers.WifiReceiver;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -101,7 +106,8 @@ public class Utilities {
             return null;
         }
     }
-    public int getCellStatus(Context c){
+
+    public static int getCellStatus(Context c){
         TelephonyManager tm = (TelephonyManager) c.getSystemService(Context.TELEPHONY_SERVICE);
         List<CellInfo> cellInfoList = tm.getAllCellInfo();
         int z = 0;
@@ -110,6 +116,10 @@ public class Utilities {
             z = 1;
         }
         return z;
+    }
+    public boolean hasCellStatus(Context context){
+        TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+        return tm.getAllCellInfo() != null && tm.getAllCellInfo().size() > 0;
     }
     public static String getCellStrength(){
         ServiceState state = new ServiceState();

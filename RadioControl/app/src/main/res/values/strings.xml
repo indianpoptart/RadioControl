@@ -109,5 +109,8 @@
     <string name="resetAirplaneSettings">Reset Airplane Mode</string>
     <string name="LogTitle">Log Directory</string>
     <string name="LogDirSummary">Change where logs are saved</string>
+    <string name="prefs_summary_phone_call">Checks for an active phone call and will enable the cell radio</string>
+    <string name="prefs_phone_check">Enable Phone Call Check(Experimental)</string>
+    <string name="prefs_title_phone_settings">Phone Settings</string>
 
 </resources>

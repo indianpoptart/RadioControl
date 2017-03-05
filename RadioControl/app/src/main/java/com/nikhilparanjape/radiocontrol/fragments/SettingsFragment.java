@@ -156,6 +156,22 @@ public class SettingsFragment extends PreferenceFragment implements TimePickerDi
             }
 
         });
+        final CheckBoxPreference callingCheck = (CheckBoxPreference) getPreferenceManager().findPreference("isPhoneStateCheck");
+        callingCheck.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                int permissionCheck = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_PHONE_STATE);
+
+                if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_PHONE_STATE}, 200);
+
+                } else {
+
+                }
+
+                return true;
+            }
+
+        });
 
         final CheckBoxPreference serviceCheckbox = (CheckBoxPreference) getPreferenceManager().findPreference("isAirplaneService");
         serviceCheckbox.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {

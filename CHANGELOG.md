@@ -1,4 +1,14 @@
 # Changelog
+v4.1 - Beta 8 (3/4/2017)
+- Added Firebase Crash Reporting
+- Fixed possible memory leak in Network Settings
+- Optimized images by converting PNG to WEBP
+- Updated Gradle
+- Updated ScheduledAirplane service to match WifiReceiver
+- Removed unnecessary tests under link speed test
+- ReadPhoneState permission added to check if user is in call, and will turn off airplane mode/turn on cell radio
+- Added solution to #42 under settings
+
 v4.1 - Beta 7 (1/23/2017)
 - Removed android wear module (Will rework when AW 2.0 is released)
 - Finally fixed cell radio detection, should work flawlessly

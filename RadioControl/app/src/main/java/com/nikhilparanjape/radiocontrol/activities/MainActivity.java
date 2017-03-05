@@ -242,32 +242,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        if(pref.getBoolean("firstStart",false)){
-            TapTargetView.showFor(this,                 // `this` is an Activity
-                    TapTarget.forView(findViewById(R.id.enableSwitch), "This is a target", "We have the best targets, believe me")
-                            // All options below are optional
-                            .outerCircleColor(R.color.colorPrimary)      // Specify a color for the outer circle
-                            .targetCircleColor(R.color.white)   // Specify a color for the target circle
-                            .titleTextSize(25)                  // Specify the size (in sp) of the title text
-                            .titleTextColor(R.color.white)      // Specify the color of the title text
-                            .descriptionTextSize(17)            // Specify the size (in sp) of the description text
-                            .descriptionTextColor(R.color.md_red_900)  // Specify the color of the description text
-                            .textColor(R.color.blue)            // Specify a color for both the title and description text
-                            .textTypeface(Typeface.SANS_SERIF)  // Specify a typeface for the text
-                            .dimColor(R.color.md_black_1000)            // If set, will dim behind the view with 30% opacity of the given color
-                            .drawShadow(true)                   // Whether to draw a drop shadow or not
-                            .cancelable(false)                  // Whether tapping outside the outer circle dismisses the view
-                            .tintTarget(true)                   // Whether to tint the target view's color
-                            .transparentTarget(false)           // Specify whether the target is transparent (displays the content underneath)
-                            .targetRadius(60),                  // Specify the target radius (in dp)
-                    new TapTargetView.Listener() {          // The listener can listen for regular clicks, long clicks or cancels
-                        @Override
-                        public void onTargetClick(TapTargetView view) {
-                            super.onTargetClick(view);      // This call is optional
-                            //doSomething();
-                        }
-                    });
-        }
 
         //LinkSpeed Button
         Button linkSpeedButton = (Button) findViewById(R.id.linkSpeedButton);
@@ -286,23 +260,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //showWifiInfoDialog();
-                TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-                List<CellInfo> cellInfoList = tm.getAllCellInfo();
-                String z = cellInfoList.toString();
 
                 int linkspeed = Utilities.linkSpeed(getApplicationContext());
                 int GHz = Utilities.frequency(getApplicationContext());
-                NetworkInfo test = Utilities.getNetworkInfo(getApplicationContext());
-                NetworkInfo.State b = Utilities.getMobileState(getApplicationContext());
-                Network[] c = Utilities.getMobState(getApplicationContext());
-                String d = Utilities.getNetworkType(getApplicationContext());
-                ServiceState state = new ServiceState();
-                Log.d("RadioControl","Test: " + test);
-                Log.d("RadioControl","Test2: " + b);
-                Log.d("RadioControl","Test3: " + Arrays.toString(c));
-                Log.d("RadioControl","Test4: " + d);
-                Log.d("RadioControl","Test5: " + util.getCellStrength());
-                Log.d("RadioControl","Test6: " + z);
                 if(linkspeed == -1){
                     linkText.setText(R.string.cellNetwork);
                 }

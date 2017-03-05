@@ -23,6 +23,13 @@
             android:defaultValue="@array/empty_array"
             android:summary="@string/summaryAirplaneReset" />
     </PreferenceCategory>
+    <PreferenceCategory android:title="@string/prefs_title_phone_settings">
+        <CheckBoxPreference
+            android:key="isPhoneStateCheck"
+            android:title="@string/prefs_phone_check"
+            android:summary="@string/prefs_summary_phone_call"
+            android:defaultValue="false" />
+    </PreferenceCategory>
     <PreferenceCategory android:title="@string/title_root_mode">
         <CheckBoxPreference
             android:key="altRootCommand"
