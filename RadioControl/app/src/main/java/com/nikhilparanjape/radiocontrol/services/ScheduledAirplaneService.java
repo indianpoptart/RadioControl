@@ -285,6 +285,12 @@ public class ScheduledAirplaneService extends IntentService
     public void onDestroy()
     {
         super.onDestroy();
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        boolean airplaneService = preferences.getBoolean("isAirplaneService", false);
+        if(airplaneService){
+            util.scheduleAlarm(getApplicationContext());
+        }
+
         Log.d("RadioControl", "Service destroyed");
     }
 

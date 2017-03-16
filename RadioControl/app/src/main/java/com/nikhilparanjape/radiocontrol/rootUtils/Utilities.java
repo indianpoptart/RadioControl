@@ -203,6 +203,7 @@ public class Utilities {
         Calendar cal = Calendar.getInstance();
         // start 30 seconds after boot completed
         cal.add(Calendar.MINUTE, intervalTime);
+        Log.d("RadioControl","Interval: " + intervalTime);
 
         // Construct an intent that will execute the AlarmReceiver
         Intent intent = new Intent(c, TimedAlarmReceiver.class);
@@ -234,7 +235,7 @@ public class Utilities {
         // First parameter is the type: ELAPSED_REALTIME, ELAPSED_REALTIME_WAKEUP, RTC_WAKEUP
         // Interval can be INTERVAL_FIFTEEN_MINUTES, INTERVAL_HALF_HOUR, INTERVAL_HOUR, INTERVAL_DAY
 
-        alarm.setRepeating(RTC_WAKEUP, firstMillis,
+        alarm.setInexactRepeating(RTC_WAKEUP, firstMillis,
                 cal.getTimeInMillis(), pIntent);
         Log.d("RadioControl","RootClock enabled for " + cal.getTime());
 
