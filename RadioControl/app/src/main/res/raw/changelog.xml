@@ -4,6 +4,7 @@
     <changelogversion versionName="4.1" changeDate="TBD">
         <changelogtext>[b]New![/b] Automatic airplane mode checker</changelogtext>
         <changelogtext>[b]New![/b] Do not Disturb mode</changelogtext>
+        <changelogtext>[b]New![/b] Firebase Analytics (Opt-in)</changelogtext>
         <changelogtext>[b]New![/b] Firebase Crash Reporting</changelogtext>
         <changelogtext>[b]New![/b] Night mode</changelogtext>
         <changelogtext>[b]New![/b] Added coarse location permission only for cell radio fix</changelogtext>

@@ -29,7 +29,7 @@ import java.util.TimerTask;
 /**
  * Created by admin on 8/20/2016.
  */
-public class ScheduledAirplaneService extends IntentService
+public class BackgroundAirplaneService extends IntentService
 {
 
     private Timer timer = new Timer();
@@ -45,8 +45,8 @@ public class ScheduledAirplaneService extends IntentService
 
     Utilities util = new Utilities(); //Network and other related utilities
 
-    public ScheduledAirplaneService() {
-        super("ScheduledAirplaneService");
+    public BackgroundAirplaneService() {
+        super("BackgroundAirplaneService");
     }
 
     @Override
@@ -140,7 +140,7 @@ public class ScheduledAirplaneService extends IntentService
                         }
                         //The user does want network alert notifications
                         else {
-                            new AsyncPingTask(context).execute("");
+                            pingTask(context);
                         }
 
                     }
@@ -162,7 +162,7 @@ public class ScheduledAirplaneService extends IntentService
         if(sp.getInt("isActive",0) == 0){
             Log.d("RadioControl","RadioControl has been disabled");
             if(networkAlert){
-                new AsyncPingTask(context).execute("");
+                pingTask(context);
             }
             //Adds wifi signal lost log for nonrooters
             if(!Utilities.isConnectedWifi(context)) {
@@ -192,44 +192,17 @@ public class ScheduledAirplaneService extends IntentService
             }
         }
     }
-
-    private class AsyncPingTask extends AsyncTask<String, Void, Boolean> {
-        Context context;
-
-        public AsyncPingTask(Context context) {
-            this.context = context;
-        }
-
-        @Override
-        protected void onPreExecute(){
-            try {
-                //Wait for network to be connected fully
-                while(!Utilities.isConnected(context)){
-                    Thread.sleep(1000);
-                }
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+    public void pingTask(Context context){
+        Runtime runtime = Runtime.getRuntime();
+        try {
+            //Wait for network to be connected fully
+            while(!Utilities.isConnected(context)){
+                Thread.sleep(1000);
             }
-        }
-        protected Boolean doInBackground(String... params) {
+            Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");//Send 1 packet to google and check if it came back
+            int exitValue = ipProcess.waitFor();
+            Log.d("RadioControl", "Ping test returned " + exitValue);
 
-            Runtime runtime = Runtime.getRuntime();
-            try {
-                Thread.sleep(5000);
-                Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");//Send 1 packet to google and check if it came back
-                int exitValue = ipProcess.waitFor();
-                Log.d("RadioControl", "Ping test returned " + exitValue);
-                return (exitValue == 0);
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
-            return false;
-        }
-        @Override
-        protected void onPostExecute(Boolean result) {
             SharedPreferences sp = context.getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE);
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
@@ -240,14 +213,14 @@ public class ScheduledAirplaneService extends IntentService
 
             if(sp.getInt("isActive",0) == 0){
                 //If the connection can't reach Google
-                if(!result){
+                if(exitValue != 0){
                     Utilities.sendNote(context, context.getString(R.string.not_connected_alert),alertVibrate,alertSounds,alertPriority);
                     writeLog("Not connected to the internet",context);
                 }
             }
             else if(sp.getInt("isActive",0) == 1){
                 //If the connection can't reach Google
-                if(!result){
+                if(exitValue != 0){
                     Utilities.sendNote(context, context.getString(R.string.not_connected_alert),alertVibrate,alertSounds,alertPriority);
                     writeLog("Not connected to the internet",context);
                 }
@@ -268,9 +241,13 @@ public class ScheduledAirplaneService extends IntentService
                 }
             }
 
-
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
+
     public void waitFor(long timer){
         try {
             Thread.sleep(timer);

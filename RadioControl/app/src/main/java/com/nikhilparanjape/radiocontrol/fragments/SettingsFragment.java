@@ -1,57 +1,36 @@
 package com.nikhilparanjape.radiocontrol.fragments;
 
 import android.Manifest;
-import android.app.AlarmManager;
 import android.app.AlertDialog;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
-import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
-import android.preference.TwoStatePreference;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.TextView;
+import android.webkit.WebView;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.folderselector.FolderChooserDialog;
-import com.appeaser.sublimepickerlibrary.SublimePicker;
-import com.appeaser.sublimepickerlibrary.datepicker.SelectedDate;
-import com.appeaser.sublimepickerlibrary.helpers.SublimeListenerAdapter;
-import com.appeaser.sublimepickerlibrary.recurrencepicker.SublimeRecurrencePicker;
-import com.appyvet.rangebar.RangeBar;
 import com.borax12.materialdaterangepicker.time.RadialPickerLayout;
 import com.borax12.materialdaterangepicker.time.TimePickerDialog;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.nikhilparanjape.radiocontrol.R;
-import com.nikhilparanjape.radiocontrol.activities.MainActivity;
-import com.nikhilparanjape.radiocontrol.activities.SettingsActivity;
-import com.nikhilparanjape.radiocontrol.receivers.TimedAlarmReceiver;
 import com.nikhilparanjape.radiocontrol.rootUtils.RootAccess;
 import com.nikhilparanjape.radiocontrol.rootUtils.Utilities;
-import com.nikhilparanjape.radiocontrol.services.ScheduledAirplaneService;
 
 import java.io.File;
 import java.util.Calendar;
-
-import static android.app.AlarmManager.INTERVAL_DAY;
-import static android.app.AlarmManager.INTERVAL_FIFTEEN_MINUTES;
-import static android.app.AlarmManager.INTERVAL_HALF_HOUR;
-import static android.app.AlarmManager.INTERVAL_HOUR;
-import static android.app.AlarmManager.RTC_WAKEUP;
 
 /**
  * Created by Nikhil on 4/5/2016.
@@ -156,6 +135,13 @@ public class SettingsFragment extends PreferenceFragment implements TimePickerDi
             }
 
         });
+        Preference eulaShow = findPreference("eulaShow");
+        eulaShow.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            public boolean onPreferenceClick(Preference preference) {
+                displayEulaAlertDialog(c);
+                return false;
+            }
+        });
         final CheckBoxPreference callingCheck = (CheckBoxPreference) getPreferenceManager().findPreference("isPhoneStateCheck");
         callingCheck.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -230,6 +216,32 @@ public class SettingsFragment extends PreferenceFragment implements TimePickerDi
         });
 
 
+
+    }
+
+    private void displayEulaAlertDialog(final Context c) {
+        if(Utilities.isConnected(c)){
+            LayoutInflater inflater = LayoutInflater.from(c);//Creates layout inflator for dialog
+            WebView view = (WebView) inflater.inflate(R.layout.dialog_licenses, null);//Initializes the view for whats new dialog
+            AlertDialog.Builder builder = new AlertDialog.Builder(c);//creates alertdialog
+            view.loadUrl("https://docs.google.com/document/d/1Oz7i5FJrucpCV6Gfzmhmp3_uDqBlerCFMk3DP8Mck5Y/edit");
+            builder.setView(view).setTitle("End User License Agreement");
+            builder.setCancelable(false)
+                    .setPositiveButton("Accept", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            FirebaseAnalytics.getInstance(c).setAnalyticsCollectionEnabled(true);
+                        }
+                    })
+                    .setNegativeButton("Decline", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            FirebaseAnalytics.getInstance(c).setAnalyticsCollectionEnabled(false);
+                        }
+                    });
+            builder.create().show();
+        } else{
+            Snackbar.make(getView(), "No internet connection found", Snackbar.LENGTH_LONG)
+                    .show();
+        }
 
     }
     @Override

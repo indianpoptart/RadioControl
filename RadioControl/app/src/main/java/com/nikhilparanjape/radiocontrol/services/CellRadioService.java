@@ -49,7 +49,7 @@ public class CellRadioService extends Service {
                     stopService(i);
                     Log.d("RadioControl","CellService killed");
                 }
-            }, 15000);
+            }, 0);
         }
         return super.onStartCommand(intent, flags, startId);
     }

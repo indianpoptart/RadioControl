@@ -4,10 +4,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
-import android.telephony.ServiceState;
 import android.text.format.DateFormat;
 import android.util.Log;
 
@@ -15,6 +13,7 @@ import com.google.firebase.crash.FirebaseCrash;
 import com.nikhilparanjape.radiocontrol.R;
 import com.nikhilparanjape.radiocontrol.rootUtils.RootAccess;
 import com.nikhilparanjape.radiocontrol.rootUtils.Utilities;
+import com.nikhilparanjape.radiocontrol.services.BackgroundAirplaneService;
 import com.nikhilparanjape.radiocontrol.services.CellRadioService;
 
 import java.io.File;
@@ -52,38 +51,44 @@ public class WifiReceiver extends BroadcastReceiver {
         Set<String> h = new HashSet<>(Arrays.asList("")); //Set default set for SSID check
         Set<String> selections = prefs.getStringSet("ssid", h); //Gets stringset, if empty sets default
         boolean networkAlert= prefs.getBoolean("isNetworkAlive",false);
+        boolean batteryOptimize = sp.getBoolean("isBatteryOn", false);
 
 
         //Check if user wants the app on
         if(sp.getInt("isActive",0) == 1){
-            //Check if we just lost WiFi signal
-            if(!Utilities.isConnectedWifi(context)){
-                Log.d("RadioControl","WiFi signal LOST");
-                writeLog("WiFi Signal lost",context);
-                if(Utilities.isAirplaneMode(context) || !Utilities.isConnectedMobile(context)){
-                    //Runs the alternate root command
-                    if(prefs.getBoolean("altRootCommand", false)){
-                        if(util.getCellStatus(context) == 1){
-                            Intent cellIntent = new Intent(context, CellRadioService.class);
-                            context.startService(cellIntent);
-                            Log.d("RadioControl", "Cell Radio has been turned on");
-                            writeLog("Cell radio has been turned off, SSID: " + Utilities.getCurrentSsid(context),context);
-                        }
-                    }
-                    else{
-                        if(prefs.getBoolean("altBTCommand", false)){
-                            RootAccess.runCommands(airOffCmd3);
-                            Log.d("RadioControl","Airplane mode has been turned off(with bt cmd)");
-                            writeLog("Airplane mode has been turned off",context);
-                        }
-                        else{
-                            RootAccess.runCommands(airOffCmd2);
-                            Log.d("RadioControl","Airplane mode has been turned off");
-                            writeLog("Airplane mode has been turned off",context);
+            if (batteryOptimize) {
+                Intent i = new Intent(context, BackgroundAirplaneService.class);
+                context.startService(i);
+            }
+            else if (!batteryOptimize) {
+
+                //Check if we just lost WiFi signal
+                if (!Utilities.isConnectedWifi(context)) {
+                    Log.d("RadioControl", "WiFi signal LOST");
+                    writeLog("WiFi Signal lost", context);
+                    if (Utilities.isAirplaneMode(context) || !Utilities.isConnectedMobile(context)) {
+                        //Runs the alternate root command
+                        if (prefs.getBoolean("altRootCommand", false)) {
+                            if (util.getCellStatus(context) == 1) {
+                                Intent cellIntent = new Intent(context, CellRadioService.class);
+                                context.startService(cellIntent);
+                                Log.d("RadioControl", "Cell Radio has been turned on");
+                                writeLog("Cell radio has been turned off, SSID: " + Utilities.getCurrentSsid(context), context);
+                            }
+                        } else {
+                            if (prefs.getBoolean("altBTCommand", false)) {
+                                RootAccess.runCommands(airOffCmd3);
+                                Log.d("RadioControl", "Airplane mode has been turned off(with bt cmd)");
+                                writeLog("Airplane mode has been turned off", context);
+                            } else {
+                                RootAccess.runCommands(airOffCmd2);
+                                Log.d("RadioControl", "Airplane mode has been turned off");
+                                writeLog("Airplane mode has been turned off", context);
+                            }
+
                         }
 
                     }
-
                 }
             }
 

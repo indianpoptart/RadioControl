@@ -112,5 +112,11 @@
     <string name="prefs_summary_phone_call">Checks for an active phone call and will enable the cell radio</string>
     <string name="prefs_phone_check">Enable Phone Call Check(Experimental)</string>
     <string name="prefs_title_phone_settings">Phone Settings</string>
+    <string name="prefs_title_batOptim">Experimental Battery Optimizations</string>
+    <string name="title_battery_optimization">Background Optimization</string>
+    <string name="summary_battery_optimization">This will run the current service on the background, as opposed to the UI thread.</string>
+    <string name="title_analytics_service">Analytics Services</string>
+    <string name="title_firebase_analytics">Enable Firebase Analytics</string>
+    <string name="summary_firebase_analytics">This allows me to see analytics on this app (Active users, daily engagement, App version used, etc.)</string>
 
 </resources>

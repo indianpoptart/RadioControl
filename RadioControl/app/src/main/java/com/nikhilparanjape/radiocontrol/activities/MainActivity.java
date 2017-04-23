@@ -11,10 +11,7 @@ import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
-import android.net.Network;
-import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -27,9 +24,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.telephony.CellInfo;
-import android.telephony.CellInfoLte;
-import android.telephony.ServiceState;
 import android.telephony.TelephonyManager;
 import android.text.format.DateFormat;
 import android.util.Log;
@@ -47,12 +41,10 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
-import com.afollestad.materialdialogs.folderselector.FolderChooserDialog;
 import com.android.vending.billing.IInAppBillingService;
-import com.getkeepsafe.taptargetview.TapTarget;
-import com.getkeepsafe.taptargetview.TapTargetView;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.crash.FirebaseCrash;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
@@ -69,12 +61,10 @@ import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 import com.nikhilparanjape.radiocontrol.BuildConfig;
 import com.nikhilparanjape.radiocontrol.R;
 import com.nikhilparanjape.radiocontrol.receivers.NightModeReceiver;
-import com.nikhilparanjape.radiocontrol.receivers.TimedAlarmReceiver;
 import com.nikhilparanjape.radiocontrol.rootUtils.PingWrapper;
-import com.nikhilparanjape.radiocontrol.rootUtils.RootAccess;
 import com.nikhilparanjape.radiocontrol.rootUtils.Utilities;
+import com.nikhilparanjape.radiocontrol.services.BackgroundAirplaneService;
 import com.nikhilparanjape.radiocontrol.services.CellRadioService;
-import com.nikhilparanjape.radiocontrol.services.ScheduledAirplaneService;
 import com.nikhilparanjape.radiocontrol.util.IabHelper;
 import com.nikhilparanjape.radiocontrol.util.IabResult;
 import com.nikhilparanjape.radiocontrol.util.Inventory;
@@ -85,13 +75,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
-import java.util.List;
 
-import it.gmariotti.changelibs.library.Util;
 import it.gmariotti.changelibs.library.view.ChangeLogRecyclerView;
-
-import static android.app.AlarmManager.*;
 
 /**
  * Created by Nikhil Paranjape on 11/3/2015.
@@ -155,6 +140,7 @@ public class MainActivity extends AppCompatActivity {
                 //  If the activity has never started before...
                 if (isFirstStart) {
 
+
                     //  Launch app intro
                     Intent i = new Intent(MainActivity.this, TutorialActivity.class);
                     startActivity(i);
@@ -174,7 +160,7 @@ public class MainActivity extends AppCompatActivity {
                 boolean airplaneService = getPrefs.getBoolean("isAirplaneService", false);
 
                 if(!intervalTime.equals("0") && airplaneService){
-                    Intent i= new Intent(getApplicationContext(), ScheduledAirplaneService.class);
+                    Intent i= new Intent(getApplicationContext(), BackgroundAirplaneService.class);
                     getBaseContext().startService(i);
                     Log.d("RadioControl", "Service launched");
                 }
@@ -316,7 +302,7 @@ public class MainActivity extends AppCompatActivity {
         serviceTest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i= new Intent(getApplicationContext(), ScheduledAirplaneService.class);
+                Intent i= new Intent(getApplicationContext(), BackgroundAirplaneService.class);
                 getBaseContext().startService(i);
                 util.scheduleAlarm(getApplicationContext());
                 Log.d("RadioControl", "Service started");
@@ -377,6 +363,8 @@ public class MainActivity extends AppCompatActivity {
                     statusText.setText("is Enabled");
                     statusText.setTextColor(getResources().getColor(R.color.status_activated));
                     editor.apply();
+                    Intent i = new Intent(getApplicationContext(), BackgroundAirplaneService.class);
+                    getApplicationContext().startService(i);
                 }
             }
         });
@@ -398,7 +386,9 @@ public class MainActivity extends AppCompatActivity {
             FirebaseCrash.logcat(Log.ERROR, "RadioControl", "Unable to get version name");
             FirebaseCrash.report(e);
         }
-
+        if(currentVersionNumber == 47){
+            FirebaseAnalytics.getInstance(getApplicationContext()).setAnalyticsCollectionEnabled(false);
+        }
         if (currentVersionNumber > savedVersionNumber) {
             showUpdated();
             editor.putInt(VERSION_KEY, currentVersionNumber);

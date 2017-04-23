@@ -1,21 +1,21 @@
 package com.nikhilparanjape.radiocontrol.receivers;
 
+/**
+ * Created by admin on 4/23/2017.
+ */
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 import com.nikhilparanjape.radiocontrol.services.BackgroundAirplaneService;
 
-public class TimedAlarmReceiver extends BroadcastReceiver {
-    public static final int REQUEST_CODE = 12345;
-    public static final String ACTION = "com.nikhilparanjape.radiocontrol.services.BackgroundAirplaneService";
-
-    public TimedAlarmReceiver() {
-    }
+public class ServiceStarter extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Intent i = new Intent(context, BackgroundAirplaneService.class);
+        Intent i = new Intent("com.prac.test.MyPersistingService");
+        i.setClass(context, BackgroundAirplaneService.class);
         context.startService(i);
     }
 }

@@ -7,14 +7,13 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import com.nikhilparanjape.radiocontrol.rootUtils.Utilities;
-import com.nikhilparanjape.radiocontrol.services.ScheduledAirplaneService;
 
 public class WakeupReceiver extends BroadcastReceiver {
     public WakeupReceiver() {
     }
 
     public static final int REQUEST_CODE = 12345;
-    public static final String ACTION = "com.nikhilparanjape.radiocontrol.services.ScheduledAirplaneService";
+    public static final String ACTION = "com.nikhilparanjape.radiocontrol.services.BackgroundAirplaneService";
 
     @Override
     public void onReceive(Context context, Intent intent) {

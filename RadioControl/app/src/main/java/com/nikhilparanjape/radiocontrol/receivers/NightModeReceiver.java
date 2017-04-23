@@ -14,7 +14,7 @@ public class NightModeReceiver extends BroadcastReceiver {
     }
 
     public static final int REQUEST_CODE = 12345;
-    public static final String ACTION = "com.nikhilparanjape.radiocontrol.services.ScheduledAirplaneService";
+    public static final String ACTION = "com.nikhilparanjape.radiocontrol.services.BackgroundAirplaneService";
 
     @Override
     public void onReceive(Context context, Intent intent) {

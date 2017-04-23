@@ -1,4 +1,11 @@
 # Changelog
+v4.1 - Beta 9 (4/23/2017)
+- Optimized background airplane service when checking for connectivity
+- Added Firebase Analytics EULA
+- Changed ScheduledAirplaneService to BackgroundAirplaneService
+- Added module for update checker
+- Fixed SSL for About page
+
 v4.1 - Beta 8 (3/4/2017)
 - Added Firebase Crash Reporting
 - Fixed possible memory leak in Network Settings

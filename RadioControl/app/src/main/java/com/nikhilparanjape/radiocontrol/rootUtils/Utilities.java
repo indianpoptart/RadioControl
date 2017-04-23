@@ -46,6 +46,7 @@ import static android.app.AlarmManager.INTERVAL_DAY;
 import static android.app.AlarmManager.INTERVAL_FIFTEEN_MINUTES;
 import static android.app.AlarmManager.INTERVAL_HALF_HOUR;
 import static android.app.AlarmManager.INTERVAL_HOUR;
+import static android.app.AlarmManager.RTC;
 import static android.app.AlarmManager.RTC_WAKEUP;
 
 /**
@@ -215,7 +216,7 @@ public class Utilities {
         AlarmManager alarm = (AlarmManager) c.getSystemService(Context.ALARM_SERVICE);
         // First parameter is the type: ELAPSED_REALTIME, ELAPSED_REALTIME_WAKEUP, RTC_WAKEUP
         // Interval can be INTERVAL_FIFTEEN_MINUTES, INTERVAL_HALF_HOUR, INTERVAL_HOUR, INTERVAL_DAY
-        alarm.setRepeating(RTC_WAKEUP, firstMillis,
+        alarm.setInexactRepeating(RTC, firstMillis,
                 cal.getTimeInMillis(), pIntent);
 
     }

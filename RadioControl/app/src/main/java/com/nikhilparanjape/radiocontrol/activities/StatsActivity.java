@@ -443,7 +443,7 @@ public class StatsActivity extends AppCompatActivity {
                         }
                         wifiSigLost++;
                     }
-                    Log.d("RadioControl", "LINE: " + line + " contains " + wifiSigLost);
+                    //Log.d("RadioControl", "LINE: " + line + " contains " + wifiSigLost);
                 }
 
             } else {
@@ -501,7 +501,7 @@ public class StatsActivity extends AppCompatActivity {
                         }
                         airplaneOn++;
                     }
-                    Log.d("RadioControl", "LINE: " + line + " contains " + airplaneOn);
+                    //Log.d("RadioControl", "LINE: " + line + " contains " + airplaneOn);
                 }
 
             } else {
