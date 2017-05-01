@@ -61,6 +61,7 @@ public class CustomPhoneStateListener extends PhoneStateListener {
     public void cellChange(){
         SharedPreferences sp = context.getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        //Utilities util = new Utilities();
 
         //Check if user wants the app on
         if(sp.getInt("isActive",0) == 1 && prefs.getBoolean("isPhoneStateCheck",true)) {
@@ -69,17 +70,14 @@ public class CustomPhoneStateListener extends PhoneStateListener {
                 if (prefs.getBoolean("altRootCommand", false)) {
                     if (Utilities.getCellStatus(context) == 1) {
                         Intent cellIntent = new Intent(context, CellRadioService.class);
+                        //util.cancelAlarm(context);
                         context.startService(cellIntent);
                         Log.d("RadioControl", "Cell Radio has been turned on");
                     }
-                } else {
-                    if (prefs.getBoolean("altBTCommand", false)) {
-                        RootAccess.runCommands(airOffCmd3);
-                        Log.d("RadioControl", "Airplane mode has been turned off(with bt cmd)");
-                    } else {
-                        RootAccess.runCommands(airOffCmd2);
-                        Log.d("RadioControl", "Airplane mode has been turned off");
-                    }
+                }
+                else {
+                    RootAccess.runCommands(airOffCmd2);
+                    Log.d("RadioControl", "Airplane mode has been turned off");
 
                 }
 

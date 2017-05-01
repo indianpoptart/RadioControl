@@ -1,4 +1,11 @@
 # Changelog
+v4.1 - Beta 10 (5/1/2017)
+- Attempting to fix shitty sleep bug
+- Changed most BroadcastReceivers to Wakelocks
+- Migrated CellService to IntentService(background)
+- Fixed Phone Call Check for Alternate Cell Command
+- Fixed memory leak in WifiReceiver
+
 v4.1 - Beta 9 (4/23/2017)
 - Optimized background airplane service when checking for connectivity
 - Added Firebase Analytics EULA

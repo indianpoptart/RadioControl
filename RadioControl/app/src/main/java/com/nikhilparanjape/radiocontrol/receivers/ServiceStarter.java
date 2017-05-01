@@ -14,8 +14,7 @@ public class ServiceStarter extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Intent i = new Intent("com.prac.test.MyPersistingService");
-        i.setClass(context, BackgroundAirplaneService.class);
+        Intent i = new Intent(context, BackgroundAirplaneService.class);
         context.startService(i);
     }
 }

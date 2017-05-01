@@ -1,6 +1,7 @@
 package com.nikhilparanjape.radiocontrol.services;
 
 import android.app.AlarmManager;
+import android.app.IntentService;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
@@ -22,24 +23,32 @@ import static android.app.AlarmManager.RTC_WAKEUP;
  * Created by admin on 9/23/2016.
  */
 
-public class CellRadioService extends Service {
+public class CellRadioService extends IntentService {
     private boolean mRunning;
+
+    public CellRadioService() {
+        super("CellRadioService");
+    }
 
     @Override
     public void onCreate() {
         super.onCreate();
         mRunning = false;
     }
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
+    }
 
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
+    protected void onHandleIntent(@Nullable Intent intent) {
         if (!mRunning) {
             mRunning = true;
             Log.d("RadioControl","CellService Toggled");
             Utilities util = new Utilities();
             Context context = getApplicationContext();
             String[] cellOffCmd = {"service call phone 27","service call phone 14 s16"};
-
             RootAccess.runCommands(cellOffCmd);
             final Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
@@ -51,13 +60,6 @@ public class CellRadioService extends Service {
                 }
             }, 0);
         }
-        return super.onStartCommand(intent, flags, startId);
-    }
-
-    @Nullable
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
     }
 
 

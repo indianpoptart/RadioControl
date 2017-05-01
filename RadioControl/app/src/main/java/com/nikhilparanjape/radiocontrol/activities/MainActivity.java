@@ -249,6 +249,7 @@ public class MainActivity extends AppCompatActivity {
 
                 int linkspeed = Utilities.linkSpeed(getApplicationContext());
                 int GHz = Utilities.frequency(getApplicationContext());
+                Log.i("RadioControl", "Test1: " + util.getCellStatus(getApplicationContext()));
                 if(linkspeed == -1){
                     linkText.setText(R.string.cellNetwork);
                 }

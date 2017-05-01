@@ -63,7 +63,7 @@ public class BackgroundAirplaneService extends IntentService
 
     protected void onHandleIntent(Intent intent) {
         // Start Alarm Task
-        Log.d("RadioControl", "Service running");
+        Log.d("RadioControl", "Background Service running");
         Context context = getApplicationContext();
         SharedPreferences sp = context.getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
@@ -73,37 +73,31 @@ public class BackgroundAirplaneService extends IntentService
         Set<String> selections = prefs.getStringSet("ssid", h); //Gets stringset, if empty sets default
         boolean networkAlert= prefs.getBoolean("isNetworkAlive",false);
 
-
+        Log.i("RadioControl","Battery Optimized");
         //Check if user wants the app on
         if(sp.getInt("isActive",0) == 1){
             //Check if we just lost WiFi signal
             if(!Utilities.isConnectedWifi(context)){
                 Log.d("RadioControl","WiFi signal LOST");
                 writeLog("WiFi Signal lost",context);
-                if(Utilities.isAirplaneMode(context) || !Utilities.isConnectedMobile(context)){
-                    //Runs the alternate root command
-                    if(prefs.getBoolean("altRootCommand", false)){
-                        if(util.getCellStatus(context) == 1){
-                            Intent cellIntent = new Intent(context, CellRadioService.class);
-                            context.startService(cellIntent);
-                            Log.d("RadioControl", "Cell Radio has been turned on");
-                            writeLog("Cell radio has been turned off, SSID: " + Utilities.getCurrentSsid(context),context);
+                if(Utilities.isAirplaneMode(context) || !Utilities.isConnectedMobile(context)) {
+                    //Checks that user is not in call
+                    if(!util.isCallActive(context)){
+                        //Runs the alternate root command
+                        if (prefs.getBoolean("altRootCommand", false)) {
+                            if (util.getCellStatus(context) == 1) {
+                                Intent cellIntent = new Intent(context, CellRadioService.class);
+                                context.startService(cellIntent);
+                                Log.d("RadioControl", "Cell Radio has been turned on");
+                                writeLog("Cell radio has been turned off, SSID: " + Utilities.getCurrentSsid(context), context);
+                            }
                         }
-                    }
-                    else{
-                        if(prefs.getBoolean("altBTCommand", false)){
-                            RootAccess.runCommands(airOffCmd3);
-                            Log.d("RadioControl","Airplane mode has been turned off(with bt cmd)");
-                            writeLog("Airplane mode has been turned off",context);
-                        }
-                        else{
+                        else {
                             RootAccess.runCommands(airOffCmd2);
-                            Log.d("RadioControl","Airplane mode has been turned off");
-                            writeLog("Airplane mode has been turned off",context);
+                            Log.d("RadioControl", "Airplane mode has been turned off");
+                            writeLog("Airplane mode has been turned off", context);
                         }
-
                     }
-
                 }
             }
 
@@ -268,7 +262,7 @@ public class BackgroundAirplaneService extends IntentService
             util.scheduleAlarm(getApplicationContext());
         }
 
-        Log.d("RadioControl", "Service destroyed");
+        Log.d("RadioControl", "Background Service destroyed");
     }
 
 }
