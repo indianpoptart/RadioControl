@@ -1,5 +1,5 @@
 # RadioControl
-![icon](https://nikhilp.org/images/ic_launcher.png)
+![icon](http://nikhilp.org/images/ic_launcher.png)
 
 **Root Required!**
 
