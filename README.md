@@ -33,12 +33,12 @@ https://crowdin.com/project/radiocontrol/invite
 # Compatibility
 Tested on the following devices
 - Google Pixel
-- LG V10 ![LG](https://nikhilp.org/images/lg.png)
-- Moto X (2nd Gen.) ![Motorola](https://nikhilp.org/images/moto.png)
-- Nexus 6 ![Motorola](https://nikhilp.org/images/moto.png)
-- Nexus 6P ![Huawei](https://nikhilp.org/images/huawei.png)
-- Nexus 5X ![LG](https://nikhilp.org/images/lg.png)
-- Nexus 5 ![LG](https://nikhilp.org/images/lg.png)
+- LG V10 ![LG](http://nikhilp.org/images/lg.png)
+- Moto X (2nd Gen.) ![Motorola](http://nikhilp.org/images/moto.png)
+- Nexus 6 ![Motorola](http://nikhilp.org/images/moto.png)
+- Nexus 6P ![Huawei](http://nikhilp.org/images/huawei.png)
+- Nexus 5X ![LG](http://nikhilp.org/images/lg.png)
+- Nexus 5 ![LG](http://nikhilp.org/images/lg.png)
 - OnePlus 1
 - OnePlus 2
 - OnePlus 3
@@ -49,7 +49,7 @@ Tested on the following devices
 # Changelog
 [Check here for the new changelog](https://github.com/indianpoptart/RadioControl/blob/master/CHANGELOG.md)
 
-#Upcoming Features
+# Upcoming Features
 
 - [Alternate cellular mode](https://github.com/indianpoptart/RadioControl/issues/35)
 - Android Wear support (Maybe, it's only use would be to do a latency test, or to enable/disable cell radios)
