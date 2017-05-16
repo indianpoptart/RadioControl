@@ -19,13 +19,11 @@ This project sometimes follows [Semantic Versioning](http://semver.org/) but not
 
 # Versions
 
-Latest Stable Release: [v4.0](https://github.com/indianpoptart/RadioControl/releases/latest) (5/17/2016)
+Latest **Stable** Release: [v4.0](https://github.com/indianpoptart/RadioControl/releases/latest) (5/17/2016)
 
-Current Beta Release: [v4.1-beta10](https://github.com/indianpoptart/RadioControl/releases/tag/v4.1-beta10) (5/1/2017)
+Latest **Beta** Release: [v4.1-beta10](https://github.com/indianpoptart/RadioControl/releases/tag/v4.1-beta10) (5/1/2017)
 
-Current Alpha Release: [v3.0.1-alpha6](https://github.com/indianpoptart/RadioControl/releases/tag/v3.0.1-alpha6) (4/4/2016) (OLD)
-
-Current Release Candidate [v4.0-rc5](https://github.com/indianpoptart/RadioControl/releases/tag/v4.0-rc5) (5/13/2016) (OLD)
+Current **Stable Beta** Release: [v4.1-beta9](https://github.com/indianpoptart/RadioControl/releases/tag/v4.1-beta9) (4/23/2017)
 
 # Help me translate to your native language
 https://crowdin.com/project/radiocontrol/invite
