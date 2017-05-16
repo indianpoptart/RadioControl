@@ -31,8 +31,8 @@ Current Release Candidate [v4.0-rc5](https://github.com/indianpoptart/RadioContr
 https://crowdin.com/project/radiocontrol/invite
 
 # Compatibility
-Tested on the following devices
-- Google Pixel
+The app has been tested and works properly on these devices:
+- ~~Google Pixel~~ (Some errors have been reported)
 - LG V10 ![LG](http://nikhilp.org/images/lg.png)
 - Moto X (2nd Gen.) ![Motorola](http://nikhilp.org/images/moto.png)
 - Nexus 6 ![Motorola](http://nikhilp.org/images/moto.png)
