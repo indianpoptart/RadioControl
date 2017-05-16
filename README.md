@@ -46,6 +46,11 @@ Tested on the following devices
 - Samsung Galaxy S7
 - Samsung Galaxy S7 Edge
 
+# SU Binary Compatibility
+Working properly with the following SU binary
+- SuperSU 2.78+
+- MagiskSU (8)
+
 # Changelog
 [Check here for the new changelog](https://github.com/indianpoptart/RadioControl/blob/master/CHANGELOG.md)
 
