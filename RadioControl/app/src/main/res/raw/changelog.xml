@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog bulletedList="true">
 
-    <changelogversion versionName="4.1" changeDate="BETA">
+    <changelogversion versionName="4.1" changeDate="July 14, 2017">
         <changelogtext>[b]New![/b] Automatic airplane mode checker</changelogtext>
         <changelogtext>[b]New![/b] Do not Disturb mode</changelogtext>
         <changelogtext>[b]New![/b] Firebase Analytics (Opt-in)</changelogtext>
-        <changelogtext>[b]New![/b] Firebase Crash Reporting</changelogtext>
+        <changelogtext>[b]New![/b] Fabric Crashlytics</changelogtext>
         <changelogtext>[b]New![/b] Night mode</changelogtext>
+        <changelogtext>[b]New![/b] Standby mode</changelogtext>
         <changelogtext>[b]New![/b] Added coarse location permission only for cell radio fix</changelogtext>
         <changelogtext>[b]New![/b] The app can detect a call and turn the cell radio back on for seamless call experience</changelogtext>
         <changelogtext>Converted foreground services to background services</changelogtext>
-        <changelogtext>Optimized images</changelogtext>
+        <changelogtext>Optimized images and files</changelogtext>
         <changelogbug>Fixed statistics bug</changelogbug>
         <changelogbug>Fixed Network Settings memory leak</changelogbug>
         <changelogbug>Fixed standby bug</changelogbug>

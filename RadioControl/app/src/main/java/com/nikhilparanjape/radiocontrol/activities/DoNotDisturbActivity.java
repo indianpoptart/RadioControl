@@ -1,10 +1,10 @@
 package com.nikhilparanjape.radiocontrol.activities;
 
-import android.app.Activity;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -20,8 +20,6 @@ import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.nikhilparanjape.radiocontrol.R;
 import com.nikhilparanjape.radiocontrol.rootUtils.Utilities;
-
-import it.gmariotti.changelibs.library.Util;
 
 public class DoNotDisturbActivity extends AppCompatActivity {
 
@@ -47,13 +45,13 @@ public class DoNotDisturbActivity extends AppCompatActivity {
         final Button cancelButton = (Button) findViewById(R.id.cancel_button);
 
         if(pref.getBoolean("isNoDisturbEnabled",false)){
-            status.setImageDrawable(getResources().getDrawable(R.drawable.ic_do_not_disturb_on_white_48px));
+            status.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_do_not_disturb_on_white_48px));
             hourStatus.setText("set for " + pref.getInt("dndHours", 0) + " hour(s)");
             cancelButton.setVisibility(View.VISIBLE);
         }
         else{
             hourStatus.setText("not set");
-            status.setImageDrawable(getResources().getDrawable(R.drawable.ic_do_not_disturb_off_white_48px));
+            status.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_do_not_disturb_off_white_48px));
             cancelButton.setVisibility(View.GONE);
         }
 
@@ -103,7 +101,7 @@ public class DoNotDisturbActivity extends AppCompatActivity {
                 editor.putBoolean("isNoDisturbEnabled", false);
                 editor.apply();
                 hourStatus.setText("not set");
-                status.setImageDrawable(getResources().getDrawable(R.drawable.ic_do_not_disturb_off_white_48px));
+                status.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_do_not_disturb_off_white_48px));
                 cancelButton.setVisibility(View.GONE);
                 util.cancelWakeupAlarm(getApplicationContext());
                 Toast.makeText(DoNotDisturbActivity.this, "Do not disturb cancelled", Toast.LENGTH_LONG).show();

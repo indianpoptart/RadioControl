@@ -2,6 +2,7 @@ package com.nikhilparanjape.radiocontrol.activities;
 
 import android.app.AlarmManager;
 import android.app.AlertDialog;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
@@ -21,10 +22,13 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.telephony.TelephonyManager;
+import android.text.Html;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.Gravity;
@@ -60,6 +64,7 @@ import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 import com.nikhilparanjape.radiocontrol.BuildConfig;
 import com.nikhilparanjape.radiocontrol.R;
+import com.nikhilparanjape.radiocontrol.receivers.ActionReceiver;
 import com.nikhilparanjape.radiocontrol.receivers.NightModeReceiver;
 import com.nikhilparanjape.radiocontrol.rootUtils.PingWrapper;
 import com.nikhilparanjape.radiocontrol.rootUtils.Utilities;
@@ -69,6 +74,8 @@ import com.nikhilparanjape.radiocontrol.util.IabHelper;
 import com.nikhilparanjape.radiocontrol.util.IabResult;
 import com.nikhilparanjape.radiocontrol.util.Inventory;
 import com.nikhilparanjape.radiocontrol.util.Purchase;
+import com.crashlytics.android.Crashlytics;
+import io.fabric.sdk.android.Fabric;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -93,6 +100,7 @@ public class MainActivity extends AppCompatActivity {
     String versionName = BuildConfig.VERSION_NAME;
     Utilities util = new Utilities();
     IInAppBillingService mService;
+    private Toast toast;
     CoordinatorLayout clayout;
     static final String ITEM_SKU = "com.nikhilparanjape.radiocontrol.test_donate1";
     static final String ITEM_ONE_DOLLAR = "com.nikihlparanjape.radiocontrol.donate.one";
@@ -195,7 +203,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
         //Checks for IAB support
         Intent serviceIntent =
                 new Intent("com.android.vending.billing.InAppBillingService.BIND");
@@ -227,6 +234,7 @@ public class MainActivity extends AppCompatActivity {
                 });
             }
         }
+        Fabric.with(this, new Crashlytics());
 
 
         //LinkSpeed Button
@@ -273,6 +281,7 @@ public class MainActivity extends AppCompatActivity {
         Button serviceTest = (Button) findViewById(R.id.airplane_service_test);
         Button nightCancel = (Button) findViewById(R.id.night_mode_cancel);
         Button radioOffButton = (Button) findViewById(R.id.cellRadioOff);
+        Button forceCrashButton = (Button) findViewById(R.id.forceCrashButton);
         //Check if the easter egg is NOT activated
         if(!sharedPref.getBoolean("isDeveloper",false)){
             conn.setVisibility(View.GONE);
@@ -280,6 +289,7 @@ public class MainActivity extends AppCompatActivity {
             nightCancel.setVisibility(View.GONE);
             connectionStatusText.setVisibility(View.GONE);
             radioOffButton.setVisibility(View.GONE);
+            forceCrashButton.setVisibility(View.GONE);
         }
         else if(sharedPref.getBoolean("isDeveloper",false)){
             conn.setVisibility(View.VISIBLE);
@@ -287,13 +297,14 @@ public class MainActivity extends AppCompatActivity {
             nightCancel.setVisibility(View.VISIBLE);
             connectionStatusText.setVisibility(View.VISIBLE);
             radioOffButton.setVisibility(View.VISIBLE);
+            forceCrashButton.setVisibility(View.VISIBLE);
         }
 
         conn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 connectionStatusText.setText(R.string.ping);
-                connectionStatusText.setTextColor(getResources().getColor(R.color.material_grey_50));
+                connectionStatusText.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.material_grey_50));
                 dialog.setVisibility(View.VISIBLE);
                 new AsyncBackgroundTask(getApplicationContext()).execute("");
             }
@@ -356,13 +367,13 @@ public class MainActivity extends AppCompatActivity {
                 if (!isChecked) {
                     editor.putInt("isActive",0);
                     statusText.setText("is Disabled");
-                    statusText.setTextColor(getResources().getColor(R.color.status_deactivated));
+                    statusText.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.status_deactivated));
                     editor.apply();
 
                 } else {
                     editor.putInt("isActive",1);
                     statusText.setText("is Enabled");
-                    statusText.setTextColor(getResources().getColor(R.color.status_activated));
+                    statusText.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.status_activated));
                     editor.apply();
                     Intent i = new Intent(getApplicationContext(), BackgroundAirplaneService.class);
                     getApplicationContext().startService(i);
@@ -421,65 +432,66 @@ public class MainActivity extends AppCompatActivity {
 
         //Drawable lg = getResources().getDrawable(R.mipmap.lg);
         if(getDeviceName().contains("Nexus 6P")){
-            icon = getResources().getDrawable(R.mipmap.huawei);
+            icon = ContextCompat.getDrawable(getApplicationContext(),R.mipmap.huawei);
         }
         else if(getDeviceName().contains("Motorola")){
-            icon = getResources().getDrawable(R.mipmap.moto2);
+            icon = ContextCompat.getDrawable(getApplicationContext(),R.mipmap.moto2);
         }
         else if(getDeviceName().contains("Pixel")){
-            icon = getResources().getDrawable(R.mipmap.google);
+            icon = ContextCompat.getDrawable(getApplicationContext(),R.mipmap.google);
         }
         else if(getDeviceName().contains("LG")){
-            icon = getResources().getDrawable(R.mipmap.lg);
+            icon = ContextCompat.getDrawable(getApplicationContext(),R.mipmap.lg);
         }
         else if(getDeviceName().contains("Samsung")){
-            icon = getResources().getDrawable(R.mipmap.samsung);
+            icon = ContextCompat.getDrawable(getApplicationContext(),R.mipmap.samsung);
         }
         else if(getDeviceName().contains("OnePlus")){
-            icon = getResources().getDrawable(R.mipmap.oneplus);
+            icon = ContextCompat.getDrawable(getApplicationContext(),R.mipmap.oneplus);
         }
         else{
-            icon = getResources().getDrawable(R.mipmap.ic_launcher);
+            icon = ContextCompat.getDrawable(getApplicationContext(),R.mipmap.ic_launcher);
         }
 
         // Carrier icon
         if(carrierName.contains("Fi Network") || carrierName.contains("Project Fi")){
-            carrierIcon = getResources().getDrawable(R.mipmap.fi_logo);
+            carrierIcon = ContextCompat.getDrawable(getApplicationContext(),R.mipmap.fi_logo);
         }
         else if(carrierName.contains("AT&T") || carrierName.contains("att")){
-            carrierIcon = getResources().getDrawable(R.mipmap.att_logo);
+            carrierIcon = ContextCompat.getDrawable(getApplicationContext(),R.mipmap.att_logo);
         }
         else if(carrierName.contains("Republic") || carrierName.contains("republic")){
-            carrierIcon = getResources().getDrawable(R.mipmap.republic_logo);
+            carrierIcon = ContextCompat.getDrawable(getApplicationContext(),R.mipmap.republic_logo);
         }
         else if(carrierName.contains("sprint") || carrierName.contains("Sprint")){
-            carrierIcon = getResources().getDrawable(R.mipmap.sprint_logo);
+            carrierIcon = ContextCompat.getDrawable(getApplicationContext(),R.mipmap.sprint_logo);
         }
         else if(carrierName.contains("T-Mobile")){
-            carrierIcon = getResources().getDrawable(R.mipmap.tmobile_logo);
+            carrierIcon = ContextCompat.getDrawable(getApplicationContext(),R.mipmap.tmobile_logo);
         }
         else if(carrierName.contains("Verizon")){
-            carrierIcon = getResources().getDrawable(R.mipmap.verizon_logo);
+            carrierIcon = ContextCompat.getDrawable(getApplicationContext(),R.mipmap.verizon_logo);
         }
         else if(carrierName.contains("Android") || carrierName.equals("")){
-            carrierIcon = getResources().getDrawable(R.mipmap.android_logo);
+            carrierIcon = ContextCompat.getDrawable(getApplicationContext(),R.mipmap.android_logo);
             carrierName = "No Carrier";
         }
         else if(carrierName.contains("Vodafone")){
-            carrierIcon = getResources().getDrawable(R.mipmap.vodafone_logo);
+            carrierIcon = ContextCompat.getDrawable(getApplicationContext(),R.mipmap.vodafone_logo);
         }
         else{
-            carrierIcon = getResources().getDrawable(R.mipmap.android_logo);
+            carrierIcon = ContextCompat.getDrawable(getApplicationContext(),R.mipmap.android_logo);
         }
 
         //WiFi Icon
         String ssid = util.getCurrentSsid(getApplicationContext());
         if(!ssid.equals("Not Connected")){
-            wifiIcon = getResources().getDrawable(R.mipmap.wifi_on);
+            wifiIcon = ContextCompat.getDrawable(getApplicationContext(),R.mipmap.wifi_on);
         }
         else{
-            wifiIcon = getResources().getDrawable(R.mipmap.wifi_off);
+            wifiIcon = ContextCompat.getDrawable(getApplicationContext(),R.mipmap.wifi_off);
         }
+
         //Creates navigation drawer header
         AccountHeader headerResult = new AccountHeaderBuilder()
                 .withActivity(this)
@@ -503,6 +515,7 @@ public class MainActivity extends AppCompatActivity {
         SecondaryDrawerItem item4 = new SecondaryDrawerItem().withName(R.string.donate).withIcon(GoogleMaterial.Icon.gmd_attach_money);
         SecondaryDrawerItem item5 = new SecondaryDrawerItem().withName(R.string.sendFeedback).withIcon(GoogleMaterial.Icon.gmd_send);
         SecondaryDrawerItem item6 = new SecondaryDrawerItem().withName(R.string.stats).withIcon(GoogleMaterial.Icon.gmd_timeline);
+        SecondaryDrawerItem item7 = new SecondaryDrawerItem().withName(R.string.standby_drawer_name).withIcon(GoogleMaterial.Icon.gmd_pause_circle_outline);
 
         //Create navigation drawer
         result = new DrawerBuilder()
@@ -518,7 +531,8 @@ public class MainActivity extends AppCompatActivity {
                         item3,
                         new DividerDrawerItem(),
                         item4,
-                        item5
+                        item5,
+                        item7
                 )
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
@@ -554,6 +568,10 @@ public class MainActivity extends AppCompatActivity {
                             //Feedback Button, send as email
                             Log.d("RadioControl", "Feedback");
                             sendFeedback();
+                        } else if (position == 9) {
+                            //Feedback Button, send as email
+                            Log.d("RadioControl", "Standby Mode Engaged");
+                            startStandbyMode();
                         }
                         return false;
                     }
@@ -577,6 +595,54 @@ public class MainActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+    private void showToast(String message) {
+        final SharedPreferences sharedPref = getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE);
+        final SharedPreferences.Editor editor = sharedPref.edit();
+        if(message.equalsIgnoreCase("true")){
+            editor.putBoolean("isStandbyDialog",true);
+            editor.apply();
+        }
+        else{
+            editor.putBoolean("isStandbyDialog",false);
+            editor.apply();
+        }
+
+    }
+    public void startStandbyMode(){
+        final SharedPreferences sharedPref = getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE);
+        final SharedPreferences.Editor editor = sharedPref.edit();
+
+        if(!sharedPref.getBoolean("isStandbyDialog",false)){
+            new MaterialDialog.Builder(this)
+                    .iconRes(R.mipmap.ic_launcher)
+                    .limitIconToDefaultSize()
+                    .title(Html.fromHtml(getString(R.string.permissionSample, getString(R.string.app_name))))
+                    .positiveText("Ok")
+                    .backgroundColorRes(R.color.material_drawer_dark_background)
+                    .onAny((dialog, which) -> showToast(""+dialog.isPromptCheckBoxChecked()))
+                    .checkBoxPromptRes(R.string.dont_ask_again, false, null)
+                    .show();
+        }
+
+        editor.putInt("isActive",0);
+        editor.apply();
+        Intent intentAction = new Intent(getApplicationContext(),ActionReceiver.class);
+        Log.d("RadioControl","Value Changed");
+        Toast.makeText(getApplicationContext(), "Standby Mode enabled",
+                Toast.LENGTH_LONG).show();
+
+        PendingIntent pIntentlogin = PendingIntent.getBroadcast(getApplicationContext(),1,intentAction,PendingIntent.FLAG_UPDATE_CURRENT);
+        NotificationCompat.Builder note = (NotificationCompat.Builder) new NotificationCompat.Builder(getApplicationContext())
+                .setSmallIcon(R.drawable.ic_warning_black_48dp)
+                .setContentTitle("Standby Mode")
+                .setContentText("RadioControl services have been paused")
+                //Using this action button I would like to call logTest
+                .addAction(R.drawable.ic_done,"Turn OFF standby mode", pIntentlogin)
+                .setPriority(-2)
+                .setOngoing(true);
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.notify(10110, note.build());
+    }
 
     //starts about activity
     public void startAboutActivity() {
@@ -596,30 +662,6 @@ public class MainActivity extends AppCompatActivity {
     public void startChangelogActivity(){
         Intent intent = new Intent(this, ChangeLogActivity.class);
         startActivity(intent);
-    }
-    //whats new dialog
-    private void showWhatsNewDialog() {
-        LayoutInflater inflater = LayoutInflater.from(this);//Creates layout inflator for dialog
-        ChangeLogRecyclerView chgList= (ChangeLogRecyclerView) inflater.inflate(R.layout.dialog_whats_new, null);
-        View view = inflater.inflate(R.layout.dialog_whatsnew, null);//Initializes the view for whats new dialog
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);//creates alertdialog
-
-        builder.setView(chgList).setTitle(R.string.whatsNew)//sets title
-                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-        builder.create().show();
-    }
-    public void showLatencyDialog(){
-        new MaterialDialog.Builder(this)
-                .title("Testing")
-                .content("Please wait...")
-                .progress(true, 0)
-                .progressIndeterminateStyle(false)
-                .show();
     }
     public void showUpdated() {
         new MaterialDialog.Builder(this)
@@ -810,18 +852,18 @@ public class MainActivity extends AppCompatActivity {
         if(!rootInit()){
             toggle.setClickable(false);
             statusText.setText(R.string.noRoot);
-            statusText.setTextColor(getResources().getColor(R.color.status_deactivated));
+            statusText.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.status_deactivated));
         }
 
         if(sharedPref.getInt("isActive",1) == 1){
             if(!rootInit()){
                 toggle.setClickable(false);
                 statusText.setText(R.string.noRoot);
-                statusText.setTextColor(getResources().getColor(R.color.status_deactivated));
+                statusText.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.status_deactivated));
             }
             else{
                 statusText.setText(R.string.rEnabled);
-                statusText.setTextColor(getResources().getColor(R.color.status_activated));
+                statusText.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.status_activated));
                 toggle.setChecked(true);
             }
 
@@ -830,11 +872,11 @@ public class MainActivity extends AppCompatActivity {
             if(!rootInit()){
                 toggle.setClickable(false);
                 statusText.setText(R.string.noRoot);
-                statusText.setTextColor(getResources().getColor(R.color.status_deactivated));
+                statusText.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.status_deactivated));
             }
             else{
                 statusText.setText(R.string.rDisabled);
-                statusText.setTextColor(getResources().getColor(R.color.status_deactivated));
+                statusText.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.status_deactivated));
                 toggle.setChecked(false);
             }
 
@@ -1060,18 +1102,18 @@ public class MainActivity extends AppCompatActivity {
             if(result){
                 if(Utilities.isConnectedWifi(getApplicationContext())){
                     connectionStatusText.setText(R.string.connectedWifi);
-                    connectionStatusText.setTextColor(getResources().getColor(R.color.status_activated));
+                    connectionStatusText.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.status_activated));
                     writeLog(getString(R.string.connectedWifi),context);
                 }
                 else if(Utilities.isConnectedMobile(getApplicationContext())){
                     if(Utilities.isConnectedFast(getApplicationContext())){
                         connectionStatusText.setText(R.string.connectedFCell);
-                        connectionStatusText.setTextColor(getResources().getColor(R.color.status_activated));
+                        connectionStatusText.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.status_activated));
                         writeLog(getString(R.string.connectedFCell),context);
                     }
                     else if(!Utilities.isConnectedFast(getApplicationContext())){
                         connectionStatusText.setText(R.string.connectedSCell);
-                        connectionStatusText.setTextColor(getResources().getColor(R.color.status_activated));
+                        connectionStatusText.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.status_activated));
                         writeLog(getString(R.string.connectedSCell),context);
                     }
 
@@ -1081,11 +1123,11 @@ public class MainActivity extends AppCompatActivity {
             else{
                 if(Utilities.isAirplaneMode(getApplicationContext()) && !Utilities.isConnected(getApplicationContext())){
                     connectionStatusText.setText(R.string.airplaneOn);
-                    connectionStatusText.setTextColor(getResources().getColor(R.color.status_deactivated));
+                    connectionStatusText.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.status_deactivated));
                 }
                 else{
                     connectionStatusText.setText(R.string.connectionUnable);
-                    connectionStatusText.setTextColor(getResources().getColor(R.color.status_deactivated));
+                    connectionStatusText.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.status_deactivated));
                     writeLog(getString(R.string.connectionUnable),context);
                 }
 
@@ -1106,6 +1148,10 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     };
+
+    public void forceCrash(View view) {
+        throw new RuntimeException("This is a crash");
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

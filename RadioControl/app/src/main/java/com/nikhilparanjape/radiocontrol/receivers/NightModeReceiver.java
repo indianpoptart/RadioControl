@@ -3,8 +3,6 @@ package com.nikhilparanjape.radiocontrol.receivers;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.nikhilparanjape.radiocontrol.rootUtils.Utilities;

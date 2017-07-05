@@ -128,7 +128,7 @@ public class SettingsFragment extends PreferenceFragment implements TimePickerDi
                 if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
                     ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 200);
                 } else {
-                    //TODO
+                    //TODO: permission granted check
                 }
 
                 return true;

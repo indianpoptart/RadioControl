@@ -4,19 +4,14 @@ package com.nikhilparanjape.radiocontrol.listeners;
  * Created by admin on 3/4/2017.
  */
 
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.preference.PreferenceManager;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.util.Log;
-import android.view.View;
-import android.widget.Toast;
 
-import com.nikhilparanjape.radiocontrol.receivers.WifiReceiver;
 import com.nikhilparanjape.radiocontrol.rootUtils.RootAccess;
 import com.nikhilparanjape.radiocontrol.rootUtils.Utilities;
 import com.nikhilparanjape.radiocontrol.services.CellRadioService;

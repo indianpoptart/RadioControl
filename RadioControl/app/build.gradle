@@ -1,5 +1,11 @@
 apply plugin: 'com.android.application'
 
+apply plugin: 'io.fabric'
+
+repositories {
+    maven { url 'https://maven.fabric.io/public' }
+}
+
 android {
     compileSdkVersion 24
     buildToolsVersion '25.0.0'
@@ -7,21 +13,28 @@ android {
         applicationId "com.nikhilparanjape.radiocontrol"
         minSdkVersion 21
         targetSdkVersion 25
-        versionCode 48
-        versionName "4.1 - Beta10"
+        versionCode 49
+        versionName "4.1 - Beta11"
         // Enabling multidex support.
         multiDexEnabled true
+        jackOptions {
+            enabled true
+        }
     }
     dexOptions {
         javaMaxHeapSize "14g"
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
     productFlavors {
+    }
+    compileOptions {
+        targetCompatibility 1.8
+        sourceCompatibility 1.8
     }
 }
 
@@ -35,7 +48,7 @@ dependencies {
     compile 'com.android.support:design:25.1.1'
     compile 'com.mikepenz:google-material-typeface:2.2.0.1.original@aar'
     compile 'com.github.gabrielemariotti.changeloglib:changelog:2.0.1-SNAPSHOT'
-    compile 'com.android.support:support-v4:24.2.0'
+    compile 'com.android.support:support-v4:25.1.1'
     compile 'com.gordonwong:material-sheet-fab:1.2.1'
     compile 'com.github.jorgecastilloprz:fabprogresscircle:1.01@aar'
     compile 'com.appeaser.sublimepickerlibrary:sublimepickerlibrary:2.1.1'
@@ -49,6 +62,9 @@ dependencies {
     compile 'com.afollestad.material-dialogs:commons:0.9.2.3'
     compile 'com.getkeepsafe.taptargetview:taptargetview:1.8.0'
     compile 'com.google.firebase:firebase-crash:10.0.1'
+    compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
+        transitive = true;
+    }
 }
 
 

@@ -118,5 +118,8 @@
     <string name="title_analytics_service">Analytics Services</string>
     <string name="title_firebase_analytics">Enable Firebase Analytics</string>
     <string name="summary_firebase_analytics">This allows me to see analytics on this app (Active users, daily engagement, App version used, etc.)</string>
+    <string name="standby_drawer_name">Standby Mode (Experimental)</string>
+    <string name="dont_ask_again">Don\'t show again</string>
+    <string name="permissionSample"><![CDATA[Standby mode disables all <b>%1$s</b> services (Useful for airplanes) This can be disabled from notifications]]></string>
 
 </resources>

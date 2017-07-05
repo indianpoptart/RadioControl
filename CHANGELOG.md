@@ -1,4 +1,13 @@
 # Changelog
+v4.1 - Beta 11 (7/5/2017)
+- Added Fabric Crashlytics
+- Added a force crash test button
+- Added standby mode
+- Fixed deprecated methods
+- Fixed location crash(added try catch)
+- Added proguard(Took me long enough)
+- Added v2 APK Signature
+
 v4.1 - Beta 10 (5/1/2017)
 - Attempting to fix shitty sleep bug
 - Changed most BroadcastReceivers to Wakelocks

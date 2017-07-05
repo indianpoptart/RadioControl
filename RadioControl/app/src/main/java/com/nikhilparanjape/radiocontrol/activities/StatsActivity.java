@@ -1,14 +1,11 @@
 package com.nikhilparanjape.radiocontrol.activities;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
@@ -20,7 +17,6 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
-import com.db.chart.model.ChartSet;
 import com.db.chart.model.LineSet;
 import com.db.chart.view.AxisController;
 import com.db.chart.view.ChartView;
@@ -36,7 +32,6 @@ import com.db.chart.view.animation.easing.QuadEase;
 import com.db.chart.view.animation.easing.QuartEase;
 import com.db.chart.view.animation.easing.QuintEase;
 import com.db.chart.view.animation.easing.SineEase;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.crash.FirebaseCrash;
 import com.gordonwong.materialsheetfab.MaterialSheetFab;
 import com.gordonwong.materialsheetfab.MaterialSheetFabEventListener;
@@ -71,8 +66,6 @@ public class StatsActivity extends AppCompatActivity {
     LineChartView chart1;
     MaterialSheetFab materialSheetFab;
 
-    private GoogleApiClient client;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -103,8 +96,8 @@ public class StatsActivity extends AppCompatActivity {
         Fab fab = (Fab) findViewById(R.id.fab);
         View sheetView = findViewById(R.id.fab_sheet);
         View overlay = findViewById(R.id.overlay);
-        int sheetColor = getResources().getColor(R.color.white);
-        int fabColor = getResources().getColor(R.color.accent);
+        int sheetColor = ContextCompat.getColor(getApplicationContext(), R.color.white);
+        int fabColor = ContextCompat.getColor(getApplicationContext(), R.color.accent);
 
         // Initialize material sheet FAB
         materialSheetFab = new MaterialSheetFab<>(fab, sheetView, overlay,

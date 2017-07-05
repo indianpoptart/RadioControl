@@ -109,12 +109,17 @@ public class Utilities {
     }
 
     public static int getCellStatus(Context c){
-        TelephonyManager tm = (TelephonyManager) c.getSystemService(Context.TELEPHONY_SERVICE);
-        List<CellInfo> cellInfoList = tm.getAllCellInfo();
         int z = 0;
-        //This means cell is off
-        if(cellInfoList.isEmpty()){
-            z = 1;
+        try {
+            TelephonyManager tm = (TelephonyManager) c.getSystemService(Context.TELEPHONY_SERVICE);
+            List<CellInfo> cellInfoList = tm.getAllCellInfo();
+            //This means cell is off
+            if (cellInfoList.isEmpty()) {
+                z = 1;
+            }
+            return z;
+        } catch(SecurityException e){
+            Log.e("RadioControl","Unable to get Location Permission",e);
         }
         return z;
     }

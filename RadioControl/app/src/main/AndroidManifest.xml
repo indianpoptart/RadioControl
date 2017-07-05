@@ -121,6 +121,11 @@
             android:enabled="true"
             android:exported="true"
             android:process=":remote"></receiver>
+        <receiver android:name=".receivers.ActionReceiver"></receiver>
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="81de282abeba311751e18b3d5109feb5ba38e192"
+            />
     </application>
 
 </manifest>
