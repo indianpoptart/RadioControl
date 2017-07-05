@@ -13,7 +13,7 @@ android {
         applicationId "com.nikhilparanjape.radiocontrol"
         minSdkVersion 21
         targetSdkVersion 25
-        versionCode 49
+        versionCode 50
         versionName "4.1 - Beta11"
         // Enabling multidex support.
         multiDexEnabled true
@@ -26,7 +26,7 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled true
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
