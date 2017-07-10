@@ -64,7 +64,7 @@
     <string name="log_summary">This will log all wifi switching actions and place it into a text file</string>
     <string name="ad_settings">Ad Settings</string>
     <string name="disable_ads">Disable Ads</string>
-    <string name="ad_summary">Face it, we all hate ads</string>
+    <string name="ad_summary">Even I hate ads sometimes :)</string>
     <string name="changelog">Changelog</string>
     <string name="changelog_summary">View the current changelog</string>
     <string name="radiocontrol_version">RadioControl version</string>
@@ -112,14 +112,22 @@
     <string name="prefs_summary_phone_call">Checks for an active phone call and will enable the cell radio</string>
     <string name="prefs_phone_check">Enable Phone Call Check(Experimental)</string>
     <string name="prefs_title_phone_settings">Phone Settings</string>
-    <string name="prefs_title_batOptim">Experimental Battery Optimizations</string>
+    <string name="prefs_title_batOptim">Optimizations</string>
     <string name="title_battery_optimization">Background Optimization</string>
     <string name="summary_battery_optimization">This will run the current service on the background, as opposed to the UI thread.</string>
-    <string name="title_analytics_service">Analytics Services</string>
-    <string name="title_firebase_analytics">Enable Firebase Analytics</string>
-    <string name="summary_firebase_analytics">This allows me to see analytics on this app (Active users, daily engagement, App version used, etc.)</string>
-    <string name="standby_drawer_name">Standby Mode (Experimental)</string>
+    <string name="title_analytics_service">Third Party Services</string>
+    <string name="title_firebase_analytics">Usage reporting</string>
+    <string name="summary_firebase_analytics">General usage reporting. Nothing personally identifiable</string>
+    <string name="standby_drawer_name">Standby Mode</string>
     <string name="dont_ask_again">Don\'t show again</string>
     <string name="permissionSample"><![CDATA[Standby mode disables all <b>%1$s</b> services (Useful for airplanes) This can be disabled from notifications]]></string>
+    <string name="permissionSampleFirebase"><![CDATA[Allow <b>%1$s</b> to collect general usage data through Firebase]]></string>
+    <string name="permissionSampleFabric"><![CDATA[Allow <b>%1$s</b> to send crash and error reports to Fabric Crashlytics]]></string>
+    <string name="showDisabled">is Disabled</string>
+    <string name="showEnabled">is Enabled</string>
+    <string name="not_set">not set</string>
+    <string name="title_fabric_analytics">Crash reporting</string>
+    <string name="summary_fabric_analytics">Crashes and error reporting. Nothing personally identifiable or unrelated to RadioControl</string>
+    <string name="text_root_status">Root Status</string>
 
 </resources>

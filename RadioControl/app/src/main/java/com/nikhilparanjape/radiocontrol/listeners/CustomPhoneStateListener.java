@@ -21,11 +21,11 @@ public class CustomPhoneStateListener extends PhoneStateListener {
     //Root commands which disable cell only
     String[] airCmd = {"su", "settings put global airplane_mode_radios  \"cell\"", "content update --uri content://settings/global --bind value:s:'cell' --where \"name='airplane_mode_radios'\"", "settings put global airplane_mode_on 1", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state true"};
     //runs command to disable airplane mode on wifi loss, while restoring previous airplane settings
-    String[] airOffCmd2 = {"su", "settings put global airplane_mode_on 0", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state false", "settings put global airplane_mode_radios  \"cell,bluetooth,nfc,wimax\"", "content update --uri content://settings/global --bind value:s:'cell,bluetooth,nfc,wimax' --where \"name='airplane_mode_radios'\""};
+    private String[] airOffCmd2 = {"su", "settings put global airplane_mode_on 0", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state false", "settings put global airplane_mode_radios  \"cell,bluetooth,nfc,wimax\"", "content update --uri content://settings/global --bind value:s:'cell,bluetooth,nfc,wimax' --where \"name='airplane_mode_radios'\""};
     String[] airOffCmd3 = {"su", "settings put global airplane_mode_on 0", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state false"};
 
     //private static final String TAG = "PhoneStateChanged";
-    Context context; //Context to make Toast if required
+    private Context context; //Context to make Toast if required
     public CustomPhoneStateListener(Context context) {
         super();
         this.context = context;
@@ -53,7 +53,7 @@ public class CustomPhoneStateListener extends PhoneStateListener {
                 break;
         }
     }
-    public void cellChange(){
+    private void cellChange(){
         SharedPreferences sp = context.getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         //Utilities util = new Utilities();

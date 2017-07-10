@@ -30,7 +30,9 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.nikhilparanjape.radiocontrol.R;
+import com.nikhilparanjape.radiocontrol.activities.MainActivity;
 import com.nikhilparanjape.radiocontrol.receivers.NightModeReceiver;
+import com.nikhilparanjape.radiocontrol.receivers.PersistenceAlarmReceiver;
 import com.nikhilparanjape.radiocontrol.receivers.RootServiceReceiver;
 import com.nikhilparanjape.radiocontrol.receivers.TimedAlarmReceiver;
 import com.nikhilparanjape.radiocontrol.receivers.WakeupReceiver;
@@ -86,7 +88,7 @@ public class Utilities {
         ConnectivityManager connManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
         if (networkInfo.isConnected()) {
-            final WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+            final WifiManager wifiManager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
             final WifiInfo connectionInfo = wifiManager.getConnectionInfo();
             ssid = connectionInfo.getSSID();
             ssid = ssid.substring(1, ssid.length()-1);
@@ -157,7 +159,7 @@ public class Utilities {
      * @return
      */
     public static int linkSpeed(Context c){
-        WifiManager wifiManager = (WifiManager)c.getSystemService(Context.WIFI_SERVICE);
+        WifiManager wifiManager = (WifiManager)c.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         int linkSpeed = wifiManager.getConnectionInfo().getLinkSpeed();
         Log.d("RadioControl", "Link speed = " + linkSpeed + "Mbps");
         return linkSpeed;
@@ -209,7 +211,7 @@ public class Utilities {
         Calendar cal = Calendar.getInstance();
         // start 30 seconds after boot completed
         cal.add(Calendar.MINUTE, intervalTime);
-        Log.d("RadioControl","Interval: " + intervalTime);
+        Log.d("RadioControl","Interval: " + intervalTime + cal.getTime());
 
         // Construct an intent that will execute the AlarmReceiver
         Intent intent = new Intent(c, TimedAlarmReceiver.class);
@@ -221,9 +223,31 @@ public class Utilities {
         AlarmManager alarm = (AlarmManager) c.getSystemService(Context.ALARM_SERVICE);
         // First parameter is the type: ELAPSED_REALTIME, ELAPSED_REALTIME_WAKEUP, RTC_WAKEUP
         // Interval can be INTERVAL_FIFTEEN_MINUTES, INTERVAL_HALF_HOUR, INTERVAL_HOUR, INTERVAL_DAY
+        Log.d("RadioControl","Time: " + (cal.getTimeInMillis()-firstMillis));
         alarm.setInexactRepeating(RTC, firstMillis,
                 cal.getTimeInMillis(), pIntent);
 
+    }
+    public static void schedulePersistAlarm(Context c){
+
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(c);
+        String intervalTimeString = preferences.getString("interval_prefs","10");
+        int intervalTime = Integer.parseInt(intervalTimeString);
+        Calendar cal = Calendar.getInstance();
+        // start 30 seconds after boot completed
+        cal.add(Calendar.MINUTE, intervalTime);
+
+        // Construct an intent that will execute the AlarmReceiver
+        Intent intent = new Intent(c, PersistenceAlarmReceiver.class);
+        // Create a PendingIntent to be triggered when the alarm goes off
+        final PendingIntent pIntent = PendingIntent.getBroadcast(c, PersistenceAlarmReceiver.REQUEST_CODE,
+                intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        long firstMillis = System.currentTimeMillis(); // alarm is set right away
+        AlarmManager alarm = (AlarmManager) c.getSystemService(Context.ALARM_SERVICE);
+        // First parameter is the type: ELAPSED_REALTIME, ELAPSED_REALTIME_WAKEUP, RTC_WAKEUP
+        // Interval can be INTERVAL_FIFTEEN_MINUTES, INTERVAL_HALF_HOUR, INTERVAL_HOUR, INTERVAL_DAY
+        alarm.setInexactRepeating(RTC, firstMillis,
+                cal.getTimeInMillis(), pIntent);
     }
     public void scheduleRootAlarm(Context c) {
         Calendar cal = Calendar.getInstance();
@@ -288,7 +312,7 @@ public class Utilities {
         alarm.cancel(pIntent);
     }
     public static int frequency(Context c){
-        WifiManager wifiManager = (WifiManager)c.getSystemService(Context.WIFI_SERVICE);
+        WifiManager wifiManager = (WifiManager)c.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         int freq = wifiManager.getConnectionInfo().getFrequency();
         int GHz = freq/1000;
         if(GHz == 2){
@@ -304,7 +328,7 @@ public class Utilities {
 
     }
     public static void getSecurity(Context c){
-        WifiManager wifiManager = (WifiManager)c.getSystemService(Context.WIFI_SERVICE);
+        WifiManager wifiManager = (WifiManager)c.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         WifiConfiguration netConfig = new WifiConfiguration();
 
     }
@@ -337,7 +361,7 @@ public class Utilities {
     }
 
     public static String getFrequency(Context c){
-        WifiManager wifiManager = (WifiManager)c.getSystemService(Context.WIFI_SERVICE);
+        WifiManager wifiManager = (WifiManager)c.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         int freq = wifiManager.getConnectionInfo().getFrequency();
         int GHz = freq/1000;
         if(GHz == 2){
@@ -407,7 +431,7 @@ public class Utilities {
      *@param context
      */
     public void enableWifi(Context context){
-        WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+        WifiManager wifiManager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         wifiManager.setWifiEnabled(true);
 
     }
@@ -417,7 +441,7 @@ public class Utilities {
      *@param context
      */
     public void disableWifi(Context context){
-        WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+        WifiManager wifiManager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         wifiManager.setWifiEnabled(false);
 
     }
@@ -606,8 +630,7 @@ public class Utilities {
                 Log.d("RadioControl", "Ping test returned " + exitValue);
                 return (exitValue == 0);
             }
-            catch (IOException e){ e.printStackTrace(); }
-            catch (InterruptedException e) { e.printStackTrace(); }
+            catch (IOException | InterruptedException e){ e.printStackTrace(); }
 
             return false;
         }

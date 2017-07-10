@@ -1,4 +1,14 @@
 # Changelog
+v4.1 - Beta 12 (7/9/2017)
+- Fixed possible memory leak for Android N devices
+- Optimized code
+- Changed wording for firebase analytics
+- Adding Chrome Custom Tabs
+- Optimized Statistics activity launch delay
+- Optimized WifiReceiver for Android N+
+- Changed some layouts and icons
+- Changed analytics dialog
+
 v4.1 - Beta 11 (7/5/2017)
 - Added Fabric Crashlytics
 - Added a force crash test button

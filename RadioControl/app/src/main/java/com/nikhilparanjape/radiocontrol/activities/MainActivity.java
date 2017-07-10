@@ -8,11 +8,13 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -23,7 +25,6 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -46,6 +47,7 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
 import com.android.vending.billing.IInAppBillingService;
+import com.crashlytics.android.core.CrashlyticsCore;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.firebase.analytics.FirebaseAnalytics;
@@ -66,10 +68,13 @@ import com.nikhilparanjape.radiocontrol.BuildConfig;
 import com.nikhilparanjape.radiocontrol.R;
 import com.nikhilparanjape.radiocontrol.receivers.ActionReceiver;
 import com.nikhilparanjape.radiocontrol.receivers.NightModeReceiver;
+import com.nikhilparanjape.radiocontrol.receivers.PersistenceAlarmReceiver;
+import com.nikhilparanjape.radiocontrol.receivers.WifiReceiver;
 import com.nikhilparanjape.radiocontrol.rootUtils.PingWrapper;
 import com.nikhilparanjape.radiocontrol.rootUtils.Utilities;
 import com.nikhilparanjape.radiocontrol.services.BackgroundAirplaneService;
 import com.nikhilparanjape.radiocontrol.services.CellRadioService;
+import com.nikhilparanjape.radiocontrol.services.PersistenceService;
 import com.nikhilparanjape.radiocontrol.util.IabHelper;
 import com.nikhilparanjape.radiocontrol.util.IabResult;
 import com.nikhilparanjape.radiocontrol.util.Inventory;
@@ -83,7 +88,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import it.gmariotti.changelibs.library.view.ChangeLogRecyclerView;
 
 /**
  * Created by Nikhil Paranjape on 11/3/2015.
@@ -222,19 +226,48 @@ public class MainActivity extends AppCompatActivity {
         //Checks for root
         rootInit();
 
-        //checks if ads should be enabled
         if(!pref.getBoolean("disableAds",false)){
             if(!pref.getBoolean("isDonated",false)){
                 runOnUiThread(new Runnable() {
                     public void run() {
                         AdView mAdView = (AdView) findViewById(R.id.adView);
                         AdRequest adRequest = new AdRequest.Builder().build();
-                        mAdView.loadAd(adRequest);
+                        AdRequest adRequestTest = new AdRequest.Builder()
+                                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                                .build();
+                        if(BuildConfig.DEBUG){
+                            mAdView.loadAd(adRequestTest);
+                        }
+                        else{
+                            mAdView.loadAd(adRequest);
+                        }
                     }
                 });
             }
         }
-        Fabric.with(this, new Crashlytics());
+        if(pref.getBoolean("allowFabric",false)){
+            Fabric.with(this, new Crashlytics());
+        } else{
+            Fabric.with(this, new Crashlytics.Builder()
+                    .core(new CrashlyticsCore.Builder()
+                            .disabled(true).build()).build());
+        }
+
+
+        if (Build.VERSION.SDK_INT >= 24) {
+            IntentFilter intentFilter = new IntentFilter();
+            intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+            registerReceiver(new WifiReceiver(), intentFilter);
+            NotificationCompat.Builder note = new NotificationCompat.Builder(getApplicationContext())
+                    .setSmallIcon(R.drawable.ic_cached_white_36dp)
+                    .setContentTitle("Persistent Service")
+                    .setContentText("Idle")
+                    .setPriority(-2)
+                    .setOngoing(true);
+            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.notify(10110, note.build());
+        }
+
 
 
         //LinkSpeed Button
@@ -257,7 +290,7 @@ public class MainActivity extends AppCompatActivity {
 
                 int linkspeed = Utilities.linkSpeed(getApplicationContext());
                 int GHz = Utilities.frequency(getApplicationContext());
-                Log.i("RadioControl", "Test1: " + util.getCellStatus(getApplicationContext()));
+                Log.i("RadioControl", "Test1: " + Utilities.getCellStatus(getApplicationContext()));
                 if(linkspeed == -1){
                     linkText.setText(R.string.cellNetwork);
                 }
@@ -310,7 +343,6 @@ public class MainActivity extends AppCompatActivity {
             }
 
         });
-        SharedPreferences.Editor editor2 = sharedPref.edit();
         serviceTest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -366,13 +398,13 @@ public class MainActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (!isChecked) {
                     editor.putInt("isActive",0);
-                    statusText.setText("is Disabled");
+                    statusText.setText(R.string.showDisabled);
                     statusText.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.status_deactivated));
                     editor.apply();
 
                 } else {
                     editor.putInt("isActive",1);
-                    statusText.setText("is Enabled");
+                    statusText.setText(R.string.showEnabled);
                     statusText.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.status_activated));
                     editor.apply();
                     Intent i = new Intent(getApplicationContext(), BackgroundAirplaneService.class);
@@ -398,7 +430,7 @@ public class MainActivity extends AppCompatActivity {
             FirebaseCrash.logcat(Log.ERROR, "RadioControl", "Unable to get version name");
             FirebaseCrash.report(e);
         }
-        if(currentVersionNumber == 47){
+        if(currentVersionNumber > 47){
             FirebaseAnalytics.getInstance(getApplicationContext()).setAnalyticsCollectionEnabled(false);
         }
         if (currentVersionNumber > savedVersionNumber) {
@@ -422,13 +454,12 @@ public class MainActivity extends AppCompatActivity {
 
     //Method to create the Navigation Drawer
     public void drawerCreate(){
-        // Get System TELEPHONY service reference
-        TelephonyManager tManager = (TelephonyManager) getBaseContext()
-                .getSystemService(Context.TELEPHONY_SERVICE);
 
-        // Get carrier name (Network Operator Name)
-        String carrierName = tManager.getSimOperatorName();
-        Log.d("RadioControl",carrierName);
+        String carrierName = "Not Rooted";
+        final SharedPreferences sharedPref = getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE);
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        boolean batteryOptimize = pref.getBoolean("isBatteryOn",true);
+
 
         //Drawable lg = getResources().getDrawable(R.mipmap.lg);
         if(getDeviceName().contains("Nexus 6P")){
@@ -453,53 +484,47 @@ public class MainActivity extends AppCompatActivity {
             icon = ContextCompat.getDrawable(getApplicationContext(),R.mipmap.ic_launcher);
         }
 
-        // Carrier icon
-        if(carrierName.contains("Fi Network") || carrierName.contains("Project Fi")){
-            carrierIcon = ContextCompat.getDrawable(getApplicationContext(),R.mipmap.fi_logo);
+        // root icon
+        if(rootInit()){
+            carrierIcon = new IconicsDrawable(this)
+                    .icon(GoogleMaterial.Icon.gmd_check_circle)
+                    .color(Color.GREEN);
+            carrierName = "Rooted";
         }
-        else if(carrierName.contains("AT&T") || carrierName.contains("att")){
-            carrierIcon = ContextCompat.getDrawable(getApplicationContext(),R.mipmap.att_logo);
-        }
-        else if(carrierName.contains("Republic") || carrierName.contains("republic")){
-            carrierIcon = ContextCompat.getDrawable(getApplicationContext(),R.mipmap.republic_logo);
-        }
-        else if(carrierName.contains("sprint") || carrierName.contains("Sprint")){
-            carrierIcon = ContextCompat.getDrawable(getApplicationContext(),R.mipmap.sprint_logo);
-        }
-        else if(carrierName.contains("T-Mobile")){
-            carrierIcon = ContextCompat.getDrawable(getApplicationContext(),R.mipmap.tmobile_logo);
-        }
-        else if(carrierName.contains("Verizon")){
-            carrierIcon = ContextCompat.getDrawable(getApplicationContext(),R.mipmap.verizon_logo);
-        }
-        else if(carrierName.contains("Android") || carrierName.equals("")){
-            carrierIcon = ContextCompat.getDrawable(getApplicationContext(),R.mipmap.android_logo);
-            carrierName = "No Carrier";
-        }
-        else if(carrierName.contains("Vodafone")){
-            carrierIcon = ContextCompat.getDrawable(getApplicationContext(),R.mipmap.vodafone_logo);
-        }
-        else{
-            carrierIcon = ContextCompat.getDrawable(getApplicationContext(),R.mipmap.android_logo);
+        else {
+            carrierIcon = new IconicsDrawable(this)
+                    .icon(GoogleMaterial.Icon.gmd_error_outline)
+                    .color(Color.RED);
         }
 
         //WiFi Icon
-        String ssid = util.getCurrentSsid(getApplicationContext());
-        if(!ssid.equals("Not Connected")){
-            wifiIcon = ContextCompat.getDrawable(getApplicationContext(),R.mipmap.wifi_on);
+        String ssid = "Not Optimized";
+        if(batteryOptimize){
+            wifiIcon = new IconicsDrawable(this)
+                    .icon(GoogleMaterial.Icon.gmd_check_circle)
+                    .color(Color.GREEN);
+            ssid = "Battery Optimized";
         }
         else{
-            wifiIcon = ContextCompat.getDrawable(getApplicationContext(),R.mipmap.wifi_off);
+            wifiIcon = new IconicsDrawable(this)
+                    .icon(GoogleMaterial.Icon.gmd_help_outline)
+                    .color(Color.YELLOW);
+        }
+        Drawable headerIcon = ContextCompat.getDrawable(getApplicationContext(),R.mipmap.header);
+
+
+        if(sharedPref.getBoolean("isDeveloper",false)){
+            headerIcon = ContextCompat.getDrawable(getApplicationContext(),R.mipmap.header2);
         }
 
         //Creates navigation drawer header
         AccountHeader headerResult = new AccountHeaderBuilder()
                 .withActivity(this)
-                .withHeaderBackground(R.mipmap.header)
+                .withHeaderBackground(headerIcon)
                 .addProfiles(
                         new ProfileDrawerItem().withName(getDeviceName()).withEmail("v" + versionName).withIcon(icon),
-                        new ProfileDrawerItem().withName(getString(R.string.netOperator)).withEmail(carrierName).withIcon(carrierIcon),
-                        new ProfileDrawerItem().withName(getString(R.string.wifiNetwork)).withEmail(ssid).withIcon(wifiIcon)
+                        new ProfileDrawerItem().withName("Root Status").withEmail(carrierName).withIcon(carrierIcon),
+                        new ProfileDrawerItem().withName("Battery Optimization").withEmail(ssid).withIcon(wifiIcon)
                 )
                 .withOnAccountHeaderListener(new AccountHeader.OnAccountHeaderListener() {
                     @Override
@@ -558,7 +583,7 @@ public class MainActivity extends AppCompatActivity {
                         } else if (position == 7) {
                             //Donation
                             Log.d("RadioControl", "Donation button pressed");
-                            if(util.isConnected(getApplicationContext())){
+                            if(Utilities.isConnected(getApplicationContext())){
                                 showDonateDialog();
                             }
                             else{
@@ -632,7 +657,7 @@ public class MainActivity extends AppCompatActivity {
                 Toast.LENGTH_LONG).show();
 
         PendingIntent pIntentlogin = PendingIntent.getBroadcast(getApplicationContext(),1,intentAction,PendingIntent.FLAG_UPDATE_CURRENT);
-        NotificationCompat.Builder note = (NotificationCompat.Builder) new NotificationCompat.Builder(getApplicationContext())
+        NotificationCompat.Builder note = new NotificationCompat.Builder(getApplicationContext())
                 .setSmallIcon(R.drawable.ic_warning_black_48dp)
                 .setContentTitle("Standby Mode")
                 .setContentText("RadioControl services have been paused")
@@ -784,11 +809,6 @@ public class MainActivity extends AppCompatActivity {
             return Character.toUpperCase(first) + s.substring(1);
         }
     }
-    public void boolPrefEditor(String key, boolean value){
-        SharedPreferences pref = getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = pref.edit();
-        editor.putBoolean(key,value);
-    }
     public boolean rootInit(){
         try{
             Process p = Runtime.getRuntime().exec("su");
@@ -805,6 +825,14 @@ public class MainActivity extends AppCompatActivity {
         final SharedPreferences sharedPref = getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE);
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
+        if(pref.getBoolean("allowFabric",false)){
+            Fabric.with(this, new Crashlytics());
+        }else{
+            Fabric.with(this, new Crashlytics.Builder()
+                    .core(new CrashlyticsCore.Builder()
+                            .disabled(true).build()).build());
+        }
+
         if(!pref.getBoolean("disableAds",false)){
             if(!pref.getBoolean("isDonated",false)){
                 runOnUiThread(new Runnable() {
@@ -814,24 +842,39 @@ public class MainActivity extends AppCompatActivity {
                         AdRequest adRequestTest = new AdRequest.Builder()
                                 .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
                                 .build();
-                        mAdView.loadAd(adRequest);
+                        if(BuildConfig.DEBUG){
+                            mAdView.loadAd(adRequestTest);
+                        }
+                        else{
+                            mAdView.loadAd(adRequest);
+                        }
                     }
                 });
             }
         }
-        //Connection Test button
-        Button conn = (Button) findViewById(R.id.pingTestButton);
-        //Ping text
-        TextView connectionStatusText = (TextView) findViewById(R.id.pingStatus);
-
+        //Connection Test button (Dev Feature)
+        final Button conn = (Button) findViewById(R.id.pingTestButton);
+        Button serviceTest = (Button) findViewById(R.id.airplane_service_test);
+        Button nightCancel = (Button) findViewById(R.id.night_mode_cancel);
+        Button radioOffButton = (Button) findViewById(R.id.cellRadioOff);
+        Button forceCrashButton = (Button) findViewById(R.id.forceCrashButton);
+        final TextView connectionStatusText = (TextView) findViewById(R.id.pingStatus);
         //Check if the easter egg is NOT activated
         if(!sharedPref.getBoolean("isDeveloper",false)){
             conn.setVisibility(View.GONE);
+            serviceTest.setVisibility(View.GONE);
+            nightCancel.setVisibility(View.GONE);
             connectionStatusText.setVisibility(View.GONE);
+            radioOffButton.setVisibility(View.GONE);
+            forceCrashButton.setVisibility(View.GONE);
         }
         else if(sharedPref.getBoolean("isDeveloper",false)){
             conn.setVisibility(View.VISIBLE);
+            serviceTest.setVisibility(View.VISIBLE);
+            nightCancel.setVisibility(View.VISIBLE);
             connectionStatusText.setVisibility(View.VISIBLE);
+            radioOffButton.setVisibility(View.VISIBLE);
+            forceCrashButton.setVisibility(View.VISIBLE);
         }
 
         //LinkSpeed Button
@@ -1006,14 +1049,14 @@ public class MainActivity extends AppCompatActivity {
             dialog.setIndeterminate(true);
         }
 
-        public AsyncBackgroundTask(Context context) {
+        AsyncBackgroundTask(Context context) {
             this.context = context;
         }
         @Override
         protected PingWrapper doInBackground(String... params) {
             Runtime runtime = Runtime.getRuntime();
             PingWrapper w = new PingWrapper();
-            StringBuffer echo = new StringBuffer();
+            StringBuilder echo = new StringBuilder();
             String s = "";
             try {
                 Process ipProcess = runtime.exec("/system/bin/ping -c 4 8.8.8.8");
@@ -1022,11 +1065,11 @@ public class MainActivity extends AppCompatActivity {
                 if(exitValue == 0){
                     InputStreamReader reader = new InputStreamReader(ipProcess.getInputStream());
                     BufferedReader buf = new BufferedReader(reader);
-                    String line = "";
+                    String line;
                     while((line = buf.readLine()) != null){
-                        echo.append(line + "\n");
+                        echo.append(line).append("\n");
                     }
-                    s = util.getPingStats(echo.toString());
+                    s = Utilities.getPingStats(echo.toString());
                 }
 
                 if(exitValue == 0){
@@ -1035,8 +1078,7 @@ public class MainActivity extends AppCompatActivity {
                 w.status = s;
 
             }
-            catch (IOException e){ e.printStackTrace(); }
-            catch (InterruptedException e) { e.printStackTrace(); }
+            catch (IOException | InterruptedException e){ e.printStackTrace(); }
             return w;
         }
         @Override
@@ -1053,6 +1095,7 @@ public class MainActivity extends AppCompatActivity {
             } catch(Exception e){
                 isDouble = false;
                 Log.d("RadioControl", "Not a double");
+                Crashlytics.logException(e);
             }
             try{
                 pStatus = w.status;
@@ -1092,8 +1135,7 @@ public class MainActivity extends AppCompatActivity {
                 }
 
             } catch(Exception e){
-                FirebaseCrash.logcat(Log.ERROR, "RadioControl", "Status Check Error");
-                FirebaseCrash.report(e);
+                Crashlytics.logException(e);
                 Snackbar.make(findViewById(android.R.id.content), "An error has occurred", Snackbar.LENGTH_LONG).show();
             }
 
@@ -1173,5 +1215,10 @@ public class MainActivity extends AppCompatActivity {
         }
         if (mHelper != null) mHelper.dispose();
         mHelper = null;
+
+
+
+
+
     }
 }

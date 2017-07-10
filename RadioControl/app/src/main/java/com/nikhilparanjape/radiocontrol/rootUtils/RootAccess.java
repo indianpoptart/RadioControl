@@ -24,8 +24,7 @@ public class RootAccess{
         }
         catch (IOException e){
             e.printStackTrace();
-            FirebaseCrash.logcat(Log.ERROR, "RadioControl", "Root Error");
-            FirebaseCrash.report(e);
+
         }
     }
 }

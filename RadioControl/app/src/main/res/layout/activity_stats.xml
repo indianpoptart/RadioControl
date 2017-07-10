@@ -49,7 +49,15 @@
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
                 android:layout_centerVertical="true"
-                android:layout_alignParentStart="true" />
+                android:layout_alignParentStart="true" >
+
+                <ProgressBar
+                    android:id="@+id/progressWifiOff"
+                    style="?android:attr/progressBarStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true" />
+            </com.db.chart.view.LineChartView>
 
         </android.support.v7.widget.CardView>
 
@@ -86,7 +94,15 @@
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
                 android:layout_below="@+id/card_wifi_lost"
-                android:layout_alignParentStart="true" />
+                android:layout_alignParentStart="true" >
+
+                <ProgressBar
+                    android:id="@+id/progressAirplaneOn"
+                    style="?android:attr/progressBarStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true" />
+            </com.db.chart.view.LineChartView>
 
 
         </android.support.v7.widget.CardView>
@@ -119,6 +135,7 @@
         android:orientation="vertical">
 
         <!-- Sheet that contains your items -->
+
         <android.support.v7.widget.CardView
             android:id="@+id/fab_sheet"
             android:layout_width="250dp"
@@ -134,21 +151,21 @@
                 <TextView
                     android:id="@+id/fab_sheet_item_grid"
                     style="@style/TextAppearance.MaterialSheetFab.Sheet.Item"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
                     android:drawableLeft="@drawable/ic_grid_on_black_24dp"
                     android:drawableStart="@drawable/ic_grid_on_black_24dp"
-                    android:text="@string/gridline_text_box"
-                    android:layout_height="fill_parent"
-                    android:layout_width="fill_parent" />
+                    android:text="@string/gridline_text_box" />
 
                 <!-- Easing -->
                 <TextView
                     android:id="@+id/fab_sheet_item_easing"
                     style="@style/TextAppearance.MaterialSheetFab.Sheet.Item"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
                     android:drawableLeft="@drawable/ic_timeline_black_24dp"
                     android:drawableStart="@drawable/ic_timeline_black_24dp"
-                    android:text="@string/animation_text_box"
-                    android:layout_height="fill_parent"
-                    android:layout_width="fill_parent" />
+                    android:text="@string/animation_text_box" />
 
 
             </LinearLayout>

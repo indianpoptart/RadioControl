@@ -1,18 +1,15 @@
 package com.nikhilparanjape.radiocontrol.fragments;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
+import android.support.customtabs.CustomTabsIntent;
 import android.support.design.widget.Snackbar;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.webkit.WebView;
 import android.widget.Toast;
 
 
@@ -21,20 +18,18 @@ import com.nikhilparanjape.radiocontrol.activities.ChangeLogActivity;
 import com.nikhilparanjape.radiocontrol.R;
 import com.nikhilparanjape.radiocontrol.activities.TutorialActivity;
 import com.nikhilparanjape.radiocontrol.rootUtils.Utilities;
+import com.novoda.simplechromecustomtabs.SimpleChromeCustomTabs;
 
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-
-import it.gmariotti.changelibs.library.view.ChangeLogRecyclerView;
 
 /**
  * Created by Nikhil on 4/5/2016.
@@ -42,6 +37,8 @@ import it.gmariotti.changelibs.library.view.ChangeLogRecyclerView;
 public class AboutFragment extends PreferenceFragment {
     String versionName = BuildConfig.VERSION_NAME;
     private static final String PRIVATE_PREF = "prefs";
+    private static final Uri SOURCE_URI = Uri.parse(
+            "https://nikhilp.org/radiocontrol/opensource/");
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -51,7 +48,9 @@ public class AboutFragment extends PreferenceFragment {
         Utilities util = new Utilities();
 
 
+
         final Context c = getActivity();
+        SimpleChromeCustomTabs.initialize(c);
 
         if (Utilities.isConnected(c)) {
             getPreferenceScreen().findPreference("source").setEnabled(true);
@@ -130,11 +129,7 @@ public class AboutFragment extends PreferenceFragment {
             DocumentBuilder db = dbf.newDocumentBuilder();
             doc = db.parse(xml);
             xml.close();
-        } catch (SAXException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ParserConfigurationException e) {
+        } catch (SAXException | IOException | ParserConfigurationException e) {
             e.printStackTrace();
         }
 
@@ -142,19 +137,12 @@ public class AboutFragment extends PreferenceFragment {
     }
     private void displayLicensesAlertDialog(Context c) {
         if(Utilities.isConnected(c)){
-            LayoutInflater inflater = LayoutInflater.from(c);//Creates layout inflator for dialog
-            WebView view = (WebView) inflater.inflate(R.layout.dialog_licenses, null);//Initializes the view for whats new dialog
-            AlertDialog.Builder builder = new AlertDialog.Builder(c);//creates alertdialog
-            view.loadUrl("http://nikhilp.org/radiocontrol/opensource/index.html");
-            builder.setView(view).setTitle(R.string.open_source_title)//sets title
-                    .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    });
+            String url = "https://nikhilp.org/radiocontrol/opensource";
+            CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
+            builder.setToolbarColor(424242);
 
-            builder.create().show();
+            CustomTabsIntent customTabsIntent = builder.build();
+            customTabsIntent.launchUrl(getActivity(), Uri.parse(url));
         } else{
             Snackbar.make(getView(), "No internet connection found", Snackbar.LENGTH_LONG)
                     .show();
@@ -172,5 +160,6 @@ public class AboutFragment extends PreferenceFragment {
         Intent i = new Intent(c, TutorialActivity.class);
         startActivity(i);
     }
+
 
 }

@@ -29,12 +29,27 @@
             android:title="@string/title_battery_optimization"
             android:summary="@string/summary_battery_optimization"
             android:defaultValue="false" />
+        <CheckBoxPreference
+            android:key="altRootCommand"
+            android:title="@string/title_root_command_alt"
+            android:summary="@string/summary_root_command_alt"
+            android:defaultValue="false" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/title_analytics_service">
-        <Preference
+        <CheckBoxPreference
             android:key="eulaShow"
             android:title="@string/title_firebase_analytics"
             android:summary="@string/summary_firebase_analytics"
+            android:defaultValue="false" />
+        <CheckBoxPreference
+            android:key="fabricCrashlytics"
+            android:title="@string/title_fabric_analytics"
+            android:summary="@string/summary_fabric_analytics"
+            android:defaultValue="false" />
+        <CheckBoxPreference
+            android:key="disableAds"
+            android:title="@string/disable_ads"
+            android:summary="@string/ad_summary"
             android:defaultValue="false" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/prefs_title_phone_settings">
@@ -43,14 +58,6 @@
             android:title="@string/prefs_phone_check"
             android:summary="@string/prefs_summary_phone_call"
             android:defaultValue="false" />
-    </PreferenceCategory>
-    <PreferenceCategory android:title="@string/title_root_mode">
-        <CheckBoxPreference
-            android:key="altRootCommand"
-            android:title="@string/title_root_command_alt"
-            android:summary="@string/summary_root_command_alt"
-            android:defaultValue="false" />
-
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/title_service_settings">
         <CheckBoxPreference
@@ -122,13 +129,6 @@
             android:title="@string/LogTitle"
             android:defaultValue="@array/empty_array"
             android:summary="@string/LogDirSummary" />
-    </PreferenceCategory>
-    <PreferenceCategory android:title="@string/ad_settings">
-        <CheckBoxPreference
-            android:key="disableAds"
-            android:title="@string/disable_ads"
-            android:summary="@string/ad_summary"
-            android:defaultValue="false" />
     </PreferenceCategory>
 
 

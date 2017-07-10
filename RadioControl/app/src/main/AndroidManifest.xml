@@ -12,13 +12,15 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="com.android.vending.BILLING" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
 
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/MaterialDarkTheme">
+        android:theme="@style/MaterialDarkTheme"
+        android:fullBackupContent="true">
 
         <!-- This meta-data tag is required to use Google Play Services. -->
         <meta-data
@@ -69,8 +71,7 @@
 
         <service
             android:name=".BillingService"
-            android:enabled="true"
-            android:exported="true" />
+            android:enabled="true" />
 
         <!-- Include the AdActivity configChanges and theme. -->
         <activity
@@ -84,13 +85,11 @@
         <service
             android:name=".services.DoNotDisturbService"
             android:enabled="true"
-            android:exported="true"
             android:icon="@drawable/ic_do_not_disturb_on_black_48dp"
             android:label="AirplaneService" />
         <service
             android:name=".services.CellRadioService"
             android:enabled="true"
-            android:exported="true"
             android:icon="@drawable/ic_network_cell"
             android:label="CellRadioService" />
         <receiver android:name=".receivers.PhoneStateBroadcastReceiver">
@@ -102,12 +101,10 @@
         <receiver
             android:name=".receivers.TimedAlarmReceiver"
             android:enabled="true"
-            android:exported="true"
             android:process=":remote" />
         <receiver
             android:name=".receivers.WakeupReceiver"
             android:enabled="true"
-            android:exported="true"
             android:process=":remote"/>
         <!-- Start the Service if applicable on boot -->
         <receiver android:name="com.nikhilparanjape.radiocontrol.receivers.ServiceStarter">
@@ -119,9 +116,10 @@
         <receiver
             android:name=".receivers.NightModeReceiver"
             android:enabled="true"
-            android:exported="true"
-            android:process=":remote"></receiver>
-        <receiver android:name=".receivers.ActionReceiver"></receiver>
+            android:process=":remote" />
+
+        <receiver android:name=".receivers.ActionReceiver" />
+        <receiver android:name=".receivers.PersistenceAlarmReceiver" />
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="81de282abeba311751e18b3d5109feb5ba38e192"

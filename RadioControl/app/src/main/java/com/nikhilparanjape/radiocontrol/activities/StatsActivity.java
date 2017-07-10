@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -81,6 +82,11 @@ public class StatsActivity extends AppCompatActivity {
             editor.putInt("easing",4);
             editor.apply();
         }
+        ProgressBar progress1 = (ProgressBar)findViewById(R.id.progressWifiOff);
+        progress1.setVisibility(View.GONE);
+        ProgressBar progress2 = (ProgressBar)findViewById(R.id.progressAirplaneOn);
+        progress2.setVisibility(View.GONE);
+
 
 
         final ActionBar actionBar = getSupportActionBar();
@@ -137,7 +143,6 @@ public class StatsActivity extends AppCompatActivity {
 
         TextView btn1 = (TextView) findViewById(R.id.fab_sheet_item_easing);
         AutofitHelper.create(btn1);
-        assert btn1 != null;
         btn1.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -147,15 +152,14 @@ public class StatsActivity extends AppCompatActivity {
             }
         });
 
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+
         wifiLostGraph();
 
         airplaneOnGraph();
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        //client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
-    }
-    public void showColorChooserPrimary() {
     }
     public void showLongList() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
@@ -232,6 +236,9 @@ public class StatsActivity extends AppCompatActivity {
                 .show();
     }
     public void wifiLostGraph() {
+        ProgressBar progress1 = (ProgressBar)findViewById(R.id.progressWifiOff);
+        progress1.setVisibility(View.VISIBLE);
+
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         //Initiate chart
         chart = (LineChartView) findViewById(R.id.linechart);
@@ -308,12 +315,16 @@ public class StatsActivity extends AppCompatActivity {
         } else if(prefs.getInt("gridlines",0) == 3){
             chart.setGrid(ChartView.GridType.NONE, p);
         }
-
+        progress1.setVisibility(View.GONE);
         chart.show(anim);
+
     }
 
     //Airplane on graph
     public void airplaneOnGraph() {
+        ProgressBar progress2 = (ProgressBar)findViewById(R.id.progressAirplaneOn);
+        progress2.setVisibility(View.VISIBLE);
+
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         //Initiate chart
         chart1 = (LineChartView) findViewById(R.id.linechart_airplane_on);
@@ -390,6 +401,8 @@ public class StatsActivity extends AppCompatActivity {
         } else if(prefs.getInt("gridlines",0) == 3){
             chart1.setGrid(ChartView.GridType.NONE, p);
         }
+        progress2.setVisibility(View.GONE);
+
         chart1.show(anim);
     }
 

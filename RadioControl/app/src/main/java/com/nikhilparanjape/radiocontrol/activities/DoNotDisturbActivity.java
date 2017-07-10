@@ -87,7 +87,7 @@ public class DoNotDisturbActivity extends AppCompatActivity {
                 else{
                     editor.putBoolean("isNoDisturbEnabled", false);
                     editor.apply();
-                    hourStatus.setText("not set");
+                    hourStatus.setText(R.string.not_set);
                 }
 
 
@@ -100,7 +100,7 @@ public class DoNotDisturbActivity extends AppCompatActivity {
             public void onClick(View v) {
                 editor.putBoolean("isNoDisturbEnabled", false);
                 editor.apply();
-                hourStatus.setText("not set");
+                hourStatus.setText(R.string.not_set);
                 status.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_do_not_disturb_off_white_48px));
                 cancelButton.setVisibility(View.GONE);
                 util.cancelWakeupAlarm(getApplicationContext());

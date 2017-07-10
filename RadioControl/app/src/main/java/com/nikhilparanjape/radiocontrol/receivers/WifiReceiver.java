@@ -1,9 +1,10 @@
 package com.nikhilparanjape.radiocontrol.receivers;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.support.v4.content.WakefulBroadcastReceiver;
@@ -20,7 +21,7 @@ import com.nikhilparanjape.radiocontrol.services.CellRadioService;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -31,6 +32,7 @@ import java.util.Set;
 public class WifiReceiver extends WakefulBroadcastReceiver {
 
     private static final String PRIVATE_PREF = "prefs";
+    private static boolean firstConnect = true;
 
     //Root commands which disable cell only
     String[] airCmd = {"su", "settings put global airplane_mode_radios  \"cell\"", "content update --uri content://settings/global --bind value:s:'cell' --where \"name='airplane_mode_radios'\"", "settings put global airplane_mode_on 1", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state true"};
@@ -41,15 +43,15 @@ public class WifiReceiver extends WakefulBroadcastReceiver {
 
     Utilities util = new Utilities(); //Network and other related utilities
 
+
     public void onReceive(Context context, Intent intent) {
         intent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
-
 
         SharedPreferences sp = context.getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         final SharedPreferences disabledPref = context.getSharedPreferences("disabled-networks", Context.MODE_PRIVATE);
 
-        Set<String> h = new HashSet<>(Arrays.asList("")); //Set default set for SSID check
+        Set<String> h = new HashSet<>(Collections.singletonList("")); //Set default set for SSID check
         Set<String> selections = prefs.getStringSet("ssid", h); //Gets stringset, if empty sets default
         boolean networkAlert= prefs.getBoolean("isNetworkAlive",false);
         boolean batteryOptimize = prefs.getBoolean("isBatteryOn",true);
@@ -73,7 +75,7 @@ public class WifiReceiver extends WakefulBroadcastReceiver {
                         if(!util.isCallActive(context)) {
                             //Runs the alternate root command
                             if (prefs.getBoolean("altRootCommand", false)) {
-                                if (util.getCellStatus(context) == 1) {
+                                if (Utilities.getCellStatus(context) == 1) {
                                     Intent cellIntent = new Intent(context, CellRadioService.class);
                                     context.startService(cellIntent);
                                     Log.d("RadioControl", "Cell Radio has been turned on");
@@ -109,13 +111,13 @@ public class WifiReceiver extends WakefulBroadcastReceiver {
                             //Runs the alternate root command
                             if(prefs.getBoolean("altRootCommand", false)){
 
-                                if(util.getCellStatus(context) == 0){
+                                if(Utilities.getCellStatus(context) == 0){
                                     Intent cellIntent = new Intent(context, CellRadioService.class);
                                     context.startService(cellIntent);
                                     Log.d("RadioControl", "Cell Radio has been turned off");
                                     writeLog("Cell radio has been turned off, SSID: " + Utilities.getCurrentSsid(context),context);
                                 }
-                                else if(util.getCellStatus(context) == 1){
+                                else if(Utilities.getCellStatus(context) == 1){
                                     Log.d("RadioControl", "Cell Radio is already off");
                                 }
 
@@ -160,6 +162,8 @@ public class WifiReceiver extends WakefulBroadcastReceiver {
             }
         }
 
+
+
     }
     public void writeLog(String data, Context c){
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(c);
@@ -186,7 +190,7 @@ public class WifiReceiver extends WakefulBroadcastReceiver {
     private class AsyncPingTask extends AsyncTask<String, Void, Boolean> {
         Context context;
 
-        public AsyncPingTask(Context context) {
+        AsyncPingTask(Context context) {
             this.context = context;
         }
 
@@ -210,9 +214,7 @@ public class WifiReceiver extends WakefulBroadcastReceiver {
                 int exitValue = ipProcess.waitFor();
                 Log.d("RadioControl", "Ping test returned " + exitValue);
                 return (exitValue == 0);
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
+            } catch (IOException | InterruptedException e) {
                 e.printStackTrace();
             }
 

@@ -21,6 +21,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Timer;
@@ -69,11 +70,11 @@ public class BackgroundAirplaneService extends IntentService
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         final SharedPreferences disabledPref = context.getSharedPreferences("disabled-networks", Context.MODE_PRIVATE);
 
-        Set<String> h = new HashSet<>(Arrays.asList("")); //Set default set for SSID check
+        Set<String> h = new HashSet<>(Collections.singletonList("")); //Set default set for SSID check
         Set<String> selections = prefs.getStringSet("ssid", h); //Gets stringset, if empty sets default
         boolean networkAlert= prefs.getBoolean("isNetworkAlive",false);
 
-        Log.i("RadioControl","Battery Optimized");
+        //Log.i("RadioControl","Battery Optimized");
         //Check if user wants the app on
         if(sp.getInt("isActive",0) == 1){
             //Check if we just lost WiFi signal
@@ -85,7 +86,7 @@ public class BackgroundAirplaneService extends IntentService
                     if(!util.isCallActive(context)){
                         //Runs the alternate root command
                         if (prefs.getBoolean("altRootCommand", false)) {
-                            if (util.getCellStatus(context) == 1) {
+                            if (Utilities.getCellStatus(context) == 1) {
                                 Intent cellIntent = new Intent(context, CellRadioService.class);
                                 context.startService(cellIntent);
                                 Log.d("RadioControl", "Cell Radio has been turned on");
@@ -114,13 +115,13 @@ public class BackgroundAirplaneService extends IntentService
                             //Runs the alternate root command
                             if(prefs.getBoolean("altRootCommand", false)){
 
-                                if(util.getCellStatus(context) == 0){
+                                if(Utilities.getCellStatus(context) == 0){
                                     Intent cellIntent = new Intent(context, CellRadioService.class);
                                     context.startService(cellIntent);
                                     Log.d("RadioControl", "Cell Radio has been turned off");
                                     writeLog("Cell radio has been turned off, SSID: " + Utilities.getCurrentSsid(context),context);
                                 }
-                                else if(util.getCellStatus(context) == 1){
+                                else if(Utilities.getCellStatus(context) == 1){
                                     Log.d("RadioControl", "Cell Radio is already off");
                                 }
 
@@ -235,9 +236,7 @@ public class BackgroundAirplaneService extends IntentService
                 }
             }
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
     }

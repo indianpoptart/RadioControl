@@ -16,11 +16,14 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.webkit.WebView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.folderselector.FolderChooserDialog;
 import com.borax12.materialdaterangepicker.time.RadialPickerLayout;
 import com.borax12.materialdaterangepicker.time.TimePickerDialog;
@@ -109,6 +112,7 @@ public class SettingsFragment extends PreferenceFragment implements TimePickerDi
                     }
                 }
                 else{
+                    checkboxPref.setChecked(false);
                     editor.putBoolean("enableLogs", false);
                     Log.d("RadioControl", "Logging disabled");
                     File log = new File("radiocontrol.log");
@@ -128,20 +132,94 @@ public class SettingsFragment extends PreferenceFragment implements TimePickerDi
                 if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
                     ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 200);
                 } else {
-                    //TODO: permission granted check
+                    altRootCommand.setChecked(false);
                 }
 
                 return true;
             }
 
         });
-        Preference eulaShow = findPreference("eulaShow");
-        eulaShow.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            public boolean onPreferenceClick(Preference preference) {
-                displayEulaAlertDialog(c);
-                return false;
+        final CheckBoxPreference eulaShow = (CheckBoxPreference) getPreferenceManager().findPreference("eulaShow");
+        eulaShow.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                if(newValue.toString().equals("true")){
+                    new MaterialDialog.Builder(getActivity())
+                            .iconRes(R.mipmap.ic_launcher)
+                            .limitIconToDefaultSize()
+                            .title(Html.fromHtml(getString(R.string.permissionSampleFirebase, getString(R.string.app_name))))
+                            .positiveText("Allow")
+                            .negativeText("Deny")
+                            .backgroundColorRes(R.color.material_drawer_dark_background)
+                            .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                @Override
+                                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                    FirebaseAnalytics.getInstance(c).setAnalyticsCollectionEnabled(true);
+                                }
+                            })
+                            .onNegative(new MaterialDialog.SingleButtonCallback() {
+                                @Override
+                                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                    eulaShow.setChecked(false);
+                                    FirebaseAnalytics.getInstance(c).setAnalyticsCollectionEnabled(false);
+                                }
+                            })
+                            .checkBoxPromptRes(R.string.dont_ask_again, false, null)
+                            .show();
+                }
+                else{
+                    FirebaseAnalytics.getInstance(c).setAnalyticsCollectionEnabled(false);
+                    eulaShow.setChecked(false);
+                }
+
+                return true;
             }
         });
+
+        final CheckBoxPreference fabricCrashlyticsPref = (CheckBoxPreference) getPreferenceManager().findPreference("fabricCrashlytics");
+        fabricCrashlyticsPref.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(c);
+                SharedPreferences.Editor editor = preferences.edit();
+
+                if(newValue.toString().equals("true")){
+                    new MaterialDialog.Builder(getActivity())
+                            .iconRes(R.mipmap.ic_launcher)
+                            .limitIconToDefaultSize()
+                            .title(Html.fromHtml(getString(R.string.permissionSampleFabric, getString(R.string.app_name))))
+                            .positiveText("Allow")
+                            .negativeText("Deny")
+                            .backgroundColorRes(R.color.material_drawer_dark_background)
+                            .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                @Override
+                                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                    editor.putBoolean("allowFabric", true);
+                                    editor.apply();
+                                }
+                            })
+                            .onNegative(new MaterialDialog.SingleButtonCallback() {
+                                @Override
+                                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                    fabricCrashlyticsPref.setChecked(false);
+                                    editor.putBoolean("allowFabric", false);
+                                    editor.apply();
+
+                            }
+                            })
+                            .checkBoxPromptRes(R.string.dont_ask_again, false, null)
+                            .show();
+
+                }
+                else{
+                    editor.putBoolean("allowFabric", false);
+                    editor.apply();
+                }
+
+
+                return true;
+            }
+
+        });
+
         final CheckBoxPreference callingCheck = (CheckBoxPreference) getPreferenceManager().findPreference("isPhoneStateCheck");
         callingCheck.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -151,7 +229,7 @@ public class SettingsFragment extends PreferenceFragment implements TimePickerDi
                     ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_PHONE_STATE}, 200);
 
                 } else {
-
+                   callingCheck.setChecked(false);
                 }
 
                 return true;
@@ -220,28 +298,27 @@ public class SettingsFragment extends PreferenceFragment implements TimePickerDi
     }
 
     private void displayEulaAlertDialog(final Context c) {
-        if(Utilities.isConnected(c)){
-            LayoutInflater inflater = LayoutInflater.from(c);//Creates layout inflator for dialog
-            WebView view = (WebView) inflater.inflate(R.layout.dialog_licenses, null);//Initializes the view for whats new dialog
-            AlertDialog.Builder builder = new AlertDialog.Builder(c);//creates alertdialog
-            view.loadUrl("https://docs.google.com/document/d/1Oz7i5FJrucpCV6Gfzmhmp3_uDqBlerCFMk3DP8Mck5Y/edit");
-            builder.setView(view).setTitle("End User License Agreement");
-            builder.setCancelable(false)
-                    .setPositiveButton("Accept", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            FirebaseAnalytics.getInstance(c).setAnalyticsCollectionEnabled(true);
-                        }
-                    })
-                    .setNegativeButton("Decline", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            FirebaseAnalytics.getInstance(c).setAnalyticsCollectionEnabled(false);
-                        }
-                    });
-            builder.create().show();
-        } else{
-            Snackbar.make(getView(), "No internet connection found", Snackbar.LENGTH_LONG)
-                    .show();
-        }
+        new MaterialDialog.Builder(getActivity())
+                .iconRes(R.mipmap.ic_launcher)
+                .limitIconToDefaultSize()
+                .title(Html.fromHtml(getString(R.string.permissionSampleFirebase, getString(R.string.app_name))))
+                .positiveText("Allow")
+                .negativeText("Deny")
+                .backgroundColorRes(R.color.material_drawer_dark_background)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        FirebaseAnalytics.getInstance(c).setAnalyticsCollectionEnabled(true);
+                    }
+                })
+                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        FirebaseAnalytics.getInstance(c).setAnalyticsCollectionEnabled(false);
+                    }
+                })
+                .checkBoxPromptRes(R.string.dont_ask_again, false, null)
+                .show();
 
     }
     @Override
