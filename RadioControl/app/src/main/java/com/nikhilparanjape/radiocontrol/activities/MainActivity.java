@@ -524,7 +524,7 @@ public class MainActivity extends AppCompatActivity {
                 .addProfiles(
                         new ProfileDrawerItem().withName(getDeviceName()).withEmail("v" + versionName).withIcon(icon),
                         new ProfileDrawerItem().withName("Root Status").withEmail(carrierName).withIcon(carrierIcon),
-                        new ProfileDrawerItem().withName("Battery Optimization").withEmail(ssid).withIcon(wifiIcon)
+                        new ProfileDrawerItem().withName("Background Optimization").withEmail(ssid).withIcon(wifiIcon)
                 )
                 .withOnAccountHeaderListener(new AccountHeader.OnAccountHeaderListener() {
                     @Override
@@ -541,6 +541,7 @@ public class MainActivity extends AppCompatActivity {
         SecondaryDrawerItem item5 = new SecondaryDrawerItem().withName(R.string.sendFeedback).withIcon(GoogleMaterial.Icon.gmd_send);
         SecondaryDrawerItem item6 = new SecondaryDrawerItem().withName(R.string.stats).withIcon(GoogleMaterial.Icon.gmd_timeline);
         SecondaryDrawerItem item7 = new SecondaryDrawerItem().withName(R.string.standby_drawer_name).withIcon(GoogleMaterial.Icon.gmd_pause_circle_outline);
+        SecondaryDrawerItem item8 = new SecondaryDrawerItem().withName(R.string.drawer_string_troubleshooting).withIcon(GoogleMaterial.Icon.gmd_help);
 
         //Create navigation drawer
         result = new DrawerBuilder()
@@ -555,6 +556,7 @@ public class MainActivity extends AppCompatActivity {
                         item6,
                         item3,
                         new DividerDrawerItem(),
+                        item8,
                         item4,
                         item5,
                         item7
@@ -573,6 +575,7 @@ public class MainActivity extends AppCompatActivity {
                                 Log.d("RadioControl", "Log Exists");
                                 startStatsActivity();
                             } else{
+                                result.setSelection(item1);
                                 Snackbar.make(clayout, "No log file found", Snackbar.LENGTH_LONG)
                                         .show();
                             }
@@ -581,7 +584,12 @@ public class MainActivity extends AppCompatActivity {
                             startAboutActivity();
                             Log.d("drawer", "Started about activity");
                         } else if (position == 7) {
+                            result.setSelection(item1);
+                            Snackbar.make(clayout, "Coming in v4.2!", Snackbar.LENGTH_LONG)
+                                    .show();
+                        } else if (position == 8) {
                             //Donation
+                            result.setSelection(item1);
                             Log.d("RadioControl", "Donation button pressed");
                             if(Utilities.isConnected(getApplicationContext())){
                                 showDonateDialog();
@@ -589,12 +597,12 @@ public class MainActivity extends AppCompatActivity {
                             else{
                                 showErrorDialog();
                             }
-                        } else if (position == 8) {
-                            //Feedback Button, send as email
+                        } else if (position == 9) {
+                            result.setSelection(item1);
                             Log.d("RadioControl", "Feedback");
                             sendFeedback();
-                        } else if (position == 9) {
-                            //Feedback Button, send as email
+                        } else if (position == 10) {
+                            result.setSelection(item1);
                             Log.d("RadioControl", "Standby Mode Engaged");
                             startStandbyMode();
                         }

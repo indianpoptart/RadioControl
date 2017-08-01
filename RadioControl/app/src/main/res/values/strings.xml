@@ -129,5 +129,7 @@
     <string name="title_fabric_analytics">Crash reporting</string>
     <string name="summary_fabric_analytics">Crashes and error reporting. Nothing personally identifiable or unrelated to RadioControl</string>
     <string name="text_root_status">Root Status</string>
+    <string name="title_doze_optimization">Battery Optimization</string>
+    <string name="drawer_string_troubleshooting">Troubleshooting</string>
 
 </resources>

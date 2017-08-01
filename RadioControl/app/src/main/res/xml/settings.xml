@@ -25,6 +25,11 @@
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/prefs_title_batOptim">
         <CheckBoxPreference
+            android:key="isDozeOff"
+            android:title="@string/title_doze_optimization"
+            android:summary="This allows RadioControl to be awake even when Android enables Doze"
+            android:defaultValue="false" />
+        <CheckBoxPreference
             android:key="isBatteryOn"
             android:title="@string/title_battery_optimization"
             android:summary="@string/summary_battery_optimization"
