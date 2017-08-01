@@ -12,6 +12,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.preference.CheckBoxPreference;
+import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
@@ -23,6 +24,7 @@ import android.support.v4.content.ContextCompat;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.webkit.WebView;
 import android.widget.Toast;
 
@@ -49,6 +51,9 @@ public class SettingsFragment extends PreferenceFragment implements TimePickerDi
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.settings);
 
+        SharedPreferences sp = getPreferenceScreen().getSharedPreferences();
+
+
         c = getActivity();
         final Utilities util = new Utilities();
 
@@ -61,6 +66,29 @@ public class SettingsFragment extends PreferenceFragment implements TimePickerDi
         else{
             getPreferenceScreen().findPreference("ssid").setEnabled(false);
         }
+
+        Preference workPref = findPreference("workMode");
+
+        if (Build.VERSION.SDK_INT >= 24) {
+            workPref
+                    .setSummary(sp.getString("workMode", "Intelligent"));
+        }
+        workPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            public boolean onPreferenceClick(Preference preference) {
+                if (Build.VERSION.SDK_INT >=24){
+                    new MaterialDialog.Builder(getActivity())
+                            .content("Intelligent is designed for the new network capabilities in Android 7.0+")
+                            .positiveText("Ok")
+                            .show();
+                }else{
+                    new MaterialDialog.Builder(getActivity())
+                            .content("Standard is designed for Android 5.0 and 6.0")
+                            .positiveText("Ok")
+                            .show();
+                }
+                return false;
+            }
+        });
         Preference ssidListPref = findPreference("ssid");
         ssidListPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             public boolean onPreferenceClick(Preference preference) {
@@ -93,6 +121,7 @@ public class SettingsFragment extends PreferenceFragment implements TimePickerDi
                 return false;
             }
         });
+
         final CheckBoxPreference checkboxPref = (CheckBoxPreference) getPreferenceManager().findPreference("enableLogs");
         checkboxPref.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             public boolean onPreferenceChange(Preference preference, Object newValue) {

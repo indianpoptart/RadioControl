@@ -46,6 +46,7 @@ public class WifiReceiver extends WakefulBroadcastReceiver {
 
     public void onReceive(Context context, Intent intent) {
         intent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
+        Log.d("RadioControl", "Get action: " + intent.getAction());
 
         SharedPreferences sp = context.getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);

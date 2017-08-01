@@ -63,6 +63,7 @@ public class BackgroundAirplaneService extends IntentService
     }
 
     protected void onHandleIntent(Intent intent) {
+        Log.d("RadioControl", "Get action: " + intent.getAction());
         // Start Alarm Task
         Log.d("RadioControl", "Background Service running");
         Context context = getApplicationContext();
