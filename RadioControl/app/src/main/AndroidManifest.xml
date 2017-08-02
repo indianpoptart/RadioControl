@@ -48,10 +48,12 @@
             android:label="app_intro" />
 
         <!-- Receive Wi-Fi connection state changes -->
-        <receiver android:name=".receivers.WifiReceiver">
+        <receiver android:name=".receivers.WifiReceiver"
+            android:enabled="false">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
                 <action android:name="com.nikhilparanjape.radiocontrol.android.action.broadcast" />
+                <action android:name="android.net.wifi.STATE_CHANGE"/>
             </intent-filter>
         </receiver>
 
@@ -85,10 +87,15 @@
         <activity android:name=".activities.DoNotDisturbActivity" />
 
         <service
+            android:name=".services.PersistenceService"
+            android:enabled="true"
+            android:process=":persistent"
+            android:label="PersistenceService" />
+        <service
             android:name=".services.DoNotDisturbService"
             android:enabled="true"
             android:icon="@drawable/ic_do_not_disturb_on_black_48dp"
-            android:label="AirplaneService" />
+            android:label="DoNotDisturbService" />
         <service
             android:name=".services.CellRadioService"
             android:enabled="true"

@@ -1,12 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <Preference
-        android:key="workMode"
-        android:title="Working Mode"
-        android:dialogTitle="Working Mode"
-        android:defaultValue="@array/empty_array"
-        android:summary="Standard" >
-    </Preference>
     <PreferenceCategory android:title="@string/title_activity_network">
         <Preference
             android:key="ssid"

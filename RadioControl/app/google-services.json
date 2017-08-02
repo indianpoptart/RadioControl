@@ -15,6 +15,22 @@
       },
       "oauth_client": [
         {
+          "client_id": "1087279988045-uo4tta1b27toeteo1i6qpmabiv3ql22r.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.nikhilparanjape.radiocontrol",
+            "certificate_hash": "d750c1497844db301df6b6d495fc9b5844c70ad8"
+          }
+        },
+        {
+          "client_id": "1087279988045-v5o036ak3lt2av0o7so1e0jb7snv50g5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.nikhilparanjape.radiocontrol",
+            "certificate_hash": "62e092f3b9dccb94f989ab5bf42b324d2d1c4f2f"
+          }
+        },
+        {
           "client_id": "1087279988045-3a3t148hld9o9g7qomalg24t00756crm.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
@@ -30,6 +46,9 @@
       "api_key": [
         {
           "current_key": "AIzaSyAdR15TVFC0WSdJbqxQjbSwNVK-Rh4O--A"
+        },
+        {
+          "current_key": "AIzaSyCFuMCTWsRLB7w6EDMtOoU62U7JERufpl0"
         }
       ],
       "services": {

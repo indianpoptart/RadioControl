@@ -4,6 +4,7 @@ import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -12,6 +13,7 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
@@ -96,6 +98,7 @@ import java.io.InputStreamReader;
 public class MainActivity extends AppCompatActivity {
     private static final String PRIVATE_PREF = "prefs";
     private static final String VERSION_KEY = "version_number";
+    private final BroadcastReceiver standardBroadcast = new WifiReceiver();
 
     Drawable icon;
     Drawable carrierIcon;
@@ -137,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
         clayout = (CoordinatorLayout) findViewById(R.id.clayout);
         final ProgressBar dialog = (ProgressBar) findViewById(R.id.pingProgressBar);
         final ActionBar actionBar = getSupportActionBar();
-
+        registerForBroadcasts(getApplicationContext());
         //  Declare a new thread to do a preference check
         Thread t = new Thread(new Runnable() {
             @Override
@@ -253,20 +256,14 @@ public class MainActivity extends AppCompatActivity {
                             .disabled(true).build()).build());
         }
 
-
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
         if (Build.VERSION.SDK_INT >= 24) {
-            IntentFilter intentFilter = new IntentFilter();
-            intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
-            registerReceiver(new WifiReceiver(), intentFilter);
-            NotificationCompat.Builder note = new NotificationCompat.Builder(getApplicationContext())
-                    .setSmallIcon(R.drawable.ic_cached_white_36dp)
-                    .setContentTitle("Persistent Service")
-                    .setContentText("Idle")
-                    .setPriority(-2)
-                    .setOngoing(true);
-            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-            notificationManager.notify(10110, note.build());
+            //this.unregisterReceiver(standardBroadcast);
+            //Log.d("RadioControl","Persistent Service Started");
+            //startService(new Intent(this, PersistenceService.class));
         }
+
 
 
 
@@ -451,6 +448,14 @@ public class MainActivity extends AppCompatActivity {
         writeLog("Feedback sent",getApplicationContext());
     }
 
+    public void registerForBroadcasts(Context context) {
+        ComponentName component = new ComponentName(context, WifiReceiver.class);
+        PackageManager pm = context.getPackageManager();
+        pm.setComponentEnabledSetting(
+                component,
+                PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+                PackageManager.DONT_KILL_APP);
+    }
 
     //Method to create the Navigation Drawer
     public void drawerCreate(){

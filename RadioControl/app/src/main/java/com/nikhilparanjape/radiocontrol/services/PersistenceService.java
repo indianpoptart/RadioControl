@@ -39,31 +39,28 @@ import java.util.Set;
  */
 
 public class PersistenceService extends Service {
+    private final BroadcastReceiver mybroadcast = new WifiReceiver();
 
     @Override
     public void onCreate() {
         super.onCreate();
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
 
-
-        registerReceiver(receiver, filter);
     }
     @Nullable
+    public int onStartCommand(Intent intent, int flags, int startId){
+        Log.i("RadioControl","PERSISTENCE Started");
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+        unregisterReceiver(mybroadcast);
+
+        this.registerReceiver(receiver,filter);
+
+        return flags;
+    }
     @Override
     public IBinder onBind(Intent intent) {
-        Log.i("RadioControl","Receiver Started");
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
-        registerReceiver(new WifiReceiver(), intentFilter);
-        NotificationCompat.Builder note = new NotificationCompat.Builder(getApplicationContext())
-                .setSmallIcon(R.drawable.ic_cached_white_36dp)
-                .setContentTitle("Persistent Service")
-                .setContentText("Sleeping")
-                .setPriority(-2)
-                .setOngoing(true);
-        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.notify(10110, note.build());
+
+
         return null;
     }
     private final BroadcastReceiver receiver = new WakefulBroadcastReceiver() {
@@ -83,7 +80,23 @@ public class PersistenceService extends Service {
 
         public void onReceive(Context context, Intent intent) {
             intent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
-            Log.d("RadioControl", "Get action: " + intent.getAction());
+            Log.d("RadioControl", "Get actionS: " + intent.getAction());
+            NotificationCompat.Builder note = new NotificationCompat.Builder(getApplicationContext())
+                    .setSmallIcon(R.drawable.ic_cached_white_36dp)
+                    .setContentTitle("Persistent Service")
+                    .setContentText("Running")
+                    .setPriority(-2)
+                    .setOngoing(true);
+            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.notify(10110, note.build());
+
+            NotificationCompat.Builder sleep = new NotificationCompat.Builder(getApplicationContext())
+                    .setSmallIcon(R.drawable.ic_cached_white_36dp)
+                    .setContentTitle("Persistent Service")
+                    .setContentText("Sleeping")
+                    .setPriority(-2)
+                    .setOngoing(true);
+
 
             SharedPreferences sp = context.getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE);
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
@@ -100,7 +113,9 @@ public class PersistenceService extends Service {
                 if (batteryOptimize) {
                     Log.d("RadioControl", "Battery Optimization ON");
                     Intent i = new Intent(context, BackgroundAirplaneService.class);
+                    notificationManager.notify(10110, sleep.build());
                     context.startService(i);
+
                 } else {
                     Log.d("RadioControl", "Battery Optimization OFF");
                     //Check if we just lost WiFi signal
@@ -117,16 +132,19 @@ public class PersistenceService extends Service {
                                         context.startService(cellIntent);
                                         Log.d("RadioControl", "Cell Radio has been turned on");
                                         writeLog("Cell radio has been turned off, SSID: " + Utilities.getCurrentSsid(context), context);
+                                        notificationManager.notify(10110, sleep.build());
                                     }
                                 } else {
                                     if (prefs.getBoolean("altBTCommand", false)) {
                                         RootAccess.runCommands(airOffCmd3);
                                         Log.d("RadioControl", "Airplane mode has been turned off(with bt cmd)");
                                         writeLog("Airplane mode has been turned off", context);
+                                        notificationManager.notify(10110, sleep.build());
                                     } else {
                                         RootAccess.runCommands(airOffCmd2);
                                         Log.d("RadioControl", "Airplane mode has been turned off");
                                         writeLog("Airplane mode has been turned off", context);
+                                        notificationManager.notify(10110, sleep.build());
                                     }
 
                                 }
@@ -153,14 +171,17 @@ public class PersistenceService extends Service {
                                         context.startService(cellIntent);
                                         Log.d("RadioControl", "Cell Radio has been turned off");
                                         writeLog("Cell radio has been turned off, SSID: " + Utilities.getCurrentSsid(context), context);
+                                        notificationManager.notify(10110, sleep.build());
                                     } else if (Utilities.getCellStatus(context) == 1) {
                                         Log.d("RadioControl", "Cell Radio is already off");
+                                        notificationManager.notify(10110, sleep.build());
                                     }
 
                                 } else {
                                     RootAccess.runCommands(airCmd);
                                     Log.d("RadioControl", "Airplane mode has been turned on");
                                     writeLog("Airplane mode has been turned on, SSID: " + Utilities.getCurrentSsid(context), context);
+                                    notificationManager.notify(10110, sleep.build());
                                 }
 
                             }
@@ -181,6 +202,7 @@ public class PersistenceService extends Service {
                     else if (selections.contains(Utilities.getCurrentSsid(context))) {
                         Log.d("RadioControl", Utilities.getCurrentSsid(context) + " was blocked from list " + selections);
                         writeLog(Utilities.getCurrentSsid(context) + " was blocked from list " + selections, context);
+                        notificationManager.notify(10110, sleep.build());
                     }
                 }
 
@@ -189,11 +211,13 @@ public class PersistenceService extends Service {
                 Log.d("RadioControl", "RadioControl has been disabled");
                 if (networkAlert) {
                     //new com.nikhilparanjape.radiocontrol.receivers.WifiReceiver.AsyncPingTask(context).execute("");
+                    notificationManager.notify(10110, sleep.build());
                 }
                 //Adds wifi signal lost log for nonrooters
                 if (!Utilities.isConnectedWifi(context)) {
                     Log.d("RadioControl", "WiFi signal LOST");
                     writeLog("WiFi Signal lost", context);
+                    notificationManager.notify(10110, sleep.build());
                 }
             }
 

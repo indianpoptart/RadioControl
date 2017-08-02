@@ -67,28 +67,7 @@ public class SettingsFragment extends PreferenceFragment implements TimePickerDi
             getPreferenceScreen().findPreference("ssid").setEnabled(false);
         }
 
-        Preference workPref = findPreference("workMode");
 
-        if (Build.VERSION.SDK_INT >= 24) {
-            workPref
-                    .setSummary(sp.getString("workMode", "Intelligent"));
-        }
-        workPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            public boolean onPreferenceClick(Preference preference) {
-                if (Build.VERSION.SDK_INT >=24){
-                    new MaterialDialog.Builder(getActivity())
-                            .content("Intelligent is designed for the new network capabilities in Android 7.0+")
-                            .positiveText("Ok")
-                            .show();
-                }else{
-                    new MaterialDialog.Builder(getActivity())
-                            .content("Standard is designed for Android 5.0 and 6.0")
-                            .positiveText("Ok")
-                            .show();
-                }
-                return false;
-            }
-        });
         Preference ssidListPref = findPreference("ssid");
         ssidListPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             public boolean onPreferenceClick(Preference preference) {
