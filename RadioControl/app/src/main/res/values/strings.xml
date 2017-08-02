@@ -131,5 +131,8 @@
     <string name="text_root_status">Root Status</string>
     <string name="title_doze_optimization">Battery Optimization</string>
     <string name="drawer_string_troubleshooting">Troubleshooting</string>
+    <string name="permissionIntelligent">This works better with Background Optimization. Should I turn it on for you?</string>
+    <string name="title_intelligent_mode">Intelligent Mode (Beta)</string>
+    <string name="summary_intelligent_mode">This is a higher priority detection method that might fix issues on Nougat+</string>
 
 </resources>

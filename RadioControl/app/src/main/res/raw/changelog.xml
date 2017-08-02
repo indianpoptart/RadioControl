@@ -6,9 +6,10 @@
         <changelogtext>[b]New![/b] Do not Disturb mode</changelogtext>
         <changelogtext>[b]New![/b] Firebase Analytics (Opt-in)</changelogtext>
         <changelogtext>[b]New![/b] Fabric Crashlytics</changelogtext>
+        <changelogtext>[b]New![/b] Intelligent Detection mode</changelogtext>
         <changelogtext>[b]New![/b] Night mode</changelogtext>
         <changelogtext>[b]New![/b] Standby mode</changelogtext>
-        <changelogtext>[b]New![/b] Added coarse location permission only for cell radio fix</changelogtext>
+        <changelogtext>[b]New![/b] Coarse location permission for cell radio fix</changelogtext>
         <changelogtext>[b]New![/b] The app can detect a call and turn the cell radio back on for seamless call experience</changelogtext>
         <changelogtext>Converted foreground services to background services</changelogtext>
         <changelogtext>Optimized images and files</changelogtext>

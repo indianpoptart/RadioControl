@@ -140,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
         clayout = (CoordinatorLayout) findViewById(R.id.clayout);
         final ProgressBar dialog = (ProgressBar) findViewById(R.id.pingProgressBar);
         final ActionBar actionBar = getSupportActionBar();
-        registerForBroadcasts(getApplicationContext());
+
         //  Declare a new thread to do a preference check
         Thread t = new Thread(new Runnable() {
             @Override
@@ -258,10 +258,13 @@ public class MainActivity extends AppCompatActivity {
 
         IntentFilter filter = new IntentFilter();
         filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
-        if (Build.VERSION.SDK_INT >= 24) {
-            //this.unregisterReceiver(standardBroadcast);
-            //Log.d("RadioControl","Persistent Service Started");
-            //startService(new Intent(this, PersistenceService.class));
+
+
+        if (pref.getBoolean("workMode",true)){
+            Intent intent = new Intent(this, PersistenceService.class);
+            //startActivity(intent);
+        }else{
+            registerForBroadcasts(getApplicationContext());
         }
 
 
@@ -590,7 +593,7 @@ public class MainActivity extends AppCompatActivity {
                             Log.d("drawer", "Started about activity");
                         } else if (position == 7) {
                             result.setSelection(item1);
-                            Snackbar.make(clayout, "Coming in v4.2!", Snackbar.LENGTH_LONG)
+                            Snackbar.make(clayout, "Coming in v5.1!", Snackbar.LENGTH_LONG)
                                     .show();
                         } else if (position == 8) {
                             //Donation
@@ -833,10 +836,17 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
-        drawerCreate();
         final SharedPreferences sharedPref = getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE);
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+
+        if (pref.getBoolean("workMode",true)) {
+            Intent intent = new Intent(this, PersistenceService.class);
+            //startActivity(intent);
+        }else{
+            registerForBroadcasts(getApplicationContext());
+        }
+        drawerCreate();
+
 
         if(pref.getBoolean("allowFabric",false)){
             Fabric.with(this, new Crashlytics());

@@ -1,4 +1,24 @@
 # Changelog
+v5.0 - Beta 1 (8/2/2017)
+- The current v4.1 beta is a big step up from v4.0 so I have decided to upgrade to v5.0
+- New Intelligent Mode(USE WITH BACKGROUND OPTIMIZATION
+- Added way to bind WifiReceiver to MainActivity and make it
+unkillable
+- Added code to make sure the background service stays awake
+- Added WifiReceiver codebase to PersistenceService, disabled internet
+access alert temporarily
+- Added battery optimization toggle(From Android settings)
+- Adds new permission for doze
+- Fixed possible memory leak for Android N devices
+- Optimized code
+- Changed wording for firebase analytics
+- Optimized Statistics activity launch delay
+- Optimized WifiReceiver for Android N+
+- Changed some layouts and icons
+- Changed analytics dialog
+- KNOWN BUGS:
+- Open Source licenses button will crash
+
 v4.1 - Beta 12 (7/9/2017)
 - Fixed possible memory leak for Android N devices
 - Optimized code

@@ -2,6 +2,7 @@ package com.nikhilparanjape.radiocontrol.fragments;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -35,8 +36,10 @@ import com.borax12.materialdaterangepicker.time.RadialPickerLayout;
 import com.borax12.materialdaterangepicker.time.TimePickerDialog;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.nikhilparanjape.radiocontrol.R;
+import com.nikhilparanjape.radiocontrol.receivers.WifiReceiver;
 import com.nikhilparanjape.radiocontrol.rootUtils.RootAccess;
 import com.nikhilparanjape.radiocontrol.rootUtils.Utilities;
+import com.nikhilparanjape.radiocontrol.services.PersistenceService;
 
 import java.io.File;
 import java.util.Calendar;
@@ -98,6 +101,58 @@ public class SettingsFragment extends PreferenceFragment implements TimePickerDi
             public boolean onPreferenceClick(Preference preference) {
                 logDirectoryButton();
                 return false;
+            }
+        });
+
+        final CheckBoxPreference batteryOptimizePref = (CheckBoxPreference) getPreferenceManager().findPreference("isBatteryOn");
+        final CheckBoxPreference workModePref = (CheckBoxPreference) getPreferenceManager().findPreference("workMode");
+        workModePref.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(c);
+                if(newValue.toString().equals("true")) {
+                    if(batteryOptimizePref.isChecked()){
+                        if (pref.getBoolean("workMode", true)) {
+                            getActivity().startService(new Intent(getActivity(), PersistenceService.class));
+                        } else {
+                            registerForBroadcasts(c);
+                        }
+                    } else{
+                        new MaterialDialog.Builder(getActivity())
+                                .iconRes(R.mipmap.ic_launcher)
+                                .limitIconToDefaultSize()
+                                .title(getString(R.string.permissionIntelligent))
+                                .positiveText("Allow")
+                                .negativeText("Deny")
+                                .backgroundColorRes(R.color.material_drawer_dark_background)
+                                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                    @Override
+                                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                        batteryOptimizePref.setChecked(true);
+                                        if (pref.getBoolean("workMode", true)) {
+                                            getActivity().startService(new Intent(getActivity(), PersistenceService.class));
+                                        } else {
+                                            registerForBroadcasts(c);
+                                        }
+                                    }
+                                })
+                                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                                    @Override
+                                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                        if (pref.getBoolean("workMode", true)) {
+                                            getActivity().startService(new Intent(getActivity(), PersistenceService.class));
+                                        } else {
+                                            registerForBroadcasts(c);
+                                        }
+                                    }
+                                })
+                                .checkBoxPromptRes(R.string.dont_ask_again, false, null)
+                                .show();
+                    }
+
+                }
+                Log.i("RadioControl","workMode");
+
+                return true;
             }
         });
 
@@ -375,6 +430,14 @@ public class SettingsFragment extends PreferenceFragment implements TimePickerDi
                 .checkBoxPromptRes(R.string.dont_ask_again, false, null)
                 .show();
 
+    }
+    public void registerForBroadcasts(Context context) {
+        ComponentName component = new ComponentName(context, WifiReceiver.class);
+        PackageManager pm = context.getPackageManager();
+        pm.setComponentEnabledSetting(
+                component,
+                PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+                PackageManager.DONT_KILL_APP);
     }
     @Override
     public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute, int hourOfDayEnd, int minuteEnd) {

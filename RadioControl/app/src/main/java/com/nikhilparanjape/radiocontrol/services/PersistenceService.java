@@ -6,10 +6,12 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -44,22 +46,22 @@ public class PersistenceService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-
+        Log.i("RadioControl","PERSISTENCE Created");
     }
     @Nullable
     public int onStartCommand(Intent intent, int flags, int startId){
         Log.i("RadioControl","PERSISTENCE Started");
         IntentFilter filter = new IntentFilter();
         filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
-        unregisterReceiver(mybroadcast);
 
-        this.registerReceiver(receiver,filter);
+        this.registerReceiver(mybroadcast,filter);
+
 
         return flags;
     }
     @Override
     public IBinder onBind(Intent intent) {
-
+        Log.i("RadioControl","PERSISTENCE Bound");
 
         return null;
     }
