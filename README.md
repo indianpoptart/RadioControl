@@ -50,7 +50,7 @@ Working properly with the following SU binary
 - MagiskSU (8)
 
 # Changelog
-[Check here for the new changelog](https://github.com/indianpoptart/RadioControl/blob/master/CHANGELOG.md)
+[Check here for the new changelog](https://changelog.nikhilp.org/)
 
 # Upcoming Features
 
