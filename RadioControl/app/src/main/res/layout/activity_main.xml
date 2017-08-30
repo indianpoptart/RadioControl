@@ -114,11 +114,11 @@
             android:id="@+id/adView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
             android:layout_gravity="bottom"
             app:adSize="BANNER"
-            app:adUnitId="@string/banner_ad_unit_id"></com.google.android.gms.ads.AdView>
+            app:adUnitId="@string/banner_ad_unit_id"
+            android:layout_alignParentBottom="true"
+            android:layout_alignStart="@+id/forceCrashButton"></com.google.android.gms.ads.AdView>
 
         <Button
             android:id="@+id/airplane_service_test"

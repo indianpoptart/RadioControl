@@ -49,6 +49,8 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
 import com.android.vending.billing.IInAppBillingService;
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.RatingEvent;
 import com.crashlytics.android.core.CrashlyticsCore;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -248,6 +250,7 @@ public class MainActivity extends AppCompatActivity {
                 });
             }
         }
+
         if(pref.getBoolean("allowFabric",false)){
             Fabric.with(this, new Crashlytics());
         } else{
@@ -449,6 +452,11 @@ public class MainActivity extends AppCompatActivity {
         emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, getString(R.string.mail_feedback_message));
         startActivity(Intent.createChooser(emailIntent, getString(R.string.title_send_feedback)));
         writeLog("Feedback sent",getApplicationContext());
+        Answers.getInstance().logRating(new RatingEvent()
+                .putRating(4)
+                .putContentName("RadioControl Feedback")
+                .putContentType("Feedback")
+                .putContentId("feedback-001"));
     }
 
     public void registerForBroadcasts(Context context) {

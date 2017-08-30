@@ -139,6 +139,11 @@
             android:title="@string/LogTitle"
             android:defaultValue="@array/empty_array"
             android:summary="@string/LogDirSummary" />
+        <Preference
+            android:key="logDel"
+            android:title="Delete Logs"
+            android:defaultValue="@array/empty_array"
+            android:summary="This will delete the log file used in Stats" />
     </PreferenceCategory>
 
 

@@ -455,6 +455,15 @@ public class Utilities {
         NetworkInfo info = getNetworkInfo(context);
         return (info != null && info.isConnected() && info.getType() == ConnectivityManager.TYPE_WIFI);
     }
+    public static boolean isWifiOn(Context context){
+        WifiManager wifiManager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        if (wifiManager.isWifiEnabled()){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
 
     /**
      * Check if there is any connectivity

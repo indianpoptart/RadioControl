@@ -15,8 +15,8 @@ android {
         applicationId "com.nikhilparanjape.radiocontrol"
         minSdkVersion 21
         targetSdkVersion 25
-        versionCode 52
-        versionName "5.0 - Beta1"
+        versionCode 53
+        versionName "5.0 - Beta2"
         // Enabling multidex support.
         multiDexEnabled true
         jackOptions {
@@ -24,15 +24,21 @@ android {
         }
     }
     dexOptions {
-        javaMaxHeapSize "14g"
+        javaMaxHeapSize "6g"
+        incremental true
+        maxProcessCount 8
+
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+        debug {
+        }
     }
     productFlavors {
+
     }
     compileOptions {
         targetCompatibility 1.8

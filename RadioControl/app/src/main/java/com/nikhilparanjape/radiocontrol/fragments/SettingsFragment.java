@@ -60,7 +60,7 @@ public class SettingsFragment extends PreferenceFragment implements TimePickerDi
         c = getActivity();
         final Utilities util = new Utilities();
 
-        if(Utilities.isConnectedWifi(c)){
+        if(Utilities.isWifiOn(c)){
             getPreferenceScreen().findPreference("ssid").setEnabled(true);
             //Listen for changes, I'm not sure if this is how it's meant to work, but it does :/
 
@@ -100,6 +100,13 @@ public class SettingsFragment extends PreferenceFragment implements TimePickerDi
         logDirPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             public boolean onPreferenceClick(Preference preference) {
                 logDirectoryButton();
+                return false;
+            }
+        });
+        final Preference logDelPref = findPreference("logDel");
+        logDelPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            public boolean onPreferenceClick(Preference preference) {
+                logDeleteButton();
                 return false;
             }
         });
@@ -471,6 +478,12 @@ public class SettingsFragment extends PreferenceFragment implements TimePickerDi
     public void logDirectoryButton(){
         Toast.makeText(getActivity(),
                 "Coming Soon!", Toast.LENGTH_LONG).show();
+    }
+    public void logDeleteButton(){
+        File log = new File(c.getFilesDir(), "radiocontrol.log");
+        boolean deleted = log.delete();
+        Toast.makeText(getActivity(),
+                "Log Deleted", Toast.LENGTH_LONG).show();
     }
 
 
