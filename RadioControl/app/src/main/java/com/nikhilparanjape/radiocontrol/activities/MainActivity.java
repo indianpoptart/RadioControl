@@ -50,6 +50,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
 import com.android.vending.billing.IInAppBillingService;
 import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.PurchaseEvent;
 import com.crashlytics.android.answers.RatingEvent;
 import com.crashlytics.android.core.CrashlyticsCore;
 import com.google.android.gms.ads.AdRequest;
@@ -91,6 +92,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.math.BigDecimal;
+import java.util.Currency;
 
 
 /**
@@ -439,6 +442,10 @@ public class MainActivity extends AppCompatActivity {
         if (currentVersionNumber > savedVersionNumber) {
             showUpdated();
             editor.putInt(VERSION_KEY, currentVersionNumber);
+            editor.apply();
+        }
+        if (android.os.Build.VERSION.SDK_INT >= 26){
+            editor.putBoolean("workMode",true);
             editor.apply();
         }
     }
@@ -1028,21 +1035,49 @@ public class MainActivity extends AppCompatActivity {
         if(bill == 0){
             mHelper.launchPurchaseFlow(this, ITEM_ONE_DOLLAR, 001,
                     mPurchaseFinishedListener, "supportOneDollar");
+            Answers.getInstance().logPurchase(new PurchaseEvent()
+                    .putItemPrice(BigDecimal.valueOf(0.99))
+                    .putCurrency(Currency.getInstance("USD"))
+                    .putItemName("Donation1")
+                    .putItemType("Donation")
+                    .putItemId("sku-001")
+                    .putSuccess(true));
         }
         //Check if $2.99
         else if(bill == 1){
             mHelper.launchPurchaseFlow(this, ITEM_THREE_DOLLAR, 002,
                     mPurchaseFinishedListener, "supportThreeDollar");
+            Answers.getInstance().logPurchase(new PurchaseEvent()
+                    .putItemPrice(BigDecimal.valueOf(2.99))
+                    .putCurrency(Currency.getInstance("USD"))
+                    .putItemName("Donation3")
+                    .putItemType("Donation")
+                    .putItemId("sku-002")
+                    .putSuccess(true));
         }
         //Check if $4.99
         else if(bill == 2){
             mHelper.launchPurchaseFlow(this, ITEM_FIVE_DOLLAR, 003,
                     mPurchaseFinishedListener, "supportFiveDollar");
+            Answers.getInstance().logPurchase(new PurchaseEvent()
+                    .putItemPrice(BigDecimal.valueOf(4.99))
+                    .putCurrency(Currency.getInstance("USD"))
+                    .putItemName("Donation5")
+                    .putItemType("Donation")
+                    .putItemId("sku-003")
+                    .putSuccess(true));
         }
         //Check if $9.99
         else if(bill == 3){
             mHelper.launchPurchaseFlow(this, ITEM_TEN_DOLLAR, 004,
                     mPurchaseFinishedListener, "supportTenDollar");
+            Answers.getInstance().logPurchase(new PurchaseEvent()
+                    .putItemPrice(BigDecimal.valueOf(9.99))
+                    .putCurrency(Currency.getInstance("USD"))
+                    .putItemName("Donation10")
+                    .putItemType("Donation")
+                    .putItemId("sku-004")
+                    .putSuccess(true));
 
         }
 

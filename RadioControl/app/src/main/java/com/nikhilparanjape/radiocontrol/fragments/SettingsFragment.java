@@ -55,6 +55,15 @@ public class SettingsFragment extends PreferenceFragment implements TimePickerDi
         addPreferencesFromResource(R.xml.settings);
 
         SharedPreferences sp = getPreferenceScreen().getSharedPreferences();
+        SharedPreferences.Editor editor = sp.edit();
+        if (android.os.Build.VERSION.SDK_INT >= 26){
+            getPreferenceScreen().findPreference("workMode").setEnabled(false);
+            getPreferenceScreen().findPreference("workMode").setEnabled(false);
+            editor.putBoolean("workMode",true);
+            editor.apply();
+        }else{
+            getPreferenceScreen().findPreference("workMode").setEnabled(true);
+        }
 
 
         c = getActivity();
@@ -62,9 +71,6 @@ public class SettingsFragment extends PreferenceFragment implements TimePickerDi
 
         if(Utilities.isWifiOn(c)){
             getPreferenceScreen().findPreference("ssid").setEnabled(true);
-            //Listen for changes, I'm not sure if this is how it's meant to work, but it does :/
-
-
         }
         else{
             getPreferenceScreen().findPreference("ssid").setEnabled(false);
