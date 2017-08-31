@@ -21,7 +21,7 @@ This project sometimes follows [Semantic Versioning](http://semver.org/) but not
 
 Latest **Stable** Release: [v4.0](https://github.com/indianpoptart/RadioControl/releases/latest) (5/17/2016)
 
-Latest **Beta** Release: [v5.0-beta1](https://github.com/indianpoptart/RadioControl/releases/tag/v5.0-beta1) (8/2/2017)
+Latest **Beta** Release: [v5.0-beta2](https://github.com/indianpoptart/RadioControl/releases/tag/v5.0-beta2) (8/31/2017)
 
 Current **Stable Beta** Release: [v4.1-beta11](https://github.com/indianpoptart/RadioControl/releases/tag/v4.1-beta11) (7/5/2017)
 
