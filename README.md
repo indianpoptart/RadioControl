@@ -5,10 +5,9 @@
 
 I created this app because of the lack of apps on the play store that enable airplane mode, while keeping wifi on. Probably because not many carriers have WiFi calling and SMS over WiFi
 
-An app that auto toggles wifi and cell radio for maximum battery life
+RadioControl automatically toggles WiFi and Cell radios to maximize battery life
 
-This app will probably only be useful to Project Fi users as it can disable radios while keeping wifi on if.
-This could work for Republic Wireless users, but your device must be rooted, and most of their devices are hard to root without losing functionality.
+This app will be useful to Project Fi and Republic Wireless users, as both carriers support Talk & Text through wifi.
 
 Feel free to ask questions related to Android programming or this project in the public Gitter chat room. The issues page should be primarily used for bug reports and enhancement ideas.
 
@@ -16,6 +15,11 @@ This project sometimes follows [Semantic Versioning](http://semver.org/) but not
 
 [![Join the chat at https://gitter.im/indianpoptart/RadioControl](https://badges.gitter.im/indianpoptart/RadioControl.svg)](https://gitter.im/indianpoptart/RadioControl?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
+# Battery Usage by RadioControl
+
+I have only detected a 0.3% decrease in battery with regular day to day use.
+
+I will continue testing and possibly have an average battery usage(on my phone) per week
 
 # Versions
 
@@ -30,7 +34,7 @@ https://crowdin.com/project/radiocontrol/invite
 
 # Compatibility
 The app has been tested and works properly on these devices:
-- ~~Google Pixel~~ (Some errors have been reported)
+- ~~Google Pixel~~ (Some errors have been reported) - Should be fixed in v5.0
 - LG V10 ![LG](http://nikhilp.org/images/lg.png)
 - Moto X (2nd Gen.) ![Motorola](http://nikhilp.org/images/moto.png)
 - Nexus 6 ![Motorola](http://nikhilp.org/images/moto.png)
