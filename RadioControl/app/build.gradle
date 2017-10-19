@@ -73,7 +73,7 @@ dependencies {
     compile 'com.android.support:customtabs:25.1.0'
     compile 'me.zhanghai.android.customtabshelper:library:1.0.3'
     compile 'com.novoda:simple-chrome-custom-tabs:0.1.5'
-    compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
+    compile('com.crashlytics.sdk.android:crashlytics:2.7.0@aar') {
         transitive = true;
     }
 }
