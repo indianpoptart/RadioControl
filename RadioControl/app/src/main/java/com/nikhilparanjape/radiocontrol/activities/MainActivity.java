@@ -30,7 +30,6 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.telephony.TelephonyManager;
 import android.text.Html;
 import android.text.format.DateFormat;
 import android.util.Log;
@@ -73,7 +72,6 @@ import com.nikhilparanjape.radiocontrol.BuildConfig;
 import com.nikhilparanjape.radiocontrol.R;
 import com.nikhilparanjape.radiocontrol.receivers.ActionReceiver;
 import com.nikhilparanjape.radiocontrol.receivers.NightModeReceiver;
-import com.nikhilparanjape.radiocontrol.receivers.PersistenceAlarmReceiver;
 import com.nikhilparanjape.radiocontrol.receivers.WifiReceiver;
 import com.nikhilparanjape.radiocontrol.rootUtils.PingWrapper;
 import com.nikhilparanjape.radiocontrol.rootUtils.Utilities;
@@ -103,16 +101,13 @@ import java.util.Currency;
 public class MainActivity extends AppCompatActivity {
     private static final String PRIVATE_PREF = "prefs";
     private static final String VERSION_KEY = "version_number";
-    private final BroadcastReceiver standardBroadcast = new WifiReceiver();
 
     Drawable icon;
     Drawable carrierIcon;
-    Drawable wifiIcon;
     Drawer result;
     String versionName = BuildConfig.VERSION_NAME;
     Utilities util = new Utilities();
     IInAppBillingService mService;
-    private Toast toast;
     CoordinatorLayout clayout;
     static final String ITEM_SKU = "com.nikhilparanjape.radiocontrol.test_donate1";
     static final String ITEM_ONE_DOLLAR = "com.nikihlparanjape.radiocontrol.donate.one";
@@ -520,19 +515,7 @@ public class MainActivity extends AppCompatActivity {
                     .color(Color.RED);
         }
 
-        //WiFi Icon
-        String ssid = "Not Optimized";
-        if(batteryOptimize){
-            wifiIcon = new IconicsDrawable(this)
-                    .icon(GoogleMaterial.Icon.gmd_check_circle)
-                    .color(Color.GREEN);
-            ssid = "Battery Optimized";
-        }
-        else{
-            wifiIcon = new IconicsDrawable(this)
-                    .icon(GoogleMaterial.Icon.gmd_help_outline)
-                    .color(Color.YELLOW);
-        }
+
         Drawable headerIcon = ContextCompat.getDrawable(getApplicationContext(),R.mipmap.header);
 
 
@@ -546,8 +529,7 @@ public class MainActivity extends AppCompatActivity {
                 .withHeaderBackground(headerIcon)
                 .addProfiles(
                         new ProfileDrawerItem().withName(getDeviceName()).withEmail("v" + versionName).withIcon(icon),
-                        new ProfileDrawerItem().withName("Root Status").withEmail(carrierName).withIcon(carrierIcon),
-                        new ProfileDrawerItem().withName("Background Optimization").withEmail(ssid).withIcon(wifiIcon)
+                        new ProfileDrawerItem().withName("Root Status").withEmail(carrierName).withIcon(carrierIcon)
                 )
                 .withOnAccountHeaderListener(new AccountHeader.OnAccountHeaderListener() {
                     @Override
@@ -1160,7 +1142,8 @@ public class MainActivity extends AppCompatActivity {
                 Double.parseDouble(w.status);
             } catch(Exception e){
                 isDouble = false;
-                Log.d("RadioControl", "Not a double");
+                Log.d("RadioControl", "Not a double: " + e);
+                Snackbar.make(clayout, "NumberFormatException " + w.status, Snackbar.LENGTH_LONG).show();
                 Crashlytics.logException(e);
             }
             try{

@@ -37,16 +37,11 @@ import javax.xml.parsers.ParserConfigurationException;
 public class AboutFragment extends PreferenceFragment {
     String versionName = BuildConfig.VERSION_NAME;
     private static final String PRIVATE_PREF = "prefs";
-    private static final Uri SOURCE_URI = Uri.parse(
-            "https://nikhilp.org/radiocontrol/opensource/");
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.about);
-
-        Utilities util = new Utilities();
-
 
 
         final Context c = getActivity();

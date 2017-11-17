@@ -1,10 +1,8 @@
 package com.nikhilparanjape.radiocontrol.fragments;
 
 import android.Manifest;
-import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -13,20 +11,15 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.preference.CheckBoxPreference;
-import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.text.Html;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.webkit.WebView;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
@@ -420,30 +413,7 @@ public class SettingsFragment extends PreferenceFragment implements TimePickerDi
 
     }
 
-    private void displayEulaAlertDialog(final Context c) {
-        new MaterialDialog.Builder(getActivity())
-                .iconRes(R.mipmap.ic_launcher)
-                .limitIconToDefaultSize()
-                .title(Html.fromHtml(getString(R.string.permissionSampleFirebase, getString(R.string.app_name))))
-                .positiveText("Allow")
-                .negativeText("Deny")
-                .backgroundColorRes(R.color.material_drawer_dark_background)
-                .onPositive(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        FirebaseAnalytics.getInstance(c).setAnalyticsCollectionEnabled(true);
-                    }
-                })
-                .onNegative(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        FirebaseAnalytics.getInstance(c).setAnalyticsCollectionEnabled(false);
-                    }
-                })
-                .checkBoxPromptRes(R.string.dont_ask_again, false, null)
-                .show();
 
-    }
     public void registerForBroadcasts(Context context) {
         ComponentName component = new ComponentName(context, WifiReceiver.class);
         PackageManager pm = context.getPackageManager();
@@ -461,8 +431,6 @@ public class SettingsFragment extends PreferenceFragment implements TimePickerDi
         String hourStringEnd = hourOfDayEnd < 10 ? "0"+hourOfDayEnd : ""+hourOfDayEnd;
         String minuteStringEnd = minuteEnd < 10 ? "0"+minuteEnd : ""+minuteEnd;
         String time = "You picked the following time: From - "+hourString+"h"+minuteString+" To - "+hourStringEnd+"h"+minuteStringEnd;
-
-        int currHour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
 
         util.cancelNightAlarm(c,hourOfDay, minute);
 

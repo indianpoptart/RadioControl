@@ -4,7 +4,6 @@ package com.nikhilparanjape.radiocontrol.receivers;
  * Created by admin on 3/4/2017.
  */
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.WakefulBroadcastReceiver;

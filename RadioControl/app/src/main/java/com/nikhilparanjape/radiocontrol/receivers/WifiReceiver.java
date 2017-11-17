@@ -3,9 +3,6 @@ package com.nikhilparanjape.radiocontrol.receivers;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.support.v4.content.WakefulBroadcastReceiver;
@@ -33,7 +30,6 @@ import java.util.Set;
 public class WifiReceiver extends WakefulBroadcastReceiver {
 
     private static final String PRIVATE_PREF = "prefs";
-    private static boolean firstConnect = true;
 
     //Root commands which disable cell only
     String[] airCmd = {"su", "settings put global airplane_mode_radios  \"cell\"", "content update --uri content://settings/global --bind value:s:'cell' --where \"name='airplane_mode_radios'\"", "settings put global airplane_mode_on 1", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state true"};

@@ -1,31 +1,24 @@
 package com.nikhilparanjape.radiocontrol.services;
 
 import android.app.IntentService;
-import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.text.format.DateFormat;
 import android.util.Log;
 
 import com.nikhilparanjape.radiocontrol.R;
-import com.nikhilparanjape.radiocontrol.receivers.WifiReceiver;
 import com.nikhilparanjape.radiocontrol.rootUtils.RootAccess;
 import com.nikhilparanjape.radiocontrol.rootUtils.Utilities;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * Created by admin on 8/20/2016.
@@ -33,16 +26,12 @@ import java.util.TimerTask;
 public class BackgroundAirplaneService extends IntentService
 {
 
-    private Timer timer = new Timer();
     private static final String PRIVATE_PREF = "prefs";
-    public static final String BROADCAST = "com.nikhilparanjape.radiocontrol.android.action.broadcast";
 
     //Root commands which disable cell only
     String[] airCmd = {"su", "settings put global airplane_mode_radios  \"cell\"", "content update --uri content://settings/global --bind value:s:'cell' --where \"name='airplane_mode_radios'\"", "settings put global airplane_mode_on 1", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state true"};
     //runs command to disable airplane mode on wifi loss, while restoring previous airplane settings
     String[] airOffCmd2 = {"su", "settings put global airplane_mode_on 0", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state false", "settings put global airplane_mode_radios  \"cell,bluetooth,nfc,wimax\"", "content update --uri content://settings/global --bind value:s:'cell,bluetooth,nfc,wimax' --where \"name='airplane_mode_radios'\""};
-
-    String[] airOffCmd3 = {"su", "settings put global airplane_mode_on 0", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state false"};
 
     Utilities util = new Utilities(); //Network and other related utilities
 

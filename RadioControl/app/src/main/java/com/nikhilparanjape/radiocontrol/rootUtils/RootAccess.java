@@ -1,9 +1,5 @@
 package com.nikhilparanjape.radiocontrol.rootUtils;
 
-import android.util.Log;
-
-import com.google.firebase.crash.FirebaseCrash;
-
 import java.io.DataOutputStream;
 import java.io.IOException;
 

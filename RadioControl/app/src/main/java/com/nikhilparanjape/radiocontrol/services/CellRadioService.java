@@ -1,9 +1,6 @@
 package com.nikhilparanjape.radiocontrol.services;
 
-import android.app.AlarmManager;
 import android.app.IntentService;
-import android.app.PendingIntent;
-import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
@@ -11,13 +8,9 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import com.nikhilparanjape.radiocontrol.receivers.RootServiceReceiver;
 import com.nikhilparanjape.radiocontrol.rootUtils.RootAccess;
 import com.nikhilparanjape.radiocontrol.rootUtils.Utilities;
 
-import java.util.Calendar;
-
-import static android.app.AlarmManager.RTC_WAKEUP;
 
 /**
  * Created by admin on 9/23/2016.

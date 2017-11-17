@@ -4,11 +4,9 @@ import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.media.AudioManager;
 import android.net.ConnectivityManager;
 import android.net.Network;
@@ -21,33 +19,21 @@ import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.v7.app.NotificationCompat;
 import android.telephony.CellInfo;
-import android.telephony.CellInfoGsm;
-import android.telephony.CellSignalStrengthGsm;
 import android.telephony.ServiceState;
 import android.telephony.TelephonyManager;
 import android.util.Log;
-import android.view.View;
-import android.widget.Toast;
 
 import com.nikhilparanjape.radiocontrol.R;
-import com.nikhilparanjape.radiocontrol.activities.MainActivity;
 import com.nikhilparanjape.radiocontrol.receivers.NightModeReceiver;
 import com.nikhilparanjape.radiocontrol.receivers.PersistenceAlarmReceiver;
 import com.nikhilparanjape.radiocontrol.receivers.RootServiceReceiver;
 import com.nikhilparanjape.radiocontrol.receivers.TimedAlarmReceiver;
 import com.nikhilparanjape.radiocontrol.receivers.WakeupReceiver;
-import com.nikhilparanjape.radiocontrol.receivers.WifiReceiver;
 
 import java.io.IOException;
-import java.lang.reflect.Method;
-import java.sql.Time;
 import java.util.Calendar;
 import java.util.List;
 
-import static android.app.AlarmManager.INTERVAL_DAY;
-import static android.app.AlarmManager.INTERVAL_FIFTEEN_MINUTES;
-import static android.app.AlarmManager.INTERVAL_HALF_HOUR;
-import static android.app.AlarmManager.INTERVAL_HOUR;
 import static android.app.AlarmManager.RTC;
 import static android.app.AlarmManager.RTC_WAKEUP;
 
@@ -55,28 +41,6 @@ import static android.app.AlarmManager.RTC_WAKEUP;
  * Created by Nikhil on 2/3/2016.
  */
 public class Utilities {
-
-
-    /**
-     * isOnline - Check if there is a NetworkConnection
-     * @return boolean
-     */
-
-    public void isOnline() {
-        new AsyncBackgroundTask().execute("");
-    }
-    public boolean isOnlineTest(){
-        Runtime runtime = Runtime.getRuntime();
-        try {
-            Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");
-            int exitValue = ipProcess.waitFor();
-            Log.d("RadioControl", "Ping test returned " + exitValue);
-            return (exitValue == 0);
-        }
-        catch (IOException | InterruptedException e){ e.printStackTrace(); }
-
-        return false;
-    }
 
     /**
      * gets network ssid
@@ -98,17 +62,6 @@ public class Utilities {
         }
         return ssid;
     }
-    public static NetworkInfo.State getMobileState(Context c){
-        try{
-            ConnectivityManager cm = (ConnectivityManager) c.getSystemService(Context.CONNECTIVITY_SERVICE);
-            NetworkInfo.State mobile = cm.getNetworkInfo(0).getState();
-            NetworkInfo.State mob = cm.getActiveNetworkInfo().getState();
-
-            return mob;
-        } catch (NullPointerException e){
-            return null;
-        }
-    }
 
     public static int getCellStatus(Context c){
         int z = 0;
@@ -124,33 +77,6 @@ public class Utilities {
             Log.e("RadioControl","Unable to get Location Permission",e);
         }
         return z;
-    }
-    public boolean hasCellStatus(Context context){
-        TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-        return tm.getAllCellInfo() != null && tm.getAllCellInfo().size() > 0;
-    }
-    public static String getCellStrength(){
-        ServiceState state = new ServiceState();
-        if(state.getState() == ServiceState.STATE_POWER_OFF){
-            return "Off";
-        }
-        else if(state.getState() == ServiceState.STATE_IN_SERVICE){
-            return "In Service";
-        }
-        else if(state.getState() == ServiceState.STATE_EMERGENCY_ONLY){
-            return "Emergency";
-        }
-        else if(state.getState() == ServiceState.STATE_OUT_OF_SERVICE){
-            return "Out Of Service";
-        }
-        else{
-            return "Unknown";
-        }
-    }
-    public static Network[] getMobState(Context c){
-        ConnectivityManager cm = (ConnectivityManager) c.getSystemService(Context.CONNECTIVITY_SERVICE);
-        Network[] mobile = cm.getAllNetworks();
-        return mobile;
     }
 
     /**
@@ -228,27 +154,7 @@ public class Utilities {
                 cal.getTimeInMillis(), pIntent);
 
     }
-    public static void schedulePersistAlarm(Context c){
 
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(c);
-        String intervalTimeString = preferences.getString("interval_prefs","10");
-        int intervalTime = Integer.parseInt(intervalTimeString);
-        Calendar cal = Calendar.getInstance();
-        // start 30 seconds after boot completed
-        cal.add(Calendar.MINUTE, intervalTime);
-
-        // Construct an intent that will execute the AlarmReceiver
-        Intent intent = new Intent(c, PersistenceAlarmReceiver.class);
-        // Create a PendingIntent to be triggered when the alarm goes off
-        final PendingIntent pIntent = PendingIntent.getBroadcast(c, PersistenceAlarmReceiver.REQUEST_CODE,
-                intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        long firstMillis = System.currentTimeMillis(); // alarm is set right away
-        AlarmManager alarm = (AlarmManager) c.getSystemService(Context.ALARM_SERVICE);
-        // First parameter is the type: ELAPSED_REALTIME, ELAPSED_REALTIME_WAKEUP, RTC_WAKEUP
-        // Interval can be INTERVAL_FIFTEEN_MINUTES, INTERVAL_HALF_HOUR, INTERVAL_HOUR, INTERVAL_DAY
-        alarm.setInexactRepeating(RTC, firstMillis,
-                cal.getTimeInMillis(), pIntent);
-    }
     public void scheduleRootAlarm(Context c) {
         Calendar cal = Calendar.getInstance();
         // start 10 seconds
@@ -334,7 +240,7 @@ public class Utilities {
     }
     public static String getPingStats(String s) {
         try{
-            String status = "";
+            String status;
             if (s.contains("0% packet loss")) {
                 int start = s.indexOf("/mdev = ");
                 int end = s.indexOf(" ms\n", start);
@@ -453,7 +359,7 @@ public class Utilities {
      */
     public static boolean isConnectedWifi(Context context){
         NetworkInfo info = getNetworkInfo(context);
-        return (info != null && info.isConnected() && info.getType() == ConnectivityManager.TYPE_WIFI);
+        return (info != null && info.isConnectedOrConnecting() && info.getType() == ConnectivityManager.TYPE_WIFI);
     }
     public static boolean isWifiOn(Context context){
         WifiManager wifiManager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
@@ -482,7 +388,7 @@ public class Utilities {
      */
     public static boolean isConnectedMobile(Context context){
         NetworkInfo info = getNetworkInfo(context);
-        return (info != null && info.isConnected() && info.getType() == ConnectivityManager.TYPE_MOBILE);
+        return (info != null && info.isConnectedOrConnecting() && info.getType() == ConnectivityManager.TYPE_MOBILE);
     }
 
     /**
@@ -506,7 +412,7 @@ public class Utilities {
      */
     public static boolean isConnectedFast(Context context){
         NetworkInfo info = getNetworkInfo(context);
-        return (info != null && info.isConnected() && isConnectionFast(info.getType(), info.getSubtype()));
+        return (info != null && info.isConnectedOrConnecting() && isConnectionFast(info.getType(), info.getSubtype()));
     }
 
     public static boolean isAirplaneMode(Context context){

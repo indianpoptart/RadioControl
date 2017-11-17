@@ -23,5 +23,6 @@ public class WakeupReceiver extends BroadcastReceiver {
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = pref.edit();
         editor.putBoolean("isNoDisturbEnabled", false);
+        editor.apply();
     }
 }
