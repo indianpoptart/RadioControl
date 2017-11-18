@@ -151,17 +151,24 @@ public class MainActivity extends AppCompatActivity {
 
                 //  Create a new boolean and preference and set it to true
                 boolean isFirstStart = getPrefs.getBoolean("firstStart", true);
+                int currentapiVersion = android.os.Build.VERSION.SDK_INT;
 
                 //  If the activity has never started before...
                 if (isFirstStart) {
+                    //  Make a new preferences editor
+                    SharedPreferences.Editor e = getPrefs.edit();
+
+
+                    if (currentapiVersion >= 24) {
+                        e.putBoolean("workmode", true);
+                    }
 
 
                     //  Launch app intro
                     Intent i = new Intent(MainActivity.this, TutorialActivity.class);
                     startActivity(i);
 
-                    //  Make a new preferences editor
-                    SharedPreferences.Editor e = getPrefs.edit();
+
 
                     //  Edit preference to make it false because we don't want this to run again
                     e.putBoolean("firstStart", false);
@@ -174,6 +181,9 @@ public class MainActivity extends AppCompatActivity {
                 String intervalTime = getPrefs.getString("interval_prefs","10");
                 boolean airplaneService = getPrefs.getBoolean("isAirplaneService", false);
 
+                if(getPrefs.getBoolean("eulaShow", false)){
+                    FirebaseAnalytics.getInstance(getApplicationContext()).setAnalyticsCollectionEnabled(true);
+                }
                 if(!intervalTime.equals("0") && airplaneService){
                     Intent i= new Intent(getApplicationContext(), BackgroundAirplaneService.class);
                     getBaseContext().startService(i);
@@ -361,7 +371,9 @@ public class MainActivity extends AppCompatActivity {
                 final PendingIntent pIntent = PendingIntent.getBroadcast(getApplicationContext(), NightModeReceiver.REQUEST_CODE,
                         intent, PendingIntent.FLAG_UPDATE_CURRENT);
                 AlarmManager alarm = (AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
-                alarm.cancel(pIntent);
+                if (alarm != null) {
+                    alarm.cancel(pIntent);
+                }
             }
 
         });
@@ -439,9 +451,12 @@ public class MainActivity extends AppCompatActivity {
             editor.putInt(VERSION_KEY, currentVersionNumber);
             editor.apply();
         }
-        if (android.os.Build.VERSION.SDK_INT >= 26){
+        if (android.os.Build.VERSION.SDK_INT >= 24){
             editor.putBoolean("workMode",true);
             editor.apply();
+        }
+        if(sharedPref.getBoolean("eulaShow", false)){
+            FirebaseAnalytics.getInstance(getApplicationContext()).setAnalyticsCollectionEnabled(true);
         }
     }
 
@@ -679,7 +694,9 @@ public class MainActivity extends AppCompatActivity {
                 .setPriority(-2)
                 .setOngoing(true);
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.notify(10110, note.build());
+        if (notificationManager != null) {
+            notificationManager.notify(10110, note.build());
+        }
     }
 
     //starts about activity
