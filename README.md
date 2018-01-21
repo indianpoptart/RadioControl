@@ -23,11 +23,11 @@ I will continue testing and possibly have an average battery usage(on my phone) 
 
 # Versions
 
-Latest **Stable** Release: [v4.0](https://github.com/indianpoptart/RadioControl/releases/latest) (5/17/2016)
+Latest **Stable** Release: [v4.0](https://github.com/indianpoptart/RadioControl/releases/latest) (1/20/2018)
 
 Latest **Beta** Release: [v5.0-beta3](https://github.com/indianpoptart/RadioControl/releases/tag/v5.0-beta3) (11/18/2017)
 
-Current **Stable Beta** Release: [v4.1-beta11](https://github.com/indianpoptart/RadioControl/releases/tag/v4.1-beta11) (7/5/2017)
+Current **Stable Beta** Release: [vNA]() (NA)
 
 # Help me translate to your native language
 https://crowdin.com/project/radiocontrol/invite
@@ -51,7 +51,7 @@ The app has been tested and works properly on these devices:
 # SU Binary Compatibility
 Working properly with the following SU binary
 - SuperSU 2.78+
-- MagiskSU (8)
+- MagiskSU (8+)
 
 # Changelog
 [Check here for the new changelog](https://changelog.nikhilp.org/)
