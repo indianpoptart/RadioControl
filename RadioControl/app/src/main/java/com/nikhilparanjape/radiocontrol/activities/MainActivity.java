@@ -21,6 +21,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.os.PowerManager;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
@@ -163,12 +164,9 @@ public class MainActivity extends AppCompatActivity {
                         e.putBoolean("workmode", true);
                     }
 
-
                     //  Launch app intro
                     Intent i = new Intent(MainActivity.this, TutorialActivity.class);
                     startActivity(i);
-
-
 
                     //  Edit preference to make it false because we don't want this to run again
                     e.putBoolean("firstStart", false);
@@ -272,6 +270,10 @@ public class MainActivity extends AppCompatActivity {
 
 
         if (pref.getBoolean("workMode",true)){
+            PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
+            PowerManager.WakeLock wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
+                    "RadioControl-WL");
+            wakeLock.acquire();
             Intent intent = new Intent(this, PersistenceService.class);
             //startActivity(intent);
         }else{

@@ -89,6 +89,13 @@ public class BackgroundAirplaneService extends IntentService
                             writeLog("Airplane mode has been turned off", context);
                         }
                     }
+
+                    //Checks that user is currently in call and pauses execution till the call ends
+                    else if(util.isCallActive(context)){
+                        while(util.isCallActive(context)){
+                            waitFor(1000);//Wait for call to end
+                        }
+                    }
                 }
             }
 

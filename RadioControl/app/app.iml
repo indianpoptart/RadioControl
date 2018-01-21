@@ -51,13 +51,6 @@
       <sourceFolder url="file://$MODULE_DIR$/src/debug/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/debug/rs" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/debug/shaders" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/testDebug/res" type="java-test-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/src/testDebug/resources" type="java-test-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/src/testDebug/assets" type="java-test-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/src/testDebug/aidl" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/src/testDebug/java" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/src/testDebug/rs" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/src/testDebug/shaders" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/androidTestDebug/res" type="java-test-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/androidTestDebug/resources" type="java-test-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/androidTestDebug/assets" type="java-test-resource" />
@@ -65,6 +58,13 @@
       <sourceFolder url="file://$MODULE_DIR$/src/androidTestDebug/java" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/androidTestDebug/rs" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/androidTestDebug/shaders" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/testDebug/res" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/testDebug/resources" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/testDebug/assets" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/testDebug/aidl" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/testDebug/java" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/testDebug/rs" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/testDebug/shaders" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/res" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/resources" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/assets" type="java-resource" />
@@ -72,13 +72,6 @@
       <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/rs" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/shaders" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/test/res" type="java-test-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/src/test/resources" type="java-test-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/src/test/assets" type="java-test-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/src/test/aidl" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/src/test/rs" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/src/test/shaders" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/androidTest/res" type="java-test-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/androidTest/resources" type="java-test-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/androidTest/assets" type="java-test-resource" />
@@ -86,6 +79,13 @@
       <sourceFolder url="file://$MODULE_DIR$/src/androidTest/java" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/androidTest/rs" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/androidTest/shaders" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/test/res" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/test/resources" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/test/assets" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/test/aidl" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/test/rs" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/test/shaders" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/assets" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/blame" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/build-info" />
@@ -118,53 +118,53 @@
     </content>
     <orderEntry type="jdk" jdkName="Android API 25 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="com.google.firebase:firebase-crash-11.6.2" level="project" />
+    <orderEntry type="library" name="com.google.firebase:firebase-iid-11.6.2" level="project" />
     <orderEntry type="library" name="com.android.support:support-v13-25.1.1" level="project" />
-    <orderEntry type="library" name="com.google.firebase:firebase-crash-11.6.0" level="project" />
     <orderEntry type="library" name="com.appeaser.sublimepickerlibrary:sublimepickerlibrary-2.1.1" level="project" />
     <orderEntry type="library" name="com.mikepenz:materialize-0.5.1" level="project" />
     <orderEntry type="library" name="com.getkeepsafe.taptargetview:taptargetview-1.8.0" level="project" />
     <orderEntry type="library" name="com.nineoldandroids:library:2.4.0@jar" level="project" />
     <orderEntry type="library" name="me.zhanghai.android.customtabshelper:library-1.0.3" level="project" />
-    <orderEntry type="library" name="com.google.android.gms:play-services-basement-license-11.6.0" level="project" />
-    <orderEntry type="library" name="com.google.firebase:firebase-iid-11.6.0" level="project" />
+    <orderEntry type="library" name="com.google.android.gms:play-services-basement-license-11.6.2" level="project" />
     <orderEntry type="library" name="com.android.support:support-fragment-25.4.0" level="project" />
     <orderEntry type="library" name="com.github.gabrielemariotti.changeloglib:changelog-2.0.1-SNAPSHOT" level="project" />
     <orderEntry type="library" name="com.mikepenz:materialdrawer-4.6.4" level="project" />
     <orderEntry type="library" name="com.android.support:animated-vector-drawable-25.4.0" level="project" />
-    <orderEntry type="library" name="com.google.firebase:firebase-common-11.6.0" level="project" />
-    <orderEntry type="library" name="com.google.android.gms:play-services-tasks-11.6.0" level="project" />
-    <orderEntry type="library" name="com.google.android.gms:play-services-ads-11.6.0" level="project" />
-    <orderEntry type="library" name="com.google.android.gms:play-services-ads-lite-license-11.6.0" level="project" />
+    <orderEntry type="library" name="com.google.android.gms:play-services-basement-11.6.2" level="project" />
+    <orderEntry type="library" name="com.google.android.gms:play-services-ads-11.6.2" level="project" />
+    <orderEntry type="library" name="com.google.firebase:firebase-common-11.6.2" level="project" />
+    <orderEntry type="library" name="com.google.android.gms:play-services-tasks-11.6.2" level="project" />
     <orderEntry type="library" name="com.novoda:simple-chrome-custom-tabs-0.1.5" level="project" />
-    <orderEntry type="library" name="com.google.firebase:firebase-core-11.6.0" level="project" />
+    <orderEntry type="library" name="com.google.firebase:firebase-common-license-11.6.2" level="project" />
     <orderEntry type="library" name="com.github.asyl.animation:arcanimator-1.0.0" level="project" />
     <orderEntry type="library" name="com.diogobernardino:williamchart-2.2" level="project" />
     <orderEntry type="library" name="com.android.support:appcompat-v7-25.4.0" level="project" />
-    <orderEntry type="library" name="com.google.firebase:firebase-common-license-11.6.0" level="project" />
-    <orderEntry type="library" name="com.google.android.gms:play-services-ads-lite-11.6.0" level="project" />
+    <orderEntry type="library" name="com.google.firebase:firebase-core-11.6.2" level="project" />
+    <orderEntry type="library" name="com.google.android.gms:play-services-ads-lite-11.6.2" level="project" />
+    <orderEntry type="library" name="com.google.android.gms:play-services-ads-lite-license-11.6.2" level="project" />
     <orderEntry type="library" name="com.android.support:gridlayout-v7-23.2.1" level="project" />
     <orderEntry type="library" name="com.crashlytics.sdk.android:crashlytics-2.7.1" level="project" />
     <orderEntry type="library" name="com.crashlytics.sdk.android:answers-1.4.1" level="project" />
-    <orderEntry type="library" name="com.google.firebase:firebase-analytics-impl-11.6.0" level="project" />
+    <orderEntry type="library" name="com.google.firebase:firebase-analytics-impl-11.6.2" level="project" />
     <orderEntry type="library" name="me.grantland:autofittextview-0.2.1" level="project" />
-    <orderEntry type="library" name="com.google.android.gms:play-services-tasks-license-11.6.0" level="project" />
-    <orderEntry type="library" name="com.google.firebase:firebase-iid-license-11.6.0" level="project" />
     <orderEntry type="library" name="com.mikepenz:google-material-typeface-2.2.0.1.original" level="project" />
+    <orderEntry type="library" name="com.google.firebase:firebase-iid-license-11.6.2" level="project" />
     <orderEntry type="library" name="com.android.support:cardview-v7-25.4.0" level="project" />
     <orderEntry type="library" name="com.android.support:support-core-ui-25.4.0" level="project" />
     <orderEntry type="library" name="com.android.support:support-compat-25.4.0" level="project" />
+    <orderEntry type="library" name="com.google.android.gms:play-services-gass-license-11.6.2" level="project" />
     <orderEntry type="library" name="com.afollestad.material-dialogs:core-0.9.3.0" level="project" />
-    <orderEntry type="library" name="com.google.android.gms:play-services-basement-11.6.0" level="project" />
-    <orderEntry type="library" name="com.google.firebase:firebase-analytics-11.6.0" level="project" />
     <orderEntry type="library" name="com.android.support:support-annotations:25.4.0@jar" level="project" />
     <orderEntry type="library" name="com.android.support:support-core-utils-25.4.0" level="project" />
     <orderEntry type="library" name="me.zhanghai.android.materialprogressbar:library-1.3.0" level="project" />
     <orderEntry type="library" name="com.github.paolorotolo:appintro-3.4.0" level="project" />
     <orderEntry type="library" name="com.gordonwong:material-sheet-fab-1.2.1" level="project" />
+    <orderEntry type="library" name="com.google.firebase:firebase-analytics-11.6.2" level="project" />
     <orderEntry type="library" name="com.android.support:support-v4-25.4.0" level="project" />
     <orderEntry type="library" name="com.github.jorgecastilloprz:fabprogresscircle-1.01" level="project" />
+    <orderEntry type="library" name="com.google.android.gms:play-services-ads-license-11.6.2" level="project" />
     <orderEntry type="library" name="com.android.support:support-media-compat-25.4.0" level="project" />
-    <orderEntry type="library" name="com.google.android.gms:play-services-ads-license-11.6.0" level="project" />
     <orderEntry type="library" name="com.mikepenz:iconics-core-2.5.4" level="project" />
     <orderEntry type="library" name="com.appyvet:materialrangebar-1.3" level="project" />
     <orderEntry type="library" name="com.android.support:design-25.4.0" level="project" />
@@ -173,15 +173,15 @@
     <orderEntry type="library" name="io.fabric.sdk.android:fabric-1.4.1" level="project" />
     <orderEntry type="library" name="com.crashlytics.sdk.android:crashlytics-core-2.4.1" level="project" />
     <orderEntry type="library" name="com.afollestad.material-dialogs:commons-0.9.2.3" level="project" />
-    <orderEntry type="library" name="com.google.android.gms:play-services-gass-license-11.6.0" level="project" />
     <orderEntry type="library" name="com.crashlytics.sdk.android:beta-1.2.7" level="project" />
-    <orderEntry type="library" name="com.google.firebase:firebase-crash-license-11.6.0" level="project" />
     <orderEntry type="library" name="com.borax12.materialdaterangepicker:library-1.7" level="project" />
+    <orderEntry type="library" name="com.google.android.gms:play-services-gass-11.6.2" level="project" />
+    <orderEntry type="library" name="com.google.firebase:firebase-crash-license-11.6.2" level="project" />
     <orderEntry type="library" name="com.android.support:support-vector-drawable-25.4.0" level="project" />
-    <orderEntry type="library" name="com.google.firebase:firebase-analytics-impl-license-11.6.0" level="project" />
     <orderEntry type="library" name="com.android.support:customtabs-25.4.0" level="project" />
+    <orderEntry type="library" name="com.google.firebase:firebase-analytics-license-11.6.2" level="project" />
     <orderEntry type="library" name="com.android.support:recyclerview-v7-25.4.0" level="project" />
-    <orderEntry type="library" name="com.google.android.gms:play-services-gass-11.6.0" level="project" />
-    <orderEntry type="library" name="com.google.firebase:firebase-analytics-license-11.6.0" level="project" />
+    <orderEntry type="library" name="com.google.firebase:firebase-analytics-impl-license-11.6.2" level="project" />
+    <orderEntry type="library" name="com.google.android.gms:play-services-tasks-license-11.6.2" level="project" />
   </component>
 </module>

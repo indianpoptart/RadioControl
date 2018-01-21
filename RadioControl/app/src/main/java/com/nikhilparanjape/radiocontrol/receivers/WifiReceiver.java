@@ -92,6 +92,12 @@ public class WifiReceiver extends WakefulBroadcastReceiver {
 
                             }
                         }
+                        //Checks that user is currently in call and pauses execution till the call ends
+                        else if(util.isCallActive(context)){
+                            while(util.isCallActive(context)){
+                                waitFor(1000);//Wait for call to end
+                            }
+                        }
                     }
                 }
             }
