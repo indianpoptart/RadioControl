@@ -23,7 +23,7 @@ I will continue testing and possibly have an average battery usage(on my phone) 
 
 # Versions
 
-Latest **Stable** Release: [v4.0](https://github.com/indianpoptart/RadioControl/releases/latest) (1/20/2018)
+Latest **Stable** Release: [v5.0](https://github.com/indianpoptart/RadioControl/releases/latest) (1/20/2018)
 
 Latest **Beta** Release: [v5.0-beta3](https://github.com/indianpoptart/RadioControl/releases/tag/v5.0-beta3) (11/18/2017)
 
