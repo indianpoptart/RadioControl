@@ -4,7 +4,6 @@ import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -21,7 +20,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.os.PowerManager;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
@@ -158,6 +156,7 @@ public class MainActivity extends AppCompatActivity {
                 if (isFirstStart) {
                     //  Make a new preferences editor
                     SharedPreferences.Editor e = getPrefs.edit();
+                    FirebaseAnalytics.getInstance(getApplicationContext()).setAnalyticsCollectionEnabled(false);
 
 
                     if (currentapiVersion >= 24) {
@@ -185,15 +184,25 @@ public class MainActivity extends AppCompatActivity {
                 if(!intervalTime.equals("0") && airplaneService){
                     Intent i= new Intent(getApplicationContext(), BackgroundAirplaneService.class);
                     getBaseContext().startService(i);
-                    Log.d("RadioControl", "Service launched");
+                    Log.d("RadioControl", "back Service launched");
                 }
+                if(getPrefs.getBoolean("workMode",true)){
+                    Intent i= new Intent(getApplicationContext(), PersistenceService.class);
+                    getBaseContext().startService(i);
+                    Log.d("RadioControl", "persist Service launched");
+                }
+
+                if (!getPrefs.getBoolean("workMode",true)){
+                    registerForBroadcasts(getApplicationContext());
+                }
+
+                //Hides the progress dialog
+                dialog.setVisibility(View.GONE);
             }
         });
 
         // Start the thread
         t.start();
-        //Hides the progress dialog
-        dialog.setVisibility(View.GONE);
 
         //Sets the actionbar with hamburger
         if (actionBar != null) {
@@ -237,6 +246,7 @@ public class MainActivity extends AppCompatActivity {
         //Checks for root
         rootInit();
 
+        //Initialize ads
         if(!pref.getBoolean("disableAds",false)){
             if(!pref.getBoolean("isDonated",false)){
                 runOnUiThread(new Runnable() {
@@ -246,9 +256,11 @@ public class MainActivity extends AppCompatActivity {
                         AdRequest adRequestTest = new AdRequest.Builder()
                                 .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
                                 .build();
+                        //Load non TOS violating ads
                         if(BuildConfig.DEBUG){
                             mAdView.loadAd(adRequestTest);
                         }
+                        //Regular $$
                         else{
                             mAdView.loadAd(adRequest);
                         }
@@ -267,21 +279,6 @@ public class MainActivity extends AppCompatActivity {
 
         IntentFilter filter = new IntentFilter();
         filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
-
-
-        if (pref.getBoolean("workMode",true)){
-            PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
-            PowerManager.WakeLock wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
-                    "RadioControl-WL");
-            wakeLock.acquire();
-            Intent intent = new Intent(this, PersistenceService.class);
-            //startActivity(intent);
-        }else{
-            registerForBroadcasts(getApplicationContext());
-        }
-
-
-
 
         //LinkSpeed Button
         Button linkSpeedButton = (Button) findViewById(R.id.linkSpeedButton);
@@ -444,9 +441,6 @@ public class MainActivity extends AppCompatActivity {
         } catch (Exception e) {
             FirebaseCrash.logcat(Log.ERROR, "RadioControl", "Unable to get version name");
             FirebaseCrash.report(e);
-        }
-        if(currentVersionNumber > 47){
-            FirebaseAnalytics.getInstance(getApplicationContext()).setAnalyticsCollectionEnabled(false);
         }
         if (currentVersionNumber > savedVersionNumber) {
             showUpdated();
@@ -856,8 +850,9 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
         if (pref.getBoolean("workMode",true)) {
-            Intent intent = new Intent(this, PersistenceService.class);
-            //startActivity(intent);
+            Intent i= new Intent(getApplicationContext(), PersistenceService.class);
+            getBaseContext().startService(i);
+            Log.d("RadioControl", "persist Service launched");
         }else{
             registerForBroadcasts(getApplicationContext());
         }
@@ -1260,7 +1255,7 @@ public class MainActivity extends AppCompatActivity {
     };
 
     public void forceCrash(View view) {
-        throw new RuntimeException("This is a crash");
+        throw new RuntimeException("This is a test crash");
     }
 
     @Override

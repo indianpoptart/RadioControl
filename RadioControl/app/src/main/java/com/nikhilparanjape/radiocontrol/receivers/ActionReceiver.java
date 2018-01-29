@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 public class ActionReceiver extends BroadcastReceiver {
     private static final String PRIVATE_PREF = "prefs";
+    public static final int REQUEST_CODE = 21345;
 
     @Override
     public void onReceive(Context context, Intent intent) {

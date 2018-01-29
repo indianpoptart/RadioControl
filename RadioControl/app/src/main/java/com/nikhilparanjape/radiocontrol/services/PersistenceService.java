@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.os.IBinder;
+import android.os.PowerManager;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
@@ -26,6 +27,21 @@ public class PersistenceService extends Service {
     }
     @Nullable
     public int onStartCommand(Intent intent, int flags, int startId){
+        try{
+            PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
+            PowerManager.WakeLock wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
+                    "RadioControl-persist");
+            if ((wakeLock != null) &&           // we have a WakeLock
+                    (!wakeLock.isHeld())) {  // but we don't hold it
+                //wakeLock.acquire();
+            }
+
+
+        } catch(NullPointerException e){
+            Log.d("Radiocontrol","NullPointer");
+        }
+
+
         Log.i("RadioControl","PERSISTENCE Started");
         IntentFilter filter = new IntentFilter();
         filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
@@ -33,7 +49,7 @@ public class PersistenceService extends Service {
         this.registerReceiver(mybroadcast,filter);
 
 
-        return flags;
+        return START_STICKY;
     }
     @Override
     public IBinder onBind(Intent intent) {

@@ -1,5 +1,5 @@
 # RadioControl
-![icon](http://nikhilp.org/images/ic_launcher.png)
+![icon](https://nikhilp.org/images/ic_launcher.png)
 
 **Root Required!**
 
@@ -23,9 +23,9 @@ I will continue testing and possibly have an average battery usage(on my phone) 
 
 # Versions
 
-Latest **Stable** Release: [v5.0](https://github.com/indianpoptart/RadioControl/releases/latest) (1/20/2018)
+Latest **Stable** Release: [v5.0.1](https://github.com/indianpoptart/RadioControl/releases/latest) (1/28/2018)
 
-Latest **Beta** Release: [v5.0-beta3](https://github.com/indianpoptart/RadioControl/releases/tag/v5.0-beta3) (11/18/2017)
+Latest **Beta** Release: [vNA]() (NA)
 
 Current **Stable Beta** Release: [vNA]() (NA)
 
@@ -34,13 +34,14 @@ https://crowdin.com/project/radiocontrol/invite
 
 # Compatibility
 The app has been tested and works properly on these devices:
-- ~~Google Pixel~~ (Some errors have been reported) - Should be fixed in v5.0
-- LG V10 ![LG](http://nikhilp.org/images/lg.png)
-- Moto X (2nd Gen.) ![Motorola](http://nikhilp.org/images/moto.png)
-- Nexus 6 ![Motorola](http://nikhilp.org/images/moto.png)
-- Nexus 6P ![Huawei](http://nikhilp.org/images/huawei.png)
-- Nexus 5X ![LG](http://nikhilp.org/images/lg.png)
-- Nexus 5 ![LG](http://nikhilp.org/images/lg.png)
+- Google Pixel/XL
+- Google Pixel 2/2XL
+- LG V10 ![LG](https://nikhilp.org/images/lg.png)
+- Moto X (2nd Gen.) ![Motorola](https://nikhilp.org/images/moto.png)
+- Nexus 6 ![Motorola](https://nikhilp.org/images/moto.png)
+- Nexus 6P ![Huawei](https://nikhilp.org/images/huawei.png)
+- Nexus 5X ![LG](https://nikhilp.org/images/lg.png)
+- Nexus 5 ![LG](https://nikhilp.org/images/lg.png)
 - OnePlus 1
 - OnePlus 2
 - OnePlus 3

@@ -4,7 +4,7 @@
         android:key="version"
         android:title="@string/radiocontrol_version"
         android:defaultValue="@array/empty_array"
-        android:summary="null"
+        android:summary="you found me :)"
         />
     <Preference
         android:key="changelog"

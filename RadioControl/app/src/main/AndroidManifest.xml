@@ -13,9 +13,9 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="com.android.vending.BILLING" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
-    <uses-permission-sdk-23 android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS"/>
+    <uses-permission-sdk-23 android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
 
     <application
         android:allowBackup="true"
@@ -49,18 +49,20 @@
             android:label="app_intro" />
 
         <!-- Receive Wi-Fi connection state changes -->
-        <receiver android:name=".receivers.WifiReceiver"
+        <receiver
+            android:name=".receivers.WifiReceiver"
             android:enabled="false">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
                 <action android:name="com.nikhilparanjape.radiocontrol.android.action.broadcast" />
-                <action android:name="android.net.wifi.STATE_CHANGE"/>
+                <action android:name="android.net.wifi.STATE_CHANGE" />
             </intent-filter>
         </receiver>
 
         <service
             android:name=".services.BackgroundAirplaneService"
             android:enabled="true"
+            android:process=":airplane"
             android:icon="@drawable/ic_wifi_black_48dp"
             android:label="AirplaneService" />
 
@@ -69,7 +71,7 @@
             android:label="@string/title_activity_settings" />
         <activity
             android:name=".activities.AboutActivity"
-            android:label="@string/title_activity_about" />
+            android:label="@string/title_activity_about"></activity>
         <activity
             android:name=".activities.NetworkListActivity"
             android:label="@string/title_activity_network" />
@@ -91,10 +93,12 @@
             android:name=".services.PersistenceService"
             android:enabled="true"
             android:process=":persistent"
+            android:icon="@drawable/ic_cached_black_48dp"
             android:label="PersistenceService" />
         <service
             android:name=".services.DoNotDisturbService"
             android:enabled="true"
+            android:process=":dnd"
             android:icon="@drawable/ic_do_not_disturb_on_black_48dp"
             android:label="DoNotDisturbService" />
         <service
@@ -103,9 +107,10 @@
             android:icon="@drawable/ic_network_cell"
             android:process=":cellservice"
             android:label="CellRadioService" />
+
         <receiver android:name=".receivers.PhoneStateBroadcastReceiver">
             <intent-filter>
-                <action android:name="android.intent.action.PHONE_STATE"/>
+                <action android:name="android.intent.action.PHONE_STATE" />
             </intent-filter>
         </receiver>
 
@@ -116,11 +121,11 @@
         <receiver
             android:name=".receivers.WakeupReceiver"
             android:enabled="true"
-            android:process=":remote"/>
+            android:process=":remote" />
         <!-- Start the Service if applicable on boot -->
         <receiver android:name="com.nikhilparanjape.radiocontrol.receivers.ServiceStarter">
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
 
@@ -131,10 +136,10 @@
 
         <receiver android:name=".receivers.ActionReceiver" />
         <receiver android:name=".receivers.PersistenceAlarmReceiver" />
+
         <meta-data
             android:name="io.fabric.ApiKey"
-            android:value="81de282abeba311751e18b3d5109feb5ba38e192"
-            />
+            android:value="81de282abeba311751e18b3d5109feb5ba38e192" />
     </application>
 
 </manifest>

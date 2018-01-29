@@ -64,6 +64,7 @@ public class AboutFragment extends PreferenceFragment {
                 SharedPreferences.Editor editor = sp.edit();//Initializes xml editor
                 z++;
                 Log.d("RadioControl", (7 - z) + " steps away from easter egg");
+                //Toast.makeText(getActivity(), (7 - z) + " steps away from easter egg", Toast.LENGTH_SHORT).show();
                 if (z >= 7) {
                     if (!sp.getBoolean("isDeveloper", false)) {
                         Toast.makeText(getActivity(), R.string.dev_activated, Toast.LENGTH_LONG).show();

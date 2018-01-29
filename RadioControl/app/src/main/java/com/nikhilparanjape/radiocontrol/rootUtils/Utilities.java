@@ -24,6 +24,7 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import com.nikhilparanjape.radiocontrol.R;
+import com.nikhilparanjape.radiocontrol.receivers.ActionReceiver;
 import com.nikhilparanjape.radiocontrol.receivers.NightModeReceiver;
 import com.nikhilparanjape.radiocontrol.receivers.PersistenceAlarmReceiver;
 import com.nikhilparanjape.radiocontrol.receivers.RootServiceReceiver;
@@ -75,6 +76,8 @@ public class Utilities {
             return z;
         } catch(SecurityException e){
             Log.e("RadioControl","Unable to get Location Permission",e);
+        } catch(NullPointerException e){
+            Log.e("RadioControl","NullPointer ",e);
         }
         return z;
     }
@@ -97,7 +100,7 @@ public class Utilities {
         // Construct an intent that will execute the AlarmReceiver
         Intent intent = new Intent(c, WakeupReceiver.class);
         // Create a PendingIntent to be triggered when the alarm goes off
-        final PendingIntent pIntent = PendingIntent.getBroadcast(c, WakeupReceiver.REQUEST_CODE,
+        final PendingIntent pIntent = PendingIntent.getBroadcast(c, ActionReceiver.REQUEST_CODE,
                 intent, PendingIntent.FLAG_UPDATE_CURRENT);
         // Setup periodic alarm every 5 seconds
         long firstMillis = System.currentTimeMillis(); // alarm is set right away
