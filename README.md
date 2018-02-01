@@ -55,7 +55,7 @@ Working properly with the following SU binary
 - MagiskSU (8+)
 
 # Changelog
-[Check here for the new changelog](https://changelog.nikhilp.org/)
+[Check here for the new changelog](https://headwayapp.co/radiocontrol-release-notes)
 
 # Upcoming Features
 
