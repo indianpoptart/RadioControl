@@ -79,12 +79,6 @@
         <service
             android:name=".BillingService"
             android:enabled="true" />
-
-        <!-- Include the AdActivity configChanges and theme. -->
-        <activity
-            android:name="com.google.android.gms.ads.AdActivity"
-            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
-            android:theme="@android:style/Theme.Translucent" />
         <activity android:name=".activities.ChangeLogActivity" />
         <activity android:name=".activities.StatsActivity" />
         <activity android:name=".activities.DoNotDisturbActivity" />
