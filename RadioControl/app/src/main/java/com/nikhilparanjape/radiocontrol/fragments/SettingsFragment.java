@@ -49,13 +49,10 @@ public class SettingsFragment extends PreferenceFragment implements TimePickerDi
 
         SharedPreferences sp = getPreferenceScreen().getSharedPreferences();
         SharedPreferences.Editor editor = sp.edit();
-        if (android.os.Build.VERSION.SDK_INT >= 26){
-            getPreferenceScreen().findPreference("workMode").setEnabled(false);
-            getPreferenceScreen().findPreference("workMode").setEnabled(false);
+        if (android.os.Build.VERSION.SDK_INT >= 24){
+            getPreferenceScreen().findPreference("workMode").setEnabled(true);
             editor.putBoolean("workMode",true);
             editor.apply();
-        }else{
-            getPreferenceScreen().findPreference("workMode").setEnabled(true);
         }
 
 
@@ -87,10 +84,32 @@ public class SettingsFragment extends PreferenceFragment implements TimePickerDi
         Preference airplaneResetPref = findPreference("reset-airplane");
         airplaneResetPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             public boolean onPreferenceClick(Preference preference) {
-                String[] airOffCmd2 = {"su", "settings put global airplane_mode_radios  \"cell,bluetooth,nfc,wimax\"", "content update --uri content://settings/global --bind value:s:'cell,bluetooth,nfc,wimax' --where \"name='airplane_mode_radios'\""};
-                RootAccess.runCommands(airOffCmd2);
-                Toast.makeText(getActivity(),
-                        "Airplane mode reset", Toast.LENGTH_LONG).show();
+                new MaterialDialog.Builder(getActivity())
+                        .iconRes(R.mipmap.ic_launcher)
+                        .limitIconToDefaultSize()
+                        .title("Please disable WiFi and make sure Airplane mode is off before pressing OK")
+                        .positiveText("OK")
+                        .negativeText("Cancel")
+                        .backgroundColorRes(R.color.material_drawer_dark_background)
+                        .onPositive(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                String[] airOffCmd2 = {"su", "settings put global airplane_mode_radios  \"cell,bluetooth,nfc,wimax\"", "content update --uri content://settings/global --bind value:s:'cell,bluetooth,nfc,wimax' --where \"name='airplane_mode_radios'\""};
+                                RootAccess.runCommands(airOffCmd2);
+                                Toast.makeText(getActivity(),
+                                        "Airplane mode reset", Toast.LENGTH_LONG).show();
+                            }
+                        })
+                        .onNegative(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+
+                            }
+                        })
+                        .checkBoxPromptRes(R.string.dont_ask_again, false, null)
+                        .show();
+
+
                 return false;
             }
         });
@@ -116,6 +135,7 @@ public class SettingsFragment extends PreferenceFragment implements TimePickerDi
             public boolean onPreferenceChange(Preference preference, Object newValue) {
                 SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(c);
                 if(newValue.toString().equals("true")) {
+                    getPreferenceScreen().findPreference("altRootCommand").setEnabled(false);
                     if(batteryOptimizePref.isChecked()){
                         if (pref.getBoolean("workMode", true)) {
                             getActivity().startService(new Intent(getActivity(), PersistenceService.class));
@@ -155,6 +175,9 @@ public class SettingsFragment extends PreferenceFragment implements TimePickerDi
                                 .show();
                     }
 
+                }else{
+                    getPreferenceScreen().findPreference("altRootCommand").setEnabled(true);
+                    getActivity().stopService(new Intent(getActivity(), PersistenceService.class));
                 }
                 Log.i("RadioControl","workMode");
 
@@ -213,6 +236,8 @@ public class SettingsFragment extends PreferenceFragment implements TimePickerDi
 
         });
 
+
+
         final CheckBoxPreference dozeSetting = (CheckBoxPreference) getPreferenceManager().findPreference("isDozeOff");
         dozeSetting.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -229,17 +254,39 @@ public class SettingsFragment extends PreferenceFragment implements TimePickerDi
                             c.startActivity(intent);
                             return false;
                         }
+                        dozeSetting.setChecked(true);
                         c.startActivity(intent);
                     }
                 }
                 else{
-
+                    if (Build.VERSION.SDK_INT >= 23) {
+                        Intent intent = new Intent();
+                        String packageName = c.getPackageName();
+                        PowerManager pm = (PowerManager) c.getSystemService(Context.POWER_SERVICE);
+                        intent.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
+                        intent.setData(Uri.parse("package:" + packageName));
+                        c.startActivity(intent);
+                        return false;
+                    }
                 }
 
                 return true;
             }
 
         });
+
+        if(altRootCommand.isChecked() || batteryOptimizePref.isChecked()){
+            final SharedPreferences pref = c.getSharedPreferences("batteryOptimizePref", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor2 = pref.edit();
+            editor2.clear();
+            editor2.apply();
+            getPreferenceScreen().findPreference("altRootCommand").setEnabled(false);
+        }
+        else if(!batteryOptimizePref.isChecked()){
+            getPreferenceScreen().findPreference("altRootCommand").setEnabled(true);
+            getActivity().stopService(new Intent(getActivity(), PersistenceService.class));
+        }
+
         final CheckBoxPreference eulaShow = (CheckBoxPreference) getPreferenceManager().findPreference("eulaShow");
         eulaShow.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             public boolean onPreferenceChange(Preference preference, Object newValue) {

@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.net.ConnectivityManager;
-import android.net.Network;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiInfo;
@@ -17,19 +16,18 @@ import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
-import android.support.v7.app.NotificationCompat;
+import android.support.v4.app.NotificationCompat;
 import android.telephony.CellInfo;
-import android.telephony.ServiceState;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import com.nikhilparanjape.radiocontrol.R;
 import com.nikhilparanjape.radiocontrol.receivers.ActionReceiver;
 import com.nikhilparanjape.radiocontrol.receivers.NightModeReceiver;
-import com.nikhilparanjape.radiocontrol.receivers.PersistenceAlarmReceiver;
 import com.nikhilparanjape.radiocontrol.receivers.RootServiceReceiver;
 import com.nikhilparanjape.radiocontrol.receivers.TimedAlarmReceiver;
 import com.nikhilparanjape.radiocontrol.receivers.WakeupReceiver;
+import com.nikhilparanjape.radiocontrol.services.CellRadioService;
 
 import java.io.IOException;
 import java.util.Calendar;
@@ -38,10 +36,15 @@ import java.util.List;
 import static android.app.AlarmManager.RTC;
 import static android.app.AlarmManager.RTC_WAKEUP;
 
+
 /**
  * Created by Nikhil on 2/3/2016.
  */
 public class Utilities {
+
+    private static final String PRIVATE_PREF = "prefs";
+    private String[] airCmd = {"su", "settings put global airplane_mode_radios  \"cell\"", "content update --uri content://settings/global --bind value:s:'cell' --where \"name='airplane_mode_radios'\"", "settings put global airplane_mode_on 1", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state true"};
+
 
     /**
      * gets network ssid
@@ -268,6 +271,9 @@ public class Utilities {
         }
 
     }
+
+
+
 
     public static String getFrequency(Context c){
         WifiManager wifiManager = (WifiManager)c.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
@@ -536,6 +542,57 @@ public class Utilities {
             return false;
         }
     }
+
+    public void pingTask(Context context){
+        Runtime runtime = Runtime.getRuntime();
+        try {
+            //Wait for network to be connected fully
+            while(!Utilities.isConnected(context)){
+                Thread.sleep(1000);
+            }
+            Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");//Send 1 packet to google and check if it came back
+            int exitValue = ipProcess.waitFor();
+            Log.d("RadioControl", "Ping test returned " + exitValue);
+
+            SharedPreferences sp = context.getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE);
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+
+            boolean alertPriority = prefs.getBoolean("networkPriority", false);//Setting for network notifier
+            boolean alertSounds = prefs.getBoolean("networkSound",false);
+            boolean alertVibrate = prefs.getBoolean("networkVibrate",false);
+
+
+            if(sp.getInt("isActive",0) == 0){
+                //If the connection can't reach Google
+                if(exitValue != 0){
+                    Utilities.sendNote(context, context.getString(R.string.not_connected_alert),alertVibrate,alertSounds,alertPriority);
+                }
+            }
+            else if(sp.getInt("isActive",0) == 1){
+                //If the connection can't reach Google
+                if(exitValue != 0){
+                    Utilities.sendNote(context, context.getString(R.string.not_connected_alert),alertVibrate,alertSounds,alertPriority);
+                }
+                else{
+                    //Runs the alternate root command
+                    if(prefs.getBoolean("altRootCommand", false)){
+                        Intent cellIntent = new Intent(context, CellRadioService.class);
+                        context.startService(cellIntent);
+                        scheduleRootAlarm(context);
+                        Log.d("RadioControl", "Cell Radio has been turned off");
+                    }
+                    else if(!prefs.getBoolean("altRootCommand", false)){
+                        RootAccess.runCommands(airCmd);
+                        Log.d("RadioControl", "Airplane mode has been turned on");
+                    }
+                }
+            }
+
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     private class AsyncBackgroundTask extends AsyncTask<String, Void, Boolean> {
 

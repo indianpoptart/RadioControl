@@ -47,12 +47,11 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
 import com.android.vending.billing.IInAppBillingService;
+import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.PurchaseEvent;
 import com.crashlytics.android.answers.RatingEvent;
 import com.crashlytics.android.core.CrashlyticsCore;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.crash.FirebaseCrash;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
@@ -81,8 +80,6 @@ import com.nikhilparanjape.radiocontrol.util.IabHelper;
 import com.nikhilparanjape.radiocontrol.util.IabResult;
 import com.nikhilparanjape.radiocontrol.util.Inventory;
 import com.nikhilparanjape.radiocontrol.util.Purchase;
-import com.crashlytics.android.Crashlytics;
-import io.fabric.sdk.android.Fabric;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -91,6 +88,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.util.Currency;
+
+import io.fabric.sdk.android.Fabric;
 
 
 /**
@@ -246,28 +245,28 @@ public class MainActivity extends AppCompatActivity {
         //Checks for root
         rootInit();
 
-        //Initialize ads
-        if(!pref.getBoolean("disableAds",false)){
-            if(!pref.getBoolean("isDonated",false)){
-                runOnUiThread(new Runnable() {
-                    public void run() {
-                        AdView mAdView = (AdView) findViewById(R.id.adView);
-                        AdRequest adRequest = new AdRequest.Builder().build();
-                        AdRequest adRequestTest = new AdRequest.Builder()
-                                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-                                .build();
-                        //Load non TOS violating ads
-                        if(BuildConfig.DEBUG){
-                            mAdView.loadAd(adRequestTest);
-                        }
-                        //Regular $$
-                        else{
-                            mAdView.loadAd(adRequest);
-                        }
-                    }
-                });
-            }
-        }
+//        //Initialize ads
+//        if(!pref.getBoolean("disableAds",false)){
+//            if(!pref.getBoolean("isDonated",false)){
+//                runOnUiThread(new Runnable() {
+//                    public void run() {
+//                        AdView mAdView = (AdView) findViewById(R.id.adView);
+//                        AdRequest adRequest = new AdRequest.Builder().build();
+//                        AdRequest adRequestTest = new AdRequest.Builder()
+//                                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+//                                .build();
+//                        //Load non TOS violating ads
+//                        if(BuildConfig.DEBUG){
+//                            mAdView.loadAd(adRequestTest);
+//                        }
+//                        //Regular $$
+//                        else{
+//                            mAdView.loadAd(adRequest);
+//                        }
+//                    }
+//                });
+//            }
+//        }
 
         if(pref.getBoolean("allowFabric",false)){
             Fabric.with(this, new Crashlytics());
@@ -400,7 +399,6 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 dialog.setVisibility(View.VISIBLE);
                 new AsyncBackgroundTask(getApplicationContext()).execute("");
-
             }
         });
 
@@ -867,7 +865,7 @@ public class MainActivity extends AppCompatActivity {
                             .disabled(true).build()).build());
         }
 
-        if(!pref.getBoolean("disableAds",false)){
+        /*if(!pref.getBoolean("disableAds",false)){
             if(!pref.getBoolean("isDonated",false)){
                 runOnUiThread(new Runnable() {
                     public void run() {
@@ -885,7 +883,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
             }
-        }
+        }*/
         //Connection Test button (Dev Feature)
         final Button conn = (Button) findViewById(R.id.pingTestButton);
         Button serviceTest = (Button) findViewById(R.id.airplane_service_test);

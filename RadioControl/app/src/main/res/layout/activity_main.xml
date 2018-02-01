@@ -55,15 +55,32 @@
             android:layout_alignParentTop="true"
             android:checked="false" />
 
+        <TextView
+            android:id="@+id/pingStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/linkSpeedButton"
+            android:layout_below="@+id/pingTestButton"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <ProgressBar
+            android:id="@+id/pingProgressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/forceCrashButton"
+            android:layout_below="@+id/enableSwitch"
+            android:layout_marginTop="18dp"
+            android:indeterminate="true" />
+
         <Button
             android:id="@+id/forceCrashButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="forceCrash"
-            android:text="Force Crash!"
-            android:layout_below="@+id/enableSwitch"
             android:layout_alignEnd="@+id/pingTestButton"
-            android:layout_marginTop="45dp" />
+            android:layout_below="@+id/enableSwitch"
+            android:layout_marginTop="89dp"
+            android:onClick="forceCrash"
+            android:text="Force Crash!" />
 
 
         <Button
@@ -71,9 +88,9 @@
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/enableSwitch"
-            android:layout_marginTop="113dp"
+            android:layout_alignStart="@+id/forceCrashButton"
+            android:layout_below="@+id/forceCrashButton"
+            android:layout_marginTop="20dp"
             android:text="Link Speed Test" />
 
         <TextView
@@ -93,39 +110,12 @@
             android:layout_below="@+id/linkSpeed"
             android:text="Latency Test" />
 
-        <TextView
-            android:id="@+id/pingStatus"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/pingTestButton"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-
-        <ProgressBar
-            android:id="@+id/pingProgressBar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/pingStatus"
-            android:indeterminate="true" />
-
-        <com.google.android.gms.ads.AdView
-            android:id="@+id/adView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            app:adSize="BANNER"
-            app:adUnitId="@string/banner_ad_unit_id"
-            android:layout_alignParentBottom="true"
-            android:layout_alignStart="@+id/forceCrashButton"></com.google.android.gms.ads.AdView>
-
         <Button
             android:id="@+id/airplane_service_test"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
-            android:layout_below="@+id/pingProgressBar"
+            android:layout_below="@+id/pingStatus"
             android:text="Airplane Service Test" />
 
         <Button

@@ -58,12 +58,12 @@ public class WifiReceiver extends WakefulBroadcastReceiver {
         //Check if user wants the app on
         if(sp.getInt("isActive",0) == 1){
             if (batteryOptimize) {
-                Log.d("RadioControl","Battery Optimization ON");
+                //Log.d("RadioControl","Battery Optimization ON");
                 Intent i = new Intent(context, BackgroundAirplaneService.class);
                 context.startService(i);
             }
             else {
-                Log.d("RadioControl","Battery Optimization OFF");
+                //Log.d("RadioControl","Battery Optimization OFF");
                 //Check if we just lost WiFi signal
                 if (!Utilities.isConnectedWifi(context)) {
                     Log.d("RadioControl", "WiFi signal LOST");
@@ -141,9 +141,9 @@ public class WifiReceiver extends WakefulBroadcastReceiver {
                     }
                     //Checks that user is currently in call and pauses execution till the call ends
                     else if(util.isCallActive(context)){
-                        while(util.isCallActive(context)){
-                            waitFor(1000);//Wait for call to end
-                        }
+                        //while(util.isCallActive(context)){
+                            //waitFor(1000);//Wait for call to end
+                        //}
                     }
                 }
                 //Pauses because WiFi network is in the list of disabled SSIDs
@@ -190,6 +190,61 @@ public class WifiReceiver extends WakefulBroadcastReceiver {
             }
         }
     }
+
+    public void pingTask(Context context){
+        Runtime runtime = Runtime.getRuntime();
+        try {
+            //Wait for network to be connected fully
+            while(!Utilities.isConnected(context)){
+                Thread.sleep(1000);
+            }
+            Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");//Send 1 packet to google and check if it came back
+            int exitValue = ipProcess.waitFor();
+            Log.d("RadioControl", "Ping test returned " + exitValue);
+
+            SharedPreferences sp = context.getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE);
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+
+            boolean alertPriority = prefs.getBoolean("networkPriority", false);//Setting for network notifier
+            boolean alertSounds = prefs.getBoolean("networkSound",false);
+            boolean alertVibrate = prefs.getBoolean("networkVibrate",false);
+
+
+            if(sp.getInt("isActive",0) == 0){
+                //If the connection can't reach Google
+                if(exitValue != 0){
+                    Utilities.sendNote(context, context.getString(R.string.not_connected_alert),alertVibrate,alertSounds,alertPriority);
+                    writeLog("Not connected to the internet",context);
+                }
+            }
+            else if(sp.getInt("isActive",0) == 1){
+                //If the connection can't reach Google
+                if(exitValue != 0){
+                    Utilities.sendNote(context, context.getString(R.string.not_connected_alert),alertVibrate,alertSounds,alertPriority);
+                    writeLog("Not connected to the internet",context);
+                }
+                else{
+                    //Runs the alternate root command
+                    if(prefs.getBoolean("altRootCommand", false)){
+                        Intent cellIntent = new Intent(context, CellRadioService.class);
+                        context.startService(cellIntent);
+                        util.scheduleRootAlarm(context);
+                        Log.d("RadioControl", "Cell Radio has been turned off");
+                        writeLog("Cell radio has been turned off, SSID: " + Utilities.getCurrentSsid(context),context);
+                    }
+                    else if(!prefs.getBoolean("altRootCommand", false)){
+                        RootAccess.runCommands(airCmd);
+                        Log.d("RadioControl", "Airplane mode has been turned on");
+                        writeLog("Airplane mode has been turned on, SSID: " + Utilities.getCurrentSsid(context),context);
+                    }
+                }
+            }
+
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     private class AsyncPingTask extends AsyncTask<String, Void, Boolean> {
         Context context;

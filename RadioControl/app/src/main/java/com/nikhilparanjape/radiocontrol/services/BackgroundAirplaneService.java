@@ -32,7 +32,7 @@ public class BackgroundAirplaneService extends IntentService
     String[] airCmd = {"su", "settings put global airplane_mode_radios  \"cell\"", "content update --uri content://settings/global --bind value:s:'cell' --where \"name='airplane_mode_radios'\"", "settings put global airplane_mode_on 1", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state true"};
     //runs command to disable airplane mode on wifi loss, while restoring previous airplane settings
     String[] airOffCmd2 = {"su", "settings put global airplane_mode_on 0", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state false", "settings put global airplane_mode_radios  \"cell,bluetooth,nfc,wimax\"", "content update --uri content://settings/global --bind value:s:'cell,bluetooth,nfc,wimax' --where \"name='airplane_mode_radios'\""};
-
+    String[] airOffCmd3 = {"su", "settings put global airplane_mode_on 0", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state false"};
     Utilities util = new Utilities(); //Network and other related utilities
 
     public BackgroundAirplaneService() {
@@ -63,6 +63,7 @@ public class BackgroundAirplaneService extends IntentService
         Set<String> h = new HashSet<>(Collections.singletonList("")); //Set default set for SSID check
         Set<String> selections = prefs.getStringSet("ssid", h); //Gets stringset, if empty sets default
         boolean networkAlert= prefs.getBoolean("isNetworkAlive",false);
+        boolean batteryOptimize = prefs.getBoolean("isBatteryOn",true);
 
         //Log.i("RadioControl","Battery Optimized");
         //Check if user wants the app on
@@ -73,7 +74,7 @@ public class BackgroundAirplaneService extends IntentService
                 writeLog("WiFi Signal lost",context);
                 if(Utilities.isAirplaneMode(context) || !Utilities.isConnectedMobile(context)) {
                     //Checks that user is not in call
-                    if(!util.isCallActive(context)){
+                    if(!util.isCallActive(context)) {
                         //Runs the alternate root command
                         if (prefs.getBoolean("altRootCommand", false)) {
                             if (Utilities.getCellStatus(context) == 1) {
@@ -82,14 +83,19 @@ public class BackgroundAirplaneService extends IntentService
                                 Log.d("RadioControl", "Cell Radio has been turned on");
                                 writeLog("Cell radio has been turned off, SSID: " + Utilities.getCurrentSsid(context), context);
                             }
-                        }
-                        else {
-                            RootAccess.runCommands(airOffCmd2);
-                            Log.d("RadioControl", "Airplane mode has been turned off");
-                            writeLog("Airplane mode has been turned off", context);
+                        } else {
+                            if (prefs.getBoolean("altBTCommand", false)) {
+                                RootAccess.runCommands(airOffCmd3);
+                                Log.d("RadioControl", "Airplane mode has been turned off(with bt cmd)");
+                                writeLog("Airplane mode has been turned off", context);
+                            } else {
+                                RootAccess.runCommands(airOffCmd2);
+                                Log.d("RadioControl", "Airplane mode has been turned off");
+                                writeLog("Airplane mode has been turned off", context);
+                            }
+
                         }
                     }
-
                     //Checks that user is currently in call and pauses execution till the call ends
                     else if(util.isCallActive(context)){
                         while(util.isCallActive(context)){

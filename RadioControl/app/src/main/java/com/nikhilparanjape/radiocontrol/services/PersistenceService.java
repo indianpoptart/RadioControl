@@ -57,5 +57,10 @@ public class PersistenceService extends Service {
 
         return null;
     }
+    public void onDestroy() {
+
+        super.onDestroy();
+
+    }
 
 }
