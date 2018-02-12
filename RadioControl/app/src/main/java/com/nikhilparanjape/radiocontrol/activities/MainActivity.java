@@ -910,8 +910,8 @@ public class MainActivity extends AppCompatActivity {
         }
 
         //LinkSpeed Button
-        Button btn3 = (Button) findViewById(R.id.linkSpeedButton);
-        final TextView linkText = (TextView)findViewById(R.id.linkSpeed);
+        Button btn3 = findViewById(R.id.linkSpeedButton);
+        final TextView linkText = findViewById(R.id.linkSpeed);
         //LinkSpeed button and text
         if(!sharedPref.getBoolean("isDeveloper",false)){
             btn3.setVisibility(View.GONE);
@@ -921,8 +921,8 @@ public class MainActivity extends AppCompatActivity {
             btn3.setVisibility(View.VISIBLE);
             linkText.setVisibility(View.VISIBLE);
         }
-        TextView statusText = (TextView)findViewById(R.id.statusText);
-        Switch toggle = (Switch) findViewById(R.id.enableSwitch);
+        TextView statusText = findViewById(R.id.statusText);
+        Switch toggle = findViewById(R.id.enableSwitch);
 
         if(!rootInit()){
             toggle.setClickable(false);
