@@ -33,12 +33,12 @@ public class PersistenceService extends Service {
                     "RadioControl-persist");
             if ((wakeLock != null) &&           // we have a WakeLock
                     (!wakeLock.isHeld())) {  // but we don't hold it
-                //wakeLock.acquire();
+                //wakeLock.acquire(); Do not uncomment
             }
 
 
         } catch(NullPointerException e){
-            Log.d("Radiocontrol","NullPointer");
+            Log.d("Radiocontrol-persist","NullPointer");
         }
 
 

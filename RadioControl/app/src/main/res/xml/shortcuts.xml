@@ -1,0 +1,18 @@
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:shortcutId="wifiReceiver"
+        android:enabled="true"
+        android:icon="@drawable/ic_network_check_white_48dp">
+        //android:shortcutShortLabel="Run Service"
+        //android:shortcutLongLabel="Runs the main RadioControl background service to change radio state">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="com.nikhilparanjape.radiocontrol"
+            android:targetClass="com.nikhilparanjape.radiocontrol.receivers.WifiReceiver" />
+        <!-- If your shortcut is associated with multiple intents, include them
+             here. The last intent in the list determines what the user sees when
+             they launch this shortcut. -->
+        <categories android:name="android.shortcut.wifi" />
+    </shortcut>
+    <!-- Specify more shortcuts here. -->
+</shortcuts>

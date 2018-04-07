@@ -1,11 +1,19 @@
 package com.nikhilparanjape.radiocontrol.services;
 
+import android.annotation.SuppressLint;
 import android.app.IntentService;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.RingtoneManager;
+import android.os.Build;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.text.format.DateFormat;
 import android.util.Log;
 
@@ -49,6 +57,41 @@ public class BackgroundAirplaneService extends IntentService
     public void onCreate()
     {
         super.onCreate();
+
+        createBackgroundNotification("RadioControl","Background Process Running...");
+        Log.d("RadioControl-background","Notified");
+
+    }
+
+    public void createBackgroundNotification(String title, String message)
+    {
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getApplicationContext(), "Background")
+                .setSmallIcon(R.drawable.ic_refresh_white_48dp)
+                .setContentTitle(title)
+                .setContentText(message)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            // Create the NotificationChannel, but only on API 26+ because
+            // the NotificationChannel class is new and not in the support library
+            int importance = NotificationManagerCompat.IMPORTANCE_DEFAULT;
+            @SuppressLint("WrongConstant") NotificationChannel channel = new NotificationChannel("radiocontrol-background", "Background Channel", importance);
+            channel.setDescription("For Intelligent mode");
+            // Register the channel with the system
+            NotificationManager notificationManager = (NotificationManager) this
+                    .getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.createNotificationChannel(channel);
+            // notificationId is a unique int for each notification that you must define
+            notificationManager.notify(0, mBuilder.build());
+
+        }
+        else{
+            mBuilder.notify();
+        }
+        startForeground(0, mBuilder.build());
+
+
+
     }
 
     protected void onHandleIntent(Intent intent) {
@@ -197,7 +240,7 @@ public class BackgroundAirplaneService extends IntentService
             while(!Utilities.isConnected(context)){
                 Thread.sleep(1000);
             }
-            Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");//Send 1 packet to google and check if it came back
+            Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");//Send 1 packet to Cloudflare and check if it came back
             int exitValue = ipProcess.waitFor();
             Log.d("RadioControl", "Ping test returned " + exitValue);
 

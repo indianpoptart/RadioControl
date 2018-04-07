@@ -82,16 +82,16 @@ public class StatsActivity extends AppCompatActivity {
             editor.putInt("easing",4);
             editor.apply();
         }
-        ProgressBar progress1 = (ProgressBar)findViewById(R.id.progressWifiOff);
+        ProgressBar progress1 = findViewById(R.id.progressWifiOff);
         progress1.setVisibility(View.GONE);
-        ProgressBar progress2 = (ProgressBar)findViewById(R.id.progressAirplaneOn);
+        ProgressBar progress2 = findViewById(R.id.progressAirplaneOn);
         progress2.setVisibility(View.GONE);
 
 
 
         final ActionBar actionBar = getSupportActionBar();
         //Sets coordlayout
-        final CoordinatorLayout clayout = (CoordinatorLayout) findViewById(R.id.clayout);
+        final CoordinatorLayout clayout = findViewById(R.id.clayout);
 
         if (actionBar != null) {
             actionBar.setHomeAsUpIndicator(new IconicsDrawable(this, GoogleMaterial.Icon.gmd_arrow_back).color(Color.WHITE).sizeDp(IconicsDrawable.ANDROID_ACTIONBAR_ICON_SIZE_DP).paddingDp(IconicsDrawable.ANDROID_ACTIONBAR_ICON_SIZE_PADDING_DP));
@@ -99,7 +99,7 @@ public class StatsActivity extends AppCompatActivity {
             actionBar.setTitle("Statistics");
         }
 
-        Fab fab = (Fab) findViewById(R.id.fab);
+        Fab fab = findViewById(R.id.fab);
         View sheetView = findViewById(R.id.fab_sheet);
         View overlay = findViewById(R.id.overlay);
         int sheetColor = ContextCompat.getColor(getApplicationContext(), R.color.white);
@@ -130,26 +130,21 @@ public class StatsActivity extends AppCompatActivity {
             }
         });
 
-        TextView btn=(TextView) findViewById(R.id.fab_sheet_item_grid);
-        assert btn !=null;
-        btn.setOnClickListener(new View.OnClickListener() {
 
-            @Override
-            public void onClick(View v) {
-                materialSheetFab.hideSheet();
-                showGridlineDialog();
-            }
+
+
+        TextView btn = findViewById(R.id.fab_sheet_item_grid);
+        assert btn !=null;
+        btn.setOnClickListener(v -> {
+            materialSheetFab.hideSheet();
+            showGridlineDialog();
         });
 
-        TextView btn1 = (TextView) findViewById(R.id.fab_sheet_item_easing);
+        TextView btn1 = findViewById(R.id.fab_sheet_item_easing);
         AutofitHelper.create(btn1);
-        btn1.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                materialSheetFab.hideSheet();
-                showLongList();
-            }
+        btn1.setOnClickListener(v -> {
+            materialSheetFab.hideSheet();
+            showLongList();
         });
 
     }
@@ -157,9 +152,13 @@ public class StatsActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        wifiLostGraph();
+            runOnUiThread(() -> {
+                wifiLostGraph();
 
-        airplaneOnGraph();
+                airplaneOnGraph();
+            });
+
+
     }
     public void showLongList() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
@@ -209,39 +208,36 @@ public class StatsActivity extends AppCompatActivity {
                 .title("Gridlines")
                 .theme(Theme.LIGHT)
                 .items(R.array.preference_values)
-                .itemsCallbackSingleChoice(2, new MaterialDialog.ListCallbackSingleChoice() {
-                    @Override
-                    public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
-                        Log.d("RadioControl","You chose " + which);
-                        float[] n = {0f,0f};
-                        if(which == 0){
-                            //Full Grids
-                            editor.putInt("gridlines",0);
-                        } else if(which == 1){
-                            //Horizontal Grids
-                            editor.putInt("gridlines",1);
-                        } else if(which == 2){
-                            //Vertical Grids
-                            editor.putInt("gridlines",2);
-                        } else if(which == 3){
-                            //No Grids
-                            editor.putInt("gridlines",3);
-                        }
-                        editor.apply();
-                        recreate();
-                        return true; // allow selection
+                .itemsCallbackSingleChoice(2, (dialog, view, which, text) -> {
+                    Log.d("RadioControl","You chose " + which);
+                    float[] n = {0f,0f};
+                    if(which == 0){
+                        //Full Grids
+                        editor.putInt("gridlines",0);
+                    } else if(which == 1){
+                        //Horizontal Grids
+                        editor.putInt("gridlines",1);
+                    } else if(which == 2){
+                        //Vertical Grids
+                        editor.putInt("gridlines",2);
+                    } else if(which == 3){
+                        //No Grids
+                        editor.putInt("gridlines",3);
                     }
+                    editor.apply();
+                    recreate();
+                    return true; // allow selection
                 })
                 .positiveText("Choose")
                 .show();
     }
     public void wifiLostGraph() {
-        ProgressBar progress1 = (ProgressBar)findViewById(R.id.progressWifiOff);
+        ProgressBar progress1 = findViewById(R.id.progressWifiOff);
         progress1.setVisibility(View.VISIBLE);
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         //Initiate chart
-        chart = (LineChartView) findViewById(R.id.linechart);
+        chart = findViewById(R.id.linechart);
         //Initiate dataset for chart
         LineSet dataset = new LineSet();
 
@@ -322,12 +318,12 @@ public class StatsActivity extends AppCompatActivity {
 
     //Airplane on graph
     public void airplaneOnGraph() {
-        ProgressBar progress2 = (ProgressBar)findViewById(R.id.progressAirplaneOn);
+        ProgressBar progress2 = findViewById(R.id.progressAirplaneOn);
         progress2.setVisibility(View.VISIBLE);
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         //Initiate chart
-        chart1 = (LineChartView) findViewById(R.id.linechart_airplane_on);
+        chart1 = findViewById(R.id.linechart_airplane_on);
         //Initiate dataset for chart
         LineSet dataset = new LineSet();
 

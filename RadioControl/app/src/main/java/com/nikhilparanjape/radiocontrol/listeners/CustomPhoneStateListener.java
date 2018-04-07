@@ -62,7 +62,7 @@ public class CustomPhoneStateListener extends PhoneStateListener {
         if(sp.getInt("isActive",0) == 1 && prefs.getBoolean("isPhoneStateCheck",true)) {
             if (Utilities.isAirplaneMode(context) || !Utilities.isConnectedMobile(context)) {
                 //Runs the alternate root command
-                if (prefs.getBoolean("altRootCommand", false)) {
+                if (prefs.getBoolean("altRootCommand", false) && !Utilities.isAirplaneMode(context)) {
                     if (Utilities.getCellStatus(context) == 1) {
                         Intent cellIntent = new Intent(context, CellRadioService.class);
                         //util.cancelAlarm(context);

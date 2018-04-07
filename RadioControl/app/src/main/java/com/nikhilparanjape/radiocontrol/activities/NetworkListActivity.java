@@ -31,7 +31,6 @@ public class NetworkListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_network_list);
-
         final ActionBar actionBar = getSupportActionBar();
 
         if (actionBar != null) {
@@ -41,8 +40,14 @@ public class NetworkListActivity extends AppCompatActivity {
         }
 
 
-        ListView List = (ListView)findViewById(R.id.network_list);
-        listWifiNetworks(List);
+        ListView List = findViewById(R.id.network_list);
+        Thread t = new Thread(() -> {
+            listWifiNetworks(List);
+        });
+
+        // Start the thread
+        t.start();
+
     }
 
     private void listWifiNetworks(ListView lv) {
@@ -96,20 +101,17 @@ public class NetworkListActivity extends AppCompatActivity {
             public View getView(int position, View convertView, ViewGroup parent) {
                 WifiConfiguration net = (WifiConfiguration) getItem(position);
                 convertView = getLayoutInflater().inflate(R.layout.wifi_network, null);
-                TextView Name = (TextView)convertView.findViewById(R.id.net_name);
+                TextView Name = convertView.findViewById(R.id.net_name);
                 final String ssid = net.SSID.substring(1, net.SSID.length() - 1);
                 Name.setText(ssid);
-                SwitchCompat on = (SwitchCompat)convertView.findViewById(R.id.network_on);
+                SwitchCompat on = convertView.findViewById(R.id.network_on);
                 Boolean isEnabled = prefs.getBoolean(net.SSID.substring(1, net.SSID.length() - 1), false);
                 on.setChecked(isEnabled);
-                on.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                        if(isChecked) {
-                            prefs.edit().putBoolean(ssid, true).apply();
-                        } else {
-                            prefs.edit().remove(ssid).apply();
-                        }
+                on.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                    if(isChecked) {
+                        prefs.edit().putBoolean(ssid, true).apply();
+                    } else {
+                        prefs.edit().remove(ssid).apply();
                     }
                 });
 

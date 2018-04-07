@@ -16,6 +16,7 @@
                 android:action="android.intent.action.VIEW"
                 android:targetPackage="com.nikhilparanjape.radiocontrol"
                 android:targetClass="com.nikhilparanjape.radiocontrol.activities.NetworkListActivity" />
+
         </Preference>
         <Preference
             android:key="clear-ssid"

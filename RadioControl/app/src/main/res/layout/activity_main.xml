@@ -28,13 +28,26 @@
         android:paddingTop="@dimen/activity_vertical_margin"
         tools:context=".activities.MainActivity">
 
+        <ProgressBar
+            android:id="@+id/pingProgressBar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="334dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="0dp"
+            android:indeterminate="true"
+            android:max="4"
+            android:progress="1"
+            android:visibility="gone" />
+
 
         <TextView
             android:id="@+id/textView3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
+            android:layout_alignStart="@+id/pingProgressBar"
+            android:layout_below="@+id/pingProgressBar"
             android:text="RadioControl "
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -42,7 +55,7 @@
             android:id="@+id/statusText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
+            android:layout_alignTop="@+id/textView3"
             android:layout_toEndOf="@+id/textView3"
             android:text="null"
             android:textAppearance="?android:attr/textAppearanceMedium" />
@@ -51,7 +64,8 @@
             android:id="@+id/enableSwitch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
+            android:layout_alignStart="@+id/statusText"
+            android:layout_alignEnd="@+id/linkSpeed"
             android:layout_alignParentTop="true"
             android:checked="false" />
 
@@ -62,15 +76,6 @@
             android:layout_alignStart="@+id/linkSpeedButton"
             android:layout_below="@+id/pingTestButton"
             android:textAppearance="?android:attr/textAppearanceMedium" />
-
-        <ProgressBar
-            android:id="@+id/pingProgressBar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignStart="@+id/forceCrashButton"
-            android:layout_below="@+id/enableSwitch"
-            android:layout_marginTop="18dp"
-            android:indeterminate="true" />
 
         <Button
             android:id="@+id/forceCrashButton"

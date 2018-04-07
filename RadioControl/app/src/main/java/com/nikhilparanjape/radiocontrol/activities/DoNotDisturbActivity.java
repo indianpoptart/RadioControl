@@ -49,9 +49,9 @@ public class DoNotDisturbActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setTitle(R.string.title_do_not_disturb);
         }
-        final ImageView status = (ImageView) findViewById(R.id.dnd_status);
-        final TextView hourStatus = (TextView) findViewById(R.id.hour_text);
-        final Button cancelButton = (Button) findViewById(R.id.cancel_button);
+        final ImageView status = findViewById(R.id.dnd_status);
+        final TextView hourStatus = findViewById(R.id.hour_text);
+        final Button cancelButton = findViewById(R.id.cancel_button);
 
         if(pref.getBoolean("isNoDisturbEnabled",false)){
             status.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_do_not_disturb_on_white_48px));
@@ -64,59 +64,45 @@ public class DoNotDisturbActivity extends AppCompatActivity {
             cancelButton.setVisibility(View.GONE);
         }
 
-        RangeBar rangebar = (RangeBar) findViewById(R.id.rangebar);
+        RangeBar rangebar = findViewById(R.id.rangebar);
 
-        rangebar.setOnRangeBarChangeListener(new RangeBar.OnRangeBarChangeListener() {
-            @Override
-            public void onRangeChangeListener(RangeBar rangeBar, int leftPinIndex,
-                                              int rightPinIndex,
-                                              String leftPinValue, String rightPinValue) {
-                //Log.d("RadioControl", "DND SET TO " + rightPinValue + " Hours");
-                hours = rightPinIndex;
-            }
+        rangebar.setOnRangeBarChangeListener((rangeBar, leftPinIndex, rightPinIndex, leftPinValue, rightPinValue) -> {
+            hours = rightPinIndex;
         });
 
         //Initialize set button
-        Button set_button = (Button) findViewById(R.id.set_button);
+        Button set_button = findViewById(R.id.set_button);
 
-        set_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(hours > 0){
-                    editor.putBoolean("isNoDisturbEnabled", true);
-                    editor.putInt("dndHours", hours);
-                    editor.apply();
-                    hourStatus.setText("set for " + hours + " hour(s)");
-                    Log.d("RadioControl", "I've set do not disturb on for " + hours + " hours");
-                    startStandbyMode();
-                    util.cancelAlarm(getApplicationContext()); // Cancels the recurring alarm that starts airplane service
-                    util.scheduleWakeupAlarm(getApplicationContext(),hours);
-                    Toast.makeText(DoNotDisturbActivity.this, "Do not disturb set for "  + hours + " hours", Toast.LENGTH_LONG).show();
-                    //onBackPressed();
-                }
-                else{
-                    editor.putBoolean("isNoDisturbEnabled", false);
-                    editor.apply();
-                    hourStatus.setText(R.string.not_set);
-                }
-
-
+        set_button.setOnClickListener(v -> {
+            if(hours > 0){
+                editor.putBoolean("isNoDisturbEnabled", true);
+                editor.putInt("dndHours", hours);
+                editor.apply();
+                hourStatus.setText("set for " + hours + " hour(s)");
+                Log.d("RadioControl", "I've set do not disturb on for " + hours + " hours");
+                startStandbyMode();
+                util.cancelAlarm(getApplicationContext()); // Cancels the recurring alarm that starts airplane service
+                util.scheduleWakeupAlarm(getApplicationContext(),hours);
+                Toast.makeText(DoNotDisturbActivity.this, "Do not disturb set for "  + hours + " hours", Toast.LENGTH_LONG).show();
+                //onBackPressed();
             }
-
-        });
-
-        cancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            else{
                 editor.putBoolean("isNoDisturbEnabled", false);
                 editor.apply();
                 hourStatus.setText(R.string.not_set);
-                status.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_do_not_disturb_off_white_48px));
-                cancelButton.setVisibility(View.GONE);
-                util.cancelWakeupAlarm(getApplicationContext());
-                Toast.makeText(DoNotDisturbActivity.this, "Do not disturb cancelled", Toast.LENGTH_LONG).show();
-
             }
+
+
+        });
+
+        cancelButton.setOnClickListener(v -> {
+            editor.putBoolean("isNoDisturbEnabled", false);
+            editor.apply();
+            hourStatus.setText(R.string.not_set);
+            status.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_do_not_disturb_off_white_48px));
+            cancelButton.setVisibility(View.GONE);
+            util.cancelWakeupAlarm(getApplicationContext());
+            Toast.makeText(DoNotDisturbActivity.this, "Do not disturb cancelled", Toast.LENGTH_LONG).show();
 
         });
 

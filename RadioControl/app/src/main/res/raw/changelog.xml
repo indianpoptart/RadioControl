@@ -1,6 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog bulletedList="true">
 
+    <changelogversion versionName="5.0.3-Beta1" changeDate="April 7, 2018">
+        <changelogbug>Fixed issue on Android 8.0+ devices where the background service would not be able to run. This adds a small notification to show when the app is running. It only shows up briefly</changelogbug>
+        <changelogtext>Refactored some code</changelogtext>
+        <changelogtext>Added an extra check to an if statement</changelogtext>
+        <changelogtext>Added an android O requirement for the background service(Should no longer give an error)</changelogtext>
+        <changelogtext>Added possible fix for Phone Call Checker</changelogtext>
+        <changelogtext>Removed unused images</changelogtext>
+        <changelogtext>Added new app icon (Vector)</changelogtext>
+        <changelogtext>Updated libraries</changelogtext>
+        <changelogtext>Adding support for Nougat shortcuts</changelogtext>
+        <changelogtext>More background threads for long-term tasks</changelogtext>
+        <changelogtext>Fixing logs so errors can be traced to an origin class</changelogtext>
+        <changelogbug>Known Issues:</changelogbug>
+        <changelogbug>Network settings crashes if app's dev mode is not enabled</changelogbug>
+        <changelogbug>Settings UI transition lags on Shamu (LOS15.1)</changelogbug>
+        <changelogbug>No notifications for 7.0+</changelogbug>
+    </changelogversion>
+
     <changelogversion versionName="5.0.2" changeDate="Feb 1, 2018">
         <changelogtext>Removed Ads!</changelogtext>
         <changelogbug>Added prompt for resetting airplane mode</changelogbug>

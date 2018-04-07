@@ -1,7 +1,9 @@
 package com.nikhilparanjape.radiocontrol.rootUtils;
 
+import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -14,9 +16,11 @@ import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.telephony.CellInfo;
 import android.telephony.TelephonyManager;
 import android.util.Log;
@@ -39,6 +43,8 @@ import static android.app.AlarmManager.RTC_WAKEUP;
 
 /**
  * Created by Nikhil on 2/3/2016.
+ *
+ * A custom Utilities class for RadioControl
  */
 public class Utilities {
 
@@ -301,33 +307,67 @@ public class Utilities {
         if(!heads){
             priority = 0;
         }
-        else if(heads){
-            priority = 1;
-        }
         else{
             priority = 1;
         }
         PendingIntent pi = PendingIntent.getActivity(context, 1, new Intent(WifiManager.ACTION_PICK_WIFI_NETWORK), 0);
         //Resources r = getResources();
-        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        Notification notification = new NotificationCompat.Builder(context)
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context, "Alerts")
                 .setSmallIcon(R.drawable.ic_warning_black_48dp)
                 .setContentTitle("RadioControl Network Alert")
                 .setContentIntent(pi)
                 .setContentText(mes)
                 .setPriority(priority)
-                .setAutoCancel(true)
-                .build();
+                .setAutoCancel(true);
 
-        if(vibrate){
-            notification.defaults|= Notification.DEFAULT_VIBRATE;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            // Create the NotificationChannel, but only on API 26+ because
+            // the NotificationChannel class is new and not in the support library
+            int importance = NotificationManagerCompat.IMPORTANCE_DEFAULT;
+            @SuppressLint("WrongConstant") NotificationChannel channel = new NotificationChannel("radiocontrol-alert", "Alerts", importance);
+            channel.setDescription("For Intelligent mode");
+            // Register the channel with the system
+            NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.createNotificationChannel(channel);
+            // notificationId is a unique int for each notification that you must define
+            notificationManager.notify(0, mBuilder.build());
+
         }
-        if(sound){
-            notification.defaults|= Notification.DEFAULT_SOUND;
+        else{
+            mBuilder.notify();
         }
 
 
-        notificationManager.notify(1, notification);
+
+
+
+    }
+    public void createBackgroundNotification(Context context, String title, String message)
+    {
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context, "Background")
+                .setSmallIcon(R.drawable.ic_refresh_white_48dp)
+                .setContentTitle(title)
+                .setContentText(message)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            // Create the NotificationChannel, but only on API 26+ because
+            // the NotificationChannel class is new and not in the support library
+            int importance = NotificationManagerCompat.IMPORTANCE_DEFAULT;
+            @SuppressLint("WrongConstant") NotificationChannel channel = new NotificationChannel("radiocontrol-background", "Background Channel", importance);
+            channel.setDescription("For Intelligent mode");
+            // Register the channel with the system
+            NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.createNotificationChannel(channel);
+            // notificationId is a unique int for each notification that you must define
+            notificationManager.notify(0, mBuilder.build());
+
+        }
+        else{
+            mBuilder.notify();
+        }
+
+
 
     }
 
@@ -459,10 +499,6 @@ public class Utilities {
                         return "HSUPA"; // ~ 1-23 Mbps
                     case TelephonyManager.NETWORK_TYPE_UMTS:
                         return "UMTS"; // ~ 400-7000 kbps
-            /*
-             * Above API level 7, make sure to set android:targetSdkVersion
-             * to appropriate level to use these
-             */
                     case TelephonyManager.NETWORK_TYPE_EHRPD: // API level 11
                         return "EHRPD"; // ~ 1-2 Mbps
                     case TelephonyManager.NETWORK_TYPE_EVDO_B: // API level 9
@@ -519,10 +555,6 @@ public class Utilities {
                     return true; // ~ 1-23 Mbps
                 case TelephonyManager.NETWORK_TYPE_UMTS:
                     return true; // ~ 400-7000 kbps
-            /*
-             * Above API level 7, make sure to set android:targetSdkVersion
-             * to appropriate level to use these
-             */
                 case TelephonyManager.NETWORK_TYPE_EHRPD: // API level 11
                     return true; // ~ 1-2 Mbps
                 case TelephonyManager.NETWORK_TYPE_EVDO_B: // API level 9
@@ -550,7 +582,7 @@ public class Utilities {
             while(!Utilities.isConnected(context)){
                 Thread.sleep(1000);
             }
-            Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");//Send 1 packet to google and check if it came back
+            Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");//Send 1 packet to Cloudflare and check if it came back
             int exitValue = ipProcess.waitFor();
             Log.d("RadioControl", "Ping test returned " + exitValue);
 

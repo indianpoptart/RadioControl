@@ -21,7 +21,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -37,13 +36,11 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.ProgressBar;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
 import com.android.vending.billing.IInAppBillingService;
@@ -64,8 +61,6 @@ import com.mikepenz.materialdrawer.model.DividerDrawerItem;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
-import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
-import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 import com.nikhilparanjape.radiocontrol.BuildConfig;
 import com.nikhilparanjape.radiocontrol.R;
 import com.nikhilparanjape.radiocontrol.receivers.ActionReceiver;
@@ -112,7 +107,6 @@ public class MainActivity extends AppCompatActivity {
     static final String ITEM_THREE_DOLLAR = "com.nikihlparanjape.radiocontrol.donate.three";
     static final String ITEM_FIVE_DOLLAR = "com.nikihlparanjape.radiocontrol.donate.five";
     static final String ITEM_TEN_DOLLAR = "com.nikihlparanjape.radiocontrol.donate.ten";
-    //static final String ITEM_TEST_PURCHASE = "com.nikhilparanjape.radiocontrol.donate.test_purchase2";
 
 
     ServiceConnection mServiceConn = new ServiceConnection() {
@@ -135,69 +129,64 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        clayout = (CoordinatorLayout) findViewById(R.id.clayout);
-        final ProgressBar dialog = (ProgressBar) findViewById(R.id.pingProgressBar);
+        clayout = findViewById(R.id.clayout);
+        final ProgressBar dialog = findViewById(R.id.pingProgressBar);
         final ActionBar actionBar = getSupportActionBar();
 
         //  Declare a new thread to do a preference check
-        Thread t = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                //  Initialize SharedPreferences
-                SharedPreferences getPrefs = PreferenceManager
-                        .getDefaultSharedPreferences(getBaseContext());
+        Thread t = new Thread(() -> {
+            //  Initialize SharedPreferences
+            SharedPreferences getPrefs = PreferenceManager
+                    .getDefaultSharedPreferences(getBaseContext());
 
-                //  Create a new boolean and preference and set it to true
-                boolean isFirstStart = getPrefs.getBoolean("firstStart", true);
-                int currentapiVersion = android.os.Build.VERSION.SDK_INT;
+            //  Create a new boolean and preference and set it to true if it's not already there
+            boolean isFirstStart = getPrefs.getBoolean("firstStart", true);
+            //Gets the current android build version on device
+            int currentapiVersion = Build.VERSION.SDK_INT;
 
-                //  If the activity has never started before...
-                if (isFirstStart) {
-                    //  Make a new preferences editor
-                    SharedPreferences.Editor e = getPrefs.edit();
-                    FirebaseAnalytics.getInstance(getApplicationContext()).setAnalyticsCollectionEnabled(false);
+            //  If the activity has never started before...
+            if (isFirstStart) {
+                //  Make a new preferences editor
+                SharedPreferences.Editor e = getPrefs.edit();
+                FirebaseAnalytics.getInstance(getApplicationContext()).setAnalyticsCollectionEnabled(false);
 
-
-                    if (currentapiVersion >= 24) {
-                        e.putBoolean("workmode", true);
-                    }
-
-                    //  Launch app intro
-                    Intent i = new Intent(MainActivity.this, TutorialActivity.class);
-                    startActivity(i);
-
-                    //  Edit preference to make it false because we don't want this to run again
-                    e.putBoolean("firstStart", false);
-
-                    //  Apply changes
-                    e.apply();
-
-
-                }
-                String intervalTime = getPrefs.getString("interval_prefs","10");
-                boolean airplaneService = getPrefs.getBoolean("isAirplaneService", false);
-
-                if(getPrefs.getBoolean("eulaShow", false)){
-                    FirebaseAnalytics.getInstance(getApplicationContext()).setAnalyticsCollectionEnabled(true);
-                }
-                if(!intervalTime.equals("0") && airplaneService){
-                    Intent i= new Intent(getApplicationContext(), BackgroundAirplaneService.class);
-                    getBaseContext().startService(i);
-                    Log.d("RadioControl", "back Service launched");
-                }
-                if(getPrefs.getBoolean("workMode",true)){
-                    Intent i= new Intent(getApplicationContext(), PersistenceService.class);
-                    getBaseContext().startService(i);
-                    Log.d("RadioControl", "persist Service launched");
+                if (currentapiVersion >= 24) {
+                    e.putBoolean("workmode", true);
                 }
 
-                if (!getPrefs.getBoolean("workMode",true)){
-                    registerForBroadcasts(getApplicationContext());
-                }
+                //  Launch app intro
+                Intent i = new Intent(MainActivity.this, TutorialActivity.class);
+                startActivity(i);
 
-                //Hides the progress dialog
-                dialog.setVisibility(View.GONE);
+                //  Edit preference to make it false because we don't want this to run again
+                e.putBoolean("firstStart", false);
+
+                //  Apply changes
+                e.apply();
             }
+            String intervalTime = getPrefs.getString("interval_prefs","10");
+            boolean airplaneService = getPrefs.getBoolean("isAirplaneService", false);
+
+            if(getPrefs.getBoolean("eulaShow", false)){
+                FirebaseAnalytics.getInstance(getApplicationContext()).setAnalyticsCollectionEnabled(true);
+            }
+            if(!intervalTime.equals("0") && airplaneService){
+                Intent i= new Intent(getApplicationContext(), BackgroundAirplaneService.class);
+                getBaseContext().startService(i);
+                Log.d("RadioControl", "back Service launched");
+            }
+            if(getPrefs.getBoolean("workMode",true)){
+                Intent i= new Intent(getApplicationContext(), PersistenceService.class);
+                getBaseContext().startService(i);
+                Log.d("RadioControl", "persist Service launched");
+            }
+
+            if (!getPrefs.getBoolean("workMode",true)){
+                registerForBroadcasts(getApplicationContext());
+            }
+
+            //Hides the progress dialog
+            dialog.setVisibility(View.GONE);
         });
 
         // Start the thread
@@ -209,20 +198,17 @@ public class MainActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-
+        //test code
         String base64EncodedPublicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxnZmUx4gqEFCsMW+/uPXIzJSaaoP4J/2RVaxYT9Be0jfga0qdGF+Vq56mzQ/LYEZgLvFelGdWwXJ5Izq5Wl/cEW8cExhQ/WDuJvYVaemuU+JnHP1zIZ2H28NtzrDH0hb59k9R8owSx7NPNITshuC4MPwwOQDgDaYk02Hgi4woSzbDtyrvwW1A1FWpftb78i8Pphr7bT14MjpNyNznk4BohLMncEVK22O1N08xrVrR66kcTgYs+EZnkRKk2uPZclsPq4KVKG8LbLcxmDdslDBnhQkSPe3ntAC8DxGhVdgJJDwulcepxWoCby1GcMZTUAC1OKCZlvGRGSwyfIqbqF2JQIDAQAB";
 
         //initializes iab helper
         mHelper = new IabHelper(this, base64EncodedPublicKey);
 
-        mHelper.startSetup(new IabHelper.OnIabSetupFinishedListener() {
-            public void onIabSetupFinished(IabResult result)
-            {
-                if (!result.isSuccess()) {
-                    Log.d("RadioControl", "In-app Billing setup failed: " + result);
-                } else {
-                    Log.d("RadioControl", "In-app Billing is set up OK");
-                }
+        mHelper.startSetup(result -> {
+            if (!result.isSuccess()) {
+                Log.d("RadioControl", "In-app Billing setup failed: " + result);
+            } else {
+                Log.d("RadioControl", "In-app Billing is set up OK");
             }
         });
 
@@ -237,36 +223,13 @@ public class MainActivity extends AppCompatActivity {
         final SharedPreferences sharedPref = getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE);
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         final SharedPreferences.Editor editor = sharedPref.edit();
-        final TextView statusText = (TextView)findViewById(R.id.statusText);
-        final TextView linkText = (TextView)findViewById(R.id.linkSpeed);
-        final TextView connectionStatusText = (TextView) findViewById(R.id.pingStatus);
-        Switch toggle = (Switch) findViewById(R.id.enableSwitch);
+        final TextView statusText = findViewById(R.id.statusText);
+        final TextView linkText = findViewById(R.id.linkSpeed);
+        final TextView connectionStatusText = findViewById(R.id.pingStatus);
+        Switch toggle = findViewById(R.id.enableSwitch);
 
         //Checks for root
         rootInit();
-
-//        //Initialize ads
-//        if(!pref.getBoolean("disableAds",false)){
-//            if(!pref.getBoolean("isDonated",false)){
-//                runOnUiThread(new Runnable() {
-//                    public void run() {
-//                        AdView mAdView = (AdView) findViewById(R.id.adView);
-//                        AdRequest adRequest = new AdRequest.Builder().build();
-//                        AdRequest adRequestTest = new AdRequest.Builder()
-//                                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-//                                .build();
-//                        //Load non TOS violating ads
-//                        if(BuildConfig.DEBUG){
-//                            mAdView.loadAd(adRequestTest);
-//                        }
-//                        //Regular $$
-//                        else{
-//                            mAdView.loadAd(adRequest);
-//                        }
-//                    }
-//                });
-//            }
-//        }
 
         if(pref.getBoolean("allowFabric",false)){
             Fabric.with(this, new Crashlytics());
@@ -280,7 +243,7 @@ public class MainActivity extends AppCompatActivity {
         filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
 
         //LinkSpeed Button
-        Button linkSpeedButton = (Button) findViewById(R.id.linkSpeedButton);
+        Button linkSpeedButton = findViewById(R.id.linkSpeedButton);
 
         //Check if the easter egg is NOT activated
         if(!sharedPref.getBoolean("isDeveloper",false)){
@@ -292,38 +255,34 @@ public class MainActivity extends AppCompatActivity {
             linkText.setVisibility(View.VISIBLE);
         }
 
-        linkSpeedButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //showWifiInfoDialog();
+        linkSpeedButton.setOnClickListener(v -> {
+            //showWifiInfoDialog();
 
-                int linkspeed = Utilities.linkSpeed(getApplicationContext());
-                int GHz = Utilities.frequency(getApplicationContext());
-                Log.i("RadioControl", "Test1: " + Utilities.getCellStatus(getApplicationContext()));
-                if(linkspeed == -1){
-                    linkText.setText(R.string.cellNetwork);
-                }
-                else{
-                    if(GHz == 2){
-                        linkText.setText("Link speed: " + linkspeed + "Mbps @ 2.4 GHz");
-
-                    }
-                    else if(GHz == 5){
-                        linkText.setText("Link speed: " + linkspeed + "Mbps @ 5 GHz");
-
-                    }
-
-                }
+            int linkspeed = Utilities.linkSpeed(getApplicationContext());
+            int GHz = Utilities.frequency(getApplicationContext());
+            Log.i("RadioControl", "Test1: " + Utilities.getCellStatus(getApplicationContext()));
+            if(linkspeed == -1){
+                linkText.setText(R.string.cellNetwork);
             }
+            else{
+                if(GHz == 2){
+                    linkText.setText("Link speed: " + linkspeed + "Mbps @ 2.4 GHz");
 
+                }
+                else if(GHz == 5){
+                    linkText.setText("Link speed: " + linkspeed + "Mbps @ 5 GHz");
+
+                }
+
+            }
         });
 
         //Connection Test button (Dev Feature)
-        final Button conn = (Button) findViewById(R.id.pingTestButton);
-        Button serviceTest = (Button) findViewById(R.id.airplane_service_test);
-        Button nightCancel = (Button) findViewById(R.id.night_mode_cancel);
-        Button radioOffButton = (Button) findViewById(R.id.cellRadioOff);
-        Button forceCrashButton = (Button) findViewById(R.id.forceCrashButton);
+        final Button conn = findViewById(R.id.pingTestButton);
+        Button serviceTest = findViewById(R.id.airplane_service_test);
+        Button nightCancel = findViewById(R.id.night_mode_cancel);
+        Button radioOffButton = findViewById(R.id.cellRadioOff);
+        Button forceCrashButton = findViewById(R.id.forceCrashButton);
         //Check if the easter egg is NOT activated
         if(!sharedPref.getBoolean("isDeveloper",false)){
             conn.setVisibility(View.GONE);
@@ -342,84 +301,62 @@ public class MainActivity extends AppCompatActivity {
             forceCrashButton.setVisibility(View.VISIBLE);
         }
 
-        conn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                connectionStatusText.setText(R.string.ping);
-                connectionStatusText.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.material_grey_50));
-                dialog.setVisibility(View.VISIBLE);
-                new AsyncBackgroundTask(getApplicationContext()).execute("");
-            }
-
+        conn.setOnClickListener(v -> {
+            connectionStatusText.setText(R.string.ping);
+            connectionStatusText.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.material_grey_50));
+            dialog.setVisibility(View.VISIBLE);
+            new AsyncBackgroundTask(getApplicationContext()).execute("");
         });
-        serviceTest.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i= new Intent(getApplicationContext(), BackgroundAirplaneService.class);
-                getBaseContext().startService(i);
-                util.scheduleAlarm(getApplicationContext());
-                Log.d("RadioControl", "Service started");
-            }
-
+        serviceTest.setOnClickListener(v -> {
+            Intent i= new Intent(getApplicationContext(), BackgroundAirplaneService.class);
+            getBaseContext().startService(i);
+            util.scheduleAlarm(getApplicationContext());
+            Log.d("RadioControl", "Service started");
         });
-        nightCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), NightModeReceiver.class);
-                final PendingIntent pIntent = PendingIntent.getBroadcast(getApplicationContext(), NightModeReceiver.REQUEST_CODE,
-                        intent, PendingIntent.FLAG_UPDATE_CURRENT);
-                AlarmManager alarm = (AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
-                if (alarm != null) {
-                    alarm.cancel(pIntent);
-                }
+        nightCancel.setOnClickListener(v -> {
+            Intent intent = new Intent(getApplicationContext(), NightModeReceiver.class);
+            final PendingIntent pIntent = PendingIntent.getBroadcast(getApplicationContext(), NightModeReceiver.REQUEST_CODE,
+                    intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            AlarmManager alarm = (AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
+            if (alarm != null) {
+                alarm.cancel(pIntent);
             }
-
         });
-        radioOffButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //String[] cellOffCmd = {"service call phone 27","service call phone 14 s16"};
-                //RootAccess.runCommands(cellOffCmd);
-                Intent cellIntent = new Intent(getApplicationContext(), CellRadioService.class);
-                startService(cellIntent);
-                util.scheduleRootAlarm(getApplicationContext());
-            }
-
+        radioOffButton.setOnClickListener(v -> {
+            //String[] cellOffCmd = {"service call phone 27","service call phone 14 s16"};
+            //RootAccess.runCommands(cellOffCmd);
+            Intent cellIntent = new Intent(getApplicationContext(), CellRadioService.class);
+            startService(cellIntent);
+            util.scheduleRootAlarm(getApplicationContext());
         });
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        assert fab != null;
+        FloatingActionButton fab = findViewById(R.id.fab);
         //CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams)fab.getLayoutParams();
         //params.setMargins(0, 85, 16, 85); //substitute parameters for left, top, right, bottom
         //fab.setLayoutParams(params);
 
         fab.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_network_check_white_48dp));
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.setVisibility(View.VISIBLE);
-                new AsyncBackgroundTask(getApplicationContext()).execute("");
-            }
+        fab.setOnClickListener(view -> {
+            dialog.setVisibility(View.VISIBLE);
+            new AsyncBackgroundTask(getApplicationContext()).execute("");
         });
 
         drawerCreate(); //Initalizes Drawer
 
-        toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (!isChecked) {
-                    editor.putInt("isActive",0);
-                    statusText.setText(R.string.showDisabled);
-                    statusText.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.status_deactivated));
-                    editor.apply();
+        toggle.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (!isChecked) {
+                editor.putInt("isActive",0);
+                statusText.setText(R.string.showDisabled);
+                statusText.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.status_deactivated));
+                editor.apply();
 
-                } else {
-                    editor.putInt("isActive",1);
-                    statusText.setText(R.string.showEnabled);
-                    statusText.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.status_activated));
-                    editor.apply();
-                    Intent i = new Intent(getApplicationContext(), BackgroundAirplaneService.class);
-                    getApplicationContext().startService(i);
-                }
+            } else {
+                editor.putInt("isActive",1);
+                statusText.setText(R.string.showEnabled);
+                statusText.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.status_activated));
+                editor.apply();
+                Intent i = new Intent(getApplicationContext(), BackgroundAirplaneService.class);
+                getApplicationContext().startService(i);
             }
         });
 
@@ -445,7 +382,7 @@ public class MainActivity extends AppCompatActivity {
             editor.putInt(VERSION_KEY, currentVersionNumber);
             editor.apply();
         }
-        if (android.os.Build.VERSION.SDK_INT >= 24){
+        if (android.os.Build.VERSION.SDK_INT >= 24 && !sharedPref.getBoolean("workMode",false)){
             editor.putBoolean("workMode",true);
             editor.apply();
         }
@@ -484,8 +421,6 @@ public class MainActivity extends AppCompatActivity {
 
         String carrierName = "Not Rooted";
         final SharedPreferences sharedPref = getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE);
-        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        boolean batteryOptimize = pref.getBoolean("isBatteryOn",true);
 
 
         //Drawable lg = getResources().getDrawable(R.mipmap.lg);
@@ -523,10 +458,7 @@ public class MainActivity extends AppCompatActivity {
                     .icon(GoogleMaterial.Icon.gmd_error_outline)
                     .color(Color.RED);
         }
-
-
         Drawable headerIcon = ContextCompat.getDrawable(getApplicationContext(),R.mipmap.header);
-
 
         if(sharedPref.getBoolean("isDeveloper",false)){
             headerIcon = ContextCompat.getDrawable(getApplicationContext(),R.mipmap.header2);
@@ -540,12 +472,7 @@ public class MainActivity extends AppCompatActivity {
                         new ProfileDrawerItem().withName(getDeviceName()).withEmail("v" + versionName).withIcon(icon),
                         new ProfileDrawerItem().withName("Root Status").withEmail(carrierName).withIcon(carrierIcon)
                 )
-                .withOnAccountHeaderListener(new AccountHeader.OnAccountHeaderListener() {
-                    @Override
-                    public boolean onProfileChanged(View view, IProfile profile, boolean currentProfile) {
-                        return false;
-                    }
-                })
+                .withOnAccountHeaderListener((view, profile, currentProfile) -> false)
                 .build();
         //Creates navigation drawer items
         PrimaryDrawerItem item1 = new PrimaryDrawerItem().withName(R.string.home).withIcon(GoogleMaterial.Icon.gmd_wifi);
@@ -575,57 +502,54 @@ public class MainActivity extends AppCompatActivity {
                         item5,
                         item7
                 )
-                .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
-                    @Override
-                    public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
-                        Log.d("RadioControl", "The drawer is at position " + position);
-                        //About button
-                        if (position == 3) {
-                            startSettingsActivity();
-                            Log.d("drawer", "Started settings activity");
-                        }else if(position == 4){
-                            File log = new File(getApplicationContext().getFilesDir(), "radiocontrol.log");
-                            if(log.exists() && log.canRead()) {
-                                Log.d("RadioControl", "Log Exists");
-                                startStatsActivity();
-                            } else{
-                                result.setSelection(item1);
-                                Snackbar.make(clayout, "No log file found", Snackbar.LENGTH_LONG)
-                                        .show();
-                            }
-                        }
-                        else if (position == 5) {
-                            startAboutActivity();
-                            Log.d("drawer", "Started about activity");
-                        } else if (position == 7) {
+                .withOnDrawerItemClickListener((view, position, drawerItem) -> {
+                    Log.d("RadioControl", "The drawer is at position " + position);
+                    //About button
+                    if (position == 3) {
+                        startSettingsActivity();
+
+                        Log.d("drawer", "Started settings activity");
+                    }else if(position == 4){
+                        File log = new File(getApplicationContext().getFilesDir(), "radiocontrol.log");
+                        if(log.exists() && log.canRead()) {
+                            Log.d("RadioControl", "Log Exists");
+                            startStatsActivity();
+                        } else{
                             result.setSelection(item1);
-                            Snackbar.make(clayout, "Coming in v5.1!", Snackbar.LENGTH_LONG)
+                            Snackbar.make(clayout, "No log file found", Snackbar.LENGTH_LONG)
                                     .show();
-                        } else if (position == 8) {
-                            //Donation
-                            result.setSelection(item1);
-                            Log.d("RadioControl", "Donation button pressed");
-                            if(Utilities.isConnected(getApplicationContext())){
-                                showDonateDialog();
-                            }
-                            else{
-                                showErrorDialog();
-                            }
-                        } else if (position == 9) {
-                            result.setSelection(item1);
-                            Log.d("RadioControl", "Feedback");
-                            sendFeedback();
-                        } else if (position == 10) {
-                            result.setSelection(item1);
-                            Log.d("RadioControl", "Standby Mode Engaged");
-                            startStandbyMode();
                         }
-                        return false;
                     }
+                    else if (position == 5) {
+                        startAboutActivity();
+                        Log.d("drawer", "Started about activity");
+                    } else if (position == 7) {
+                        result.setSelection(item1);
+                        Snackbar.make(clayout, "Coming in v5.1!", Snackbar.LENGTH_LONG)
+                                .show();
+                    } else if (position == 8) {
+                        //Donation
+                        result.setSelection(item1);
+                        Log.d("RadioControl", "Donation button pressed");
+                        if(Utilities.isConnected(getApplicationContext())){
+                            showDonateDialog();
+                        }
+                        else{
+                            showErrorDialog();
+                        }
+                    } else if (position == 9) {
+                        result.setSelection(item1);
+                        Log.d("RadioControl", "Feedback");
+                        sendFeedback();
+                    } else if (position == 10) {
+                        result.setSelection(item1);
+                        Log.d("RadioControl", "Standby Mode Engaged");
+                        startStandbyMode();
+                    }
+                    return false;
                 })
                 .build();
         result.setSelection(item1);
-
     }
 
     @Override
@@ -718,17 +642,14 @@ public class MainActivity extends AppCompatActivity {
                 .theme(Theme.LIGHT)
                 .positiveText("GOT IT")
                 .negativeText("WHAT'S NEW")
-                .onAny(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        String chk = which.name();
-                        Log.d("RadioControl", "Updated: " + chk);
-                        if(chk.equals("POSITIVE")){
-                            dialog.dismiss();
-                        }
-                        else if(chk.equals("NEGATIVE")){
-                            startChangelogActivity();
-                        }
+                .onAny((dialog, which) -> {
+                    String chk = which.name();
+                    Log.d("RadioControl", "Updated: " + chk);
+                    if(chk.equals("POSITIVE")){
+                        dialog.dismiss();
+                    }
+                    else if(chk.equals("NEGATIVE")){
+                        startChangelogActivity();
                     }
                 })
                 .show();
@@ -741,46 +662,34 @@ public class MainActivity extends AppCompatActivity {
 
 
         builder.setView(view).setTitle(R.string.donate)//sets title
-                .setPositiveButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Log.v("RadioControl", "Donation Cancelled");
-                        dialog.dismiss();
-                    }
-
+                .setPositiveButton(R.string.cancel, (dialog, which) -> {
+                    Log.v("RadioControl", "Donation Cancelled");
+                    dialog.dismiss();
                 });
 
         final AlertDialog alert = builder.create();
         alert.show();
 
         //Sets the purchase options
-        Button oneButton = (Button) view.findViewById(R.id.oneDollar);
-        oneButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                alert.cancel(); //Closes the donate dialog
-                buyItem(0); //Opens billing for set item
-            }
+        Button oneButton = view.findViewById(R.id.oneDollar);
+        oneButton.setOnClickListener(v -> {
+            alert.cancel(); //Closes the donate dialog
+            buyItem(0); //Opens billing for set item
         });
-        Button threeButton = (Button) view.findViewById(R.id.threeDollar);
-        threeButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                alert.cancel(); //Closes the donate dialog
-                buyItem(1); //Opens billing for set item
-            }
+        Button threeButton = view.findViewById(R.id.threeDollar);
+        threeButton.setOnClickListener(v -> {
+            alert.cancel(); //Closes the donate dialog
+            buyItem(1); //Opens billing for set item
         });
-        Button fiveButton = (Button) view.findViewById(R.id.fiveDollar);
-        fiveButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                alert.cancel(); //Closes the donate dialog
-                buyItem(2); //Opens billing for set item
-            }
+        Button fiveButton = view.findViewById(R.id.fiveDollar);
+        fiveButton.setOnClickListener(v -> {
+            alert.cancel(); //Closes the donate dialog
+            buyItem(2); //Opens billing for set item
         });
-        Button tenButton = (Button) view.findViewById(R.id.tenDollar);
-        tenButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                alert.cancel(); //Closes the donate dialog
-                buyItem(3); //Opens billing for set item
-            }
+        Button tenButton = view.findViewById(R.id.tenDollar);
+        tenButton.setOnClickListener(v -> {
+            alert.cancel(); //Closes the donate dialog
+            buyItem(3); //Opens billing for set item
         });
 
 
@@ -864,33 +773,19 @@ public class MainActivity extends AppCompatActivity {
                     .core(new CrashlyticsCore.Builder()
                             .disabled(true).build()).build());
         }
-
-        /*if(!pref.getBoolean("disableAds",false)){
-            if(!pref.getBoolean("isDonated",false)){
-                runOnUiThread(new Runnable() {
-                    public void run() {
-                        AdView mAdView = (AdView) findViewById(R.id.adView);
-                        AdRequest adRequest = new AdRequest.Builder().build();
-                        AdRequest adRequestTest = new AdRequest.Builder()
-                                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-                                .build();
-                        if(BuildConfig.DEBUG){
-                            mAdView.loadAd(adRequestTest);
-                        }
-                        else{
-                            mAdView.loadAd(adRequest);
-                        }
-                    }
-                });
-            }
-        }*/
         //Connection Test button (Dev Feature)
-        final Button conn = (Button) findViewById(R.id.pingTestButton);
-        Button serviceTest = (Button) findViewById(R.id.airplane_service_test);
-        Button nightCancel = (Button) findViewById(R.id.night_mode_cancel);
-        Button radioOffButton = (Button) findViewById(R.id.cellRadioOff);
-        Button forceCrashButton = (Button) findViewById(R.id.forceCrashButton);
-        final TextView connectionStatusText = (TextView) findViewById(R.id.pingStatus);
+        final Button conn = findViewById(R.id.pingTestButton);
+        Button serviceTest = findViewById(R.id.airplane_service_test);
+        Button nightCancel = findViewById(R.id.night_mode_cancel);
+        Button radioOffButton = findViewById(R.id.cellRadioOff);
+        Button forceCrashButton = findViewById(R.id.forceCrashButton);
+        final TextView connectionStatusText = findViewById(R.id.pingStatus);
+        //LinkSpeed Button
+        Button btn3 = findViewById(R.id.linkSpeedButton);
+        final TextView linkText = findViewById(R.id.linkSpeed);
+        TextView statusText = findViewById(R.id.statusText);
+        Switch toggle = findViewById(R.id.enableSwitch);
+
         //Check if the easter egg is NOT activated
         if(!sharedPref.getBoolean("isDeveloper",false)){
             conn.setVisibility(View.GONE);
@@ -899,6 +794,8 @@ public class MainActivity extends AppCompatActivity {
             connectionStatusText.setVisibility(View.GONE);
             radioOffButton.setVisibility(View.GONE);
             forceCrashButton.setVisibility(View.GONE);
+            btn3.setVisibility(View.GONE);
+            linkText.setVisibility(View.GONE);
         }
         else if(sharedPref.getBoolean("isDeveloper",false)){
             conn.setVisibility(View.VISIBLE);
@@ -907,22 +804,9 @@ public class MainActivity extends AppCompatActivity {
             connectionStatusText.setVisibility(View.VISIBLE);
             radioOffButton.setVisibility(View.VISIBLE);
             forceCrashButton.setVisibility(View.VISIBLE);
-        }
-
-        //LinkSpeed Button
-        Button btn3 = findViewById(R.id.linkSpeedButton);
-        final TextView linkText = findViewById(R.id.linkSpeed);
-        //LinkSpeed button and text
-        if(!sharedPref.getBoolean("isDeveloper",false)){
-            btn3.setVisibility(View.GONE);
-            linkText.setVisibility(View.GONE);
-        }
-        else if(sharedPref.getBoolean("isDeveloper",false)){
             btn3.setVisibility(View.VISIBLE);
             linkText.setVisibility(View.VISIBLE);
         }
-        TextView statusText = findViewById(R.id.statusText);
-        Switch toggle = findViewById(R.id.enableSwitch);
 
         if(!rootInit()){
             toggle.setClickable(false);
@@ -958,66 +842,59 @@ public class MainActivity extends AppCompatActivity {
         }
     }
     IabHelper.OnIabPurchaseFinishedListener mPurchaseFinishedListener
-            = new IabHelper.OnIabPurchaseFinishedListener() {
-        public void onIabPurchaseFinished(IabResult result,
-                                          Purchase purchase)
-        {
-            if (result.isFailure()) {
-                if(result.toString().contains("Purchase signature verification failed")){
-                    consumeItem();
-                    Toast.makeText(MainActivity.this, R.string.donationThanks, Toast.LENGTH_LONG).show();
-                    Log.d("RadioControl","In-app purchase succeeded, however verification failed");
-                    SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                    SharedPreferences.Editor editor = pref.edit();
-                    editor.putBoolean("isDonated",true);
-                    editor.apply();
-                }
-                else if(result.toString().contains("User cancelled")){
-                    //Toast.makeText(MainActivity.this, R.string.donationCancel, Toast.LENGTH_LONG).show();
-                    Snackbar.make(findViewById(android.R.id.content), R.string.donationCancel, Snackbar.LENGTH_LONG)
-                            .show();
-                    Log.d("RadioControl","Purchase Cancelled");
-                }
-                else if(result.toString().contains("Item Already Owned")){
-                    Toast.makeText(MainActivity.this, R.string.donationExists, Toast.LENGTH_LONG).show();
-                    Log.d("RadioControl","Donation already purchased");
-                }
-                else{
-                    Toast.makeText(MainActivity.this, getString(R.string.donationFailed) + result, Toast.LENGTH_LONG).show();
-                    Log.d("RadioControl","In-app purchase failed: " + result + "Purchase: " + purchase);
-                }
-
-            }
-            else if(result.isSuccess()){
-                Toast.makeText(MainActivity.this, R.string.donationThanks, Toast.LENGTH_LONG).show();
-                Log.d("RadioControl","In-app purchase succeeded");
-                SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                SharedPreferences.Editor editor = pref.edit();
-                editor.putBoolean("isDonated",true);
-                editor.apply();
-                //consumeItem();
-
-            }
-
-        }
-    };
-    IabHelper.OnConsumeFinishedListener mConsumeFinishedListener =
-            new IabHelper.OnConsumeFinishedListener() {
-                public void onConsumeFinished(Purchase purchase,
-                                              IabResult result) {
-
-                    if (result.isSuccess()) {
+            = (result, purchase) -> {
+                if (result.isFailure()) {
+                    if(result.toString().contains("Purchase signature verification failed")){
+                        consumeItem();
                         Toast.makeText(MainActivity.this, R.string.donationThanks, Toast.LENGTH_LONG).show();
-                        Log.d("RadioControl","In-app purchase succeeded");
+                        Log.d("RadioControl","In-app purchase succeeded, however verification failed");
                         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                         SharedPreferences.Editor editor = pref.edit();
                         editor.putBoolean("isDonated",true);
                         editor.apply();
-
-                    } else if(result.isFailure()){
-                        //Toast.makeText(MainActivity.this, "Thanks for the thought, but the purchase failed", Toast.LENGTH_LONG).show();
-                        Log.d("RadioControl","In-app purchase failed");
                     }
+                    else if(result.toString().contains("User cancelled")){
+                        //Toast.makeText(MainActivity.this, R.string.donationCancel, Toast.LENGTH_LONG).show();
+                        Snackbar.make(findViewById(android.R.id.content), R.string.donationCancel, Snackbar.LENGTH_LONG)
+                                .show();
+                        Log.d("RadioControl","Purchase Cancelled");
+                    }
+                    else if(result.toString().contains("Item Already Owned")){
+                        Toast.makeText(MainActivity.this, R.string.donationExists, Toast.LENGTH_LONG).show();
+                        Log.d("RadioControl","Donation already purchased");
+                    }
+                    else{
+                        Toast.makeText(MainActivity.this, getString(R.string.donationFailed) + result, Toast.LENGTH_LONG).show();
+                        Log.d("RadioControl","In-app purchase failed: " + result + "Purchase: " + purchase);
+                    }
+
+                }
+                else if(result.isSuccess()){
+                    Toast.makeText(MainActivity.this, R.string.donationThanks, Toast.LENGTH_LONG).show();
+                    Log.d("RadioControl","In-app purchase succeeded");
+                    SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                    SharedPreferences.Editor editor = pref.edit();
+                    editor.putBoolean("isDonated",true);
+                    editor.apply();
+                    //consumeItem();
+
+                }
+
+            };
+    IabHelper.OnConsumeFinishedListener mConsumeFinishedListener =
+            (purchase, result) -> {
+
+                if (result.isSuccess()) {
+                    Toast.makeText(MainActivity.this, R.string.donationThanks, Toast.LENGTH_LONG).show();
+                    Log.d("RadioControl","In-app purchase succeeded");
+                    SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                    SharedPreferences.Editor editor = pref.edit();
+                    editor.putBoolean("isDonated",true);
+                    editor.apply();
+
+                } else if(result.isFailure()){
+                    //Toast.makeText(MainActivity.this, "Thanks for the thought, but the purchase failed", Toast.LENGTH_LONG).show();
+                    Log.d("RadioControl","In-app purchase failed");
                 }
             };
 
@@ -1104,11 +981,6 @@ public class MainActivity extends AppCompatActivity {
         Context context;
         private ProgressBar dialog;
 
-        public AsyncBackgroundTask(MainActivity activity) {
-            dialog = (ProgressBar) findViewById(R.id.pingProgressBar);
-            dialog.setIndeterminate(true);
-        }
-
         AsyncBackgroundTask(Context context) {
             this.context = context;
         }
@@ -1143,9 +1015,9 @@ public class MainActivity extends AppCompatActivity {
         }
         @Override
         protected void onPostExecute(PingWrapper w) {
-            dialog = (ProgressBar)findViewById(R.id.pingProgressBar);
+            dialog = findViewById(R.id.pingProgressBar);
             dialog.setVisibility(View.GONE);
-            final TextView connectionStatusText = (TextView) findViewById(R.id.pingStatus);
+            final TextView connectionStatusText = findViewById(R.id.pingStatus);
             Log.d("RadioControl","Status: " + w.status);
             double status;
             boolean isDouble = true;
@@ -1276,10 +1148,6 @@ public class MainActivity extends AppCompatActivity {
         }
         if (mHelper != null) mHelper.dispose();
         mHelper = null;
-
-
-
-
 
     }
 }

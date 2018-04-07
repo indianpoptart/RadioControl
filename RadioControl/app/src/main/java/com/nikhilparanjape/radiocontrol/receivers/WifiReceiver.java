@@ -141,9 +141,9 @@ public class WifiReceiver extends WakefulBroadcastReceiver {
                     }
                     //Checks that user is currently in call and pauses execution till the call ends
                     else if(util.isCallActive(context)){
-                        //while(util.isCallActive(context)){
-                            //waitFor(1000);//Wait for call to end
-                        //}
+                        while(util.isCallActive(context)){
+                            waitFor(1000);//Wait for call to end
+                        }
                     }
                 }
                 //Pauses because WiFi network is in the list of disabled SSIDs
@@ -198,7 +198,7 @@ public class WifiReceiver extends WakefulBroadcastReceiver {
             while(!Utilities.isConnected(context)){
                 Thread.sleep(1000);
             }
-            Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");//Send 1 packet to google and check if it came back
+            Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");//Send 1 packet to Cloudflare and check if it came back
             int exitValue = ipProcess.waitFor();
             Log.d("RadioControl", "Ping test returned " + exitValue);
 
@@ -269,7 +269,7 @@ public class WifiReceiver extends WakefulBroadcastReceiver {
             Runtime runtime = Runtime.getRuntime();
             try {
                 Thread.sleep(5000);
-                Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");//Send 1 packet to google and check if it came back
+                Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");//Send 1 packet to Cloudflare and check if it came back
                 int exitValue = ipProcess.waitFor();
                 Log.d("RadioControl", "Ping test returned " + exitValue);
                 return (exitValue == 0);
