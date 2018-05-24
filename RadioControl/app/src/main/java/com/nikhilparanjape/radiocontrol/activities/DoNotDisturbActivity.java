@@ -45,7 +45,7 @@ public class DoNotDisturbActivity extends AppCompatActivity {
         final SharedPreferences.Editor editor = pref.edit();
 
         if (actionBar != null) {
-            actionBar.setHomeAsUpIndicator(new IconicsDrawable(this, GoogleMaterial.Icon.gmd_arrow_back).color(Color.WHITE).sizeDp(IconicsDrawable.ANDROID_ACTIONBAR_ICON_SIZE_DP).paddingDp(IconicsDrawable.ANDROID_ACTIONBAR_ICON_SIZE_PADDING_DP));
+            actionBar.setHomeAsUpIndicator(new IconicsDrawable(this, GoogleMaterial.Icon.gmd_arrow_back).color(Color.WHITE).sizeDp(IconicsDrawable.TOOLBAR_ICON_SIZE).paddingDp(IconicsDrawable.TOOLBAR_ICON_PADDING));
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setTitle(R.string.title_do_not_disturb);
         }

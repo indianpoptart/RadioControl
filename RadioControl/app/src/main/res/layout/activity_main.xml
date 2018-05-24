@@ -7,6 +7,14 @@
     android:layout_alignParentBottom="true"
     android:layout_alignParentStart="true"
     xmlns:android="http://schemas.android.com/apk/res/android">
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/actionBarSize"
+        android:background="@color/colorPrimary"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        android:elevation="4dp" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
@@ -25,13 +33,13 @@
         android:paddingBottom="@dimen/activity_vertical_margin"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin"
+        android:paddingTop="?android:attr/actionBarSize"
         tools:context=".activities.MainActivity">
 
         <ProgressBar
             android:id="@+id/pingProgressBar"
             style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="334dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
@@ -64,9 +72,8 @@
             android:id="@+id/enableSwitch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignStart="@+id/statusText"
-            android:layout_alignEnd="@+id/linkSpeed"
-            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignTop="@+id/textView3"
             android:checked="false" />
 
         <TextView

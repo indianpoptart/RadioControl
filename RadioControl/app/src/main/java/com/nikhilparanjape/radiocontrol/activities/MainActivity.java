@@ -16,6 +16,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -28,6 +29,7 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.format.DateFormat;
 import android.util.Log;
@@ -36,6 +38,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -44,6 +47,7 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
 import com.android.vending.billing.IInAppBillingService;
+import com.bumptech.glide.Glide;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.PurchaseEvent;
@@ -61,6 +65,9 @@ import com.mikepenz.materialdrawer.model.DividerDrawerItem;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
+import com.mikepenz.materialdrawer.util.AbstractDrawerImageLoader;
+import com.mikepenz.materialdrawer.util.DrawerImageLoader;
+import com.mikepenz.materialdrawer.util.DrawerUIUtils;
 import com.nikhilparanjape.radiocontrol.BuildConfig;
 import com.nikhilparanjape.radiocontrol.R;
 import com.nikhilparanjape.radiocontrol.receivers.ActionReceiver;
@@ -131,6 +138,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         clayout = findViewById(R.id.clayout);
         final ProgressBar dialog = findViewById(R.id.pingProgressBar);
+
+        // Handle Toolbar
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
         final ActionBar actionBar = getSupportActionBar();
 
         //  Declare a new thread to do a preference check
@@ -194,8 +205,9 @@ public class MainActivity extends AppCompatActivity {
 
         //Sets the actionbar with hamburger
         if (actionBar != null) {
-            actionBar.setHomeAsUpIndicator(new IconicsDrawable(this, GoogleMaterial.Icon.gmd_menu).color(Color.WHITE).sizeDp(IconicsDrawable.ANDROID_ACTIONBAR_ICON_SIZE_DP).paddingDp(IconicsDrawable.ANDROID_ACTIONBAR_ICON_SIZE_PADDING_DP));
+            actionBar.setHomeAsUpIndicator(new IconicsDrawable(this, GoogleMaterial.Icon.gmd_menu).color(Color.WHITE).sizeDp(IconicsDrawable.TOOLBAR_ICON_SIZE).paddingDp(IconicsDrawable.TOOLBAR_ICON_PADDING));
             actionBar.setDisplayHomeAsUpEnabled(true);
+
         }
 
         //test code
@@ -464,6 +476,7 @@ public class MainActivity extends AppCompatActivity {
             headerIcon = ContextCompat.getDrawable(getApplicationContext(),R.mipmap.header2);
         }
 
+
         //Creates navigation drawer header
         AccountHeader headerResult = new AccountHeaderBuilder()
                 .withActivity(this)
@@ -475,21 +488,21 @@ public class MainActivity extends AppCompatActivity {
                 .withOnAccountHeaderListener((view, profile, currentProfile) -> false)
                 .build();
         //Creates navigation drawer items
-        PrimaryDrawerItem item1 = new PrimaryDrawerItem().withName(R.string.home).withIcon(GoogleMaterial.Icon.gmd_wifi);
-        SecondaryDrawerItem item2 = new SecondaryDrawerItem().withName(R.string.settings).withIcon(GoogleMaterial.Icon.gmd_settings);
-        SecondaryDrawerItem item3 = new SecondaryDrawerItem().withName(R.string.about).withIcon(GoogleMaterial.Icon.gmd_info);
-        SecondaryDrawerItem item4 = new SecondaryDrawerItem().withName(R.string.donate).withIcon(GoogleMaterial.Icon.gmd_attach_money);
-        SecondaryDrawerItem item5 = new SecondaryDrawerItem().withName(R.string.sendFeedback).withIcon(GoogleMaterial.Icon.gmd_send);
-        SecondaryDrawerItem item6 = new SecondaryDrawerItem().withName(R.string.stats).withIcon(GoogleMaterial.Icon.gmd_timeline);
-        SecondaryDrawerItem item7 = new SecondaryDrawerItem().withName(R.string.standby_drawer_name).withIcon(GoogleMaterial.Icon.gmd_pause_circle_outline);
-        SecondaryDrawerItem item8 = new SecondaryDrawerItem().withName(R.string.drawer_string_troubleshooting).withIcon(GoogleMaterial.Icon.gmd_help);
+        PrimaryDrawerItem item1 = new PrimaryDrawerItem().withIdentifier(1).withName(R.string.home).withIcon(GoogleMaterial.Icon.gmd_wifi);
+        SecondaryDrawerItem item2 = new SecondaryDrawerItem().withIdentifier(2).withName(R.string.settings).withIcon(GoogleMaterial.Icon.gmd_settings);
+        SecondaryDrawerItem item3 = new SecondaryDrawerItem().withIdentifier(3).withName(R.string.about).withIcon(GoogleMaterial.Icon.gmd_info);
+        SecondaryDrawerItem item4 = new SecondaryDrawerItem().withIdentifier(4).withName(R.string.donate).withIcon(GoogleMaterial.Icon.gmd_attach_money);
+        SecondaryDrawerItem item5 = new SecondaryDrawerItem().withIdentifier(5).withName(R.string.sendFeedback).withIcon(GoogleMaterial.Icon.gmd_send);
+        SecondaryDrawerItem item6 = new SecondaryDrawerItem().withIdentifier(6).withName(R.string.stats).withIcon(GoogleMaterial.Icon.gmd_timeline);
+        SecondaryDrawerItem item7 = new SecondaryDrawerItem().withIdentifier(7).withName(R.string.standby_drawer_name).withIcon(GoogleMaterial.Icon.gmd_pause_circle_outline);
+        SecondaryDrawerItem item8 = new SecondaryDrawerItem().withIdentifier(8).withName(R.string.drawer_string_troubleshooting).withIcon(GoogleMaterial.Icon.gmd_help);
 
         //Create navigation drawer
         result = new DrawerBuilder()
-                .withAccountHeader(headerResult)
                 .withActivity(this)
+                .withAccountHeader(headerResult)
                 .withTranslucentStatusBar(false)
-                .withActionBarDrawerToggle(false)
+                .withActionBarDrawerToggle(true)
                 .addDrawerItems(
                         item1,
                         new DividerDrawerItem(),
@@ -550,6 +563,7 @@ public class MainActivity extends AppCompatActivity {
                 })
                 .build();
         result.setSelection(item1);
+
     }
 
     @Override

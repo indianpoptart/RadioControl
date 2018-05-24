@@ -46,7 +46,13 @@ public class PersistenceService extends Service {
         IntentFilter filter = new IntentFilter();
         filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
 
-        this.registerReceiver(mybroadcast,filter);
+
+        try{
+            this.registerReceiver(mybroadcast,filter);
+        } catch(Exception e){
+            Log.e("RadioControl-register","Registration Failed");
+        }
+
 
 
         return START_STICKY;
