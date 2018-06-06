@@ -188,7 +188,11 @@ public class MainActivity extends AppCompatActivity {
             }
             if(getPrefs.getBoolean("workMode",true)){
                 Intent i= new Intent(getApplicationContext(), PersistenceService.class);
-                getBaseContext().startService(i);
+                if(Build.VERSION.SDK_INT>=26) {
+                    getBaseContext().startForegroundService(i);
+                }else{
+                    getBaseContext().startService(i);
+                }
                 Log.d("RadioControl", "persist Service launched");
             }
 
@@ -327,7 +331,7 @@ public class MainActivity extends AppCompatActivity {
         });
         nightCancel.setOnClickListener(v -> {
             Intent intent = new Intent(getApplicationContext(), NightModeReceiver.class);
-            final PendingIntent pIntent = PendingIntent.getBroadcast(getApplicationContext(), NightModeReceiver.REQUEST_CODE,
+            final PendingIntent pIntent = PendingIntent.getBroadcast(getApplicationContext(), NightModeReceiver.Companion.getREQUEST_CODE(),
                     intent, PendingIntent.FLAG_UPDATE_CURRENT);
             AlarmManager alarm = (AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
             if (alarm != null) {
@@ -772,7 +776,12 @@ public class MainActivity extends AppCompatActivity {
 
         if (pref.getBoolean("workMode",true)) {
             Intent i= new Intent(getApplicationContext(), PersistenceService.class);
-            getBaseContext().startService(i);
+            if(Build.VERSION.SDK_INT>=26) {
+                getBaseContext().startForegroundService(i);
+            }else{
+                getBaseContext().startService(i);
+            }
+
             Log.d("RadioControl", "persist Service launched");
         }else{
             registerForBroadcasts(getApplicationContext());

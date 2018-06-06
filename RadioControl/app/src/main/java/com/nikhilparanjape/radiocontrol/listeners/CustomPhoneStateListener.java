@@ -71,7 +71,7 @@ public class CustomPhoneStateListener extends PhoneStateListener {
                     }
                 }
                 else {
-                    RootAccess.runCommands(airOffCmd2);
+                    RootAccess.INSTANCE.runCommands(airOffCmd2);
                     Log.d("RadioControl", "Airplane mode has been turned off");
 
                 }

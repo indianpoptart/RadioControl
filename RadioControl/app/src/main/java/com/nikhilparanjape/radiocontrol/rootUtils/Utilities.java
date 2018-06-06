@@ -109,7 +109,7 @@ public class Utilities {
         // Construct an intent that will execute the AlarmReceiver
         Intent intent = new Intent(c, WakeupReceiver.class);
         // Create a PendingIntent to be triggered when the alarm goes off
-        final PendingIntent pIntent = PendingIntent.getBroadcast(c, ActionReceiver.REQUEST_CODE,
+        final PendingIntent pIntent = PendingIntent.getBroadcast(c, ActionReceiver.Companion.getREQUEST_CODE(),
                 intent, PendingIntent.FLAG_UPDATE_CURRENT);
         // Setup periodic alarm every 5 seconds
         long firstMillis = System.currentTimeMillis(); // alarm is set right away
@@ -175,7 +175,7 @@ public class Utilities {
         // Construct an intent that will execute the AlarmReceiver
         Intent intent = new Intent(c, RootServiceReceiver.class);
         // Create a PendingIntent to be triggered when the alarm goes off
-        final PendingIntent pIntent = PendingIntent.getBroadcast(c, RootServiceReceiver.REQUEST_CODE,
+        final PendingIntent pIntent = PendingIntent.getBroadcast(c, RootServiceReceiver.Companion.getREQUEST_CODE(),
                 intent, PendingIntent.FLAG_UPDATE_CURRENT);
         // Setup periodic alarm every X seconds
         long firstMillis = System.currentTimeMillis(); // alarm is set right away
@@ -190,7 +190,7 @@ public class Utilities {
     }
     public void cancelRootAlarm(Context c) {
         Intent intent = new Intent(c, RootServiceReceiver.class);
-        final PendingIntent pIntent = PendingIntent.getBroadcast(c, RootServiceReceiver.REQUEST_CODE,
+        final PendingIntent pIntent = PendingIntent.getBroadcast(c, RootServiceReceiver.Companion.getREQUEST_CODE(),
                 intent, PendingIntent.FLAG_UPDATE_CURRENT);
         AlarmManager alarm = (AlarmManager) c.getSystemService(Context.ALARM_SERVICE);
         alarm.cancel(pIntent);
@@ -211,7 +211,7 @@ public class Utilities {
         // Construct an intent that will execute the AlarmReceiver
         Intent intent = new Intent(c, NightModeReceiver.class);
         // Create a PendingIntent to be triggered when the alarm goes off
-        final PendingIntent pIntent = PendingIntent.getBroadcast(c, NightModeReceiver.REQUEST_CODE,
+        final PendingIntent pIntent = PendingIntent.getBroadcast(c, NightModeReceiver.Companion.getREQUEST_CODE(),
                 intent, PendingIntent.FLAG_UPDATE_CURRENT);
         // Setup periodic alarm every 5 seconds
         long firstMillis = System.currentTimeMillis(); // alarm is set right away
@@ -224,7 +224,7 @@ public class Utilities {
 
     public void cancelWakeupAlarm(Context c) {
         Intent intent = new Intent(c, WakeupReceiver.class);
-        final PendingIntent pIntent = PendingIntent.getBroadcast(c, WakeupReceiver.REQUEST_CODE,
+        final PendingIntent pIntent = PendingIntent.getBroadcast(c, WakeupReceiver.Companion.getREQUEST_CODE(),
                 intent, PendingIntent.FLAG_UPDATE_CURRENT);
         AlarmManager alarm = (AlarmManager) c.getSystemService(Context.ALARM_SERVICE);
         alarm.cancel(pIntent);
@@ -318,6 +318,7 @@ public class Utilities {
                 .setContentIntent(pi)
                 .setContentText(mes)
                 .setPriority(priority)
+                .setChannelId("Alerts")
                 .setAutoCancel(true);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -614,7 +615,7 @@ public class Utilities {
                         Log.d("RadioControl", "Cell Radio has been turned off");
                     }
                     else if(!prefs.getBoolean("altRootCommand", false)){
-                        RootAccess.runCommands(airCmd);
+                        RootAccess.INSTANCE.runCommands(airCmd);
                         Log.d("RadioControl", "Airplane mode has been turned on");
                     }
                 }

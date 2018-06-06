@@ -25,11 +25,8 @@
         android:summary="@string/open_source_summary"
         />
     <Preference
+        android:key="support"
         android:title="@string/support_website">
-        <intent
-            android:action="android.intent.action.VIEW"
-            android:data="https://nikhilp.org/support"
-            />
     </Preference>
     <Preference
         android:title="@string/help_wiki">

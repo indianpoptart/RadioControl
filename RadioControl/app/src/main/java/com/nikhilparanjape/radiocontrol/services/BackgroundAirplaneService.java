@@ -128,11 +128,11 @@ public class BackgroundAirplaneService extends IntentService
                             }
                         } else {
                             if (prefs.getBoolean("altBTCommand", false)) {
-                                RootAccess.runCommands(airOffCmd3);
+                                RootAccess.INSTANCE.runCommands(airOffCmd3);
                                 Log.d("RadioControl", "Airplane mode has been turned off(with bt cmd)");
                                 writeLog("Airplane mode has been turned off", context);
                             } else {
-                                RootAccess.runCommands(airOffCmd2);
+                                RootAccess.INSTANCE.runCommands(airOffCmd2);
                                 Log.d("RadioControl", "Airplane mode has been turned off");
                                 writeLog("Airplane mode has been turned off", context);
                             }
@@ -173,7 +173,7 @@ public class BackgroundAirplaneService extends IntentService
 
                             }
                             else{
-                                RootAccess.runCommands(airCmd);
+                                RootAccess.INSTANCE.runCommands(airCmd);
                                 Log.d("RadioControl", "Airplane mode has been turned on");
                                 writeLog("Airplane mode has been turned on, SSID: " + Utilities.getCurrentSsid(context),context);
                             }
@@ -275,7 +275,7 @@ public class BackgroundAirplaneService extends IntentService
                         writeLog("Cell radio has been turned off, SSID: " + Utilities.getCurrentSsid(context),context);
                     }
                     else if(!prefs.getBoolean("altRootCommand", false)){
-                        RootAccess.runCommands(airCmd);
+                        RootAccess.INSTANCE.runCommands(airCmd);
                         Log.d("RadioControl", "Airplane mode has been turned on");
                         writeLog("Airplane mode has been turned on, SSID: " + Utilities.getCurrentSsid(context),context);
                     }

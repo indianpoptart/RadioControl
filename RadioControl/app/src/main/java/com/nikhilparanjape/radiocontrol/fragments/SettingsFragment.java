@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.PowerManager;
@@ -21,6 +22,8 @@ import android.support.v4.content.ContextCompat;
 import android.text.Html;
 import android.util.Log;
 import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
@@ -48,350 +51,358 @@ public class SettingsFragment extends PreferenceFragment implements TimePickerDi
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.settings);
 
-        Thread t = new Thread(() -> {
+
+        SharedPreferences sp = getPreferenceScreen().getSharedPreferences();
+        SharedPreferences.Editor editor = sp.edit();
+        if (android.os.Build.VERSION.SDK_INT >= 24){
+            getPreferenceScreen().findPreference("workMode").setEnabled(true);
+            editor.putBoolean("workMode",true);
+            editor.apply();
+        }
 
 
+        c = getActivity();
+        Utilities util = new Utilities();
 
-            SharedPreferences sp = getPreferenceScreen().getSharedPreferences();
-            SharedPreferences.Editor editor = sp.edit();
-            if (android.os.Build.VERSION.SDK_INT >= 24){
-                getPreferenceScreen().findPreference("workMode").setEnabled(true);
-                editor.putBoolean("workMode",true);
-                editor.apply();
+        if(Utilities.isWifiOn(c)){
+            getPreferenceScreen().findPreference("ssid").setEnabled(true);
+        }
+        else{
+            getPreferenceScreen().findPreference("ssid").setEnabled(false);
+        }
+
+
+        Preference ssidListPref = findPreference("ssid");
+        ssidListPref.setOnPreferenceClickListener(preference -> false);
+
+
+        Preference clearPref = findPreference("clear-ssid");
+        clearPref.setOnPreferenceClickListener(preference -> {
+            ssidClearButton();
+            return false;
+        });
+        Preference airplaneResetPref = findPreference("reset-airplane");
+        airplaneResetPref.setOnPreferenceClickListener(preference -> {
+            new MaterialDialog.Builder(getActivity())
+                    .iconRes(R.mipmap.wifi_off)
+                    .limitIconToDefaultSize()
+                    .title("Please disable WiFi and Airplane mode and make sure the cell radio is on before pressing OK")
+                    .positiveText("OK")
+                    .negativeText("Cancel")
+                    .backgroundColorRes(R.color.material_drawer_dark_background)
+                    .onPositive((dialog, which) -> {
+                        String[] airOffCmd2 = {"su", "settings put global airplane_mode_radios  \"cell,bluetooth,nfc,wimax\"", "content update --uri content://settings/global --bind value:s:'cell,bluetooth,nfc,wimax' --where \"name='airplane_mode_radios'\""};
+                        RootAccess.INSTANCE.runCommands(airOffCmd2);
+                        Toast.makeText(getActivity(),
+                                "Airplane mode reset", Toast.LENGTH_LONG).show();
+                    })
+                    .onNegative((dialog, which) -> {
+
+                    })
+                    .checkBoxPromptRes(R.string.dont_ask_again, false, null)
+                    .show();
+
+
+            return false;
+        });
+
+        Preference logDirPref = findPreference("logDir");
+        logDirPref.setOnPreferenceClickListener(preference -> {
+            logDirectoryButton();
+            return false;
+        });
+        Preference logDelPref = findPreference("logDel");
+        logDelPref.setOnPreferenceClickListener(preference -> {
+            logDeleteButton();
+            return false;
+        });
+
+        CheckBoxPreference batteryOptimizePref = (CheckBoxPreference) getPreferenceManager().findPreference("isBatteryOn");
+        CheckBoxPreference workModePref = (CheckBoxPreference) getPreferenceManager().findPreference("workMode");
+        workModePref.setOnPreferenceChangeListener((preference, newValue) -> {
+            SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(c);
+            if(newValue.toString().equals("true")) {
+                getPreferenceScreen().findPreference("altRootCommand").setEnabled(false);
+                if(batteryOptimizePref.isChecked()){
+                    if (pref.getBoolean("workMode", true)) {
+                        if(Build.VERSION.SDK_INT>=26) {
+                            getActivity().startForegroundService(new Intent(getActivity(), PersistenceService.class));
+                        }else{
+                            getActivity().startService(new Intent(getActivity(), PersistenceService.class));
+                        }
+                    } else {
+                        registerForBroadcasts(c);
+                    }
+                } else{
+                    new MaterialDialog.Builder(getActivity())
+                            .iconRes(R.mipmap.ic_launcher)
+                            .limitIconToDefaultSize()
+                            .title(getString(R.string.permissionIntelligent))
+                            .positiveText("Allow")
+                            .negativeText("Deny")
+                            .backgroundColorRes(R.color.material_drawer_dark_background)
+                            .onPositive((dialog, which) -> {
+                                batteryOptimizePref.setChecked(true);
+                                if (pref.getBoolean("workMode", true)) {
+                                    if(Build.VERSION.SDK_INT>=26) {
+                                        getActivity().startForegroundService(new Intent(getActivity(), PersistenceService.class));
+                                    }else{
+                                        getActivity().startService(new Intent(getActivity(), PersistenceService.class));
+                                    }
+                                } else {
+                                    registerForBroadcasts(c);
+                                }
+                            })
+                            .onNegative((dialog, which) -> {
+                                if (pref.getBoolean("workMode", true)) {
+                                    if(Build.VERSION.SDK_INT>=26) {
+                                        getActivity().startForegroundService(new Intent(getActivity(), PersistenceService.class));
+                                    }else{
+                                        getActivity().startService(new Intent(getActivity(), PersistenceService.class));
+                                    }
+                                } else {
+                                    registerForBroadcasts(c);
+                                }
+                            })
+                            .checkBoxPromptRes(R.string.dont_ask_again, false, null)
+                            .show();
+                }
+
+            }else{
+                getPreferenceScreen().findPreference("altRootCommand").setEnabled(true);
+                getActivity().stopService(new Intent(getActivity(), PersistenceService.class));
             }
+            Log.i("RadioControl","workMode");
 
+            return true;
+        });
 
-            c = getActivity();
-            final Utilities util = new Utilities();
+        CheckBoxPreference checkboxPref = (CheckBoxPreference) getPreferenceManager().findPreference("enableLogs");
+        checkboxPref.setOnPreferenceChangeListener((preference, newValue) -> {
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(c);
+            SharedPreferences.Editor editor1 = preferences.edit();
+            if(newValue.toString().equals("true")){
+                //Request storage permissions if on MM or greater
+                if (Build.VERSION.SDK_INT >= 23) {
+                    String[] perms = {"android.permission.READ_EXTERNAL_STORAGE", "android.permission.WRITE_EXTERNAL_STORAGE"};
 
-            if(Utilities.isWifiOn(c)){
-                getPreferenceScreen().findPreference("ssid").setEnabled(true);
+                    int permsRequestCode = 200;
+
+                    requestPermissions(perms, permsRequestCode);
+                    editor1.putBoolean("enableLogs", true);
+                    Log.d("RadioControl", "Logging enabled");
+
+                }
+                else{
+                    editor1.putBoolean("enableLogs", true);
+                    Log.d("RadioControl", "Logging enabled");
+                }
             }
             else{
-                getPreferenceScreen().findPreference("ssid").setEnabled(false);
+                checkboxPref.setChecked(false);
+                editor1.putBoolean("enableLogs", false);
+                Log.d("RadioControl", "Logging disabled");
+                File log = new File("radiocontrol.log");
+                if (log.exists()) {
+                    log.delete();
+                }
+            }
+            editor1.apply();
+            return true;
+        });
+        CheckBoxPreference altRootCommand = (CheckBoxPreference) getPreferenceManager().findPreference("altRootCommand");
+        altRootCommand.setOnPreferenceChangeListener((preference, newValue) -> {
+            int permissionCheck = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION);
+
+            if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 200);
+            } else {
+                altRootCommand.setChecked(false);
             }
 
-
-            Preference ssidListPref = findPreference("ssid");
-            ssidListPref.setOnPreferenceClickListener(preference -> false);
-
-
-            Preference clearPref = findPreference("clear-ssid");
-            clearPref.setOnPreferenceClickListener(preference -> {
-                ssidClearButton();
-                return false;
-            });
-            Preference airplaneResetPref = findPreference("reset-airplane");
-            airplaneResetPref.setOnPreferenceClickListener(preference -> {
-                new MaterialDialog.Builder(getActivity())
-                        .iconRes(R.mipmap.ic_launcher)
-                        .limitIconToDefaultSize()
-                        .title("Please disable WiFi and make sure Airplane mode is off before pressing OK")
-                        .positiveText("OK")
-                        .negativeText("Cancel")
-                        .backgroundColorRes(R.color.material_drawer_dark_background)
-                        .onPositive((dialog, which) -> {
-                            String[] airOffCmd2 = {"su", "settings put global airplane_mode_radios  \"cell,bluetooth,nfc,wimax\"", "content update --uri content://settings/global --bind value:s:'cell,bluetooth,nfc,wimax' --where \"name='airplane_mode_radios'\""};
-                            RootAccess.runCommands(airOffCmd2);
-                            Toast.makeText(getActivity(),
-                                    "Airplane mode reset", Toast.LENGTH_LONG).show();
-                        })
-                        .onNegative((dialog, which) -> {
-
-                        })
-                        .checkBoxPromptRes(R.string.dont_ask_again, false, null)
-                        .show();
-
-
-                return false;
-            });
-
-            final Preference logDirPref = findPreference("logDir");
-            logDirPref.setOnPreferenceClickListener(preference -> {
-                logDirectoryButton();
-                return false;
-            });
-            final Preference logDelPref = findPreference("logDel");
-            logDelPref.setOnPreferenceClickListener(preference -> {
-                logDeleteButton();
-                return false;
-            });
-
-            final CheckBoxPreference batteryOptimizePref = (CheckBoxPreference) getPreferenceManager().findPreference("isBatteryOn");
-            final CheckBoxPreference workModePref = (CheckBoxPreference) getPreferenceManager().findPreference("workMode");
-            workModePref.setOnPreferenceChangeListener((preference, newValue) -> {
-                SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(c);
-                if(newValue.toString().equals("true")) {
-                    getPreferenceScreen().findPreference("altRootCommand").setEnabled(false);
-                    if(batteryOptimizePref.isChecked()){
-                        if (pref.getBoolean("workMode", true)) {
-                            getActivity().startService(new Intent(getActivity(), PersistenceService.class));
-                        } else {
-                            registerForBroadcasts(c);
-                        }
-                    } else{
-                        new MaterialDialog.Builder(getActivity())
-                                .iconRes(R.mipmap.ic_launcher)
-                                .limitIconToDefaultSize()
-                                .title(getString(R.string.permissionIntelligent))
-                                .positiveText("Allow")
-                                .negativeText("Deny")
-                                .backgroundColorRes(R.color.material_drawer_dark_background)
-                                .onPositive((dialog, which) -> {
-                                    batteryOptimizePref.setChecked(true);
-                                    if (pref.getBoolean("workMode", true)) {
-                                        getActivity().startService(new Intent(getActivity(), PersistenceService.class));
-                                    } else {
-                                        registerForBroadcasts(c);
-                                    }
-                                })
-                                .onNegative((dialog, which) -> {
-                                    if (pref.getBoolean("workMode", true)) {
-                                        getActivity().startService(new Intent(getActivity(), PersistenceService.class));
-                                    } else {
-                                        registerForBroadcasts(c);
-                                    }
-                                })
-                                .checkBoxPromptRes(R.string.dont_ask_again, false, null)
-                                .show();
-                    }
-
-                }else{
-                    getPreferenceScreen().findPreference("altRootCommand").setEnabled(true);
-                    getActivity().stopService(new Intent(getActivity(), PersistenceService.class));
-                }
-                Log.i("RadioControl","workMode");
-
-                return true;
-            });
-
-            final CheckBoxPreference checkboxPref = (CheckBoxPreference) getPreferenceManager().findPreference("enableLogs");
-            checkboxPref.setOnPreferenceChangeListener((preference, newValue) -> {
-                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(c);
-                SharedPreferences.Editor editor1 = preferences.edit();
-                if(newValue.toString().equals("true")){
-                    //Request storage permissions if on MM or greater
-                    if (Build.VERSION.SDK_INT >= 23) {
-                        String[] perms = {"android.permission.READ_EXTERNAL_STORAGE", "android.permission.WRITE_EXTERNAL_STORAGE"};
-
-                        int permsRequestCode = 200;
-
-                        requestPermissions(perms, permsRequestCode);
-                        editor1.putBoolean("enableLogs", true);
-                        Log.d("RadioControl", "Logging enabled");
-
-                    }
-                    else{
-                        editor1.putBoolean("enableLogs", true);
-                        Log.d("RadioControl", "Logging enabled");
-                    }
-                }
-                else{
-                    checkboxPref.setChecked(false);
-                    editor1.putBoolean("enableLogs", false);
-                    Log.d("RadioControl", "Logging disabled");
-                    File log = new File("radiocontrol.log");
-                    if (log.exists()) {
-                        log.delete();
-                    }
-                }
-                editor1.apply();
-                return true;
-            });
-            final CheckBoxPreference altRootCommand = (CheckBoxPreference) getPreferenceManager().findPreference("altRootCommand");
-            altRootCommand.setOnPreferenceChangeListener((preference, newValue) -> {
-                int permissionCheck = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION);
-
-                if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 200);
-                } else {
-                    altRootCommand.setChecked(false);
-                }
-
-                return true;
-            });
+            return true;
+        });
 
 
 
-            final CheckBoxPreference dozeSetting = (CheckBoxPreference) getPreferenceManager().findPreference("isDozeOff");
-            dozeSetting.setOnPreferenceChangeListener((preference, newValue) -> {
-                if(newValue.toString().equals("true")){
-                    if (Build.VERSION.SDK_INT >= 23) {
-                        Intent intent = new Intent();
-                        String packageName = c.getPackageName();
-                        PowerManager pm = (PowerManager) c.getSystemService(Context.POWER_SERVICE);
-                        if (pm.isIgnoringBatteryOptimizations(packageName))
-                            intent.setAction(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS);
-                        else {
-                            intent.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
-                            intent.setData(Uri.parse("package:" + packageName));
-                            c.startActivity(intent);
-                            return false;
-                        }
-                        dozeSetting.setChecked(true);
-                        c.startActivity(intent);
-                    }
-                }
-                else{
-                    if (Build.VERSION.SDK_INT >= 23) {
-                        Intent intent = new Intent();
-                        String packageName = c.getPackageName();
-                        PowerManager pm = (PowerManager) c.getSystemService(Context.POWER_SERVICE);
+        CheckBoxPreference dozeSetting = (CheckBoxPreference) getPreferenceManager().findPreference("isDozeOff");
+        dozeSetting.setOnPreferenceChangeListener((preference, newValue) -> {
+            if(newValue.toString().equals("true")){
+                if (Build.VERSION.SDK_INT >= 23) {
+                    Intent intent = new Intent();
+                    String packageName = c.getPackageName();
+                    PowerManager pm = (PowerManager) c.getSystemService(Context.POWER_SERVICE);
+                    if (pm.isIgnoringBatteryOptimizations(packageName))
+                        intent.setAction(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS);
+                    else {
                         intent.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
                         intent.setData(Uri.parse("package:" + packageName));
                         c.startActivity(intent);
                         return false;
                     }
+                    dozeSetting.setChecked(true);
+                    c.startActivity(intent);
                 }
-
-                return true;
-            });
-
-            if(altRootCommand.isChecked() || batteryOptimizePref.isChecked()){
-                final SharedPreferences pref = c.getSharedPreferences("batteryOptimizePref", Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor2 = pref.edit();
-                editor2.clear();
-                editor2.apply();
-                getPreferenceScreen().findPreference("altRootCommand").setEnabled(false);
-            }
-            else if(!batteryOptimizePref.isChecked()){
-                getPreferenceScreen().findPreference("altRootCommand").setEnabled(true);
-                getActivity().stopService(new Intent(getActivity(), PersistenceService.class));
-            }
-
-            final CheckBoxPreference eulaShow = (CheckBoxPreference) getPreferenceManager().findPreference("eulaShow");
-            eulaShow.setOnPreferenceChangeListener((preference, newValue) -> {
-                if(newValue.toString().equals("true")){
-                    new MaterialDialog.Builder(getActivity())
-                            .iconRes(R.mipmap.ic_launcher)
-                            .limitIconToDefaultSize()
-                            .title(Html.fromHtml(getString(R.string.permissionSampleFirebase, getString(R.string.app_name))))
-                            .positiveText("Allow")
-                            .negativeText("Deny")
-                            .backgroundColorRes(R.color.material_drawer_dark_background)
-                            .onPositive((dialog, which) -> FirebaseAnalytics.getInstance(c).setAnalyticsCollectionEnabled(true))
-                            .onNegative((dialog, which) -> {
-                                eulaShow.setChecked(false);
-                                FirebaseAnalytics.getInstance(c).setAnalyticsCollectionEnabled(false);
-                            })
-                            .checkBoxPromptRes(R.string.dont_ask_again, false, null)
-                            .show();
-                }
-                else{
-                    FirebaseAnalytics.getInstance(c).setAnalyticsCollectionEnabled(false);
-                    eulaShow.setChecked(false);
-                }
-
-                return true;
-            });
-
-            final CheckBoxPreference fabricCrashlyticsPref = (CheckBoxPreference) getPreferenceManager().findPreference("fabricCrashlytics");
-            fabricCrashlyticsPref.setOnPreferenceChangeListener((preference, newValue) -> {
-                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(c);
-                SharedPreferences.Editor editor12 = preferences.edit();
-
-                if(newValue.toString().equals("true")){
-                    new MaterialDialog.Builder(getActivity())
-                            .iconRes(R.mipmap.ic_launcher)
-                            .limitIconToDefaultSize()
-                            .title(Html.fromHtml(getString(R.string.permissionSampleFabric, getString(R.string.app_name))))
-                            .positiveText("Allow")
-                            .negativeText("Deny")
-                            .backgroundColorRes(R.color.material_drawer_dark_background)
-                            .onPositive((dialog, which) -> {
-                                editor12.putBoolean("allowFabric", true);
-                                editor12.apply();
-                            })
-                            .onNegative((dialog, which) -> {
-                                fabricCrashlyticsPref.setChecked(false);
-                                editor12.putBoolean("allowFabric", false);
-                                editor12.apply();
-
-                        })
-                            .checkBoxPromptRes(R.string.dont_ask_again, false, null)
-                            .show();
-
-                }
-                else{
-                    editor12.putBoolean("allowFabric", false);
-                    editor12.apply();
-                }
-
-
-                return true;
-            });
-
-            final CheckBoxPreference callingCheck = (CheckBoxPreference) getPreferenceManager().findPreference("isPhoneStateCheck");
-            callingCheck.setOnPreferenceChangeListener((preference, newValue) -> {
-                int permissionCheck = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_PHONE_STATE);
-
-                if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_PHONE_STATE}, 200);
-
-                } else {
-                   callingCheck.setChecked(false);
-                }
-
-                return true;
-            });
-
-            final CheckBoxPreference serviceCheckbox = (CheckBoxPreference) getPreferenceManager().findPreference("isAirplaneService");
-            serviceCheckbox.setOnPreferenceChangeListener((preference, newValue) -> {
-                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(c);
-                SharedPreferences.Editor editor13 = preferences.edit();
-
-                if(newValue.toString().equals("true")){
-                    editor13.putBoolean("isAirplaneService", true);
-                    editor13.apply();
-
-                    String intervalTimeString = preferences.getString("interval_prefs","60");
-                    int intervalTime = Integer.parseInt(intervalTimeString);
-                    boolean airplaneService = preferences.getBoolean("isAirplaneService", false);
-
-                    if(intervalTime != 0 && airplaneService){
-                        Log.d("RadioControl", "Alarm Scheduled");
-                        util.scheduleAlarm(c);
-                    }
-                }
-                else{
-                    Log.d("RadioControl", "Alarm Cancelled");
-                    util.cancelAlarm(c);
-                }
-
-
-                return true;
-            });
-
-
-            if(!getPreferenceScreen().findPreference("isAirplaneService").isEnabled()){
-                getPreferenceScreen().findPreference("interval_prefs").setEnabled(false);
             }
             else{
-                getPreferenceScreen().findPreference("interval_prefs").setEnabled(true);
+                if (Build.VERSION.SDK_INT >= 23) {
+                    Intent intent = new Intent();
+                    String packageName = c.getPackageName();
+                    PowerManager pm = (PowerManager) c.getSystemService(Context.POWER_SERVICE);
+                    intent.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
+                    intent.setData(Uri.parse("package:" + packageName));
+                    c.startActivity(intent);
+                    return false;
+                }
             }
 
-            //Initialize time picker
-            Calendar now = Calendar.getInstance();
-            final TimePickerDialog tpd = TimePickerDialog.newInstance(
-                    SettingsFragment.this,
-                    now.get(Calendar.HOUR_OF_DAY),
-                    now.get(Calendar.MINUTE),
-                    false
-            );
-            tpd.setThemeDark(true);
-            tpd.setAccentColor(R.color.mdtp_accent_color);
-
-            Preference night_mode = findPreference("night-mode-service");
-            night_mode.setOnPreferenceClickListener(preference -> {
-                tpd.show(getFragmentManager(), "Timepickerdialog");
-                return false;
-            });
+            return true;
         });
 
-        // Start the thread
-        t.start();
+        if(altRootCommand.isChecked() || batteryOptimizePref.isChecked()){
+            final SharedPreferences pref = c.getSharedPreferences("batteryOptimizePref", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor2 = pref.edit();
+            editor2.clear();
+            editor2.apply();
+            getPreferenceScreen().findPreference("altRootCommand").setEnabled(false);
+        }
+        else if(!batteryOptimizePref.isChecked()){
+            getPreferenceScreen().findPreference("altRootCommand").setEnabled(true);
+            getActivity().stopService(new Intent(getActivity(), PersistenceService.class));
+        }
+
+        CheckBoxPreference eulaShow = (CheckBoxPreference) getPreferenceManager().findPreference("eulaShow");
+        eulaShow.setOnPreferenceChangeListener((preference, newValue) -> {
+            if(newValue.toString().equals("true")){
+                new MaterialDialog.Builder(getActivity())
+                        .iconRes(R.mipmap.ic_launcher)
+                        .limitIconToDefaultSize()
+                        .title(Html.fromHtml(getString(R.string.permissionSampleFirebase, getString(R.string.app_name))))
+                        .positiveText("Allow")
+                        .negativeText("Deny")
+                        .backgroundColorRes(R.color.material_drawer_dark_background)
+                        .onPositive((dialog, which) -> FirebaseAnalytics.getInstance(c).setAnalyticsCollectionEnabled(true))
+                        .onNegative((dialog, which) -> {
+                            eulaShow.setChecked(false);
+                            FirebaseAnalytics.getInstance(c).setAnalyticsCollectionEnabled(false);
+                        })
+                        .checkBoxPromptRes(R.string.dont_ask_again, false, null)
+                        .show();
+            }
+            else{
+                FirebaseAnalytics.getInstance(c).setAnalyticsCollectionEnabled(false);
+                eulaShow.setChecked(false);
+            }
+
+            return true;
+        });
+
+        CheckBoxPreference fabricCrashlyticsPref = (CheckBoxPreference) getPreferenceManager().findPreference("fabricCrashlytics");
+        fabricCrashlyticsPref.setOnPreferenceChangeListener((preference, newValue) -> {
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(c);
+            SharedPreferences.Editor editor12 = preferences.edit();
+
+            if(newValue.toString().equals("true")){
+                new MaterialDialog.Builder(getActivity())
+                        .iconRes(R.mipmap.ic_launcher)
+                        .limitIconToDefaultSize()
+                        .title(Html.fromHtml(getString(R.string.permissionSampleFabric, getString(R.string.app_name))))
+                        .positiveText("Allow")
+                        .negativeText("Deny")
+                        .backgroundColorRes(R.color.material_drawer_dark_background)
+                        .onPositive((dialog, which) -> {
+                            editor12.putBoolean("allowFabric", true);
+                            editor12.apply();
+                        })
+                        .onNegative((dialog, which) -> {
+                            fabricCrashlyticsPref.setChecked(false);
+                            editor12.putBoolean("allowFabric", false);
+                            editor12.apply();
+
+                        })
+                        .checkBoxPromptRes(R.string.dont_ask_again, false, null)
+                        .show();
+
+            }
+            else{
+                editor12.putBoolean("allowFabric", false);
+                editor12.apply();
+            }
+
+
+            return true;
+        });
+
+        CheckBoxPreference callingCheck = (CheckBoxPreference) getPreferenceManager().findPreference("isPhoneStateCheck");
+        callingCheck.setOnPreferenceChangeListener((preference, newValue) -> {
+            int permissionCheck = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_PHONE_STATE);
+
+            if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_PHONE_STATE}, 200);
+
+            } else {
+                callingCheck.setChecked(false);
+            }
+
+            return true;
+        });
+
+        CheckBoxPreference serviceCheckbox = (CheckBoxPreference) getPreferenceManager().findPreference("isAirplaneService");
+        serviceCheckbox.setOnPreferenceChangeListener((preference, newValue) -> {
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(c);
+            SharedPreferences.Editor editor13 = preferences.edit();
+
+            if(newValue.toString().equals("true")){
+                editor13.putBoolean("isAirplaneService", true);
+                editor13.apply();
+
+                String intervalTimeString = preferences.getString("interval_prefs","60");
+                int intervalTime = Integer.parseInt(intervalTimeString);
+                boolean airplaneService = preferences.getBoolean("isAirplaneService", false);
+
+                if(intervalTime != 0 && airplaneService){
+                    Log.d("RadioControl", "Alarm Scheduled");
+                    util.scheduleAlarm(c);
+                }
+            }
+            else{
+                Log.d("RadioControl", "Alarm Cancelled");
+                util.cancelAlarm(c);
+            }
+
+
+            return true;
+        });
+
+
+        if(!getPreferenceScreen().findPreference("isAirplaneService").isEnabled()){
+            getPreferenceScreen().findPreference("interval_prefs").setEnabled(false);
+        }
+        else{
+            getPreferenceScreen().findPreference("interval_prefs").setEnabled(true);
+        }
+
+        //Initialize time picker
+        Calendar now = Calendar.getInstance();
+        final TimePickerDialog tpd = TimePickerDialog.newInstance(
+                SettingsFragment.this,
+                now.get(Calendar.HOUR_OF_DAY),
+                now.get(Calendar.MINUTE),
+                false
+        );
+        tpd.setThemeDark(true);
+        tpd.setAccentColor(R.color.mdtp_accent_color);
+
+        Preference night_mode = findPreference("night-mode-service");
+        night_mode.setOnPreferenceClickListener(preference -> {
+            tpd.show(getFragmentManager(), "Timepickerdialog");
+            return false;
+        });
 
     }
+
+
+
     public void registerForBroadcasts(Context context) {
         ComponentName component = new ComponentName(context, WifiReceiver.class);
         PackageManager pm = context.getPackageManager();

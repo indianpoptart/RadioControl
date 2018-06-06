@@ -134,5 +134,6 @@
     <string name="permissionIntelligent">This works better with Background Optimization. Should I turn it on for you?</string>
     <string name="title_intelligent_mode">Intelligent Mode (Beta)</string>
     <string name="summary_intelligent_mode">This is a higher priority detection method that might fix issues on Nougat+</string>
+    <string name="persistence_description">This is a low-level notification to keep the persistence service awake</string>
 
 </resources>

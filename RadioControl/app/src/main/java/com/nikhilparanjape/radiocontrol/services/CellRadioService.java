@@ -40,7 +40,7 @@ public class CellRadioService extends IntentService {
             mRunning = true;
             Log.d("RadioControl","CellService Toggled");
             String[] cellOffCmd = {"service call phone 27","service call phone 14 s16"};
-            RootAccess.runCommands(cellOffCmd);
+            RootAccess.INSTANCE.runCommands(cellOffCmd);
             Log.d("RadioControl","CellService Killed");
             this.stopSelf();
         }
