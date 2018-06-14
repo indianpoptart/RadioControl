@@ -74,10 +74,12 @@ dependencies {
     //noinspection GradleCompatible
     implementation 'com.android.support:appcompat-v7:27.1.1'
     implementation 'com.android.support:support-compat:27.1.1'
+    implementation "com.mikepenz:aboutlibraries:6.0.9"
+    implementation "com.android.support:support-annotations:27.1.1"
     implementation 'com.android.support:cardview-v7:27.1.1'
     implementation 'com.android.support:recyclerview-v7:27.1.1'
     implementation 'com.android.support:design:27.1.1'
-    implementation 'com.mikepenz:iconics-core:3.0.3@aar'
+    implementation 'com.mikepenz:iconics-core:3.0.4@aar'
     implementation 'com.mikepenz:google-material-typeface:3.0.1.2.original@aar'
     implementation 'com.github.gabrielemariotti.changeloglib:changelog:2.0.1-SNAPSHOT'
     implementation 'com.android.support:support-v4:27.1.1'

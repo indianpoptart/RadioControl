@@ -344,19 +344,19 @@ public class Utilities {
         Notification notification;
         if (Build.VERSION.SDK_INT >= 26) {
             Notification.Builder builder = (new Notification.Builder(context, "NetworkAlert"))
-                    .setContentTitle("Persistence")
+                    .setContentTitle("Network Alert")
                     .setSmallIcon(R.drawable.ic_signal_cellular_connected_no_internet_2_bar_24px)
                     .setContentIntent(pi)
-                    .setContentText("This keeps RadioControl functioning in the background")
+                    .setContentText("Your WiFi connection is not functioning")
                     .setAutoCancel(true);
             notification = builder.build();
             builder.notify();
         } else {
             NotificationCompat.Builder builder = (new android.support.v4.app.NotificationCompat.Builder(context)
-                    .setContentTitle("Persistence")
+                    .setContentTitle("Network Alert")
                     .setSmallIcon(R.drawable.ic_signal_cellular_connected_no_internet_2_bar_24px)
                     .setContentIntent(pi)
-                    .setContentText("This keeps RadioControl functioning in the background")
+                    .setContentText("Your WiFi connection is not functioning")
                     .setPriority(-1)
                     .setAutoCancel(true));
             notification = builder.build();
@@ -364,7 +364,7 @@ public class Utilities {
         }
 
     }
-    public static void createNotificationChannel(Context context) {
+    private static void createNotificationChannel(Context context) {
         // Create the NotificationChannel, but only on API 26+ because
         // the NotificationChannel class is new and not in the support library
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -378,18 +378,6 @@ public class Utilities {
             NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
         }
-    }
-    public static void createNotificationChannelInput(Context context, String name,String description, int importance,String channelName) {
-
-        if (Build.VERSION.SDK_INT >= 26) {
-            NotificationChannel channel = new NotificationChannel(channelName, (CharSequence)name, importance);
-            channel.setDescription(description);
-            NotificationManager notificationManager = (NotificationManager) context.getSystemService(NotificationManager.class);
-
-
-            notificationManager.createNotificationChannel(channel);
-        }
-
     }
     public void createBackgroundNotification(Context context, String title, String message)
     {

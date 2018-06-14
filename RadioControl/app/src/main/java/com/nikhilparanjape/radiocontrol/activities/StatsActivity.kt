@@ -389,12 +389,12 @@ class StatsActivity : AppCompatActivity() {
         chart1.setYAxis(true)
         chart1.setYLabels(AxisController.LabelPosition.OUTSIDE)
 
-
+        //Sets color of dataset points
         dataset.setColor(Color.BLACK)
                 .setDotsColor(Color.parseColor("#758cbb"))
                 .setDashed(floatArrayOf(10f, 10f))
                 .beginAt(0)
-
+        //gets airplane mode stats
         getAirplaneModeOn()
 
         //Sets dataset points
@@ -411,6 +411,8 @@ class StatsActivity : AppCompatActivity() {
         dataset.addPoint("Nov", novAirOn)
         dataset.addPoint("Dec", decAirOn)
 
+
+        //Checker of
         if (janAirOn == 0f && febAirOn == 0f && marAirOn == 0f && aprAirOn == 0f && mayAirOn == 0f && junAirOn == 0f && julAirOn == 0f && augAirOn == 0f &&
                 sepAirOn == 0f && octAirOn == 0f && novAirOn == 0f && decAirOn == 0f) {
             Log.d("RadioControl", "No log data")

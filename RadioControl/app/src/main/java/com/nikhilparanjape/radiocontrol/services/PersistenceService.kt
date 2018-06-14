@@ -84,7 +84,7 @@ class PersistenceService : Service() {
             // Register the channel with the system; you can't change the importance
             // or other notification behaviors after this
             val notificationManager = getSystemService(NotificationManager::class.java)
-            notificationManager!!.createNotificationChannel(channel)
+            notificationManager.createNotificationChannel(channel)
         }
     }
     fun createNotificationChannelInput(name: String,description: String,  importance: Int, channelName: String) {

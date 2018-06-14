@@ -178,9 +178,11 @@ public class MainActivity extends AppCompatActivity {
             String intervalTime = getPrefs.getString("interval_prefs","10");
             boolean airplaneService = getPrefs.getBoolean("isAirplaneService", false);
 
+            //Sets analytics
             if(getPrefs.getBoolean("eulaShow", false)){
                 FirebaseAnalytics.getInstance(getApplicationContext()).setAnalyticsCollectionEnabled(true);
             }
+            //Begin background service
             if(!intervalTime.equals("0") && airplaneService){
                 Intent i= new Intent(getApplicationContext(), BackgroundAirplaneService.class);
                 getBaseContext().startService(i);
