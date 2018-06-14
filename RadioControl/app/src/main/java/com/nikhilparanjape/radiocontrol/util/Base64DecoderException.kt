@@ -12,21 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.nikhilparanjape.radiocontrol.util;
+package com.nikhilparanjape.radiocontrol.util
 
 /**
  * Exception thrown when encountering an invalid Base64 input character.
  *
  * @author nelson
  */
-public class Base64DecoderException extends Exception {
-    public Base64DecoderException() {
-        super();
-    }
+class Base64DecoderException : Exception {
+    constructor() : super() {}
 
-    public Base64DecoderException(String s) {
-        super(s);
-    }
+    constructor(s: String) : super(s) {}
 
-    private static final long serialVersionUID = 1L;
+    companion object {
+
+        private val serialVersionUID = 1L
+    }
 }

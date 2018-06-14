@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog bulletedList="true">
 
-    <changelogversion versionName="5.0.3-Beta1" changeDate="April 7, 2018">
+    <changelogversion versionName="5.0.3-Beta3" changeDate="June 14, 2018">
         <changelogbug>Fixed issue on Android 8.0+ devices where the background service would not be able to run. This adds a small notification to show when the app is running. It only shows up briefly</changelogbug>
         <changelogtext>Refactored some code</changelogtext>
         <changelogtext>Added an extra check to an if statement</changelogtext>
@@ -10,8 +10,11 @@
         <changelogtext>Removed unused images</changelogtext>
         <changelogtext>Added new app icon (Vector)</changelogtext>
         <changelogtext>Updated libraries</changelogtext>
+        <changelogtext>Added Adaptive Icons</changelogtext>
         <changelogtext>Adding support for Nougat shortcuts</changelogtext>
         <changelogtext>More background threads for long-term tasks</changelogtext>
+        <changelogtext>Converted most classes to Kotlin</changelogtext>
+        <changelogtext>Fixed main layouts</changelogtext>
         <changelogtext>Fixing logs so errors can be traced to an origin class</changelogtext>
         <changelogbug>Known Issues:</changelogbug>
         <changelogbug>Network settings crashes if app's dev mode is not enabled</changelogbug>

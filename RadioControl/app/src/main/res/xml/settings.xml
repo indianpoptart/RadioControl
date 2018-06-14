@@ -109,27 +109,10 @@
             android:title="@string/enableAlert"
             android:summary="@string/alertSum"
             android:defaultValue="false" />
-        <PreferenceScreen
+        <Preference
             android:key="button_network_key"
-            android:title="@string/notificationSettings"
-            android:persistent="false">
-
-            <CheckBoxPreference
-                android:key="networkVibrate"
-                android:title="@string/eVibrate"
-                android:summary="@string/vibeSum"
-                android:defaultValue="false" />
-            <CheckBoxPreference
-                android:key="networkSound"
-                android:title="@string/eSound"
-                android:summary="@string/soundSum"
-                android:defaultValue="false" />
-            <CheckBoxPreference
-                android:key="networkPriority"
-                android:title="@string/enable_heads_up"
-                android:summary="@string/heads_up_summary"
-                android:defaultValue="false" />
-        </PreferenceScreen>
+            android:title="@string/notificationSettings">
+        </Preference>
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/logging_settings">
         <CheckBoxPreference

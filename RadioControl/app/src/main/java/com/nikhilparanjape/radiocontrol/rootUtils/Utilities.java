@@ -6,6 +6,9 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.job.JobInfo;
+import android.app.job.JobScheduler;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -32,6 +35,8 @@ import com.nikhilparanjape.radiocontrol.receivers.RootServiceReceiver;
 import com.nikhilparanjape.radiocontrol.receivers.TimedAlarmReceiver;
 import com.nikhilparanjape.radiocontrol.receivers.WakeupReceiver;
 import com.nikhilparanjape.radiocontrol.services.CellRadioService;
+import com.nikhilparanjape.radiocontrol.services.PersistenceService;
+import com.nikhilparanjape.radiocontrol.services.TestJobService;
 
 import java.io.IOException;
 import java.util.Calendar;
@@ -128,7 +133,7 @@ public class Utilities {
         // Construct an intent that will execute the AlarmReceiver
         Intent intent = new Intent(c, TimedAlarmReceiver.class);
         // Create a PendingIntent to be triggered when the alarm goes off
-        final PendingIntent pIntent = PendingIntent.getBroadcast(c, TimedAlarmReceiver.REQUEST_CODE,
+        final PendingIntent pIntent = PendingIntent.getBroadcast(c, TimedAlarmReceiver.Companion.getREQUEST_CODE(),
                 intent, PendingIntent.FLAG_UPDATE_CURRENT);
         // Setup periodic alarm every 5 seconds
         long firstMillis = System.currentTimeMillis(); // alarm is set right away
@@ -138,6 +143,26 @@ public class Utilities {
         alarm.setRepeating(RTC_WAKEUP, firstMillis,
                 cal.getTimeInMillis(), pIntent);
 
+    }
+
+    // Schedule the start of the service every 10 - 30 seconds
+    public static void scheduleJob(Context context) {
+        ComponentName serviceComponent = new ComponentName(context, TestJobService.class);
+        JobInfo.Builder builder = new JobInfo.Builder(0, serviceComponent);
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        String intervalTimeString = preferences.getString("interval_prefs","10");
+        int intervalTime = Integer.parseInt(intervalTimeString);
+
+        builder.setMinimumLatency(intervalTime * 1000); // wait at least
+        builder.setOverrideDeadline(intervalTime * 1000); // maximum delay
+        //builder.setRequiredNetworkType(JobInfo.NETWORK_TYPE_UNMETERED); // require unmetered network
+        //builder.setRequiresDeviceIdle(true); // device should be idle
+        //builder.setRequiresCharging(false); // we don't care if the device is charging or not
+        JobScheduler jobScheduler = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+            jobScheduler = context.getSystemService(JobScheduler.class);
+        }
+        jobScheduler.schedule(builder.build());
     }
 
     // Setup a recurring alarm every 15,30,60 minutes
@@ -154,16 +179,19 @@ public class Utilities {
         // Construct an intent that will execute the AlarmReceiver
         Intent intent = new Intent(c, TimedAlarmReceiver.class);
         // Create a PendingIntent to be triggered when the alarm goes off
-        final PendingIntent pIntent = PendingIntent.getBroadcast(c, TimedAlarmReceiver.REQUEST_CODE,
+        final PendingIntent pIntent = PendingIntent.getBroadcast(c, TimedAlarmReceiver.Companion.getREQUEST_CODE(),
                 intent, PendingIntent.FLAG_UPDATE_CURRENT);
         // Setup periodic alarm every 5 seconds
         long firstMillis = System.currentTimeMillis(); // alarm is set right away
+        long interval = cal.getTimeInMillis();
         AlarmManager alarm = (AlarmManager) c.getSystemService(Context.ALARM_SERVICE);
         // First parameter is the type: ELAPSED_REALTIME, ELAPSED_REALTIME_WAKEUP, RTC_WAKEUP
         // Interval can be INTERVAL_FIFTEEN_MINUTES, INTERVAL_HALF_HOUR, INTERVAL_HOUR, INTERVAL_DAY
         Log.d("RadioControl","Time: " + (cal.getTimeInMillis()-firstMillis));
-        alarm.setInexactRepeating(RTC, firstMillis,
-                cal.getTimeInMillis(), pIntent);
+        //alarm.setInexactRepeating(RTC, firstMillis,
+                //cal.getTimeInMillis(), pIntent);
+
+        alarm.setInexactRepeating(RTC, firstMillis+interval, interval, pIntent);
 
     }
 
@@ -198,7 +226,7 @@ public class Utilities {
     }
     public void cancelAlarm(Context c) {
         Intent intent = new Intent(c, TimedAlarmReceiver.class);
-        final PendingIntent pIntent = PendingIntent.getBroadcast(c, TimedAlarmReceiver.REQUEST_CODE,
+        final PendingIntent pIntent = PendingIntent.getBroadcast(c, TimedAlarmReceiver.Companion.getREQUEST_CODE(),
                 intent, PendingIntent.FLAG_UPDATE_CURRENT);
         AlarmManager alarm = (AlarmManager) c.getSystemService(Context.ALARM_SERVICE);
         alarm.cancel(pIntent);
@@ -310,37 +338,57 @@ public class Utilities {
         else{
             priority = 1;
         }
+        createNotificationChannel(context);
         PendingIntent pi = PendingIntent.getActivity(context, 1, new Intent(WifiManager.ACTION_PICK_WIFI_NETWORK), 0);
         //Resources r = getResources();
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context, "Alerts")
-                .setSmallIcon(R.drawable.ic_warning_black_48dp)
-                .setContentTitle("RadioControl Network Alert")
-                .setContentIntent(pi)
-                .setContentText(mes)
-                .setPriority(priority)
-                .setChannelId("Alerts")
-                .setAutoCancel(true);
+        Notification notification;
+        if (Build.VERSION.SDK_INT >= 26) {
+            Notification.Builder builder = (new Notification.Builder(context, "NetworkAlert"))
+                    .setContentTitle("Persistence")
+                    .setSmallIcon(R.drawable.ic_signal_cellular_connected_no_internet_2_bar_24px)
+                    .setContentIntent(pi)
+                    .setContentText("This keeps RadioControl functioning in the background")
+                    .setAutoCancel(true);
+            notification = builder.build();
+            builder.notify();
+        } else {
+            NotificationCompat.Builder builder = (new android.support.v4.app.NotificationCompat.Builder(context)
+                    .setContentTitle("Persistence")
+                    .setSmallIcon(R.drawable.ic_signal_cellular_connected_no_internet_2_bar_24px)
+                    .setContentIntent(pi)
+                    .setContentText("This keeps RadioControl functioning in the background")
+                    .setPriority(-1)
+                    .setAutoCancel(true));
+            notification = builder.build();
+            builder.notify();
+        }
 
+    }
+    public static void createNotificationChannel(Context context) {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            // Create the NotificationChannel, but only on API 26+ because
-            // the NotificationChannel class is new and not in the support library
-            int importance = NotificationManagerCompat.IMPORTANCE_DEFAULT;
-            @SuppressLint("WrongConstant") NotificationChannel channel = new NotificationChannel("radiocontrol-alert", "Alerts", importance);
-            channel.setDescription("For Intelligent mode");
-            // Register the channel with the system
-            NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            CharSequence name = "Network Alert";
+            String description = "Channel for network related alerts";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel("networkalert", name, importance);
+            channel.setDescription(description);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
-            // notificationId is a unique int for each notification that you must define
-            notificationManager.notify(0, mBuilder.build());
-
         }
-        else{
-            mBuilder.notify();
+    }
+    public static void createNotificationChannelInput(Context context, String name,String description, int importance,String channelName) {
+
+        if (Build.VERSION.SDK_INT >= 26) {
+            NotificationChannel channel = new NotificationChannel(channelName, (CharSequence)name, importance);
+            channel.setDescription(description);
+            NotificationManager notificationManager = (NotificationManager) context.getSystemService(NotificationManager.class);
+
+
+            notificationManager.createNotificationChannel(channel);
         }
-
-
-
-
 
     }
     public void createBackgroundNotification(Context context, String title, String message)

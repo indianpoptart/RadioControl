@@ -13,6 +13,12 @@ repositories {
 
 android {
     signingConfigs {
+        config {
+            keyAlias 'radiocontrol'
+            keyPassword '6heya4UN!'
+            storeFile file('C:/Users/admin/Documents/GitHub/RadioControl/keys/keystore.jks')
+            storePassword '6heya4UN!'
+        }
     }
     compileSdkVersion 27
     buildToolsVersion '27.0.3'
@@ -20,8 +26,8 @@ android {
         applicationId "com.nikhilparanjape.radiocontrol"
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 61
-        versionName "5.0.3-Beta3"
+        versionCode 62
+        versionName "5.0.3-Beta4"
         // Enabling multidex support.
         multiDexEnabled true
 
@@ -36,6 +42,7 @@ android {
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.config
         }
         debug {
         }
@@ -48,6 +55,12 @@ android {
         targetCompatibility 1.8
         sourceCompatibility 1.8
     }
+    lintOptions {
+        checkReleaseBuilds false
+        // Or, if you prefer, you can continue to check for errors in release builds,
+        // but continue the build even when errors are found:
+        abortOnError false
+    }
 }
 configurations.all {
     exclude group: 'com.android.support', module: 'support-v13'
@@ -55,16 +68,16 @@ configurations.all {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation("com.mikepenz:materialdrawer:6.0.7@aar") {
+    implementation('com.mikepenz:materialdrawer:6.0.7@aar') {
         transitive = true
     }
     //noinspection GradleCompatible
     implementation 'com.android.support:appcompat-v7:27.1.1'
-    implementation "com.android.support:support-compat:27.1.1"
+    implementation 'com.android.support:support-compat:27.1.1'
     implementation 'com.android.support:cardview-v7:27.1.1'
     implementation 'com.android.support:recyclerview-v7:27.1.1'
     implementation 'com.android.support:design:27.1.1'
-    implementation "com.mikepenz:iconics-core:3.0.3@aar"
+    implementation 'com.mikepenz:iconics-core:3.0.3@aar'
     implementation 'com.mikepenz:google-material-typeface:3.0.1.2.original@aar'
     implementation 'com.github.gabrielemariotti.changeloglib:changelog:2.0.1-SNAPSHOT'
     implementation 'com.android.support:support-v4:27.1.1'

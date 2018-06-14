@@ -1,6 +1,7 @@
 package com.nikhilparanjape.radiocontrol.fragments;
 
 import android.Manifest;
+import android.app.NotificationChannel;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -51,7 +52,6 @@ public class SettingsFragment extends PreferenceFragment implements TimePickerDi
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.settings);
 
-
         SharedPreferences sp = getPreferenceScreen().getSharedPreferences();
         SharedPreferences.Editor editor = sp.edit();
         if (android.os.Build.VERSION.SDK_INT >= 24){
@@ -79,6 +79,15 @@ public class SettingsFragment extends PreferenceFragment implements TimePickerDi
         Preference clearPref = findPreference("clear-ssid");
         clearPref.setOnPreferenceClickListener(preference -> {
             ssidClearButton();
+            return false;
+        });
+        Preference notificationPref = findPreference("button_network_key");
+        notificationPref.setOnPreferenceClickListener(preference -> {
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                Intent intent = new Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
+                        .putExtra(Settings.EXTRA_APP_PACKAGE, c.getPackageName());
+                startActivity(intent);
+            }
             return false;
         });
         Preference airplaneResetPref = findPreference("reset-airplane");

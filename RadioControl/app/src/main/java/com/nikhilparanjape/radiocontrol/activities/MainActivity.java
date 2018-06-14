@@ -1028,9 +1028,9 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 if(exitValue == 0){
-                    w.exitCode = true;
+                    w.setExitCode(true);
                 }
-                w.status = s;
+                w.setStatus(s);
 
             }
             catch (IOException | InterruptedException e){ e.printStackTrace(); }
@@ -1041,23 +1041,23 @@ public class MainActivity extends AppCompatActivity {
             dialog = findViewById(R.id.pingProgressBar);
             dialog.setVisibility(View.GONE);
             final TextView connectionStatusText = findViewById(R.id.pingStatus);
-            Log.d("RadioControl","Status: " + w.status);
+            Log.d("RadioControl","Status: " + w.getStatus());
             double status;
             boolean isDouble = true;
             String pStatus;
             try{
-                Double.parseDouble(w.status);
+                Double.parseDouble(w.getStatus());
             } catch(Exception e){
                 isDouble = false;
                 Log.d("RadioControl", "Not a double: " + e);
-                Snackbar.make(clayout, "NumberFormatException " + w.status, Snackbar.LENGTH_LONG).show();
+                Snackbar.make(clayout, "NumberFormatException " + w.getStatus(), Snackbar.LENGTH_LONG).show();
                 Crashlytics.logException(e);
             }
             try{
-                pStatus = w.status;
+                pStatus = w.getStatus();
 
                 if(isDouble){
-                    status = Double.parseDouble(w.status);
+                    status = Double.parseDouble(w.getStatus());
                     if(status <= 50){
                         Snackbar.make(clayout, "Excellent Latency: " + status + " ms", Snackbar.LENGTH_LONG).show();
                     }
@@ -1095,7 +1095,7 @@ public class MainActivity extends AppCompatActivity {
                 Snackbar.make(findViewById(android.R.id.content), "An error has occurred", Snackbar.LENGTH_LONG).show();
             }
 
-            boolean result = w.exitCode;
+            boolean result = w.getExitCode();
 
             if(result){
                 if(Utilities.isConnectedWifi(getApplicationContext())){

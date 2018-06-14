@@ -9,6 +9,7 @@ import android.support.v4.content.WakefulBroadcastReceiver;
 import android.text.format.DateFormat;
 import android.util.Log;
 
+import com.bumptech.glide.util.Util;
 import com.google.firebase.crash.FirebaseCrash;
 import com.nikhilparanjape.radiocontrol.R;
 import com.nikhilparanjape.radiocontrol.rootUtils.RootAccess;
@@ -63,7 +64,7 @@ public class WifiReceiver extends WakefulBroadcastReceiver {
                 context.startService(i);
             }
             else {
-                //Log.d("RadioControl","Battery Optimization OFF");
+                Log.d("RadioControl","Battery Optimization OFF");
                 //Check if we just lost WiFi signal
                 if (!Utilities.isConnectedWifi(context)) {
                     Log.d("RadioControl", "WiFi signal LOST");
@@ -97,6 +98,7 @@ public class WifiReceiver extends WakefulBroadcastReceiver {
                             while(util.isCallActive(context)){
                                 waitFor(1000);//Wait for call to end
                             }
+                            Utilities.scheduleJob(context);
                         }
                     }
                 }

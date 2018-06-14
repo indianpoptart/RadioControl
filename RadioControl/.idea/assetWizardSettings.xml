@@ -62,8 +62,8 @@
                         <option name="values">
                           <map>
                             <entry key="assetSourceType" value="FILE" />
-                            <entry key="outputName" value="ic_baseline_cell_wifi_24px" />
-                            <entry key="sourceFile" value="C:\Users\admin\Downloads\baseline-cell_wifi-24px (1).svg" />
+                            <entry key="outputName" value="ic_signal_cellular_connected_no_internet_2_bar_24px" />
+                            <entry key="sourceFile" value="C:\Users\admin\Downloads\baseline-signal_cellular_connected_no_internet_2_bar-24px.svg" />
                           </map>
                         </option>
                       </PersistentState>

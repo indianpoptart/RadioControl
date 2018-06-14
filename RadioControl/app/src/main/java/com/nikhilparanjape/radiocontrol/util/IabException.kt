@@ -13,31 +13,24 @@
  * limitations under the License.
  */
 
-package com.nikhilparanjape.radiocontrol.util;
+package com.nikhilparanjape.radiocontrol.util
 
 /**
  * Exception thrown when something went wrong with in-app billing.
  * An IabException has an associated IabResult (an error).
  * To get the IAB result that caused this exception to be thrown,
- * call {@link #getResult()}.
+ * call [.getResult].
  */
-public class IabException extends Exception {
-    IabResult mResult;
+class IabException @JvmOverloads constructor(r: IabResult, cause: Exception? = null) : Exception(r.message, cause) {
+    /** Returns the IAB result (error) that this exception signals.  */
+    var result: IabResult
+        internal set
 
-    public IabException(IabResult r) {
-        this(r, null);
-    }
-    public IabException(int response, String message) {
-        this(new IabResult(response, message));
-    }
-    public IabException(IabResult r, Exception cause) {
-        super(r.getMessage(), cause);
-        mResult = r;
-    }
-    public IabException(int response, String message, Exception cause) {
-        this(new IabResult(response, message), cause);
+    constructor(response: Int, message: String) : this(IabResult(response, message)) {}
+
+    init {
+        result = r
     }
 
-    /** Returns the IAB result (error) that this exception signals. */
-    public IabResult getResult() { return mResult; }
+    constructor(response: Int, message: String, cause: Exception) : this(IabResult(response, message), cause) {}
 }

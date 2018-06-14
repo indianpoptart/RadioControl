@@ -15,7 +15,7 @@ import com.nikhilparanjape.radiocontrol.fragments.SlideFragment
 class TutorialActivity : AppIntro2() {
     // Please DO NOT override onCreate. Use init.
     override fun init(savedInstanceState: Bundle?) {
-        supportActionBar!!.hide()
+        supportActionBar?.hide()
         hideSystemUI()
 
         // Add your slide's fragments here.

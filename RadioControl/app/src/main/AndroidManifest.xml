@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.nikhilparanjape.radiocontrol">
 
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -21,7 +22,8 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/MaterialDarkThemenoab"
-        android:fullBackupContent="true">
+        android:fullBackupContent="true"
+        tools:ignore="GoogleAppIndexingWarning">
 
         <!-- This meta-data tag is required to use Google Play Services. -->
         <meta-data
@@ -66,7 +68,7 @@
             android:name=".services.BackgroundAirplaneService"
             android:enabled="true"
             android:process=":airplane"
-            android:icon="@drawable/ic_wifi_black_48dp"
+            android:icon="@drawable/ic_baseline_airplanemode_active_24px"
             android:label="AirplaneService" />
 
         <activity
@@ -88,7 +90,7 @@
             android:name=".services.PersistenceService"
             android:enabled="true"
             android:process=":persistent"
-            android:icon="@drawable/ic_cached_black_48dp"
+            android:icon="@drawable/ic_baseline_query_builder_24px"
             android:label="PersistenceService" />
         <service
             android:name=".services.DoNotDisturbService"
@@ -103,9 +105,24 @@
             android:process=":cellservice"
             android:label="CellRadioService" />
 
+        <service
+            android:name=".services.TestJobService"
+            android:label="Test"
+            android:icon="@drawable/ic_baseline_query_builder_24px"
+            android:process=":jobservice"
+            android:permission="android.permission.BIND_JOB_SERVICE" >
+
+        </service>
+
         <receiver android:name=".receivers.PhoneStateBroadcastReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.PHONE_STATE" />
+            </intent-filter>
+        </receiver>
+
+        <receiver android:name=".receivers.JobServiceStarter" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
 

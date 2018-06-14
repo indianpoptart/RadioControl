@@ -13,7 +13,12 @@ import com.nikhilparanjape.radiocontrol.receivers.WifiReceiver
 import android.os.Build
 import android.app.NotificationManager
 import android.app.NotificationChannel
+import android.content.Context
 import android.support.v4.app.NotificationCompat
+import android.preference.PreferenceManager
+import android.content.SharedPreferences
+import com.nikhilparanjape.radiocontrol.rootUtils.Utilities
+
 
 /**
  * Created by admin on 7/9/2017.
@@ -21,17 +26,17 @@ import android.support.v4.app.NotificationCompat
 
 class PersistenceService : Service() {
     private val mybroadcast = WifiReceiver()
-
+    var context: Context = this
     override fun onCreate() {
         super.onCreate()
         Log.i("RadioControl", "PERSISTENCE Created")
         createNotificationChannel()
     }
-
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         Log.i("RadioControl", "PERSISTENCE Started")
         val filter = IntentFilter()
         filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION)
+
 
         try {
             this.registerReceiver(mybroadcast, filter)
@@ -42,7 +47,7 @@ class PersistenceService : Service() {
 
             val builder = Notification.Builder(this, "persistence")
                     .setContentTitle("Persistence")
-                    .setSmallIcon(R.drawable.ic_baseline_cell_wifi_24px)
+                    .setSmallIcon(R.drawable.ic_memory_24px)
                     .setContentText("This keeps RadioControl functioning in the background")
                     .setAutoCancel(true)
 
@@ -53,7 +58,7 @@ class PersistenceService : Service() {
 
             val builder = NotificationCompat.Builder(this)
                     .setContentTitle("Persistence")
-                    .setSmallIcon(R.drawable.ic_baseline_cell_wifi_24px)
+                    .setSmallIcon(R.drawable.ic_memory_24px)
                     .setContentText("This keeps RadioControl functioning in the background")
                     .setPriority(NotificationCompat.PRIORITY_LOW)
                     .setAutoCancel(true)
@@ -75,6 +80,18 @@ class PersistenceService : Service() {
             val description = getString(R.string.persistence_description)
             val importance = NotificationManager.IMPORTANCE_LOW
             val channel = NotificationChannel("persistence", name, importance)
+            channel.description = description
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            val notificationManager = getSystemService(NotificationManager::class.java)
+            notificationManager!!.createNotificationChannel(channel)
+        }
+    }
+    fun createNotificationChannelInput(name: String,description: String,  importance: Int, channelName: String) {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(channelName, name, importance)
             channel.description = description
             // Register the channel with the system; you can't change the importance
             // or other notification behaviors after this
