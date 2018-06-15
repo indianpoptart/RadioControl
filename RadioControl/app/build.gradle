@@ -12,21 +12,13 @@ repositories {
 }
 
 android {
-    signingConfigs {
-        config {
-            keyAlias 'radiocontrol'
-            keyPassword '6heya4UN!'
-            storeFile file('C:/Users/admin/Documents/GitHub/RadioControl/keys/keystore.jks')
-            storePassword '6heya4UN!'
-        }
-    }
     compileSdkVersion 27
     buildToolsVersion '27.0.3'
     defaultConfig {
         applicationId "com.nikhilparanjape.radiocontrol"
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 62
+        versionCode 63
         versionName "5.0.3-Beta4"
         // Enabling multidex support.
         multiDexEnabled true
@@ -42,7 +34,6 @@ android {
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.config
         }
         debug {
         }
