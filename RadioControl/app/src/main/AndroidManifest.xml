@@ -102,7 +102,6 @@
         <service
             android:name=".services.CellRadioService"
             android:enabled="true"
-            android:isolatedProcess="true"
             android:icon="@drawable/ic_network_cell"
             android:process=":cellservice"
             android:label="CellRadioService" />
@@ -110,7 +109,6 @@
         <service
             android:name=".services.TestJobService"
             android:label="Test"
-            android:isolatedProcess="true"
             android:icon="@drawable/ic_baseline_query_builder_24px"
             android:process=":jobservice"
             android:permission="android.permission.BIND_JOB_SERVICE" >

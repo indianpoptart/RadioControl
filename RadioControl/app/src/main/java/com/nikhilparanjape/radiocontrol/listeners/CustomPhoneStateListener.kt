@@ -6,13 +6,12 @@ package com.nikhilparanjape.radiocontrol.listeners
 
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.preference.PreferenceManager
 import android.telephony.PhoneStateListener
 import android.telephony.TelephonyManager
 import android.util.Log
-
 import com.nikhilparanjape.radiocontrol.rootUtils.RootAccess
+
 import com.nikhilparanjape.radiocontrol.rootUtils.Utilities
 import com.nikhilparanjape.radiocontrol.services.CellRadioService
 

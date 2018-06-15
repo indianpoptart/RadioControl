@@ -1,14 +1,10 @@
 package com.nikhilparanjape.radiocontrol.services
 
 import android.app.IntentService
-import android.content.Context
 import android.content.Intent
-import android.os.Handler
 import android.os.IBinder
 import android.util.Log
-
 import com.nikhilparanjape.radiocontrol.rootUtils.RootAccess
-import com.nikhilparanjape.radiocontrol.rootUtils.Utilities
 
 
 /**
@@ -27,11 +23,11 @@ class CellRadioService : IntentService("CellRadioService") {
         return null
     }
 
-    override fun onHandleIntent(intent: Intent?) {
+    override fun onHandleIntent(intent: Intent) {
         if (!mRunning) {
             mRunning = true
             Log.d("RadioControl", "CellService Toggled")
-            val cellOffCmd = arrayOf("service call phone 27", "service call phone 14 s16")
+            val cellOffCmd = arrayOf("service call phone 27")
             RootAccess.runCommands(cellOffCmd)
             Log.d("RadioControl", "CellService Killed")
             this.stopSelf()

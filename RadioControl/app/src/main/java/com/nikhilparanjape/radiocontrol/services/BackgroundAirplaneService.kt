@@ -1,19 +1,15 @@
 package com.nikhilparanjape.radiocontrol.services
 
-import android.annotation.SuppressLint
 import android.app.IntentService
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
-import android.media.RingtoneManager
 import android.os.Build
 import android.os.IBinder
 import android.preference.PreferenceManager
 import android.support.v4.app.NotificationCompat
-import android.support.v4.app.NotificationManagerCompat
 import android.text.format.DateFormat
 import android.util.Log
 
@@ -22,9 +18,7 @@ import com.nikhilparanjape.radiocontrol.rootUtils.RootAccess
 import com.nikhilparanjape.radiocontrol.rootUtils.Utilities
 
 import java.io.File
-import java.io.FileOutputStream
 import java.io.IOException
-import java.util.Collections
 import java.util.HashSet
 
 /**

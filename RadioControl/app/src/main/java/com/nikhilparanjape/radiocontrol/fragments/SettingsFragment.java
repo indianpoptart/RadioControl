@@ -101,7 +101,7 @@ public class SettingsFragment extends PreferenceFragment implements TimePickerDi
                     .backgroundColorRes(R.color.material_drawer_dark_background)
                     .onPositive((dialog, which) -> {
                         String[] airOffCmd2 = {"su", "settings put global airplane_mode_radios  \"cell,bluetooth,nfc,wimax\"", "content update --uri content://settings/global --bind value:s:'cell,bluetooth,nfc,wimax' --where \"name='airplane_mode_radios'\""};
-                        RootAccess.INSTANCE.runCommands(airOffCmd2);
+                        RootAccess.runCommands(airOffCmd2);
                         Toast.makeText(getActivity(),
                                 "Airplane mode reset", Toast.LENGTH_LONG).show();
                     })

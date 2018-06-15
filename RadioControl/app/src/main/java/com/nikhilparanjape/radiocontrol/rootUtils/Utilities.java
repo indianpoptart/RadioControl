@@ -651,7 +651,7 @@ public class Utilities {
                         Log.d("RadioControl", "Cell Radio has been turned off");
                     }
                     else if(!prefs.getBoolean("altRootCommand", false)){
-                        RootAccess.INSTANCE.runCommands(airCmd);
+                        RootAccess.runCommands(airCmd);
                         Log.d("RadioControl", "Airplane mode has been turned on");
                     }
                 }
