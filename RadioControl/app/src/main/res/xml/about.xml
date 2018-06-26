@@ -35,5 +35,9 @@
             android:data="https://github.com/indianpoptart/RadioControl/wiki"
             />
     </Preference>
+    <Preference
+        android:key="aboutLib"
+        android:title="Libraries">
+    </Preference>
 
 </PreferenceScreen>

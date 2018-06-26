@@ -18,8 +18,8 @@ android {
         applicationId "com.nikhilparanjape.radiocontrol"
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 64
-        versionName "5.0.3-Beta4"
+        versionCode 65
+        versionName "5.0.3-Beta5"
         // Enabling multidex support.
         multiDexEnabled true
 
@@ -85,11 +85,12 @@ dependencies {
     implementation 'com.afollestad.material-dialogs:core:0.9.3.0'
     implementation 'com.afollestad.material-dialogs:commons:0.9.2.3'
     implementation 'com.getkeepsafe.taptargetview:taptargetview:1.8.0'
-    implementation 'com.google.firebase:firebase-crash:16.0.0'
+    implementation 'com.google.firebase:firebase-crash:16.0.1'
     implementation 'com.android.support:customtabs:27.1.1'
     implementation 'me.zhanghai.android.customtabshelper:library:1.0.3'
     implementation 'com.novoda:simple-chrome-custom-tabs:0.1.5'
     implementation 'com.github.bumptech.glide:glide:4.6.1'
+    implementation 'com.github.bmelnychuk:AndroidTreeView:d051ce75f5'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.6.1'
     implementation('com.crashlytics.sdk.android:crashlytics:2.9.1@aar') {
         transitive = true

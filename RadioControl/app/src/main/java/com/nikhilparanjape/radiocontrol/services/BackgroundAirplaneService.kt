@@ -116,7 +116,7 @@ class BackgroundAirplaneService : IntentService("BackgroundAirplaneService") {
                     //Checks that user is not in call
                     if (!util.isCallActive(context)) {
                         //Runs the alternate root command
-                        if (prefs.getBoolean("altRootCommand", false)) {
+                        if (prefs.getBoolean("altRootCommand", true)) {
                             if (Utilities.getCellStatus(context) == 1) {
                                 val cellIntent = Intent(context, CellRadioService::class.java)
                                 context.startService(cellIntent)
@@ -138,8 +138,9 @@ class BackgroundAirplaneService : IntentService("BackgroundAirplaneService") {
                     } else if (util.isCallActive(context)) {
                         while (util.isCallActive(context)) {
                             waitFor(1000)//Wait for call to end
+                            Log.d("RadioControl", "waiting for call to end")
                         }
-                        Utilities.scheduleJob(context)
+                        //Utilities.scheduleJob(context)
                     }//Checks that user is currently in call and pauses execution till the call ends
                 }
             }
@@ -179,6 +180,7 @@ class BackgroundAirplaneService : IntentService("BackgroundAirplaneService") {
                     } else if (util.isCallActive(context)) {
                         while (util.isCallActive(context)) {
                             waitFor(1000)//Wait for call to end
+                            Log.d("RadioControl", "waiting for call to end")
                         }
                     }//Checks that user is currently in call and pauses execution till the call ends
                 } else if (selections!!.contains(Utilities.getCurrentSsid(context))) {

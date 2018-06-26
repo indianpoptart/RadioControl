@@ -78,6 +78,7 @@ import com.nikhilparanjape.radiocontrol.rootUtils.Utilities;
 import com.nikhilparanjape.radiocontrol.services.BackgroundAirplaneService;
 import com.nikhilparanjape.radiocontrol.services.CellRadioService;
 import com.nikhilparanjape.radiocontrol.services.PersistenceService;
+import com.nikhilparanjape.radiocontrol.services.TestJobService;
 import com.nikhilparanjape.radiocontrol.util.IabHelper;
 import com.nikhilparanjape.radiocontrol.util.IabResult;
 import com.nikhilparanjape.radiocontrol.util.Inventory;
@@ -114,6 +115,7 @@ public class MainActivity extends AppCompatActivity {
     static final String ITEM_THREE_DOLLAR = "com.nikihlparanjape.radiocontrol.donate.three";
     static final String ITEM_FIVE_DOLLAR = "com.nikihlparanjape.radiocontrol.donate.five";
     static final String ITEM_TEN_DOLLAR = "com.nikihlparanjape.radiocontrol.donate.ten";
+    private ComponentName mServiceComponent;
 
 
     ServiceConnection mServiceConn = new ServiceConnection() {
@@ -138,6 +140,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         clayout = findViewById(R.id.clayout);
         final ProgressBar dialog = findViewById(R.id.pingProgressBar);
+        mServiceComponent = new ComponentName(this, TestJobService.class);
 
         // Handle Toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -659,7 +662,7 @@ public class MainActivity extends AppCompatActivity {
     public void showUpdated() {
         new MaterialDialog.Builder(this)
                 .title("RadioControl has been updated")
-                .theme(Theme.LIGHT)
+                .theme(Theme.DARK)
                 .positiveText("GOT IT")
                 .negativeText("WHAT'S NEW")
                 .onAny((dialog, which) -> {
@@ -1163,7 +1166,13 @@ public class MainActivity extends AppCompatActivity {
             super.onActivityResult(requestCode, resultCode, data);
         }
     }
-
+    @Override
+    protected void onStart() {
+        super.onStart();
+        // Start service and provide it a way to communicate with this class.
+        Intent startServiceIntent = new Intent(this, TestJobService.class);
+        startService(startServiceIntent);
+    }
 
     @Override
     public void onDestroy() {
@@ -1174,5 +1183,14 @@ public class MainActivity extends AppCompatActivity {
         if (mHelper != null) mHelper.dispose();
         mHelper = null;
 
+    }
+
+    protected void onStop() {
+        // A service can be "started" and/or "bound". In this case, it's "started" by this Activity
+        // and "bound" to the JobScheduler (also called "Scheduled" by the JobScheduler). This call
+        // to stopService() won't prevent scheduled jobs to be processed. However, failing
+        // to call stopService() would keep it alive indefinitely.
+        stopService(new Intent(this, TestJobService.class));
+        super.onStop();
     }
 }

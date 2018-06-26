@@ -50,7 +50,7 @@
     <string name="resetNetSettings">Reset Network Settings</string>
     <string name="resetSummary">Reset the disabled networks list</string>
     <string name="alertSettings">Alert Settings</string>
-    <string name="enableAlert">Enable internet access alert</string>
+    <string name="enableAlert">Internet connectivity checker</string>
     <string name="alertSum">Shows a notification when the current WiFi network is not connected to the internet (EXPERIMENTAL)</string>
     <string name="notificationSettings">Notification Settings</string>
     <string name="eVibrate">Enable vibrate</string>
@@ -98,8 +98,8 @@
     <string name="title_night_mode_experimental">Night Mode (Experimental)</string>
     <string name="summary_do_not_disturb">This will disable the service for a custom amount of hours if you are going on an airplane</string>
     <string name="summary_night_mode">Night mode can be used to disable the airplane service at a specified time frame</string>
-    <string name="title_airplane_service_toggle">Enable Airplane Service</string>
-    <string name="summary_airplane_service">This will check if airplane mode is on when connected to WiFi</string>
+    <string name="title_airplane_service_toggle">Airplane Service</string>
+    <string name="summary_airplane_service">Periodically awakens app to ensure full functionality</string>
     <string name="title_service_settings">Service Settings</string>
     <string name="summary_service_settings">Run the service every interval specified</string>
     <string name="title_root_command_alt">Alternate root command(Experimental)</string>
@@ -109,8 +109,8 @@
     <string name="resetAirplaneSettings">Reset Airplane Mode</string>
     <string name="LogTitle">Log Directory</string>
     <string name="LogDirSummary">Change where logs are saved</string>
-    <string name="prefs_summary_phone_call">Checks for an active phone call and will enable the cell radio</string>
-    <string name="prefs_phone_check">Enable Phone Call Check(Experimental)</string>
+    <string name="prefs_summary_phone_call">Checks for an active phone call and will enable the cell radio to ensure the call stays connected if WiFi is lost</string>
+    <string name="prefs_phone_check">Call Handling(Experimental)</string>
     <string name="prefs_title_phone_settings">Phone Settings</string>
     <string name="prefs_title_batOptim">Optimizations</string>
     <string name="title_battery_optimization">Background Optimization</string>

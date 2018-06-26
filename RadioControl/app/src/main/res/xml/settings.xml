@@ -59,11 +59,6 @@
             android:title="@string/title_fabric_analytics"
             android:summary="@string/summary_fabric_analytics"
             android:defaultValue="false" />
-        <CheckBoxPreference
-            android:key="disableAds"
-            android:title="@string/disable_ads"
-            android:summary="@string/ad_summary"
-            android:defaultValue="false" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/prefs_title_phone_settings">
         <CheckBoxPreference

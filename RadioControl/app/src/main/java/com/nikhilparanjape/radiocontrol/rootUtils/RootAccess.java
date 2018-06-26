@@ -1,5 +1,7 @@
 package com.nikhilparanjape.radiocontrol.rootUtils;
 
+import android.os.AsyncTask;
+
 import java.io.DataOutputStream;
 import java.io.IOException;
 
@@ -12,15 +14,21 @@ public class RootAccess{
         try {
             p = Runtime.getRuntime().exec("su");
             DataOutputStream os = new DataOutputStream(p.getOutputStream());
+            //Allows root commands to be entered line by line
             for (String tmpCmd : commands) {
                 os.writeBytes(tmpCmd + "\n"); //Sends commands to the terminal
             }
             os.writeBytes("exit\n");
             os.flush();
+            os.close();
+
+            p.waitFor();
         }
-        catch (IOException e) {
+        catch (IOException | InterruptedException e) {
             e.printStackTrace();
 
         }
+
+
     }
 }

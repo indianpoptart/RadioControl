@@ -1,6 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog bulletedList="true">
 
+    <changelogversion versionName="5.0.3-Beta5" changeDate="June 26, 2018">
+        <changelogtext>Fixed phone call checker, much reliable</changelogtext>
+        <changelogtext>Fixed root access class OutputStream closing and better handling of termination</changelogtext>
+        <changelogtext>Made Background Airplane Service more reliable</changelogtext>
+        <changelogtext>Converted most icon images to vector drawables</changelogtext>
+        <changelogtext>Implemented About Libraries</changelogtext>
+    </changelogversion>
+    <changelogversion versionName="5.0.3-Beta4" changeDate="June 15, 2018">
+        <changelogtext>More files converted to Kotlin</changelogtext>
+        <changelogtext>Fixed Airplane service time not being accurate</changelogtext>
+        <changelogtext>Images resized</changelogtext>
+        <changelogbug>Phone call check can cause issues when leaving a WiFi network</changelogbug>
+    </changelogversion>
+
     <changelogversion versionName="5.0.3-Beta3" changeDate="June 14, 2018">
         <changelogbug>Fixed issue on Android 8.0+ devices where the background service would not be able to run. This adds a small notification to show when the app is running. It only shows up briefly</changelogbug>
         <changelogtext>Refactored some code</changelogtext>
@@ -16,7 +30,7 @@
         <changelogtext>Converted most classes to Kotlin</changelogtext>
         <changelogtext>Fixed main layouts</changelogtext>
         <changelogtext>Fixing logs so errors can be traced to an origin class</changelogtext>
-        <changelogbug>Known Issues:</changelogbug>
+        <changelogtext>Known Issues:</changelogtext>
         <changelogbug>Network settings crashes if app's dev mode is not enabled</changelogbug>
         <changelogbug>Settings UI transition lags on Shamu (LOS15.1)</changelogbug>
         <changelogbug>No notifications for 7.0+</changelogbug>

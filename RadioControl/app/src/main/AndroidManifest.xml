@@ -80,6 +80,10 @@
         <activity
             android:name=".activities.NetworkListActivity"
             android:label="@string/title_activity_network" />
+        <activity
+            android:name="com.nikhilparanjape.radiocontrol.activities.CustomSortActivity"
+            android:label="Libraries"
+            android:theme="@style/AboutLibrariesTheme" />
 
 
         <activity android:name=".activities.ChangeLogActivity" />

@@ -10,7 +10,14 @@ import android.preference.PreferenceFragment
 import android.support.customtabs.CustomTabsIntent
 import android.support.design.widget.Snackbar
 import android.util.Log
+import android.view.View
 import android.widget.Toast
+import com.mikepenz.aboutlibraries.LibTaskCallback
+import com.mikepenz.aboutlibraries.Libs
+import com.mikepenz.aboutlibraries.LibsBuilder
+import com.mikepenz.aboutlibraries.LibsConfiguration
+import com.mikepenz.aboutlibraries.entity.Library
+import com.mikepenz.fastadapter.adapters.ItemAdapter
 
 
 import com.nikhilparanjape.radiocontrol.BuildConfig
@@ -108,6 +115,22 @@ class AboutFragment : PreferenceFragment() {
             displaySupportWebsite(c)
             false
         }
+        val aboutLib = findPreference("aboutLib")
+        aboutLib.onPreferenceClickListener = Preference.OnPreferenceClickListener {
+            LibsBuilder()
+                    .withLibraries("crouton", "actionbarsherlock", "showcaseview", "android_job")
+                    .withAutoDetect(true)
+                    .withLicenseShown(true)
+                    .withVersionShown(true)
+                    .withActivityTitle("Open Source Libraries")
+                    .withActivityStyle(Libs.ActivityStyle.DARK)
+                    .withListener(libsListener)
+                    .withLibTaskCallback(libTaskCallback)
+                    .withUiListener(libsUIListener)
+                    .start(c)
+
+            false
+        }
 
 
     }
@@ -152,6 +175,64 @@ class AboutFragment : PreferenceFragment() {
     private fun tutorial(c: Context) {
         val i = Intent(c, TutorialActivity::class.java)
         startActivity(i)
+    }
+
+    internal var libTaskCallback: LibTaskCallback = object : LibTaskCallback {
+        override fun onLibTaskStarted() {
+            Log.e("AboutLibraries", "started")
+        }
+
+        override fun onLibTaskFinished(fastItemAdapter: ItemAdapter<*>) {
+            Log.e("AboutLibraries", "finished")
+        }
+    }
+
+    internal var libsUIListener: LibsConfiguration.LibsUIListener = object : LibsConfiguration.LibsUIListener {
+        override fun preOnCreateView(view: View): View {
+            return view
+        }
+
+        override fun postOnCreateView(view: View): View {
+            return view
+        }
+    }
+
+    internal var libsListener: LibsConfiguration.LibsListener = object : LibsConfiguration.LibsListener {
+        override fun onIconClicked(v: View) {
+            Toast.makeText(v.context, "We are able to track this now ;)", Toast.LENGTH_LONG).show()
+        }
+
+        override fun onLibraryAuthorClicked(v: View, library: Library): Boolean {
+            return false
+        }
+
+        override fun onLibraryContentClicked(v: View, library: Library): Boolean {
+            return false
+        }
+
+        override fun onLibraryBottomClicked(v: View, library: Library): Boolean {
+            return false
+        }
+
+        override fun onExtraClicked(v: View, specialButton: Libs.SpecialButton): Boolean {
+            return false
+        }
+
+        override fun onIconLongClicked(v: View): Boolean {
+            return false
+        }
+
+        override fun onLibraryAuthorLongClicked(v: View, library: Library): Boolean {
+            return false
+        }
+
+        override fun onLibraryContentLongClicked(v: View, library: Library): Boolean {
+            return false
+        }
+
+        override fun onLibraryBottomLongClicked(v: View, library: Library): Boolean {
+            return false
+        }
     }
 
     companion object {

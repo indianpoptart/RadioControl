@@ -6,10 +6,16 @@ import android.app.job.JobParameters
 import android.app.job.JobService
 import android.content.Intent
 import android.os.Build
+import android.util.Log
 
 import com.nikhilparanjape.radiocontrol.rootUtils.Utilities
 
 class TestJobService : JobService() {
+
+    override fun onCreate(){
+        super.onCreate();
+        Log.i(TAG, "JobScheduler created");
+    }
 
     override fun onStartJob(params: JobParameters): Boolean {
         val service = Intent(applicationContext, BackgroundAirplaneService::class.java)
