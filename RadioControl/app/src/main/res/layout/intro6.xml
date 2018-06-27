@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_weight="10"
-    android:background="@color/network_connectivity_slide"
+    android:background="@color/call_detector_slide"
     android:orientation="vertical">
 
     <TextView
@@ -16,7 +16,7 @@
         android:gravity="center"
         android:paddingLeft="32dp"
         android:paddingRight="32dp"
-        android:text="@string/network_alert"
+        android:text="Call Detector (Experimental)"
         android:textColor="#ffffff"
         android:textSize="28sp" />
 
@@ -29,12 +29,14 @@
         android:weightSum="1">
 
         <ImageView
-            android:layout_width="384dp"
-            android:layout_height="270dp"
+            android:id="@+id/phone_icon"
+            android:layout_width="256dp"
+            android:layout_height="168dp"
             android:layout_gravity="center"
+            android:layout_weight="0.36"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
-            android:src="@drawable/ic_network_check_white_48dp" />
+            android:src="@drawable/ic_phone_black_24dp" />
     </LinearLayout>
 
     <TextView
@@ -45,7 +47,7 @@
         android:gravity="center"
         android:paddingLeft="32dp"
         android:paddingRight="32dp"
-        android:text="The network connectivity checker alerts you if a WiFi network can't connect to the internet. This is not required in newer versions of Android as it is a built-in feature"
+        android:text="Checks for an ongoing call and enables the cell radio to reduce call drops if WiFi is lost"
         android:textColor="#ffffff"
         android:textSize="16sp" />
 

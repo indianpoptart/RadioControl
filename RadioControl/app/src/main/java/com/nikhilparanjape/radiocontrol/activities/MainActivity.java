@@ -782,9 +782,9 @@ public class MainActivity extends AppCompatActivity {
         if (pref.getBoolean("workMode",true)) {
             Intent i= new Intent(getApplicationContext(), PersistenceService.class);
             if(Build.VERSION.SDK_INT>=26) {
-                getBaseContext().startForegroundService(i);
+                //getBaseContext().startForegroundService(i);
             }else{
-                getBaseContext().startService(i);
+                //getBaseContext().startService(i);
             }
 
             Log.d("RadioControl", "persist Service launched");

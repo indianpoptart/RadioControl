@@ -35,7 +35,8 @@
                                           <PersistentState>
                                             <option name="values">
                                               <map>
-                                                <entry key="scalingPercent" value="76" />
+                                                <entry key="scalingPercent" value="85" />
+                                                <entry key="trimmed" value="true" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -46,14 +47,12 @@
                                   <option name="values">
                                     <map>
                                       <entry key="backgroundAssetType" value="COLOR" />
-                                      <entry key="backgroundColor" value="95bd23" />
-                                      <entry key="backgroundLayerName" value="android_icon_background" />
-                                      <entry key="foregroundAssetType" value="CLIP_ART" />
-                                      <entry key="foregroundImage" value="C:\Users\admin\Downloads\radiocontrol-2018-06\web_hi_res_512.png" />
-                                      <entry key="foregroundLayerName" value="android_icon_foreground" />
-                                      <entry key="generateWebIcon" value="false" />
+                                      <entry key="backgroundColor" value="00af9c" />
+                                      <entry key="backgroundLayerName" value="ic_magisk_background" />
+                                      <entry key="foregroundImage" value="C:\Users\admin\Downloads\ic_magisk.xml" />
+                                      <entry key="foregroundLayerName" value="ic_magisk_layer" />
                                       <entry key="legacyIconShape" value="CIRCLE" />
-                                      <entry key="outputName" value="android_logo" />
+                                      <entry key="outputName" value="ic_magisk_icon" />
                                       <entry key="webIconShape" value="CIRCLE" />
                                     </map>
                                   </option>
@@ -85,7 +84,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="jar:file:/C:/Program%20Files/Android/Android%20Studio%20Preview/plugins/android/lib/android.jar!/images/material_design_icons/notification/ic_do_not_disturb_off_black_24dp.xml" />
+                                      <entry key="url" value="jar:file:/C:/Program%20Files/Android/Android%20Studio%20Preview/plugins/android/lib/android.jar!/images/material_design_icons/navigation/ic_refresh_black_24dp.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -95,12 +94,8 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="color" value="ffffff" />
-                            <entry key="height" value="48" />
-                            <entry key="outputName" value="ic_do_not_disturb_off_white_48dp" />
-                            <entry key="overrideSize" value="true" />
+                            <entry key="outputName" value="ic_refresh_black_24dp" />
                             <entry key="sourceFile" value="C:\Users\admin\Downloads\baseline-signal_cellular_connected_no_internet_2_bar-24px.svg" />
-                            <entry key="width" value="48" />
                           </map>
                         </option>
                       </PersistentState>

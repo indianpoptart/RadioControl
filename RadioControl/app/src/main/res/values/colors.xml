@@ -41,4 +41,8 @@
     <color name="status_activated">#228B22</color>
     <color name="status_deactivated">#b22222</color>
     <color name="status_text_error">#e00</color>
+    <color name="persistence_slide">#9900ff</color>
+    <color name="call_detector_slide">#2d59c7</color>
+    <color name="network_connectivity_slide">#3d9c00</color>
+    <color name="airplane_mode_slide">#e2722c</color>
 </resources>

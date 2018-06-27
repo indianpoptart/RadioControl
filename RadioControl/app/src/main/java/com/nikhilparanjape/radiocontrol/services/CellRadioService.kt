@@ -4,7 +4,9 @@ import android.app.IntentService
 import android.content.Intent
 import android.os.IBinder
 import android.util.Log
+import com.bumptech.glide.util.Util
 import com.nikhilparanjape.radiocontrol.rootUtils.RootAccess
+import com.nikhilparanjape.radiocontrol.rootUtils.Utilities
 
 
 /**
@@ -29,6 +31,7 @@ class CellRadioService : IntentService("CellRadioService") {
             Log.d("RadioControl", "CellService Toggled")
             val cellOffCmd = arrayOf("service call phone 27")
             RootAccess.runCommands(cellOffCmd)
+            Utilities.writeLog("root accessed", applicationContext)
             Log.d("RadioControl", "CellService Killed")
             this.stopSelf()
         }

@@ -50,8 +50,8 @@
     <string name="resetNetSettings">Reset Network Settings</string>
     <string name="resetSummary">Reset the disabled networks list</string>
     <string name="alertSettings">Alert Settings</string>
-    <string name="enableAlert">Internet connectivity checker</string>
-    <string name="alertSum">Shows a notification when the current WiFi network is not connected to the internet (EXPERIMENTAL)</string>
+    <string name="enableAlert">Network connectivity checker (Experimental)</string>
+    <string name="alertSum">Shows a notification when the current WiFi network is not connected to the internet</string>
     <string name="notificationSettings">Notification Settings</string>
     <string name="eVibrate">Enable vibrate</string>
     <string name="vibeSum">Enables vibrate on alerts</string>
@@ -87,7 +87,7 @@
     <string name="stats">Stats (Experimental)</string>
     <string name="tutorial_summary">View the app\'s tutorial screen</string>
     <string name="tutorial_title">Tutorial</string>
-    <string name="network_alert">Network Alert</string>
+    <string name="network_alert">Network Connectivity Checker (Experimental)</string>
     <string name="welcome_to_radiocontrol">Welcome to RadioControl</string>
     <string name="intro_summary_1">This app saves your battery by switching off the cell radio when connected to a WiFi network</string>
     <string name="airplane_mode_turned_off">Airplane mode turned off</string>
@@ -136,5 +136,7 @@
     <string name="summary_intelligent_mode">This is a higher priority detection method that might fix issues on Nougat+</string>
     <string name="persistence_description">This is a low-level notification to keep the persistence service awake</string>
     <string name="summary_airplane_service_notification">Notifies when the airplane service is running</string>
+    <string name="refresh_text_box">Refresh</string>
+    <string name="radios_toggled_graph_title">Radios toggled</string>
 
 </resources>

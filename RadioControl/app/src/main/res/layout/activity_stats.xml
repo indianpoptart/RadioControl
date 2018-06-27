@@ -17,97 +17,139 @@
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         android:elevation="4dp" />
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingBottom="@dimen/activity_vertical_margin"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="64dp"
-        tools:context="com.nikhilparanjape.radiocontrol.activities.StatsActivity">
+        android:layout_height="wrap_content">
 
-
-
-        <!-- A CardView that contains a graph -->
-        <android.support.v7.widget.CardView
-            xmlns:card_view="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/card_wifi_lost"
-            android:layout_gravity="center"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="200dp"
-            card_view:cardElevation="10dp"
-            card_view:cardBackgroundColor="#fff"
-            card_view:cardCornerRadius="2dp">
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingTop="64dp"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingBottom="@dimen/activity_vertical_margin"
+            app:context="com.nikhilparanjape.radiocontrol.activities.StatsActivity">
 
-            <TextView
-                android:id="@+id/title_wifi_off"
-                android:layout_width="match_parent"
-                android:layout_height="20dp"
-                android:text="@string/wifi_signal_lost"
-                android:gravity="center_vertical"
-                android:paddingLeft="20dp"
-                android:textColor="@android:color/black"
-                android:textSize="14sp"/>
 
-            <com.db.chart.view.LineChartView
-                xmlns:chart="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/linechart"
+            <!-- A CardView that contains a graph -->
+            <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/card_wifi_lost"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
-                android:paddingTop="20dp"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                android:layout_centerVertical="true"
-                android:layout_alignParentStart="true" >
+                android:layout_gravity="center"
+                card_view:cardBackgroundColor="#fff"
+                card_view:cardCornerRadius="2dp"
+                card_view:cardElevation="10dp">
 
-                <ProgressBar
-                    android:id="@+id/progressWifiOff"
-                    style="?android:attr/progressBarStyle"
+                <TextView
+                    android:id="@+id/title_wifi_off"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true" />
-            </com.db.chart.view.LineChartView>
+                    android:layout_height="20dp"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="20dp"
+                    android:text="@string/wifi_signal_lost"
+                    android:textColor="@android:color/black"
+                    android:textSize="14sp" />
 
-        </android.support.v7.widget.CardView>
+                <com.db.chart.view.LineChartView xmlns:chart="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/linechart"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:paddingLeft="5dp"
+                    android:paddingTop="20dp"
+                    android:paddingRight="5dp">
 
-        <!-- A CardView that contains a graph -->
-        <android.support.v7.widget.CardView
-            xmlns:card_view="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/wifi_Airplane_on"
-            android:layout_gravity="center"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            card_view:cardCornerRadius="2dp"
-            card_view:cardElevation="10dp"
-            card_view:cardBackgroundColor="#fff"
-            android:layout_marginTop="20dp"
-            android:layout_below="@+id/card_wifi_lost"
-            android:layout_alignParentStart="true">
+                    <ProgressBar
+                        android:id="@+id/progressWifiOff"
+                        style="?android:attr/progressBarStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true" />
+                </com.db.chart.view.LineChartView>
 
-            <TextView
-                android:id="@+id/title_airplane_on"
-                android:layout_width="match_parent"
-                android:layout_height="20dp"
-                android:text="@string/airplane_mode_turned_off"
-                android:gravity="center_vertical"
-                android:paddingLeft="20dp"
-                android:textColor="@android:color/black"
-                android:textSize="14sp"/>
+            </android.support.v7.widget.CardView>
 
-            <com.db.chart.view.LineChartView
-                xmlns:chart="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/linechart_airplane_on"
+            <!-- A CardView that contains an airplane graph -->
+            <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/wifi_Airplane_on"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
-                android:paddingTop="20dp"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
                 android:layout_below="@+id/card_wifi_lost"
-                android:layout_alignParentStart="true" >
+                android:layout_alignParentStart="true"
+                android:layout_gravity="center"
+                android:layout_marginTop="20dp"
+                card_view:cardBackgroundColor="#fff"
+                card_view:cardCornerRadius="2dp"
+                card_view:cardElevation="10dp">
+
+                <TextView
+                    android:id="@+id/title_airplane_on"
+                    android:layout_width="match_parent"
+                    android:layout_height="20dp"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="20dp"
+                    android:text="@string/radios_toggled_graph_title"
+                    android:textColor="@android:color/black"
+                    android:textSize="14sp" />
+
+                <com.db.chart.view.LineChartView xmlns:chart="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/linechart_airplane_on"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:layout_below="@+id/card_wifi_lost"
+                    android:layout_alignParentStart="true"
+                    android:paddingLeft="5dp"
+                    android:paddingTop="20dp"
+                    android:paddingRight="5dp">
+
+                    <ProgressBar
+                        android:id="@+id/progressAirplaneOn"
+                        style="?android:attr/progressBarStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true" />
+                </com.db.chart.view.LineChartView>
+
+
+            </android.support.v7.widget.CardView>
+
+        <!-- A CardView that contains an airplane graph -->
+        <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/root_access_card"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_below="@+id/wifi_Airplane_on"
+            android:layout_alignParentStart="true"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            card_view:cardBackgroundColor="#fff"
+            card_view:cardCornerRadius="2dp"
+            card_view:cardElevation="10dp">
+
+            <TextView
+                android:id="@+id/title_root_access"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:gravity="center_vertical"
+                android:paddingLeft="20dp"
+                android:text="Root access attempts"
+                android:textColor="@android:color/black"
+                android:textSize="14sp" />
+
+            <com.db.chart.view.LineChartView xmlns:chart="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/linechart_root_access"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_below="@+id/root_access_card"
+                android:layout_alignParentStart="true"
+                android:paddingLeft="5dp"
+                android:paddingTop="20dp"
+                android:paddingRight="5dp">
 
                 <ProgressBar
-                    android:id="@+id/progressAirplaneOn"
+                    android:id="@+id/progressRootAccess"
                     style="?android:attr/progressBarStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -118,20 +160,21 @@
         </android.support.v7.widget.CardView>
 
 
-    </RelativeLayout>
+        </RelativeLayout>
+    </ScrollView>
 
 
+    <!-- Overlay that dims the screen -->
     <com.nikhilparanjape.radiocontrol.rootUtils.Fab
         android:id="@+id/fab"
         style="@style/Widget.MaterialSheetFab.Fab"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:layout_marginBottom="16dp"
         android:layout_marginEnd="16dp"
-        android:src="@drawable/ic_add_white_24dp"/>
+        android:layout_marginBottom="16dp"
+        android:src="@drawable/ic_add_white_24dp" />
 
-    <!-- Overlay that dims the screen -->
     <com.gordonwong.materialsheetfab.DimOverlayFrameLayout
         android:id="@+id/overlay"
         android:layout_width="match_parent"
@@ -149,13 +192,23 @@
         <android.support.v7.widget.CardView
             android:id="@+id/fab_sheet"
             android:layout_width="250dp"
-            android:layout_height="120dp">
+            android:layout_height="170dp">
 
             <!-- Sheet items -->
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
+
+                <!-- Refresh -->
+                <TextView
+                    android:id="@+id/fab_sheet_item_refresh"
+                    style="@style/TextAppearance.MaterialSheetFab.Sheet.Item"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:drawableLeft="@drawable/ic_refresh_black_24dp"
+                    android:drawableStart="@drawable/ic_refresh_black_24dp"
+                    android:text="@string/refresh_text_box" />
 
                 <!-- Gridlines -->
                 <TextView
@@ -181,6 +234,7 @@
             </LinearLayout>
 
         </android.support.v7.widget.CardView>
+
     </io.codetail.widget.RevealLinearLayout>
 
 

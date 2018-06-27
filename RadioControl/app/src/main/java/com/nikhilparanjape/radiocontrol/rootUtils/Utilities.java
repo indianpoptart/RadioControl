@@ -26,8 +26,10 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.telephony.CellInfo;
 import android.telephony.TelephonyManager;
+import android.text.format.DateFormat;
 import android.util.Log;
 
+import com.google.firebase.crash.FirebaseCrash;
 import com.nikhilparanjape.radiocontrol.R;
 import com.nikhilparanjape.radiocontrol.receivers.ActionReceiver;
 import com.nikhilparanjape.radiocontrol.receivers.NightModeReceiver;
@@ -38,6 +40,8 @@ import com.nikhilparanjape.radiocontrol.services.CellRadioService;
 import com.nikhilparanjape.radiocontrol.services.PersistenceService;
 import com.nikhilparanjape.radiocontrol.services.TestJobService;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.List;
@@ -107,6 +111,34 @@ public class Utilities {
         Log.d("RadioControl", "Link speed = " + linkSpeed + "Mbps");
         return linkSpeed;
     }
+
+    /**
+     * Writes logs
+     * @param c
+     * @return
+     */
+    public static void writeLog(String data, Context c){
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(c);
+        if(preferences.getBoolean("enableLogs", false)){
+            try{
+                String h = DateFormat.format("yyyy-MM-dd HH:mm:ss", System.currentTimeMillis()).toString();
+                File log = new File(c.getFilesDir(), "radiocontrol.log");
+                if(!log.exists()) {
+                    log.createNewFile();
+                }
+                String logPath = "radiocontrol.log";
+                String string = "\n" + h + ": " + data;
+
+                FileOutputStream fos = c.openFileOutput(logPath, Context.MODE_APPEND);
+                fos.write(string.getBytes());
+                fos.close();
+            } catch(IOException e){
+                FirebaseCrash.logcat(Log.ERROR, "RadioControl", "Error with log");
+                FirebaseCrash.report(e);
+            }
+        }
+    }
+
     public void scheduleWakeupAlarm(Context c, int hour) {
         Calendar cal = Calendar.getInstance();
         // start 30 seconds after boot completed

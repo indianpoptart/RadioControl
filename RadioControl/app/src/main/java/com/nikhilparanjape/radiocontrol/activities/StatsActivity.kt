@@ -3,6 +3,7 @@ package com.nikhilparanjape.radiocontrol.activities
 import android.content.SharedPreferences
 import android.graphics.Color
 import android.graphics.Paint
+import android.os.AsyncTask
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.support.design.widget.CoordinatorLayout
@@ -53,6 +54,8 @@ import java.util.Collections
 import java.util.Date
 
 import me.grantland.widget.AutofitHelper
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
 
 
 class StatsActivity : AppCompatActivity() {
@@ -86,8 +89,24 @@ class StatsActivity : AppCompatActivity() {
     internal var novAirOn = 0f
     internal var decAirOn = 0f
 
+    internal var rootOn = 0
+    //Sets float for airplane on
+    internal var janRootOn = 0f
+    internal var febRootOn = 0f
+    internal var marRootOn = 0f
+    internal var aprRootOn = 0f
+    internal var mayRootOn = 0f
+    internal var junRootOn = 0f
+    internal var julRootOn = 0f
+    internal var augRootOn = 0f
+    internal var sepRootOn = 0f
+    internal var octRootOn = 0f
+    internal var novRootOn = 0f
+    internal var decRootOn = 0f
+
     lateinit var chart: LineChartView
     lateinit var chart1: LineChartView
+    lateinit var chart2: LineChartView
     lateinit var materialSheetFab: MaterialSheetFab<*>
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -104,11 +123,6 @@ class StatsActivity : AppCompatActivity() {
             editor.putInt("easing", 4)
             editor.apply()
         }
-        val progress1 = findViewById<ProgressBar>(R.id.progressWifiOff)
-        progress1.visibility = View.GONE
-        val progress2 = findViewById<ProgressBar>(R.id.progressAirplaneOn)
-        progress2.visibility = View.GONE
-
 
         val actionBar = findViewById<Toolbar>(R.id.toolbar)
         //Sets coordlayout
@@ -162,15 +176,28 @@ class StatsActivity : AppCompatActivity() {
             showLongList()
         }
 
+        val btn2 = findViewById<TextView>(R.id.fab_sheet_item_refresh)
+        AutofitHelper.create(btn2)
+        btn2.setOnClickListener { _ ->
+            materialSheetFab.hideSheet()
+
+        }
+
     }
 
     override fun onResume() {
         super.onResume()
 
-        runOnUiThread {
+        //chart.notifyDataUpdate()
+        //chart1.notifyDataUpdate()
+        //chart2.notifyDataUpdate()
+
+        doAsync {
             wifiLostGraph()
 
             airplaneOnGraph()
+
+            rootAccessGraph()
         }
 
 
@@ -250,195 +277,306 @@ class StatsActivity : AppCompatActivity() {
         val progress1 = findViewById<ProgressBar>(R.id.progressWifiOff)
         progress1.visibility = View.VISIBLE
 
-        val prefs = PreferenceManager.getDefaultSharedPreferences(applicationContext)
-        //Initiate chart
-        chart = findViewById(R.id.linechart)
-        //Initiate dataset for chart
-        val dataset = LineSet()
+        doAsync {
+            val prefs = PreferenceManager.getDefaultSharedPreferences(applicationContext)
+            //Initiate chart
+            chart = findViewById(R.id.linechart)
+            //Initiate dataset for chart
+            val dataset = LineSet()
 
-        val anim = Animation()
-        anim.setDuration(1000)
-        if (prefs.getInt("easing", 4) == 0) {
-            anim.setEasing(BounceEase())
-        } else if (prefs.getInt("easing", 4) == 1) {
-            anim.setEasing(CircEase())
-        } else if (prefs.getInt("easing", 4) == 2) {
-            anim.setEasing(CubicEase())
-        } else if (prefs.getInt("easing", 4) == 3) {
-            anim.setEasing(ElasticEase())
-        } else if (prefs.getInt("easing", 4) == 4) {
-            anim.setEasing(ExpoEase())
-        } else if (prefs.getInt("easing", 4) == 5) {
-            anim.setEasing(LinearEase())
-        } else if (prefs.getInt("easing", 4) == 6) {
-            anim.setEasing(QuadEase())
-        } else if (prefs.getInt("easing", 4) == 7) {
-            anim.setEasing(QuartEase())
-        } else if (prefs.getInt("easing", 4) == 8) {
-            anim.setEasing(QuintEase())
-        } else if (prefs.getInt("easing", 4) == 9) {
-            anim.setEasing(SineEase())
+            val anim = Animation()
+            anim.setDuration(2000)
+            if (prefs.getInt("easing", 4) == 0) {
+                anim.setEasing(BounceEase())
+            } else if (prefs.getInt("easing", 4) == 1) {
+                anim.setEasing(CircEase())
+            } else if (prefs.getInt("easing", 4) == 2) {
+                anim.setEasing(CubicEase())
+            } else if (prefs.getInt("easing", 4) == 3) {
+                anim.setEasing(ElasticEase())
+            } else if (prefs.getInt("easing", 4) == 4) {
+                anim.setEasing(ExpoEase())
+            } else if (prefs.getInt("easing", 4) == 5) {
+                anim.setEasing(LinearEase())
+            } else if (prefs.getInt("easing", 4) == 6) {
+                anim.setEasing(QuadEase())
+            } else if (prefs.getInt("easing", 4) == 7) {
+                anim.setEasing(QuartEase())
+            } else if (prefs.getInt("easing", 4) == 8) {
+                anim.setEasing(QuintEase())
+            } else if (prefs.getInt("easing", 4) == 9) {
+                anim.setEasing(SineEase())
+            }
+
+            val ovLap = intArrayOf(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11)
+            anim.setOverlap(1.0f, ovLap)
+            anim.setAlpha(1)
+
+            //Set chart defaults
+            chart.addData(dataset)
+            chart.setAxisColor(Color.BLACK)
+            chart.setLabelsColor(Color.BLACK)
+            chart.setXAxis(true)
+            chart.setYAxis(true)
+            chart.setYLabels(AxisController.LabelPosition.OUTSIDE)
+
+
+            dataset.setColor(Color.BLACK)
+                    .setDotsColor(Color.parseColor("#758cbb"))
+                    .setDashed(floatArrayOf(10f, 10f))
+                    .beginAt(0)
+
+            getWifiLost()
+
+            //Sets dataset points
+            dataset.addPoint("Jan", janWifiLost)
+            dataset.addPoint("Feb", febWifiLost)
+            dataset.addPoint("Mar", marWifiLost)
+            dataset.addPoint("Apr", aprWifiLost)
+            dataset.addPoint("May", mayWifiLost)
+            dataset.addPoint("Jun", junWifiLost)
+            dataset.addPoint("Jul", julWifiLost)
+            dataset.addPoint("Aug", augWifiLost)
+            dataset.addPoint("Sep", sepWifiLost)
+            dataset.addPoint("Oct", octWifiLost)
+            dataset.addPoint("Nov", novWifiLost)
+            dataset.addPoint("Dec", decWifiLost)
+
+            if (janWifiLost == 0f && febWifiLost == 0f && marWifiLost == 0f && aprWifiLost == 0f && mayWifiLost == 0f && junWifiLost == 0f && julWifiLost == 0f && augWifiLost == 0f &&
+                    sepWifiLost == 0f && octWifiLost == 0f && novWifiLost == 0f && decWifiLost == 0f) {
+                Log.d("RadioControl", "No log data")
+            } else {
+                val largest = Collections.max(Arrays.asList(janWifiLost, febWifiLost, marWifiLost, aprWifiLost, mayWifiLost, junWifiLost, julWifiLost, augWifiLost, sepWifiLost, octWifiLost, novWifiLost, decWifiLost))
+                val max = largest.toInt()
+
+                chart.setAxisBorderValues(0, 0, max)
+            }
+
+            Log.d("RadioControl", "Lost Signal $wifiSigLost times")
+
+            val p = Paint()
+            p.color = Color.BLACK
+            if (prefs.getInt("gridlines", 0) == 0) {
+                chart.setGrid(ChartView.GridType.FULL, p)
+            } else if (prefs.getInt("gridlines", 0) == 1) {
+                chart.setGrid(ChartView.GridType.HORIZONTAL, p)
+            } else if (prefs.getInt("gridlines", 0) == 2) {
+                chart.setGrid(ChartView.GridType.VERTICAL, p)
+            } else if (prefs.getInt("gridlines", 0) == 3) {
+                chart.setGrid(ChartView.GridType.NONE, p)
+            }
+
+            uiThread {
+                progress1.visibility = View.GONE
+                chart.show(anim)
+            }
         }
-
-        val ovLap = intArrayOf(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11)
-        anim.setOverlap(1.0f, ovLap)
-        anim.setAlpha(1)
-
-        //Set chart defaults
-        chart.addData(dataset)
-        chart.setAxisColor(Color.BLACK)
-        chart.setLabelsColor(Color.BLACK)
-        chart.setXAxis(true)
-        chart.setYAxis(true)
-        chart.setYLabels(AxisController.LabelPosition.OUTSIDE)
-
-
-        dataset.setColor(Color.BLACK)
-                .setDotsColor(Color.parseColor("#758cbb"))
-                .setDashed(floatArrayOf(10f, 10f))
-                .beginAt(0)
-
-        getWifiLost()
-
-        //Sets dataset points
-        dataset.addPoint("Jan", janWifiLost)
-        dataset.addPoint("Feb", febWifiLost)
-        dataset.addPoint("Mar", marWifiLost)
-        dataset.addPoint("Apr", aprWifiLost)
-        dataset.addPoint("May", mayWifiLost)
-        dataset.addPoint("Jun", junWifiLost)
-        dataset.addPoint("Jul", julWifiLost)
-        dataset.addPoint("Aug", augWifiLost)
-        dataset.addPoint("Sep", sepWifiLost)
-        dataset.addPoint("Oct", octWifiLost)
-        dataset.addPoint("Nov", novWifiLost)
-        dataset.addPoint("Dec", decWifiLost)
-
-        if (janWifiLost == 0f && febWifiLost == 0f && marWifiLost == 0f && aprWifiLost == 0f && mayWifiLost == 0f && junWifiLost == 0f && julWifiLost == 0f && augWifiLost == 0f &&
-                sepWifiLost == 0f && octWifiLost == 0f && novWifiLost == 0f && decWifiLost == 0f) {
-            Log.d("RadioControl", "No log data")
-        } else {
-            val largest = Collections.max(Arrays.asList(janWifiLost, febWifiLost, marWifiLost, aprWifiLost, mayWifiLost, junWifiLost, julWifiLost, augWifiLost, sepWifiLost, octWifiLost, novWifiLost, decWifiLost))
-            val max = largest.toInt()
-
-            chart.setAxisBorderValues(0, 0, max)
-        }
-
-        Log.d("RadioControl", "Lost Signal $wifiSigLost times")
-
-        val p = Paint()
-        p.color = Color.BLACK
-        if (prefs.getInt("gridlines", 0) == 0) {
-            chart.setGrid(ChartView.GridType.FULL, p)
-        } else if (prefs.getInt("gridlines", 0) == 1) {
-            chart.setGrid(ChartView.GridType.HORIZONTAL, p)
-        } else if (prefs.getInt("gridlines", 0) == 2) {
-            chart.setGrid(ChartView.GridType.VERTICAL, p)
-        } else if (prefs.getInt("gridlines", 0) == 3) {
-            chart.setGrid(ChartView.GridType.NONE, p)
-        }
-        progress1.visibility = View.GONE
-        chart.show(anim)
-
     }
 
     //Airplane on graph
     fun airplaneOnGraph() {
         val progress2 = findViewById<ProgressBar>(R.id.progressAirplaneOn)
         progress2.visibility = View.VISIBLE
+        doAsync {
+            val prefs = PreferenceManager.getDefaultSharedPreferences(applicationContext)
+            //Initiate chart
+            chart1 = findViewById(R.id.linechart_airplane_on)
+            //Initiate dataset for chart
+            val dataset = LineSet()
 
-        val prefs = PreferenceManager.getDefaultSharedPreferences(applicationContext)
-        //Initiate chart
-        chart1 = findViewById(R.id.linechart_airplane_on)
-        //Initiate dataset for chart
-        val dataset = LineSet()
+            val anim = Animation()
+            anim.setDuration(2000)
+            if (prefs.getInt("easing", 4) == 0) {
+                anim.setEasing(BounceEase())
+            } else if (prefs.getInt("easing", 4) == 1) {
+                anim.setEasing(CircEase())
+            } else if (prefs.getInt("easing", 4) == 2) {
+                anim.setEasing(CubicEase())
+            } else if (prefs.getInt("easing", 4) == 3) {
+                anim.setEasing(ElasticEase())
+            } else if (prefs.getInt("easing", 4) == 4) {
+                anim.setEasing(ExpoEase())
+            } else if (prefs.getInt("easing", 4) == 5) {
+                anim.setEasing(LinearEase())
+            } else if (prefs.getInt("easing", 4) == 6) {
+                anim.setEasing(QuadEase())
+            } else if (prefs.getInt("easing", 4) == 7) {
+                anim.setEasing(QuartEase())
+            } else if (prefs.getInt("easing", 4) == 8) {
+                anim.setEasing(QuintEase())
+            } else if (prefs.getInt("easing", 4) == 9) {
+                anim.setEasing(SineEase())
+            }
 
-        val anim = Animation()
-        anim.setDuration(1000)
-        if (prefs.getInt("easing", 4) == 0) {
-            anim.setEasing(BounceEase())
-        } else if (prefs.getInt("easing", 4) == 1) {
-            anim.setEasing(CircEase())
-        } else if (prefs.getInt("easing", 4) == 2) {
-            anim.setEasing(CubicEase())
-        } else if (prefs.getInt("easing", 4) == 3) {
-            anim.setEasing(ElasticEase())
-        } else if (prefs.getInt("easing", 4) == 4) {
-            anim.setEasing(ExpoEase())
-        } else if (prefs.getInt("easing", 4) == 5) {
-            anim.setEasing(LinearEase())
-        } else if (prefs.getInt("easing", 4) == 6) {
-            anim.setEasing(QuadEase())
-        } else if (prefs.getInt("easing", 4) == 7) {
-            anim.setEasing(QuartEase())
-        } else if (prefs.getInt("easing", 4) == 8) {
-            anim.setEasing(QuintEase())
-        } else if (prefs.getInt("easing", 4) == 9) {
-            anim.setEasing(SineEase())
+            val ovLap = intArrayOf(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11)
+            anim.setOverlap(1.0f, ovLap)
+            anim.setAlpha(1)
+
+            //Set chart defaults
+            chart1.addData(dataset)
+            chart1.setAxisColor(Color.BLACK)
+            chart1.setLabelsColor(Color.BLACK)
+            chart1.setXAxis(true)
+            chart1.setYAxis(true)
+            chart1.setYLabels(AxisController.LabelPosition.OUTSIDE)
+
+            //Sets color of dataset points
+            dataset.setColor(Color.BLACK)
+                    .setDotsColor(Color.parseColor("#758cbb"))
+                    .setDashed(floatArrayOf(10f, 10f))
+                    .beginAt(0)
+            //gets airplane mode stats
+            getAirplaneModeOn()
+
+            //Sets dataset points
+            dataset.addPoint("Jan", janAirOn)
+            dataset.addPoint("Feb", febAirOn)
+            dataset.addPoint("Mar", marAirOn)
+            dataset.addPoint("Apr", aprAirOn)
+            dataset.addPoint("May", mayAirOn)
+            dataset.addPoint("Jun", junAirOn)
+            dataset.addPoint("Jul", julAirOn)
+            dataset.addPoint("Aug", augAirOn)
+            dataset.addPoint("Sep", sepAirOn)
+            dataset.addPoint("Oct", octAirOn)
+            dataset.addPoint("Nov", novAirOn)
+            dataset.addPoint("Dec", decAirOn)
+
+
+            //Checker of
+            if (janAirOn == 0f && febAirOn == 0f && marAirOn == 0f && aprAirOn == 0f && mayAirOn == 0f && junAirOn == 0f && julAirOn == 0f && augAirOn == 0f &&
+                    sepAirOn == 0f && octAirOn == 0f && novAirOn == 0f && decAirOn == 0f) {
+                Log.d("RadioControl", "No log data")
+            } else {
+                val largest = Collections.max(Arrays.asList(janAirOn, febAirOn, marAirOn, aprAirOn, mayAirOn, junAirOn, julAirOn, augAirOn, sepAirOn, octAirOn, novAirOn, decAirOn))
+                val max = largest.toInt()
+                chart1.setAxisBorderValues(0, 0, max)
+            }
+
+
+            Log.d("RadioControl", "Lost Signal $airplaneOn times")
+
+            val p = Paint()
+            p.color = Color.BLACK
+            if (prefs.getInt("gridlines", 0) == 0) {
+                chart1.setGrid(ChartView.GridType.FULL, p)
+            } else if (prefs.getInt("gridlines", 0) == 1) {
+                chart1.setGrid(ChartView.GridType.HORIZONTAL, p)
+            } else if (prefs.getInt("gridlines", 0) == 2) {
+                chart1.setGrid(ChartView.GridType.VERTICAL, p)
+            } else if (prefs.getInt("gridlines", 0) == 3) {
+                chart1.setGrid(ChartView.GridType.NONE, p)
+            }
+
+            uiThread {
+                progress2.visibility = View.GONE
+
+                chart1.show(anim)
+            }
         }
+    }
 
-        val ovLap = intArrayOf(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11)
-        anim.setOverlap(1.0f, ovLap)
-        anim.setAlpha(1)
+    fun rootAccessGraph(){
+        val progress3 = findViewById<ProgressBar>(R.id.progressRootAccess)
+        progress3.visibility = View.VISIBLE
+        doAsync {
+            val prefs = PreferenceManager.getDefaultSharedPreferences(applicationContext)
+            //Initiate chart
+            chart2 = findViewById(R.id.linechart_root_access)
+            //Initiate dataset for chart
+            val dataset = LineSet()
 
-        //Set chart defaults
-        chart1.addData(dataset)
-        chart1.setAxisColor(Color.BLACK)
-        chart1.setLabelsColor(Color.BLACK)
-        chart1.setXAxis(true)
-        chart1.setYAxis(true)
-        chart1.setYLabels(AxisController.LabelPosition.OUTSIDE)
+            val anim = Animation()
+            anim.setDuration(2000)
+            if (prefs.getInt("easing", 4) == 0) {
+                anim.setEasing(BounceEase())
+            } else if (prefs.getInt("easing", 4) == 1) {
+                anim.setEasing(CircEase())
+            } else if (prefs.getInt("easing", 4) == 2) {
+                anim.setEasing(CubicEase())
+            } else if (prefs.getInt("easing", 4) == 3) {
+                anim.setEasing(ElasticEase())
+            } else if (prefs.getInt("easing", 4) == 4) {
+                anim.setEasing(ExpoEase())
+            } else if (prefs.getInt("easing", 4) == 5) {
+                anim.setEasing(LinearEase())
+            } else if (prefs.getInt("easing", 4) == 6) {
+                anim.setEasing(QuadEase())
+            } else if (prefs.getInt("easing", 4) == 7) {
+                anim.setEasing(QuartEase())
+            } else if (prefs.getInt("easing", 4) == 8) {
+                anim.setEasing(QuintEase())
+            } else if (prefs.getInt("easing", 4) == 9) {
+                anim.setEasing(SineEase())
+            }
 
-        //Sets color of dataset points
-        dataset.setColor(Color.BLACK)
-                .setDotsColor(Color.parseColor("#758cbb"))
-                .setDashed(floatArrayOf(10f, 10f))
-                .beginAt(0)
-        //gets airplane mode stats
-        getAirplaneModeOn()
+            val ovLap = intArrayOf(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11)
+            anim.setOverlap(1.0f, ovLap)
+            anim.setAlpha(1)
 
-        //Sets dataset points
-        dataset.addPoint("Jan", janAirOn)
-        dataset.addPoint("Feb", febAirOn)
-        dataset.addPoint("Mar", marAirOn)
-        dataset.addPoint("Apr", aprAirOn)
-        dataset.addPoint("May", mayAirOn)
-        dataset.addPoint("Jun", junAirOn)
-        dataset.addPoint("Jul", julAirOn)
-        dataset.addPoint("Aug", augAirOn)
-        dataset.addPoint("Sep", sepAirOn)
-        dataset.addPoint("Oct", octAirOn)
-        dataset.addPoint("Nov", novAirOn)
-        dataset.addPoint("Dec", decAirOn)
+            //Set chart defaults
+            chart2.addData(dataset)
+            chart2.setAxisColor(Color.BLACK)
+            chart2.setLabelsColor(Color.BLACK)
+            chart2.setXAxis(true)
+            chart2.setYAxis(true)
+            chart2.setYLabels(AxisController.LabelPosition.OUTSIDE)
+
+            //Sets color of dataset points
+            dataset.setColor(Color.BLACK)
+                    .setDotsColor(Color.parseColor("#758cbb"))
+                    .setDashed(floatArrayOf(10f, 10f))
+                    .beginAt(0)
+            //gets airplane mode stats
+            getRootAccessTimes()
+
+            //Sets dataset points
+            dataset.addPoint("Jan", janRootOn)
+            dataset.addPoint("Feb", febRootOn)
+            dataset.addPoint("Mar", marRootOn)
+            dataset.addPoint("Apr", aprRootOn)
+            dataset.addPoint("May", mayRootOn)
+            dataset.addPoint("Jun", junRootOn)
+            dataset.addPoint("Jul", julRootOn)
+            dataset.addPoint("Aug", augRootOn)
+            dataset.addPoint("Sep", sepRootOn)
+            dataset.addPoint("Oct", octRootOn)
+            dataset.addPoint("Nov", novRootOn)
+            dataset.addPoint("Dec", decRootOn)
 
 
-        //Checker of
-        if (janAirOn == 0f && febAirOn == 0f && marAirOn == 0f && aprAirOn == 0f && mayAirOn == 0f && junAirOn == 0f && julAirOn == 0f && augAirOn == 0f &&
-                sepAirOn == 0f && octAirOn == 0f && novAirOn == 0f && decAirOn == 0f) {
-            Log.d("RadioControl", "No log data")
-        } else {
-            val largest = Collections.max(Arrays.asList(janAirOn, febAirOn, marAirOn, aprAirOn, mayAirOn, junAirOn, julAirOn, augAirOn, sepAirOn, octAirOn, novAirOn, decAirOn))
-            val max = largest.toInt()
-            chart1.setAxisBorderValues(0, 0, max)
+            //Checker of
+            if (janRootOn == 0f && febRootOn == 0f && marRootOn == 0f && aprRootOn == 0f && mayRootOn == 0f && junRootOn == 0f && julRootOn == 0f && augRootOn == 0f &&
+                    sepRootOn == 0f && octRootOn == 0f && novRootOn == 0f && decRootOn == 0f) {
+                Log.d("RadioControl", "No log data")
+            } else {
+                val largest = Collections.max(Arrays.asList(janRootOn, febRootOn, marRootOn, aprRootOn, mayRootOn, junRootOn, julRootOn, augRootOn, sepRootOn, octRootOn, novRootOn, decRootOn))
+                val max = largest.toInt()
+                chart2.setAxisBorderValues(0, 0, max)
+            }
+
+
+            Log.d("RadioControl", "Root Accessed $rootOn times")
+
+            val p = Paint()
+            p.color = Color.BLACK
+            if (prefs.getInt("gridlines", 0) == 0) {
+                chart2.setGrid(ChartView.GridType.FULL, p)
+            } else if (prefs.getInt("gridlines", 0) == 1) {
+                chart2.setGrid(ChartView.GridType.HORIZONTAL, p)
+            } else if (prefs.getInt("gridlines", 0) == 2) {
+                chart2.setGrid(ChartView.GridType.VERTICAL, p)
+            } else if (prefs.getInt("gridlines", 0) == 3) {
+                chart2.setGrid(ChartView.GridType.NONE, p)
+            }
+
+
+            uiThread {
+                progress3.visibility = View.GONE
+
+                chart2.show(anim)
+            }
         }
-
-
-        Log.d("RadioControl", "Lost Signal $airplaneOn times")
-
-        val p = Paint()
-        p.color = Color.BLACK
-        if (prefs.getInt("gridlines", 0) == 0) {
-            chart1.setGrid(ChartView.GridType.FULL, p)
-        } else if (prefs.getInt("gridlines", 0) == 1) {
-            chart1.setGrid(ChartView.GridType.HORIZONTAL, p)
-        } else if (prefs.getInt("gridlines", 0) == 2) {
-            chart1.setGrid(ChartView.GridType.VERTICAL, p)
-        } else if (prefs.getInt("gridlines", 0) == 3) {
-            chart1.setGrid(ChartView.GridType.NONE, p)
-        }
-        progress2.visibility = View.GONE
-
-        chart1.show(anim)
     }
 
     fun getWifiLost() {
@@ -515,7 +653,7 @@ class StatsActivity : AppCompatActivity() {
 
                 while (line != null) {
                     line = reader.readLine()
-                    if (countMatches(line, "Airplane mode has been turned off") == 1) {
+                    if (countMatches(line, "Airplane mode has been turned off") == 1 || countMatches(line, "Cell radio has been turned") == 1) {
                         if (line!!.contains("$year-01")) {
                             janAirOn++
                         } else if (line.contains("$year-02")) {
@@ -552,6 +690,64 @@ class StatsActivity : AppCompatActivity() {
             }
         } catch (e: IOException) {
             Log.d("RadioControl", "Error: $e")
+            Snackbar.make(findViewById(android.R.id.content), "Error: $e", Snackbar.LENGTH_LONG)
+                    .show()
+        }
+
+    }
+    fun getRootAccessTimes(){
+        val formatter = SimpleDateFormat("yyyy")
+        val year = formatter.format(Date())
+        val log = File(applicationContext.filesDir, "radiocontrol.log")
+
+        val `is`: FileInputStream
+        val reader: BufferedReader
+        try {
+            if (log.exists()) {
+                `is` = FileInputStream(log)
+                reader = BufferedReader(InputStreamReader(`is`))
+                var line: String? = reader.readLine()
+
+                while (line != null) {
+                    line = reader.readLine()
+                    if (countMatches(line, "root") == 1) {
+                        if (line!!.contains("$year-01")) {
+                            janRootOn++
+                        } else if (line.contains("$year-02")) {
+                            febRootOn++
+                        } else if (line.contains("$year-03")) {
+                            marRootOn++
+                        } else if (line.contains("$year-04")) {
+                            aprRootOn++
+                        } else if (line.contains("$year-05")) {
+                            mayRootOn++
+                        } else if (line.contains("$year-06")) {
+                            junRootOn++
+                        } else if (line.contains("$year-07")) {
+                            julRootOn++
+                        } else if (line.contains("$year-08")) {
+                            augRootOn++
+                        } else if (line.contains("$year-09")) {
+                            sepRootOn++
+                        } else if (line.contains("$year-10")) {
+                            octRootOn++
+                        } else if (line.contains("$year-11")) {
+                            novRootOn++
+                        } else if (line.contains("$year-12")) {
+                            decRootOn++
+                        }
+                        rootOn++
+                    }
+                    //Log.d("RadioControl", "LINE: " + line + " contains " + wifiSigLost);
+                }
+
+            } else {
+                Snackbar.make(findViewById(android.R.id.content), "No log file found", Snackbar.LENGTH_LONG)
+                        .show()
+            }
+        } catch (e: IOException) {
+            FirebaseCrash.logcat(Log.ERROR, "RadioControl", "Unable to get version name")
+            FirebaseCrash.report(e)
             Snackbar.make(findViewById(android.R.id.content), "Error: $e", Snackbar.LENGTH_LONG)
                     .show()
         }
@@ -599,4 +795,6 @@ class StatsActivity : AppCompatActivity() {
         }
         return super.onOptionsItemSelected(item)
     }
+
+
 }

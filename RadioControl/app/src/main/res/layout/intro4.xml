@@ -1,54 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/main"
-    android:layout_width="match_parent"
+    android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#00AF9C"
     android:layout_weight="10"
-    android:background="@color/network_connectivity_slide"
-    android:orientation="vertical">
+    android:id="@+id/main">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_gravity="center"
-        android:layout_weight="3"
-        android:fontFamily="sans-serif-thin"
         android:gravity="center"
         android:paddingLeft="32dp"
-        android:paddingRight="32dp"
-        android:text="@string/network_alert"
+        android:layout_weight="3"
+        android:fontFamily="sans-serif-thin"
         android:textColor="#ffffff"
-        android:textSize="28sp" />
+        android:paddingRight="32dp"
+        android:textSize="28sp"
+        android:text="MagiskSU"/>
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="0dp"
-        android:layout_weight="5"
-        android:gravity="center"
         android:orientation="vertical"
+        android:gravity="center"
+        android:layout_weight="5"
         android:weightSum="1">
 
         <ImageView
-            android:layout_width="384dp"
-            android:layout_height="270dp"
+            android:layout_width="256dp"
+            android:layout_height="168dp"
             android:layout_gravity="center"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
-            android:src="@drawable/ic_network_check_white_48dp" />
+            android:id="@+id/magisk"
+            android:src="@drawable/ic_magisk"
+            android:layout_weight="0.36" />
     </LinearLayout>
-
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:layout_gravity="center"
         android:layout_weight="3"
+        android:layout_gravity="center"
         android:gravity="center"
-        android:paddingLeft="32dp"
-        android:paddingRight="32dp"
-        android:text="The network connectivity checker alerts you if a WiFi network can't connect to the internet. This is not required in newer versions of Android as it is a built-in feature"
         android:textColor="#ffffff"
-        android:textSize="16sp" />
-
+        android:paddingLeft="64dp"
+        android:paddingRight="64dp"
+        android:textSize="16sp"
+        android:text="This app uses Root to run a few commands. They are only to change the state of Airplane mode, Bluetooth, Cell radios, and WiFi"/>
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="64dp" />

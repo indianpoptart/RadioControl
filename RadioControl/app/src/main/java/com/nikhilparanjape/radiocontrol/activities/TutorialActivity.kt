@@ -21,8 +21,12 @@ class TutorialActivity : AppIntro2() {
         // Add your slide's fragments here.
         // AppIntro will automatically generate the dots indicator and buttons.
         addSlide(SlideFragment.newInstance(R.layout.intro1))
+        addSlide(SlideFragment.newInstance(R.layout.intro4))
         addSlide(SlideFragment.newInstance(R.layout.intro2))
+        addSlide(SlideFragment.newInstance(R.layout.intro5))
         addSlide(SlideFragment.newInstance(R.layout.intro3))
+        addSlide(SlideFragment.newInstance(R.layout.intro6))
+        addSlide(SlideFragment.newInstance(R.layout.intro7))
         // Instead of fragments, you can also use our default slide
         // Just set a title, description, background and image. AppIntro will do the rest.
         //addSlide(AppIntroFragment.newInstance("Welcome to RadioControl", "Use this app to auto toggle the cell radio when you join a WiFi network", R.mipmap.ic_launcher, R.color.colorPrimary));
@@ -30,7 +34,7 @@ class TutorialActivity : AppIntro2() {
         // SHOW or HIDE the statusbar
 
         showStatusBar(false)
-        setDepthAnimation()
+        setFadeAnimation()
     }
 
     // This snippet hides the system bars.
@@ -43,7 +47,7 @@ class TutorialActivity : AppIntro2() {
     }
 
     fun onSkipPressed() {
-        // Do something when users tap on Skip button.
+        loadMainActivity()
     }
 
     private fun loadMainActivity() {
@@ -62,5 +66,9 @@ class TutorialActivity : AppIntro2() {
 
     override fun onNextPressed() {
         // Do something when users tap on Next button.
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
     }
 }

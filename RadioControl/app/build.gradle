@@ -18,8 +18,8 @@ android {
         applicationId "com.nikhilparanjape.radiocontrol"
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 65
-        versionName "5.0.3-Beta5"
+        versionCode 66
+        versionName "5.0.3-Beta6"
         // Enabling multidex support.
         multiDexEnabled true
 
@@ -89,6 +89,7 @@ dependencies {
     implementation 'com.android.support:customtabs:27.1.1'
     implementation 'me.zhanghai.android.customtabshelper:library:1.0.3'
     implementation 'com.novoda:simple-chrome-custom-tabs:0.1.5'
+    implementation "org.jetbrains.anko:anko-commons:0.10.4"
     implementation 'com.github.bumptech.glide:glide:4.6.1'
     implementation 'com.github.bmelnychuk:AndroidTreeView:d051ce75f5'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.6.1'
