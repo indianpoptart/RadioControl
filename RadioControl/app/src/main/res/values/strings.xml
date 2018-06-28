@@ -138,5 +138,7 @@
     <string name="summary_airplane_service_notification">Notifies when the airplane service is running</string>
     <string name="refresh_text_box">Refresh</string>
     <string name="radios_toggled_graph_title">Radios toggled</string>
+    <string name="statistics_title_slide">Statistics (Experimental)</string>
+    <string name="statistics_description_slide">Shows you statistics about the app service. Requires logging to be enabled</string>
 
 </resources>
