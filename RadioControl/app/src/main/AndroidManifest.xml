@@ -19,10 +19,10 @@
 
     <application
         android:allowBackup="true"
+        android:fullBackupContent="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/MaterialDarkThemenoab"
-        android:fullBackupContent="true"
         tools:ignore="GoogleAppIndexingWarning">
 
         <!-- This meta-data tag is required to use Google Play Services. -->
@@ -32,7 +32,6 @@
 
         <activity
             android:name=".activities.SplashActivity"
-
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -43,9 +42,9 @@
         <activity
             android:name=".activities.MainActivity"
             android:label="@string/app_name">
-
-        <meta-data android:name="android.app.shortcuts"
-            android:resource="@xml/shortcuts" />
+            <meta-data
+                android:name="android.app.shortcuts"
+                android:resource="@xml/shortcuts" />
         </activity>
 
         <!-- Tutorial Activity -->
@@ -67,25 +66,23 @@
         <service
             android:name=".services.BackgroundAirplaneService"
             android:enabled="true"
-            android:process=":airplane"
             android:icon="@drawable/ic_baseline_airplanemode_active_24px"
-            android:label="AirplaneService" />
+            android:label="AirplaneService"
+            android:process=":airplane" />
 
         <activity
             android:name=".activities.SettingsActivity"
             android:label="@string/title_activity_settings" />
         <activity
             android:name=".activities.AboutActivity"
-            android:label="@string/title_activity_about"></activity>
+            android:label="@string/title_activity_about" />
         <activity
             android:name=".activities.NetworkListActivity"
             android:label="@string/title_activity_network" />
         <activity
-            android:name="com.nikhilparanjape.radiocontrol.activities.CustomSortActivity"
+            android:name=".activities.CustomSortActivity"
             android:label="Libraries"
             android:theme="@style/AboutLibrariesTheme" />
-
-
         <activity android:name=".activities.ChangeLogActivity" />
         <activity android:name=".activities.StatsActivity" />
         <activity android:name=".activities.DoNotDisturbActivity" />
@@ -93,44 +90,39 @@
         <service
             android:name=".services.PersistenceService"
             android:enabled="true"
-            android:process=":persistent"
             android:icon="@drawable/ic_baseline_query_builder_24px"
-            android:label="PersistenceService" />
+            android:label="PersistenceService"
+            android:process=":persistent" />
         <service
             android:name=".services.DoNotDisturbService"
             android:enabled="true"
-            android:process=":dnd"
-            android:isolatedProcess="true"
             android:icon="@drawable/ic_do_not_disturb_on_black_48dp"
-            android:label="DoNotDisturbService" />
+            android:isolatedProcess="true"
+            android:label="DoNotDisturbService"
+            android:process=":dnd" />
         <service
             android:name=".services.CellRadioService"
             android:enabled="true"
             android:icon="@drawable/ic_network_cell"
-            android:process=":cellservice"
-            android:label="CellRadioService" />
-
+            android:label="CellRadioService"
+            android:process=":cellservice" />
         <service
             android:name=".services.TestJobService"
-            android:label="Test"
             android:icon="@drawable/ic_baseline_query_builder_24px"
-            android:process=":jobservice"
-            android:permission="android.permission.BIND_JOB_SERVICE" >
-
-        </service>
+            android:label="Test"
+            android:permission="android.permission.BIND_JOB_SERVICE"
+            android:process=":jobservice"></service>
 
         <receiver android:name=".receivers.PhoneStateBroadcastReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.PHONE_STATE" />
             </intent-filter>
         </receiver>
-
-        <receiver android:name=".receivers.JobServiceStarter" >
+        <receiver android:name=".receivers.JobServiceStarter">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-
         <receiver
             android:name=".receivers.TimedAlarmReceiver"
             android:enabled="true"
@@ -140,23 +132,25 @@
             android:enabled="true"
             android:process=":remote" />
         <!-- Start the Service if applicable on boot -->
-        <receiver android:name="com.nikhilparanjape.radiocontrol.receivers.ServiceStarter">
+        <receiver android:name=".receivers.ServiceStarter">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-
         <receiver
             android:name=".receivers.NightModeReceiver"
             android:enabled="true"
             android:process=":remote" />
-
         <receiver android:name=".receivers.ActionReceiver" />
         <receiver android:name=".receivers.PersistenceAlarmReceiver" />
 
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="81de282abeba311751e18b3d5109feb5ba38e192" />
+
+        <activity
+            android:name=".activities.TroubleshootingActivity"
+            android:label="@string/title_activity_troubleshooting"></activity>
     </application>
 
 </manifest>

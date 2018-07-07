@@ -45,8 +45,8 @@ class TutorialActivity : AppIntro2() {
                 or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                 or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
     }
-
-    fun onSkipPressed() {
+    @Override
+    override fun onSkipPressed() {
         loadMainActivity()
     }
 

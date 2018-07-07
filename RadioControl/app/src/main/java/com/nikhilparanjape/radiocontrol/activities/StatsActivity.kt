@@ -176,7 +176,7 @@ class StatsActivity : AppCompatActivity() {
             showLongList()
         }
 
-        val btn2 = findViewById<TextView>(R.id.fab_sheet_item_refresh)
+        val btn2 = findViewById<TextView>(R.id.fab_sheet_item_duration)
         AutofitHelper.create(btn2)
         btn2.setOnClickListener { _ ->
             materialSheetFab.hideSheet()
@@ -238,6 +238,38 @@ class StatsActivity : AppCompatActivity() {
                     recreate()
                 }
                 .positiveText(android.R.string.cancel)
+                .show()
+    }
+
+    fun showDurationDialog() {
+        val prefs = PreferenceManager.getDefaultSharedPreferences(applicationContext)
+        val editor = prefs.edit()
+
+        MaterialDialog.Builder(this)
+                .title("Animation Duration")
+                .theme(Theme.LIGHT)
+                .items(R.array.preference_values)
+                .itemsCallbackSingleChoice(2) { _, _, which, _ ->
+                    Log.d("RadioControl", "You chose $which")
+                    val n = floatArrayOf(0f, 0f)
+                    if (which == 0) {
+                        //Full Grids
+                        editor.putInt("duration", 0)
+                    } else if (which == 1) {
+                        //Horizontal Grids
+                        editor.putInt("duration", 1)
+                    } else if (which == 2) {
+                        //Vertical Grids
+                        editor.putInt("gridlines", 2)
+                    } else if (which == 3) {
+                        //No Grids
+                        editor.putInt("gridlines", 3)
+                    }
+                    editor.apply()
+                    recreate()
+                    true // allow selection
+                }
+                .positiveText("Choose")
                 .show()
     }
 

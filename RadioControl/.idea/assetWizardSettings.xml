@@ -84,7 +84,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="jar:file:/C:/Program%20Files/Android/Android%20Studio%20Preview/plugins/android/lib/android.jar!/images/material_design_icons/navigation/ic_refresh_black_24dp.xml" />
+                                      <entry key="url" value="jar:file:/C:/Program%20Files/Android/Android%20Studio%20Preview/plugins/android/lib/android.jar!/images/material_design_icons/image/ic_timer_black_24dp.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -94,7 +94,7 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="outputName" value="ic_refresh_black_24dp" />
+                            <entry key="outputName" value="ic_timer_black_24dp" />
                             <entry key="sourceFile" value="C:\Users\admin\Downloads\baseline-signal_cellular_connected_no_internet_2_bar-24px.svg" />
                           </map>
                         </option>

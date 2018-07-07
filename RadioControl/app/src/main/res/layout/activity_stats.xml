@@ -202,13 +202,13 @@
 
                 <!-- Refresh -->
                 <TextView
-                    android:id="@+id/fab_sheet_item_refresh"
+                    android:id="@+id/fab_sheet_item_duration"
                     style="@style/TextAppearance.MaterialSheetFab.Sheet.Item"
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
-                    android:drawableLeft="@drawable/ic_refresh_black_24dp"
-                    android:drawableStart="@drawable/ic_refresh_black_24dp"
-                    android:text="@string/refresh_text_box" />
+                    android:drawableLeft="@drawable/ic_timer_black_24dp"
+                    android:drawableStart="@drawable/ic_timer_black_24dp"
+                    android:text="@string/animation_duration_sheet_text" />
 
                 <!-- Gridlines -->
                 <TextView

@@ -2,7 +2,7 @@
 <changelog bulletedList="true">
 
     <changelogversion versionName="5.0.3-Beta5" changeDate="June 26, 2018">
-        <changelogtext>Fixed phone call checker, much reliable</changelogtext>
+        <changelogtext>Fixed phone call checker, much more reliable</changelogtext>
         <changelogtext>Fixed root access class OutputStream closing and better handling of termination</changelogtext>
         <changelogtext>Made Background Airplane Service more reliable</changelogtext>
         <changelogtext>Converted most icon images to vector drawables</changelogtext>

@@ -133,6 +133,7 @@ public class SettingsFragment extends PreferenceFragment implements TimePickerDi
             if(newValue.toString().equals("true")) {
                 getPreferenceScreen().findPreference("altRootCommand").setEnabled(false);
                 if(batteryOptimizePref.isChecked()){
+                    Log.i("RadioControl","true-ischecked");
                     if (pref.getBoolean("workMode", true)) {
                         if(Build.VERSION.SDK_INT>=26) {
                             getActivity().startForegroundService(new Intent(getActivity(), PersistenceService.class));
@@ -237,6 +238,7 @@ public class SettingsFragment extends PreferenceFragment implements TimePickerDi
         CheckBoxPreference dozeSetting = (CheckBoxPreference) getPreferenceManager().findPreference("isDozeOff");
         dozeSetting.setOnPreferenceChangeListener((preference, newValue) -> {
             if(newValue.toString().equals("true")){
+                Log.i("RadioControl","true-new");
                 if (Build.VERSION.SDK_INT >= 23) {
                     Intent intent = new Intent();
                     String packageName = c.getPackageName();
@@ -254,13 +256,16 @@ public class SettingsFragment extends PreferenceFragment implements TimePickerDi
                 }
             }
             else{
+                dozeSetting.setChecked(false);
+                Log.i("RadioControl","false");
                 if (Build.VERSION.SDK_INT >= 23) {
-                    Intent intent = new Intent();
+                    startActivityForResult(new Intent(android.provider.Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS), 0);
+                    /*Intent intent = new Intent();
                     String packageName = c.getPackageName();
                     PowerManager pm = (PowerManager) c.getSystemService(Context.POWER_SERVICE);
                     intent.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
                     intent.setData(Uri.parse("package:" + packageName));
-                    c.startActivity(intent);
+                    c.startActivity(intent);*/
                     return false;
                 }
             }
@@ -461,6 +466,14 @@ public class SettingsFragment extends PreferenceFragment implements TimePickerDi
 
     @Override
     public void onFolderSelection(@NonNull FolderChooserDialog dialog, @NonNull File folder) {
+        // TODO
+        final String tag = dialog.getTag(); // gets tag set from Builder, if you use multiple dialogs
+        Toast.makeText(getActivity(),
+                tag, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onFolderChooserDismissed(@NonNull FolderChooserDialog dialog) {
         // TODO
         final String tag = dialog.getTag(); // gets tag set from Builder, if you use multiple dialogs
         Toast.makeText(getActivity(),

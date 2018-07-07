@@ -1,7 +1,5 @@
 package com.nikhilparanjape.radiocontrol.rootUtils;
 
-import android.os.AsyncTask;
-
 import java.io.DataOutputStream;
 import java.io.IOException;
 
@@ -31,4 +29,5 @@ public class RootAccess{
 
 
     }
+
 }

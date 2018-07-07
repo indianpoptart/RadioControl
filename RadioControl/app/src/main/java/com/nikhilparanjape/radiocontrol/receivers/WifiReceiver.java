@@ -27,6 +27,8 @@ import java.util.Set;
 
 /**
  * Created by Nikhil Paranjape on 11/8/2015.
+ *
+ * This file will get deprecated soon :( Sad, as it's the backbone of this app
  */
 public class WifiReceiver extends WakefulBroadcastReceiver {
 

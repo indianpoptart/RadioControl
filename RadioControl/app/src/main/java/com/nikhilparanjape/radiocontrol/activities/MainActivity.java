@@ -549,6 +549,7 @@ public class MainActivity extends AppCompatActivity {
                         result.setSelection(item1);
                         Snackbar.make(clayout, "Coming in v5.1!", Snackbar.LENGTH_LONG)
                                 .show();
+                        startTroubleActivity();
                     } else if (position == 8) {
                         //Donation
                         result.setSelection(item1);
@@ -640,6 +641,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    //starts troubleshooting activity
+    public void startTroubleActivity() {
+        Intent intent = new Intent(this, TroubleshootingActivity.class);
+        startActivity(intent);
+    }
     //starts about activity
     public void startAboutActivity() {
         Intent intent = new Intent(this, AboutActivity.class);

@@ -140,5 +140,10 @@
     <string name="radios_toggled_graph_title">Radios toggled</string>
     <string name="statistics_title_slide">Statistics (Experimental)</string>
     <string name="statistics_description_slide">Shows you statistics about the app service. Requires logging to be enabled</string>
+    <string name="animation_duration_sheet_text">Animation Duration</string>
+    <string name="title_activity_troubleshooting">TroubleshootingActivity</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
 
 </resources>

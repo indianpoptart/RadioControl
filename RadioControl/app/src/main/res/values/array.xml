@@ -9,6 +9,14 @@
         <item>Off</item>
     </string-array>
 
+    <string-array name="animation_duration_values">
+        <item>0.5 seconds</item>
+        <item>1 second</item>
+        <item>2 seconds</item>
+        <item>3 seconds</item>
+        <item>4 seconds</item>
+    </string-array>
+
     <string-array name="easing">
         <item>Bounce Ease</item>
         <item>Circ Ease</item>
