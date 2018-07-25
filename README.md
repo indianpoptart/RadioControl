@@ -50,7 +50,7 @@ The app has been tested and works properly on these devices:
 - Samsung Galaxy S7 Edge
 
 As well as these OS's
-- Android P(9)
+- Android P(9.0)
 - Android Oreo(8.0+)
 - Android Nougat(7.0+)
 - Android Marshmallow (6.0+)
