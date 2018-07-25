@@ -49,6 +49,13 @@ The app has been tested and works properly on these devices:
 - Samsung Galaxy S7
 - Samsung Galaxy S7 Edge
 
+As well as these OS's
+- Android P(9)
+- Android Oreo(8.0+)
+- Android Nougat(7.0+)
+- Android Marshmallow (6.0+)
+- Android Lollipop (5.0+)
+
 # SU Binary Compatibility
 Working properly with the following SU binary
 - SuperSU 2.78+
