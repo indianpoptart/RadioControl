@@ -34,20 +34,20 @@ https://crowdin.com/project/radiocontrol/invite
 
 # Compatibility
 The app has been tested and works properly on these devices:
-- Google Pixel/XL
-- Google Pixel 2/2XL
+- ![Google](https://nikhilp.org/images/google.png) Google Pixel/XL
+- ![Google](https://nikhilp.org/images/google.png) Google Pixel 2/2XL
 - ![LG](https://nikhilp.org/images/lg.png) LG V10 
 - ![Motorola](https://nikhilp.org/images/moto.png) Moto X (2nd Gen.) 
 - ![Motorola](https://nikhilp.org/images/moto.png) Nexus 6 
 - ![Huawei](https://nikhilp.org/images/huawei.png) Nexus 6P 
 - ![LG](https://nikhilp.org/images/lg.png) Nexus 5X 
 - ![LG](https://nikhilp.org/images/lg.png) Nexus 5 
-- OnePlus 1
-- OnePlus 2
-- OnePlus 3
-- OnePlus 3T
-- Samsung Galaxy S7
-- Samsung Galaxy S7 Edge
+- ![OnePlus](https://nikhilp.org/images/oneplus.png) OnePlus 1
+- ![OnePlus](https://nikhilp.org/images/oneplus.png) OnePlus 2
+- ![OnePlus](https://nikhilp.org/images/oneplus.png) OnePlus 3
+- ![OnePlus](https://nikhilp.org/images/oneplus.png) OnePlus 3T
+- ![Samsung](https://nikhilp.org/images/samsung.png) Samsung Galaxy S7
+- ![Samsung](https://nikhilp.org/images/samsung.png) Samsung Galaxy S7 Edge
 
 As well as these Android
 - ![P(9.0)](https://nikhilp.org/images/android_p_logo.png)       
