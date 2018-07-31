@@ -16,6 +16,7 @@ import android.util.Log
 import com.nikhilparanjape.radiocontrol.R
 import com.nikhilparanjape.radiocontrol.rootUtils.RootAccess
 import com.nikhilparanjape.radiocontrol.rootUtils.Utilities
+import org.jetbrains.anko.doAsync
 
 import java.io.File
 import java.io.IOException
@@ -227,55 +228,57 @@ class BackgroundAirplaneService : IntentService("BackgroundAirplaneService") {
     }
 
     fun pingTask(context: Context) {
-        val runtime = Runtime.getRuntime()
-        try {
-            //Wait for network to be connected fully
-            while (!Utilities.isConnected(context)) {
-                Thread.sleep(1000)
-            }
-            val ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8")//Send 1 packet to Cloudflare and check if it came back
-            val exitValue = ipProcess.waitFor()
-            Log.d("RadioControl", "Ping test returned $exitValue")
-
-            val sp = context.getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE)
-            val prefs = PreferenceManager.getDefaultSharedPreferences(context)
-
-            val alertPriority = prefs.getBoolean("networkPriority", false)//Setting for network notifier
-            val alertSounds = prefs.getBoolean("networkSound", false)
-            val alertVibrate = prefs.getBoolean("networkVibrate", false)
-
-
-            if (sp.getInt("isActive", 0) == 0) {
-                //If the connection can't reach Google
-                if (exitValue != 0) {
-                    Utilities.sendNote(context, context.getString(R.string.not_connected_alert), alertVibrate, alertSounds, alertPriority)
-                    writeLog("Not connected to the internet", context)
+        doAsync {
+            val runtime = Runtime.getRuntime()
+            try {
+                //Wait for network to be connected fully
+                while (!Utilities.isConnected(context)) {
+                    Thread.sleep(1000)
                 }
-            } else if (sp.getInt("isActive", 0) == 1) {
-                //If the connection can't reach Google
-                if (exitValue != 0) {
-                    Utilities.sendNote(context, context.getString(R.string.not_connected_alert), alertVibrate, alertSounds, alertPriority)
-                    writeLog("Not connected to the internet", context)
-                } else {
-                    //Runs the alternate root command
-                    if (prefs.getBoolean("altRootCommand", false)) {
-                        val cellIntent = Intent(context, CellRadioService::class.java)
-                        context.startService(cellIntent)
-                        util.scheduleRootAlarm(context)
-                        Log.d("RadioControl", "Cell Radio has been turned off")
-                        writeLog("Cell radio has been turned off, SSID: " + Utilities.getCurrentSsid(context)!!, context)
-                    } else if (!prefs.getBoolean("altRootCommand", false)) {
-                        RootAccess.runCommands(airCmd)
-                        Log.d("RadioControl", "Airplane mode has been turned on")
-                        writeLog("Airplane mode has been turned on, SSID: " + Utilities.getCurrentSsid(context)!!, context)
+                val ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8")//Send 1 packet to Cloudflare and check if it came back
+                val exitValue = ipProcess.waitFor()
+                Log.d("RadioControl", "Ping test returned $exitValue")
+
+                val sp = context.getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE)
+                val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+
+                val alertPriority = prefs.getBoolean("networkPriority", false)//Setting for network notifier
+                val alertSounds = prefs.getBoolean("networkSound", false)
+                val alertVibrate = prefs.getBoolean("networkVibrate", false)
+
+
+                if (sp.getInt("isActive", 0) == 0) {
+                    //If the connection can't reach Google
+                    if (exitValue != 0) {
+                        Utilities.sendNote(context, context.getString(R.string.not_connected_alert), alertVibrate, alertSounds, alertPriority)
+                        writeLog("Not connected to the internet", context)
+                    }
+                } else if (sp.getInt("isActive", 0) == 1) {
+                    //If the connection can't reach Google
+                    if (exitValue != 0) {
+                        Utilities.sendNote(context, context.getString(R.string.not_connected_alert), alertVibrate, alertSounds, alertPriority)
+                        writeLog("Not connected to the internet", context)
+                    } else {
+                        //Runs the alternate root command
+                        if (prefs.getBoolean("altRootCommand", false)) {
+                            val cellIntent = Intent(context, CellRadioService::class.java)
+                            context.startService(cellIntent)
+                            util.scheduleRootAlarm(context)
+                            Log.d("RadioControl", "Cell Radio has been turned off")
+                            writeLog("Cell radio has been turned off, SSID: " + Utilities.getCurrentSsid(context)!!, context)
+                        } else if (!prefs.getBoolean("altRootCommand", false)) {
+                            RootAccess.runCommands(airCmd)
+                            Log.d("RadioControl", "Airplane mode has been turned on")
+                            writeLog("Airplane mode has been turned on, SSID: " + Utilities.getCurrentSsid(context)!!, context)
+                        }
                     }
                 }
-            }
 
-        } catch (e: IOException) {
-            e.printStackTrace()
-        } catch (e: InterruptedException) {
-            e.printStackTrace()
+            } catch (e: IOException) {
+                e.printStackTrace()
+            } catch (e: InterruptedException) {
+                e.printStackTrace()
+            }
         }
 
     }

@@ -707,7 +707,7 @@ public class MainActivity extends AppCompatActivity {
         });
         Button threeButton = view.findViewById(R.id.threeDollar);
         threeButton.setOnClickListener(v -> {
-            alert.cancel(); //Closes the donate dialog
+        alert.cancel(); //Closes the donate dialog
             buyItem(1); //Opens billing for set item
         });
         Button fiveButton = view.findViewById(R.id.fiveDollar);

@@ -61,12 +61,12 @@ class DoNotDisturbActivity : AppCompatActivity() {
 
         val rangebar = findViewById<RangeBar>(R.id.rangebar)
 
-        rangebar.setOnRangeBarChangeListener { rangeBar, leftPinIndex, rightPinIndex, leftPinValue, rightPinValue -> hours = rightPinIndex }
+        rangebar.setOnRangeBarChangeListener { _, _, rightPinIndex, _, _ -> hours = rightPinIndex }
 
         //Initialize set button
         val set_button = findViewById<Button>(R.id.set_button)
 
-        set_button.setOnClickListener { v ->
+        set_button.setOnClickListener { _ ->
             if (hours > 0) {
                 editor.putBoolean("isNoDisturbEnabled", true)
                 editor.putInt("dndHours", hours)
@@ -87,7 +87,7 @@ class DoNotDisturbActivity : AppCompatActivity() {
 
         }
 
-        cancelButton.setOnClickListener { v ->
+        cancelButton.setOnClickListener { _ ->
             editor.putBoolean("isNoDisturbEnabled", false)
             editor.apply()
             hourStatus.setText(R.string.not_set)
@@ -135,7 +135,7 @@ class DoNotDisturbActivity : AppCompatActivity() {
                     .title(Html.fromHtml(getString(R.string.permissionSample, getString(R.string.app_name))))
                     .positiveText("Ok")
                     .backgroundColorRes(R.color.material_drawer_dark_background)
-                    .onAny { dialog, which -> showToast("" + dialog.isPromptCheckBoxChecked) }
+                    .onAny { dialog, _ -> showToast("" + dialog.isPromptCheckBoxChecked) }
                     .checkBoxPromptRes(R.string.dont_ask_again, false, null)
                     .show()
         }
@@ -157,7 +157,7 @@ class DoNotDisturbActivity : AppCompatActivity() {
                 .setPriority(-2)
                 .setOngoing(true)
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        notificationManager?.notify(10110, note.build())
+        notificationManager.notify(10110, note.build())
     }
 
     companion object {

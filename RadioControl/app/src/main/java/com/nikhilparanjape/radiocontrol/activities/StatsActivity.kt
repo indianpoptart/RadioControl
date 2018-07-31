@@ -42,6 +42,7 @@ import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.mikepenz.iconics.IconicsDrawable
 import com.nikhilparanjape.radiocontrol.R
 import com.nikhilparanjape.radiocontrol.rootUtils.Fab
+import kotlinx.android.synthetic.main.activity_stats.*
 
 import java.io.BufferedReader
 import java.io.File
@@ -180,6 +181,7 @@ class StatsActivity : AppCompatActivity() {
         AutofitHelper.create(btn2)
         btn2.setOnClickListener { _ ->
             materialSheetFab.hideSheet()
+            showDurationDialog()
 
         }
 
@@ -193,11 +195,16 @@ class StatsActivity : AppCompatActivity() {
         //chart2.notifyDataUpdate()
 
         doAsync {
-            wifiLostGraph()
+            try{
+                wifiLostGraph()
 
-            airplaneOnGraph()
+                airplaneOnGraph()
 
-            rootAccessGraph()
+                rootAccessGraph()
+            }catch (e: Exception){
+                Log.d("RadioControl", "Error: $e");
+            }
+
         }
 
 
@@ -209,7 +216,7 @@ class StatsActivity : AppCompatActivity() {
 
         MaterialDialog.Builder(this)
                 .title("Easing Animation")
-                .theme(Theme.LIGHT)
+                .theme(Theme.DARK)
                 .items(R.array.easing)
                 .itemsCallback { _, _, which, _ ->
                     Log.d("RadioControl", "Easing: $which")
@@ -244,26 +251,32 @@ class StatsActivity : AppCompatActivity() {
     fun showDurationDialog() {
         val prefs = PreferenceManager.getDefaultSharedPreferences(applicationContext)
         val editor = prefs.edit()
+        var index = prefs.getInt("duration", 2)
+        index -= 1
 
         MaterialDialog.Builder(this)
                 .title("Animation Duration")
-                .theme(Theme.LIGHT)
-                .items(R.array.preference_values)
-                .itemsCallbackSingleChoice(2) { _, _, which, _ ->
+                .theme(Theme.DARK)
+                .items(R.array.animation_duration_values)
+                .itemsCallbackSingleChoice(index) { _, _, which, _ ->
                     Log.d("RadioControl", "You chose $which")
                     val n = floatArrayOf(0f, 0f)
                     if (which == 0) {
-                        //Full Grids
-                        editor.putInt("duration", 0)
-                    } else if (which == 1) {
-                        //Horizontal Grids
+                        //1 second delay
                         editor.putInt("duration", 1)
+                    } else if (which == 1) {
+                        //2 second delay
+                        editor.putInt("duration", 2)
                     } else if (which == 2) {
-                        //Vertical Grids
-                        editor.putInt("gridlines", 2)
+                        //3 Second delay
+                        editor.putInt("duration", 3)
                     } else if (which == 3) {
-                        //No Grids
-                        editor.putInt("gridlines", 3)
+                        //4 second delay
+                        editor.putInt("duration", 4)
+                    }
+                    else if (which == 4) {
+                        //5 second delay
+                        editor.putInt("duration", 5)
                     }
                     editor.apply()
                     recreate()
@@ -276,12 +289,13 @@ class StatsActivity : AppCompatActivity() {
     fun showGridlineDialog() {
         val prefs = PreferenceManager.getDefaultSharedPreferences(applicationContext)
         val editor = prefs.edit()
+        val index = prefs.getInt("gridlines", 2)
 
         MaterialDialog.Builder(this)
                 .title("Gridlines")
-                .theme(Theme.LIGHT)
+                .theme(Theme.DARK)
                 .items(R.array.preference_values)
-                .itemsCallbackSingleChoice(2) { _, _, which, _ ->
+                .itemsCallbackSingleChoice(index) { _, _, which, _ ->
                     Log.d("RadioControl", "You chose $which")
                     val n = floatArrayOf(0f, 0f)
                     if (which == 0) {
@@ -316,8 +330,10 @@ class StatsActivity : AppCompatActivity() {
             //Initiate dataset for chart
             val dataset = LineSet()
 
+            val dura = prefs.getInt("duration", 2)
+
             val anim = Animation()
-            anim.setDuration(2000)
+            anim.setDuration(dura*1000)
             if (prefs.getInt("easing", 4) == 0) {
                 anim.setEasing(BounceEase())
             } else if (prefs.getInt("easing", 4) == 1) {
@@ -416,8 +432,9 @@ class StatsActivity : AppCompatActivity() {
             //Initiate dataset for chart
             val dataset = LineSet()
 
+            val dura = prefs.getInt("duration", 2)
             val anim = Animation()
-            anim.setDuration(2000)
+            anim.setDuration(dura*1000)
             if (prefs.getInt("easing", 4) == 0) {
                 anim.setEasing(BounceEase())
             } else if (prefs.getInt("easing", 4) == 1) {
@@ -518,8 +535,10 @@ class StatsActivity : AppCompatActivity() {
             //Initiate dataset for chart
             val dataset = LineSet()
 
+            val dura = prefs.getInt("duration", 2)
+
             val anim = Animation()
-            anim.setDuration(2000)
+            anim.setDuration(dura*1000)
             if (prefs.getInt("easing", 4) == 0) {
                 anim.setEasing(BounceEase())
             } else if (prefs.getInt("easing", 4) == 1) {

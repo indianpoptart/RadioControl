@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog bulletedList="true">
 
+    <changelogversion versionName="5.0.3-Beta6" changeDate="July 30, 2018">
+        <changelogtext>Android P improvements(Maybe)</changelogtext>
+        <changelogtext>Changed long tasks to kotlin Async(Smooth)</changelogtext>
+        <changelogtext>Added animation duration to statistics</changelogtext>
+        <changelogtext>Added boot receiver</changelogtext>
+        <changelogtext>Made statistics FAB smarter</changelogtext>
+        <changelogtext>Known bugs:</changelogtext>
+        <changelogtext>App may crash on boot</changelogtext>
+    </changelogversion>
     <changelogversion versionName="5.0.3-Beta5" changeDate="June 26, 2018">
         <changelogtext>Fixed phone call checker, much more reliable</changelogtext>
         <changelogtext>Fixed root access class OutputStream closing and better handling of termination</changelogtext>
