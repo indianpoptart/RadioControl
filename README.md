@@ -36,12 +36,12 @@ https://crowdin.com/project/radiocontrol/invite
 The app has been tested and works properly on these devices:
 - Google Pixel/XL
 - Google Pixel 2/2XL
-- LG V10 ![LG](https://nikhilp.org/images/lg.png)
-- Moto X (2nd Gen.) ![Motorola](https://nikhilp.org/images/moto.png)
-- Nexus 6 ![Motorola](https://nikhilp.org/images/moto.png)
-- Nexus 6P ![Huawei](https://nikhilp.org/images/huawei.png)
-- Nexus 5X ![LG](https://nikhilp.org/images/lg.png)
-- Nexus 5 ![LG](https://nikhilp.org/images/lg.png)
+- ![LG](https://nikhilp.org/images/lg.png) LG V10 
+- ![Motorola](https://nikhilp.org/images/moto.png) Moto X (2nd Gen.) 
+- ![Motorola](https://nikhilp.org/images/moto.png) Nexus 6 
+- ![Huawei](https://nikhilp.org/images/huawei.png) Nexus 6P 
+- ![LG](https://nikhilp.org/images/lg.png) Nexus 5X 
+- ![LG](https://nikhilp.org/images/lg.png) Nexus 5 
 - OnePlus 1
 - OnePlus 2
 - OnePlus 3
@@ -49,12 +49,12 @@ The app has been tested and works properly on these devices:
 - Samsung Galaxy S7
 - Samsung Galaxy S7 Edge
 
-As well as these OS's
-- Android P(9.0)
-- Android Oreo(8.0+)
-- Android Nougat(7.0+)
-- Android Marshmallow (6.0+)
-- Android Lollipop (5.0+)
+As well as these Android
+- ![P(9.0)](https://nikhilp.org/images/android_p_logo.png)       
+- ![Oreo(8.0)](https://nikhilp.org/images/android_o_logo_v2.png)
+- ![Nougat(7.0)](https://nikhilp.org/images/android_n_logo.png)
+- ![Marshmallow(6.0)](https://nikhilp.org/images/android_m_logo.png)
+- ![Lollipop(5.0+)](https://nikhilp.org/images/android_l_logo.png)
 
 # SU Binary Compatibility
 Working properly with the following SU binary
