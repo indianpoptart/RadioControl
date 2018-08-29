@@ -800,7 +800,7 @@ public class MainActivity extends AppCompatActivity {
         drawerCreate();
 
 
-        if(pref.getBoolean("allowFabric",false)){
+        if(pref.getBoolean("allowFabric",true)){
             Fabric.with(this, new Crashlytics());
         }else{
             Fabric.with(this, new Crashlytics.Builder()

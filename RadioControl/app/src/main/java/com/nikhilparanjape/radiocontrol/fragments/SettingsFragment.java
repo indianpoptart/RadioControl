@@ -32,8 +32,10 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.folderselector.FolderChooserDialog;
 import com.borax12.materialdaterangepicker.time.RadialPickerLayout;
 import com.borax12.materialdaterangepicker.time.TimePickerDialog;
+import com.crashlytics.android.Crashlytics;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.nikhilparanjape.radiocontrol.R;
+import com.nikhilparanjape.radiocontrol.activities.MainActivity;
 import com.nikhilparanjape.radiocontrol.receivers.WifiReceiver;
 import com.nikhilparanjape.radiocontrol.rootUtils.RootAccess;
 import com.nikhilparanjape.radiocontrol.rootUtils.Utilities;
@@ -41,6 +43,8 @@ import com.nikhilparanjape.radiocontrol.services.PersistenceService;
 
 import java.io.File;
 import java.util.Calendar;
+
+import io.fabric.sdk.android.Fabric;
 
 /**
  * Created by Nikhil on 4/5/2016.
@@ -131,7 +135,6 @@ public class SettingsFragment extends PreferenceFragment implements TimePickerDi
         workModePref.setOnPreferenceChangeListener((preference, newValue) -> {
             SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(c);
             if(newValue.toString().equals("true")) {
-                getPreferenceScreen().findPreference("altRootCommand").setEnabled(false);
                 if(batteryOptimizePref.isChecked()){
                     Log.i("RadioControl","true-ischecked");
                     if (pref.getBoolean("workMode", true)) {
@@ -227,7 +230,7 @@ public class SettingsFragment extends PreferenceFragment implements TimePickerDi
             if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 200);
             } else {
-                altRootCommand.setChecked(false);
+                //altRootCommand.setChecked(false);
             }
 
             return true;
@@ -298,7 +301,7 @@ public class SettingsFragment extends PreferenceFragment implements TimePickerDi
                         .onPositive((dialog, which) -> FirebaseAnalytics.getInstance(c).setAnalyticsCollectionEnabled(true))
                         .onNegative((dialog, which) -> {
                             eulaShow.setChecked(false);
-                            FirebaseAnalytics.getInstance(c).setAnalyticsCollectionEnabled(false);
+                            FirebaseAnalytics.getInstance(c).setAnalyticsCollectionEnabled(true);
                         })
                         .checkBoxPromptRes(R.string.dont_ask_again, false, null)
                         .show();

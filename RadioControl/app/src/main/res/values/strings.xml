@@ -9,7 +9,7 @@
 
     <string name="title_activity_settings">Settings</string>
     <string name="title_activity_about">About</string>
-    <string name="title_activity_network">Network Settings</string>
+    <string name="title_activity_network">Network Blacklist Settings</string>
     <string name="supportlink"><a href="https://nikhilp.org/support/" rel="nofollow"> Report a problem</a></string>
 
     <string name="title_send_feedback">Send feedback</string>
@@ -46,12 +46,12 @@
     <string name="airplaneOn">Airplane mode is on</string>
     <string name="connectionUnable">Unable to connect to the internet</string>
     <string name="ping">Testing…</string>
-    <string name="netSettingsSum">Check off networks that aren\'t that reliable(this will keep cell awake while connected to this network)</string>
+    <string name="netSettingsSum">Blacklist networks that aren\'t reliable(this will keep the cell radio awake while connected to this network)</string>
     <string name="resetNetSettings">Reset Network Settings</string>
     <string name="resetSummary">Reset the disabled networks list</string>
     <string name="alertSettings">Alert Settings</string>
-    <string name="enableAlert">Network connectivity checker (Experimental)</string>
-    <string name="alertSum">Shows a notification when the current WiFi network is not connected to the internet</string>
+    <string name="enableAlert">Network connectivity pre-checker (Experimental)</string>
+    <string name="alertSum">Shows a notification when the connected WiFi network is not connected to the internet</string>
     <string name="notificationSettings">Notification Settings</string>
     <string name="eVibrate">Enable vibrate</string>
     <string name="vibeSum">Enables vibrate on alerts</string>
@@ -130,7 +130,7 @@
     <string name="summary_fabric_analytics">Crashes and error reporting. Nothing personally identifiable or unrelated to RadioControl</string>
     <string name="text_root_status">Root Status</string>
     <string name="title_doze_optimization">Battery Optimization</string>
-    <string name="drawer_string_troubleshooting">Troubleshooting</string>
+    <string name="drawer_string_troubleshooting">Troubleshooting (WIP)</string>
     <string name="permissionIntelligent">This works better with Background Optimization. Should I turn it on for you?</string>
     <string name="title_intelligent_mode">Intelligent Mode (Beta)</string>
     <string name="summary_intelligent_mode">This is a higher priority detection method that might fix issues on Nougat+</string>

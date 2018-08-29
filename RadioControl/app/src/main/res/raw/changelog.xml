@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog bulletedList="true">
 
+    <changelogversion versionName="5.0.3-Beta7" changeDate="August 29, 2018">
+        <changelogtext>Fixes for Alternate root command setting</changelogtext>
+        <changelogtext>Fixed wording on previeous network settings(Thanks to Gadget Hacks video)</changelogtext>
+        <changelogtext>Known bugs:</changelogtext>
+        <changelogtext>App may crash on boot if updating from v5.0.3-Beta5</changelogtext>
+    </changelogversion>
     <changelogversion versionName="5.0.3-Beta6" changeDate="July 30, 2018">
         <changelogtext>Android P improvements(Maybe)</changelogtext>
         <changelogtext>Changed long tasks to kotlin Async(Smooth)</changelogtext>
