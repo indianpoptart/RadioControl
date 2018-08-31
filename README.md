@@ -49,7 +49,7 @@ The app has been tested and works properly on these devices:
 - ![Samsung](https://nikhilp.org/images/samsung.png) Samsung Galaxy S7
 - ![Samsung](https://nikhilp.org/images/samsung.png) Samsung Galaxy S7 Edge
 
-As well as these Android
+As well as these Android versions
 - ![P(9.0)](https://nikhilp.org/images/android_p_logo.png)       
 - ![Oreo(8.0)](https://nikhilp.org/images/android_o_logo_v2.png)
 - ![Nougat(7.0)](https://nikhilp.org/images/android_n_logo.png)
