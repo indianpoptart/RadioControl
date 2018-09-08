@@ -37,7 +37,6 @@ import com.nikhilparanjape.radiocontrol.receivers.RootServiceReceiver;
 import com.nikhilparanjape.radiocontrol.receivers.TimedAlarmReceiver;
 import com.nikhilparanjape.radiocontrol.receivers.WakeupReceiver;
 import com.nikhilparanjape.radiocontrol.services.CellRadioService;
-import com.nikhilparanjape.radiocontrol.services.PersistenceService;
 import com.nikhilparanjape.radiocontrol.services.TestJobService;
 
 import java.io.File;

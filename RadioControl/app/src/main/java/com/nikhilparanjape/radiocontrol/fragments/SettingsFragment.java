@@ -1,14 +1,12 @@
 package com.nikhilparanjape.radiocontrol.fragments;
 
 import android.Manifest;
-import android.app.NotificationChannel;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.PowerManager;
@@ -22,20 +20,14 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.text.Html;
 import android.util.Log;
-import android.view.View;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.folderselector.FolderChooserDialog;
 import com.borax12.materialdaterangepicker.time.RadialPickerLayout;
 import com.borax12.materialdaterangepicker.time.TimePickerDialog;
-import com.crashlytics.android.Crashlytics;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.nikhilparanjape.radiocontrol.R;
-import com.nikhilparanjape.radiocontrol.activities.MainActivity;
 import com.nikhilparanjape.radiocontrol.receivers.WifiReceiver;
 import com.nikhilparanjape.radiocontrol.rootUtils.RootAccess;
 import com.nikhilparanjape.radiocontrol.rootUtils.Utilities;
@@ -44,7 +36,6 @@ import com.nikhilparanjape.radiocontrol.services.PersistenceService;
 import java.io.File;
 import java.util.Calendar;
 
-import io.fabric.sdk.android.Fabric;
 
 /**
  * Created by Nikhil on 4/5/2016.

@@ -1,15 +1,12 @@
 package com.nikhilparanjape.radiocontrol.activities
 
-import android.content.SharedPreferences
 import android.graphics.Color
 import android.graphics.Paint
-import android.os.AsyncTask
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.support.design.widget.CoordinatorLayout
 import android.support.design.widget.Snackbar
 import android.support.v4.content.ContextCompat
-import android.support.v7.app.ActionBar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.util.Log
@@ -38,11 +35,8 @@ import com.db.chart.view.animation.easing.SineEase
 import com.google.firebase.crash.FirebaseCrash
 import com.gordonwong.materialsheetfab.MaterialSheetFab
 import com.gordonwong.materialsheetfab.MaterialSheetFabEventListener
-import com.mikepenz.google_material_typeface_library.GoogleMaterial
-import com.mikepenz.iconics.IconicsDrawable
 import com.nikhilparanjape.radiocontrol.R
 import com.nikhilparanjape.radiocontrol.rootUtils.Fab
-import kotlinx.android.synthetic.main.activity_stats.*
 
 import java.io.BufferedReader
 import java.io.File

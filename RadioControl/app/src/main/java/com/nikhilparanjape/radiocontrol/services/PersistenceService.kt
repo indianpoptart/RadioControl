@@ -15,10 +15,6 @@ import android.app.NotificationManager
 import android.app.NotificationChannel
 import android.content.Context
 import android.support.v4.app.NotificationCompat
-import android.preference.PreferenceManager
-import android.content.SharedPreferences
-import com.nikhilparanjape.radiocontrol.rootUtils.Utilities
-
 
 /**
  * Created by admin on 7/9/2017.

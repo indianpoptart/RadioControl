@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 
 import com.nikhilparanjape.radiocontrol.R;
 import com.nikhilparanjape.radiocontrol.adapters.RecyclerAdapter;
-import com.nikhilparanjape.radiocontrol.holders.RecyclerHolder;
 
 /**
  * Created by Nikhil on 07/31/2018.

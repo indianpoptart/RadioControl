@@ -1,6 +1,5 @@
 package com.nikhilparanjape.radiocontrol.services;
 
-import android.app.IntentService;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
