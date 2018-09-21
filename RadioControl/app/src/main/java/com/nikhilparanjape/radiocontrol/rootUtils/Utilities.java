@@ -29,7 +29,6 @@ import android.telephony.TelephonyManager;
 import android.text.format.DateFormat;
 import android.util.Log;
 
-import com.google.firebase.crash.FirebaseCrash;
 import com.nikhilparanjape.radiocontrol.R;
 import com.nikhilparanjape.radiocontrol.receivers.ActionReceiver;
 import com.nikhilparanjape.radiocontrol.receivers.NightModeReceiver;
@@ -132,8 +131,7 @@ public class Utilities {
                 fos.write(string.getBytes());
                 fos.close();
             } catch(IOException e){
-                FirebaseCrash.logcat(Log.ERROR, "RadioControl", "Error with log");
-                FirebaseCrash.report(e);
+                Log.e("RadioControl", "Error writing log");
             }
         }
     }

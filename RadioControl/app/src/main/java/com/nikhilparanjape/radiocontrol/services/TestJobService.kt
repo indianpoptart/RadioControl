@@ -6,6 +6,10 @@ import android.content.Intent
 import android.util.Log
 
 import com.nikhilparanjape.radiocontrol.rootUtils.Utilities
+import android.support.v4.content.ContextCompat.startForegroundService
+import android.os.Build
+import android.support.annotation.RequiresApi
+
 
 class TestJobService : JobService() {
 
@@ -14,9 +18,16 @@ class TestJobService : JobService() {
         Log.i(TAG, "JobScheduler created");
     }
 
+
     override fun onStartJob(params: JobParameters): Boolean {
         val service = Intent(applicationContext, BackgroundAirplaneService::class.java)
-        applicationContext.startService(service)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            Log.d("RadioControl","Trying background service")
+            applicationContext.startForegroundService(service)
+        } else {
+            applicationContext.startService(service)
+        }
+
         Utilities.scheduleJob(applicationContext) // reschedule the job
         return true
     }

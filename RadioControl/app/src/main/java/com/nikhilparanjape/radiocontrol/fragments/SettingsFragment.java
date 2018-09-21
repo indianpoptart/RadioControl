@@ -26,7 +26,6 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.folderselector.FolderChooserDialog;
 import com.borax12.materialdaterangepicker.time.RadialPickerLayout;
 import com.borax12.materialdaterangepicker.time.TimePickerDialog;
-import com.google.firebase.analytics.FirebaseAnalytics;
 import com.nikhilparanjape.radiocontrol.R;
 import com.nikhilparanjape.radiocontrol.receivers.WifiReceiver;
 import com.nikhilparanjape.radiocontrol.rootUtils.RootAccess;
@@ -278,32 +277,6 @@ public class SettingsFragment extends PreferenceFragment implements TimePickerDi
             getPreferenceScreen().findPreference("altRootCommand").setEnabled(true);
             getActivity().stopService(new Intent(getActivity(), PersistenceService.class));
         }
-
-        CheckBoxPreference eulaShow = (CheckBoxPreference) getPreferenceManager().findPreference("eulaShow");
-        eulaShow.setOnPreferenceChangeListener((preference, newValue) -> {
-            if(newValue.toString().equals("true")){
-                new MaterialDialog.Builder(getActivity())
-                        .iconRes(R.mipmap.ic_launcher)
-                        .limitIconToDefaultSize()
-                        .title(Html.fromHtml(getString(R.string.permissionSampleFirebase, getString(R.string.app_name))))
-                        .positiveText("Allow")
-                        .negativeText("Deny")
-                        .backgroundColorRes(R.color.material_drawer_dark_background)
-                        .onPositive((dialog, which) -> FirebaseAnalytics.getInstance(c).setAnalyticsCollectionEnabled(true))
-                        .onNegative((dialog, which) -> {
-                            eulaShow.setChecked(false);
-                            FirebaseAnalytics.getInstance(c).setAnalyticsCollectionEnabled(true);
-                        })
-                        .checkBoxPromptRes(R.string.dont_ask_again, false, null)
-                        .show();
-            }
-            else{
-                FirebaseAnalytics.getInstance(c).setAnalyticsCollectionEnabled(false);
-                eulaShow.setChecked(false);
-            }
-
-            return true;
-        });
 
         CheckBoxPreference fabricCrashlyticsPref = (CheckBoxPreference) getPreferenceManager().findPreference("fabricCrashlytics");
         fabricCrashlyticsPref.setOnPreferenceChangeListener((preference, newValue) -> {

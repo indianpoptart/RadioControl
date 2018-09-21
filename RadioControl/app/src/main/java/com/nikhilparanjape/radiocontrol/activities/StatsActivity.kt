@@ -32,7 +32,6 @@ import com.db.chart.view.animation.easing.QuadEase
 import com.db.chart.view.animation.easing.QuartEase
 import com.db.chart.view.animation.easing.QuintEase
 import com.db.chart.view.animation.easing.SineEase
-import com.google.firebase.crash.FirebaseCrash
 import com.gordonwong.materialsheetfab.MaterialSheetFab
 import com.gordonwong.materialsheetfab.MaterialSheetFabEventListener
 import com.nikhilparanjape.radiocontrol.R
@@ -675,8 +674,6 @@ class StatsActivity : AppCompatActivity() {
                         .show()
             }
         } catch (e: IOException) {
-            FirebaseCrash.logcat(Log.ERROR, "RadioControl", "Unable to get version name")
-            FirebaseCrash.report(e)
             Snackbar.make(findViewById(android.R.id.content), "Error: $e", Snackbar.LENGTH_LONG)
                     .show()
         }
@@ -791,8 +788,6 @@ class StatsActivity : AppCompatActivity() {
                         .show()
             }
         } catch (e: IOException) {
-            FirebaseCrash.logcat(Log.ERROR, "RadioControl", "Unable to get version name")
-            FirebaseCrash.report(e)
             Snackbar.make(findViewById(android.R.id.content), "Error: $e", Snackbar.LENGTH_LONG)
                     .show()
         }

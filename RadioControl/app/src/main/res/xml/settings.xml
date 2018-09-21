@@ -50,11 +50,6 @@
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/title_analytics_service">
         <CheckBoxPreference
-            android:key="eulaShow"
-            android:title="@string/title_firebase_analytics"
-            android:summary="@string/summary_firebase_analytics"
-            android:defaultValue="false" />
-        <CheckBoxPreference
             android:key="fabricCrashlytics"
             android:title="@string/title_fabric_analytics"
             android:summary="@string/summary_fabric_analytics"

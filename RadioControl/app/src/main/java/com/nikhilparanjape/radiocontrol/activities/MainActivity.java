@@ -50,8 +50,6 @@ import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.PurchaseEvent;
 import com.crashlytics.android.answers.RatingEvent;
 import com.crashlytics.android.core.CrashlyticsCore;
-import com.google.firebase.analytics.FirebaseAnalytics;
-import com.google.firebase.crash.FirebaseCrash;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.materialdrawer.AccountHeader;
@@ -156,7 +154,6 @@ public class MainActivity extends AppCompatActivity {
             if (isFirstStart) {
                 //  Make a new preferences editor
                 SharedPreferences.Editor e = getPrefs.edit();
-                FirebaseAnalytics.getInstance(getApplicationContext()).setAnalyticsCollectionEnabled(false);
 
                 if (currentapiVersion >= 24) {
                     e.putBoolean("workmode", true);
@@ -175,10 +172,6 @@ public class MainActivity extends AppCompatActivity {
             String intervalTime = getPrefs.getString("interval_prefs","10");
             boolean airplaneService = getPrefs.getBoolean("isAirplaneService", false);
 
-            //Sets analytics
-            if(getPrefs.getBoolean("eulaShow", false)){
-                FirebaseAnalytics.getInstance(getApplicationContext()).setAnalyticsCollectionEnabled(true);
-            }
             //Begin background service
             if(!intervalTime.equals("0") && airplaneService){
                 Intent i= new Intent(getApplicationContext(), BackgroundAirplaneService.class);
@@ -389,8 +382,7 @@ public class MainActivity extends AppCompatActivity {
             PackageInfo pi = getPackageManager().getPackageInfo(getPackageName(), 0);
             currentVersionNumber = pi.versionCode;
         } catch (Exception e) {
-            FirebaseCrash.logcat(Log.ERROR, "RadioControl", "Unable to get version name");
-            FirebaseCrash.report(e);
+            Log.e("RadioControl", "Unable to get version number");
         }
         if (currentVersionNumber > savedVersionNumber) {
             showUpdated();
@@ -400,9 +392,6 @@ public class MainActivity extends AppCompatActivity {
         if (android.os.Build.VERSION.SDK_INT >= 24 && !sharedPref.getBoolean("workMode",false)){
             editor.putBoolean("workMode",true);
             editor.apply();
-        }
-        if(sharedPref.getBoolean("eulaShow", false)){
-            FirebaseAnalytics.getInstance(getApplicationContext()).setAnalyticsCollectionEnabled(true);
         }
     }
 
@@ -999,8 +988,7 @@ public class MainActivity extends AppCompatActivity {
                 fos.write(string.getBytes());
                 fos.close();
             } catch(IOException e){
-                FirebaseCrash.logcat(Log.ERROR, "RadioControl", "There was an error saving the log");
-                FirebaseCrash.report(e);
+                Log.e("RadioControl", "Error saving log");
             }
         }
     }
