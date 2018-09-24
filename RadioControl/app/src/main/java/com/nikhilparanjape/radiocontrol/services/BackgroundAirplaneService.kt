@@ -60,6 +60,7 @@ class BackgroundAirplaneService : IntentService("BackgroundAirplaneService") {
 
         } else {
 
+            @Suppress("DEPRECATION") //For backwards compatibility
             val builder = NotificationCompat.Builder(this)
                     .setContentTitle(title)
                     .setSmallIcon(R.drawable.ic_info_white_24dp)
@@ -104,7 +105,7 @@ class BackgroundAirplaneService : IntentService("BackgroundAirplaneService") {
         val h = HashSet(listOf("")) //Set default set for SSID check
         val selections = prefs.getStringSet("ssid", h) //Gets stringset, if empty sets default
         val networkAlert = prefs.getBoolean("isNetworkAlive", false)
-        val batteryOptimize = prefs.getBoolean("isBatteryOn", true)
+        prefs.getBoolean("isBatteryOn", true)
 
         //Log.i("RadioControl","Battery Optimized");
         //Check if user wants the app on

@@ -52,6 +52,7 @@ class PersistenceService : Service() {
 
         } else {
 
+            @Suppress("DEPRECATION") //For backwards compatibility
             val builder = NotificationCompat.Builder(this)
                     .setContentTitle("Persistence")
                     .setSmallIcon(R.drawable.ic_memory_24px)

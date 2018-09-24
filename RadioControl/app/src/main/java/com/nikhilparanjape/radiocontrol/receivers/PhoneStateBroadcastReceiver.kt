@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package com.nikhilparanjape.radiocontrol.receivers
 
 /**

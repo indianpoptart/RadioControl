@@ -120,7 +120,7 @@ class StatsActivity : AppCompatActivity() {
 
         val actionBar = findViewById<Toolbar>(R.id.toolbar)
         //Sets coordlayout
-        val clayout = findViewById<CoordinatorLayout>(R.id.clayout)
+        findViewById<CoordinatorLayout>(R.id.clayout)
 
         if (actionBar != null) {
             //actionBar.setHomeAsUpIndicator(IconicsDrawable(this, GoogleMaterial.Icon.gmd_arrow_back).color(Color.WHITE).sizeDp(IconicsDrawable.TOOLBAR_ICON_SIZE).paddingDp(IconicsDrawable.TOOLBAR_ICON_PADDING))
@@ -253,7 +253,7 @@ class StatsActivity : AppCompatActivity() {
                 .items(R.array.animation_duration_values)
                 .itemsCallbackSingleChoice(index) { _, _, which, _ ->
                     Log.d("RadioControl", "You chose $which")
-                    val n = floatArrayOf(0f, 0f)
+                    floatArrayOf(0f, 0f)
                     if (which == 0) {
                         //1 second delay
                         editor.putInt("duration", 1)
@@ -290,7 +290,7 @@ class StatsActivity : AppCompatActivity() {
                 .items(R.array.preference_values)
                 .itemsCallbackSingleChoice(index) { _, _, which, _ ->
                     Log.d("RadioControl", "You chose $which")
-                    val n = floatArrayOf(0f, 0f)
+                    floatArrayOf(0f, 0f)
                     if (which == 0) {
                         //Full Grids
                         editor.putInt("gridlines", 0)
