@@ -6,9 +6,9 @@ import android.content.Intent
 import android.util.Log
 
 import com.nikhilparanjape.radiocontrol.rootUtils.Utilities
-import android.support.v4.content.ContextCompat.startForegroundService
+import androidx.core.content.ContextCompat.startForegroundService
 import android.os.Build
-import android.support.annotation.RequiresApi
+import androidx.annotation.RequiresApi
 
 
 class TestJobService : JobService() {

@@ -4,7 +4,7 @@ package com.nikhilparanjape.radiocontrol.rootUtils
  * Added and modified by Nikhil on 5/17/2016.
  */
 import android.content.Context
-import android.support.design.widget.FloatingActionButton
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import android.util.AttributeSet
 import android.view.View
 import android.view.animation.Animation

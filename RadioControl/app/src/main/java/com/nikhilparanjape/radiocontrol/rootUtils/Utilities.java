@@ -19,7 +19,7 @@ import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
-import android.support.v4.app.NotificationCompat;
+import androidx.core.app.NotificationCompat;
 import android.telephony.CellInfo;
 import android.telephony.TelephonyManager;
 import android.text.format.DateFormat;
@@ -341,7 +341,7 @@ public class Utilities {
             notification = builder.build();
             builder.notify();
         } else {
-            NotificationCompat.Builder builder = (new android.support.v4.app.NotificationCompat.Builder(context)
+            NotificationCompat.Builder builder = (new androidx.core.app.NotificationCompat.Builder(context)
                     .setContentTitle("Network Alert")
                     .setSmallIcon(R.drawable.ic_signal_cellular_connected_no_internet_2_bar_24px)
                     .setContentIntent(pi)

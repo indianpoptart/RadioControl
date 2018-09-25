@@ -6,8 +6,8 @@ import android.graphics.Color
 import android.net.wifi.WifiConfiguration
 import android.net.wifi.WifiManager
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.SwitchCompat
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SwitchCompat
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View

@@ -4,11 +4,11 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.os.Bundle
 import android.preference.PreferenceManager
-import android.support.design.widget.CoordinatorLayout
-import android.support.design.widget.Snackbar
-import android.support.v4.content.ContextCompat
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.Toolbar
+import androidx.coordinatorlayout.widget.CoordinatorLayout
+import com.google.android.material.snackbar.Snackbar
+import androidx.core.content.ContextCompat
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import android.util.Log
 import android.view.MenuItem
 import android.view.View

@@ -6,8 +6,8 @@ import android.net.Uri
 import android.os.Bundle
 import android.preference.Preference
 import android.preference.PreferenceFragment
-import android.support.customtabs.CustomTabsIntent
-import android.support.design.widget.Snackbar
+import androidx.browser.customtabs.CustomTabsIntent
+import com.google.android.material.snackbar.Snackbar
 import android.util.Log
 import android.view.View
 import android.widget.Toast

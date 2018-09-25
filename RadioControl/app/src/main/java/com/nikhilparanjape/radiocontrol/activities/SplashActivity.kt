@@ -2,9 +2,7 @@ package com.nikhilparanjape.radiocontrol.activities
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
-
-import com.nikhilparanjape.radiocontrol.R
+import androidx.appcompat.app.AppCompatActivity
 
 /**
  * Created by Nikhil on 4/24/2016.

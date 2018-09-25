@@ -1,14 +1,14 @@
 package com.nikhilparanjape.radiocontrol.activities
 
 import android.os.Bundle
-import android.support.design.widget.BottomNavigationView
-import android.support.v7.app.AppCompatActivity
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import androidx.appcompat.app.AppCompatActivity
 import com.nikhilparanjape.radiocontrol.R
-import kotlinx.android.synthetic.main.activity_troubleshooting.*
 
 import com.nikhilparanjape.radiocontrol.fragments.AppFragment
 import com.nikhilparanjape.radiocontrol.fragments.CellFragment
 import com.nikhilparanjape.radiocontrol.fragments.WLANFragment
+import kotlinx.android.synthetic.main.activity_troubleshooting.*
 
 
 class TroubleshootingActivity : AppCompatActivity() {

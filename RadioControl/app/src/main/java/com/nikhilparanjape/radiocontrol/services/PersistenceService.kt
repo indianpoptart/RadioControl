@@ -14,7 +14,7 @@ import android.os.Build
 import android.app.NotificationManager
 import android.app.NotificationChannel
 import android.content.Context
-import android.support.v4.app.NotificationCompat
+import androidx.core.app.NotificationCompat
 
 /**
  * Created by admin on 7/9/2017.

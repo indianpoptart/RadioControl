@@ -7,9 +7,9 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.preference.PreferenceManager
-import android.support.v4.app.NotificationCompat
-import android.support.v4.content.ContextCompat
-import android.support.v7.app.AppCompatActivity
+import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat
+import androidx.appcompat.app.AppCompatActivity
 import android.text.Html
 import android.util.Log
 import android.view.MenuItem

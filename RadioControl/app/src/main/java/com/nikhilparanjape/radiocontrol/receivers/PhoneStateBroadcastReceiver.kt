@@ -8,7 +8,7 @@ package com.nikhilparanjape.radiocontrol.receivers
 
 import android.content.Context
 import android.content.Intent
-import android.support.v4.content.WakefulBroadcastReceiver
+import androidx.legacy.content.WakefulBroadcastReceiver
 import android.telephony.PhoneStateListener
 import android.telephony.TelephonyManager
 import android.util.Log
