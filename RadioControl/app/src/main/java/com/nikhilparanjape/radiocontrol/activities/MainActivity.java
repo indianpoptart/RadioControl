@@ -74,7 +74,6 @@ import com.nikhilparanjape.radiocontrol.services.TestJobService;
 import com.nikhilparanjape.radiocontrol.util.IabHelper;
 import com.nikhilparanjape.radiocontrol.util.IabResult;
 import com.nikhilparanjape.radiocontrol.util.Inventory;
-import com.nikhilparanjape.radiocontrol.util.Purchase;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -323,7 +322,7 @@ public class MainActivity extends AppCompatActivity {
         });
         nightCancel.setOnClickListener(v -> {
             Intent intent = new Intent(getApplicationContext(), NightModeReceiver.class);
-            final PendingIntent pIntent = PendingIntent.getBroadcast(getApplicationContext(), NightModeReceiver.Companion.getREQUEST_CODE(),
+            final PendingIntent pIntent = PendingIntent.getBroadcast(getApplicationContext(), NightModeReceiver.REQUEST_CODE,
                     intent, PendingIntent.FLAG_UPDATE_CURRENT);
             AlarmManager alarm = (AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
             if (alarm != null) {
@@ -776,7 +775,6 @@ public class MainActivity extends AppCompatActivity {
                 //getBaseContext().startService(i);
             }
 
-            Log.d("RadioControl", "persist Service launched");
         }else{
             registerForBroadcasts(getApplicationContext());
         }

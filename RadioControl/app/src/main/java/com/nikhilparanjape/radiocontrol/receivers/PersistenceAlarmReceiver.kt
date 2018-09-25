@@ -18,8 +18,4 @@ class PersistenceAlarmReceiver : WakefulBroadcastReceiver() {
         val service = Intent(context, PersistenceService::class.java)
         WakefulBroadcastReceiver.startWakefulService(context, service)
     }
-
-    companion object {
-        val REQUEST_CODE = 25912
-    }
 }

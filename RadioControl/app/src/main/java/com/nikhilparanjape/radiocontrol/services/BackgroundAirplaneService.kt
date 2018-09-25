@@ -28,10 +28,11 @@ import java.util.HashSet
 class BackgroundAirplaneService : IntentService("BackgroundAirplaneService") {
 
     //Root commands which disable cell only
-    internal var airCmd = arrayOf("su", "settings put global airplane_mode_radios  \"cell\"", "content update --uri content://settings/global --bind value:s:'cell' --where \"name='airplane_mode_radios'\"", "settings put global airplane_mode_on 1", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state true")
+    private var airCmd = arrayOf("su", "settings put global airplane_mode_radios  \"cell\"", "content update --uri content://settings/global --bind value:s:'cell' --where \"name='airplane_mode_radios'\"", "settings put global airplane_mode_on 1", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state true")
     //runs command to disable airplane mode on wifi loss, while restoring previous airplane settings
-    internal var airOffCmd2 = arrayOf("su", "settings put global airplane_mode_on 0", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state false", "settings put global airplane_mode_radios  \"cell,bluetooth,nfc,wimax\"", "content update --uri content://settings/global --bind value:s:'cell,bluetooth,nfc,wimax' --where \"name='airplane_mode_radios'\"")
-    internal var airOffCmd3 = arrayOf("su", "settings put global airplane_mode_on 0", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state false")
+    private var airOffCmd2 = arrayOf("su", "settings put global airplane_mode_on 0", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state false", "settings put global airplane_mode_radios  \"cell,bluetooth,nfc,wimax\"", "content update --uri content://settings/global --bind value:s:'cell,bluetooth,nfc,wimax' --where \"name='airplane_mode_radios'\"")
+    private var airOffCmd3 = arrayOf("su", "settings put global airplane_mode_on 0", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state false")
+
     internal var util = Utilities() //Network and other related utilities
 
     override fun onBind(intent: Intent): IBinder? {
@@ -46,7 +47,7 @@ class BackgroundAirplaneService : IntentService("BackgroundAirplaneService") {
 
     }
 
-    fun createBackgroundNotification(title: String, message: String) {
+    private fun createBackgroundNotification(title: String, message: String) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
             val builder = Notification.Builder(this, "airplane")
@@ -206,7 +207,7 @@ class BackgroundAirplaneService : IntentService("BackgroundAirplaneService") {
 
     }
 
-    fun writeLog(data: String, c: Context) {
+    private fun writeLog(data: String, c: Context) {
         val preferences = PreferenceManager.getDefaultSharedPreferences(c)
         if (preferences.getBoolean("enableLogs", false)) {
             try {
@@ -228,7 +229,7 @@ class BackgroundAirplaneService : IntentService("BackgroundAirplaneService") {
         }
     }
 
-    fun pingTask(context: Context) {
+    private fun pingTask(context: Context) {
         doAsync {
             val runtime = Runtime.getRuntime()
             try {
@@ -284,7 +285,7 @@ class BackgroundAirplaneService : IntentService("BackgroundAirplaneService") {
 
     }
 
-    fun waitFor(timer: Long) {
+    private fun waitFor(timer: Long) {
         try {
             Thread.sleep(timer)
         } catch (e: InterruptedException) {
@@ -307,7 +308,7 @@ class BackgroundAirplaneService : IntentService("BackgroundAirplaneService") {
 
     companion object {
 
-        private val PRIVATE_PREF = "prefs"
+        private const val PRIVATE_PREF = "prefs"
     }
 
 }

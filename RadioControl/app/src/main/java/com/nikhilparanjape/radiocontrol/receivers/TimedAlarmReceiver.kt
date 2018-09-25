@@ -16,7 +16,6 @@ class TimedAlarmReceiver : WakefulBroadcastReceiver() {
     }
 
     companion object {
-        val REQUEST_CODE = 12345
-        val ACTION = "com.nikhilparanjape.radiocontrol.services.BackgroundAirplaneService"
+        const val REQUEST_CODE = 12345
     }
 }

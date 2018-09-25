@@ -24,5 +24,4 @@ class PhoneStateBroadcastReceiver : WakefulBroadcastReceiver() {
         Log.d("RadioControl", "PhoneCall ENGAGED")
 
     }
-
 }

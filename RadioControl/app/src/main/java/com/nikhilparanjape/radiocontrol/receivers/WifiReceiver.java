@@ -82,11 +82,11 @@ public class WifiReceiver extends WakefulBroadcastReceiver {
                                 }
                             } else {
                                 if (prefs.getBoolean("altBTCommand", false)) {
-                                    RootAccess.INSTANCE.runCommands(airOffCmd3);
+                                    RootAccess.runCommands(airOffCmd3);
                                     Log.d("RadioControl", "Airplane mode has been turned off(with bt cmd)");
                                     writeLog("Airplane mode has been turned off", context);
                                 } else {
-                                    RootAccess.INSTANCE.runCommands(airOffCmd2);
+                                    RootAccess.runCommands(airOffCmd2);
                                     Log.d("RadioControl", "Airplane mode has been turned off");
                                     writeLog("Airplane mode has been turned off", context);
                                 }
@@ -129,7 +129,7 @@ public class WifiReceiver extends WakefulBroadcastReceiver {
 
                             }
                             else{
-                                RootAccess.INSTANCE.runCommands(airCmd);
+                                RootAccess.runCommands(airCmd);
                                 Log.d("RadioControl", "Airplane mode has been turned on");
                                 writeLog("Airplane mode has been turned on, SSID: " + Utilities.getCurrentSsid(context),context);
                             }
@@ -234,7 +234,7 @@ public class WifiReceiver extends WakefulBroadcastReceiver {
                         writeLog("Cell radio has been turned off, SSID: " + Utilities.getCurrentSsid(context),context);
                     }
                     else if(!prefs.getBoolean("altRootCommand", false)){
-                        RootAccess.INSTANCE.runCommands(airCmd);
+                        RootAccess.runCommands(airCmd);
                         Log.d("RadioControl", "Airplane mode has been turned on");
                         writeLog("Airplane mode has been turned on, SSID: " + Utilities.getCurrentSsid(context),context);
                     }
@@ -319,7 +319,7 @@ public class WifiReceiver extends WakefulBroadcastReceiver {
 
                     }
                     else if(!prefs.getBoolean("altRootCommand", false)){
-                        RootAccess.INSTANCE.runCommands(airCmd);
+                        RootAccess.runCommands(airCmd);
                         Log.d("RadioControl", "Airplane mode has been turned on");
                         writeLog("Airplane mode has been turned on, SSID: " + Utilities.getCurrentSsid(context),context);
                     }

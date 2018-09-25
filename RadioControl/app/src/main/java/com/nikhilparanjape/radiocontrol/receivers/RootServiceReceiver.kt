@@ -27,6 +27,6 @@ class RootServiceReceiver : WakefulBroadcastReceiver() {
     }
 
     companion object {
-        val REQUEST_CODE = 35718
+        const val REQUEST_CODE = 35718
     }
 }

@@ -1,6 +1,5 @@
 package com.nikhilparanjape.radiocontrol.rootUtils;
 
-import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -15,15 +14,12 @@ import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationManagerCompat;
 import android.telephony.CellInfo;
 import android.telephony.TelephonyManager;
 import android.text.format.DateFormat;
@@ -35,7 +31,6 @@ import com.nikhilparanjape.radiocontrol.receivers.NightModeReceiver;
 import com.nikhilparanjape.radiocontrol.receivers.RootServiceReceiver;
 import com.nikhilparanjape.radiocontrol.receivers.TimedAlarmReceiver;
 import com.nikhilparanjape.radiocontrol.receivers.WakeupReceiver;
-import com.nikhilparanjape.radiocontrol.services.CellRadioService;
 import com.nikhilparanjape.radiocontrol.services.TestJobService;
 
 import java.io.File;
@@ -54,10 +49,6 @@ import static android.app.AlarmManager.RTC_WAKEUP;
  * A custom Utilities class for RadioControl
  */
 public class Utilities {
-
-    private static final String PRIVATE_PREF = "prefs";
-    private String[] airCmd = {"su", "settings put global airplane_mode_radios  \"cell\"", "content update --uri content://settings/global --bind value:s:'cell' --where \"name='airplane_mode_radios'\"", "settings put global airplane_mode_on 1", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state true"};
-
 
     /**
      * gets network ssid
@@ -143,7 +134,7 @@ public class Utilities {
         // Construct an intent that will execute the AlarmReceiver
         Intent intent = new Intent(c, WakeupReceiver.class);
         // Create a PendingIntent to be triggered when the alarm goes off
-        final PendingIntent pIntent = PendingIntent.getBroadcast(c, ActionReceiver.Companion.getREQUEST_CODE(),
+        final PendingIntent pIntent = PendingIntent.getBroadcast(c, ActionReceiver.REQUEST_CODE,
                 intent, PendingIntent.FLAG_UPDATE_CURRENT);
         // Setup periodic alarm every 5 seconds
         long firstMillis = System.currentTimeMillis(); // alarm is set right away
@@ -162,7 +153,7 @@ public class Utilities {
         // Construct an intent that will execute the AlarmReceiver
         Intent intent = new Intent(c, TimedAlarmReceiver.class);
         // Create a PendingIntent to be triggered when the alarm goes off
-        final PendingIntent pIntent = PendingIntent.getBroadcast(c, TimedAlarmReceiver.Companion.getREQUEST_CODE(),
+        final PendingIntent pIntent = PendingIntent.getBroadcast(c, TimedAlarmReceiver.REQUEST_CODE,
                 intent, PendingIntent.FLAG_UPDATE_CURRENT);
         // Setup periodic alarm every 5 seconds
         long firstMillis = System.currentTimeMillis(); // alarm is set right away
@@ -208,7 +199,7 @@ public class Utilities {
         // Construct an intent that will execute the AlarmReceiver
         Intent intent = new Intent(c, TimedAlarmReceiver.class);
         // Create a PendingIntent to be triggered when the alarm goes off
-        final PendingIntent pIntent = PendingIntent.getBroadcast(c, TimedAlarmReceiver.Companion.getREQUEST_CODE(),
+        final PendingIntent pIntent = PendingIntent.getBroadcast(c, TimedAlarmReceiver.REQUEST_CODE,
                 intent, PendingIntent.FLAG_UPDATE_CURRENT);
         // Setup periodic alarm every 5 seconds
         long firstMillis = System.currentTimeMillis(); // alarm is set right away
@@ -232,7 +223,7 @@ public class Utilities {
         // Construct an intent that will execute the AlarmReceiver
         Intent intent = new Intent(c, RootServiceReceiver.class);
         // Create a PendingIntent to be triggered when the alarm goes off
-        final PendingIntent pIntent = PendingIntent.getBroadcast(c, RootServiceReceiver.Companion.getREQUEST_CODE(),
+        final PendingIntent pIntent = PendingIntent.getBroadcast(c, RootServiceReceiver.REQUEST_CODE,
                 intent, PendingIntent.FLAG_UPDATE_CURRENT);
         // Setup periodic alarm every X seconds
         long firstMillis = System.currentTimeMillis(); // alarm is set right away
@@ -247,7 +238,7 @@ public class Utilities {
     }
     public void cancelRootAlarm(Context c) {
         Intent intent = new Intent(c, RootServiceReceiver.class);
-        final PendingIntent pIntent = PendingIntent.getBroadcast(c, RootServiceReceiver.Companion.getREQUEST_CODE(),
+        final PendingIntent pIntent = PendingIntent.getBroadcast(c, RootServiceReceiver.REQUEST_CODE,
                 intent, PendingIntent.FLAG_UPDATE_CURRENT);
         AlarmManager alarm = (AlarmManager) c.getSystemService(Context.ALARM_SERVICE);
         alarm.cancel(pIntent);
@@ -255,7 +246,7 @@ public class Utilities {
     }
     public void cancelAlarm(Context c) {
         Intent intent = new Intent(c, TimedAlarmReceiver.class);
-        final PendingIntent pIntent = PendingIntent.getBroadcast(c, TimedAlarmReceiver.Companion.getREQUEST_CODE(),
+        final PendingIntent pIntent = PendingIntent.getBroadcast(c, TimedAlarmReceiver.REQUEST_CODE,
                 intent, PendingIntent.FLAG_UPDATE_CURRENT);
         AlarmManager alarm = (AlarmManager) c.getSystemService(Context.ALARM_SERVICE);
         alarm.cancel(pIntent);
@@ -268,7 +259,7 @@ public class Utilities {
         // Construct an intent that will execute the AlarmReceiver
         Intent intent = new Intent(c, NightModeReceiver.class);
         // Create a PendingIntent to be triggered when the alarm goes off
-        final PendingIntent pIntent = PendingIntent.getBroadcast(c, NightModeReceiver.Companion.getREQUEST_CODE(),
+        final PendingIntent pIntent = PendingIntent.getBroadcast(c, NightModeReceiver.REQUEST_CODE,
                 intent, PendingIntent.FLAG_UPDATE_CURRENT);
         // Setup periodic alarm every 5 seconds
         long firstMillis = System.currentTimeMillis(); // alarm is set right away
@@ -281,7 +272,7 @@ public class Utilities {
 
     public void cancelWakeupAlarm(Context c) {
         Intent intent = new Intent(c, WakeupReceiver.class);
-        final PendingIntent pIntent = PendingIntent.getBroadcast(c, WakeupReceiver.Companion.getREQUEST_CODE(),
+        final PendingIntent pIntent = PendingIntent.getBroadcast(c, WakeupReceiver.REQUEST_CODE,
                 intent, PendingIntent.FLAG_UPDATE_CURRENT);
         AlarmManager alarm = (AlarmManager) c.getSystemService(Context.ALARM_SERVICE);
         alarm.cancel(pIntent);
@@ -300,11 +291,6 @@ public class Utilities {
         }
         else
             return 0;
-
-    }
-    public static void getSecurity(Context c){
-        WifiManager wifiManager = (WifiManager)c.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-        WifiConfiguration netConfig = new WifiConfiguration();
 
     }
     public static String getPingStats(String s) {
@@ -335,38 +321,12 @@ public class Utilities {
 
     }
 
-
-
-
-    public static String getFrequency(Context c){
-        WifiManager wifiManager = (WifiManager)c.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-        int freq = wifiManager.getConnectionInfo().getFrequency();
-        int GHz = freq/1000;
-        if(GHz == 2){
-            Log.d("RadioControl", "Frequency = " + freq + "MHz");
-            return "2.4 GHz";
-        }
-        else if(GHz == 5){
-            Log.d("RadioControl", "Frequency = " + freq + "MHz");
-            return "5 GHz";
-        }
-        else
-            return null;
-    }
-
     /**
      * Makes a network alert
      * @param context
      * @return
      */
     public static void sendNote(Context context, String mes, boolean vibrate, boolean sound, boolean heads){
-        int priority;
-        if(!heads){
-            priority = 0;
-        }
-        else{
-            priority = 1;
-        }
         createNotificationChannel(context);
         PendingIntent pi = PendingIntent.getActivity(context, 1, new Intent(WifiManager.ACTION_PICK_WIFI_NETWORK), 0);
         //Resources r = getResources();
@@ -407,34 +367,6 @@ public class Utilities {
             NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
         }
-    }
-    public void createBackgroundNotification(Context context, String title, String message)
-    {
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context, "Background")
-                .setSmallIcon(R.drawable.ic_refresh_white_48dp)
-                .setContentTitle(title)
-                .setContentText(message)
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            // Create the NotificationChannel, but only on API 26+ because
-            // the NotificationChannel class is new and not in the support library
-            int importance = NotificationManagerCompat.IMPORTANCE_DEFAULT;
-            @SuppressLint("WrongConstant") NotificationChannel channel = new NotificationChannel("radiocontrol-background", "Background Channel", importance);
-            channel.setDescription("For Intelligent mode");
-            // Register the channel with the system
-            NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-            notificationManager.createNotificationChannel(channel);
-            // notificationId is a unique int for each notification that you must define
-            notificationManager.notify(0, mBuilder.build());
-
-        }
-        else{
-            mBuilder.notify();
-        }
-
-
-
     }
 
     /**
@@ -638,78 +570,6 @@ public class Utilities {
             }
         }else{
             return false;
-        }
-    }
-
-    public void pingTask(Context context){
-        Runtime runtime = Runtime.getRuntime();
-        try {
-            //Wait for network to be connected fully
-            while(!Utilities.isConnected(context)){
-                Thread.sleep(1000);
-            }
-            Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");//Send 1 packet to Cloudflare and check if it came back
-            int exitValue = ipProcess.waitFor();
-            Log.d("RadioControl", "Ping test returned " + exitValue);
-
-            SharedPreferences sp = context.getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE);
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-
-            boolean alertPriority = prefs.getBoolean("networkPriority", false);//Setting for network notifier
-            boolean alertSounds = prefs.getBoolean("networkSound",false);
-            boolean alertVibrate = prefs.getBoolean("networkVibrate",false);
-
-
-            if(sp.getInt("isActive",0) == 0){
-                //If the connection can't reach Google
-                if(exitValue != 0){
-                    Utilities.sendNote(context, context.getString(R.string.not_connected_alert),alertVibrate,alertSounds,alertPriority);
-                }
-            }
-            else if(sp.getInt("isActive",0) == 1){
-                //If the connection can't reach Google
-                if(exitValue != 0){
-                    Utilities.sendNote(context, context.getString(R.string.not_connected_alert),alertVibrate,alertSounds,alertPriority);
-                }
-                else{
-                    //Runs the alternate root command
-                    if(prefs.getBoolean("altRootCommand", false)){
-                        Intent cellIntent = new Intent(context, CellRadioService.class);
-                        context.startService(cellIntent);
-                        scheduleRootAlarm(context);
-                        Log.d("RadioControl", "Cell Radio has been turned off");
-                    }
-                    else if(!prefs.getBoolean("altRootCommand", false)){
-                        RootAccess.INSTANCE.runCommands(airCmd);
-                        Log.d("RadioControl", "Airplane mode has been turned on");
-                    }
-                }
-            }
-
-        } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    private class AsyncBackgroundTask extends AsyncTask<String, Void, Boolean> {
-
-        @Override
-        protected Boolean doInBackground(String... params) {
-            Runtime runtime = Runtime.getRuntime();
-            try {
-                Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");
-                int exitValue = ipProcess.waitFor();
-                Log.d("RadioControl", "Ping test returned " + exitValue);
-                return (exitValue == 0);
-            }
-            catch (IOException | InterruptedException e){ e.printStackTrace(); }
-
-            return false;
-        }
-        @Override
-        protected void onPostExecute(Boolean result) {
-
         }
     }
 }

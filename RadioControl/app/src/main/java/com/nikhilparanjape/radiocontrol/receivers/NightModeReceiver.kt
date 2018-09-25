@@ -19,7 +19,6 @@ class NightModeReceiver : BroadcastReceiver() {
 
     companion object {
 
-        val REQUEST_CODE = 12345
-        val ACTION = "com.nikhilparanjape.radiocontrol.services.BackgroundAirplaneService"
+        const val REQUEST_CODE = 12345
     }
 }

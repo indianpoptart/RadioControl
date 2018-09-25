@@ -31,8 +31,8 @@ class ActionReceiver : BroadcastReceiver() {
     }
 
     companion object {
-        private val PRIVATE_PREF = "prefs"
-        val REQUEST_CODE = 21345
+        private const val PRIVATE_PREF = "prefs"
+        const val REQUEST_CODE = 21345
     }
 
 

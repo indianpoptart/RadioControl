@@ -1,5 +1,6 @@
 package com.nikhilparanjape.radiocontrol.rootUtils
 
+import org.jetbrains.anko.doAsync
 import java.io.DataOutputStream
 import java.io.IOException
 
@@ -9,24 +10,26 @@ import java.io.IOException
 object RootAccess {
     @JvmStatic
     fun runCommands(commands: Array<String>) {
-        val p: Process
-        try {
-            p = Runtime.getRuntime().exec("su")
-            val os = DataOutputStream(p.outputStream)
-            //Allows root commands to be entered line by line
-            for (tmpCmd in commands) {
-                os.writeBytes(tmpCmd + "\n") //Sends commands to the terminal
+        doAsync {
+            val p: Process
+            try {
+                p = Runtime.getRuntime().exec("su")
+                val os = DataOutputStream(p.outputStream)
+                //Allows root commands to be entered line by line
+                for (tmpCmd in commands) {
+                    os.writeBytes(tmpCmd + "\n") //Sends commands to the terminal
+                }
+                os.writeBytes("exit\n")
+                os.flush()
+                os.close()
+
+                p.waitFor()
+            } catch (e: IOException) {
+                e.printStackTrace()
+
+            } catch (e: InterruptedException) {
+                e.printStackTrace()
             }
-            os.writeBytes("exit\n")
-            os.flush()
-            os.close()
-
-            p.waitFor()
-        } catch (e: IOException) {
-            e.printStackTrace()
-
-        } catch (e: InterruptedException) {
-            e.printStackTrace()
         }
 
 
