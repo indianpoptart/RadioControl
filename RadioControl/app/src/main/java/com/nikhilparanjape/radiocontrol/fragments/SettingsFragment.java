@@ -20,6 +20,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.text.Html;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -430,6 +431,9 @@ public class SettingsFragment extends PreferenceFragment implements TimePickerDi
                 "Log Deleted", Toast.LENGTH_LONG).show();
     }
 
+    public void forceCrash(View view) {
+        throw new RuntimeException("This is a test crash");
+    }
 
     @Override
     public void onFolderSelection(@NonNull FolderChooserDialog dialog, @NonNull File folder) {
