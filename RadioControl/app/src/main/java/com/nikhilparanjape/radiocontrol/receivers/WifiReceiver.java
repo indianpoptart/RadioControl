@@ -66,19 +66,19 @@ public class WifiReceiver extends WakefulBroadcastReceiver {
             else {
                 Log.d("RadioControl","Battery Optimization OFF");
                 //Check if we just lost WiFi signal
-                if (!Utilities.isConnectedWifi(context)) {
+                if (!Utilities.Companion.isConnectedWifi(context)) {
                     Log.d("RadioControl", "WiFi signal LOST");
                     writeLog("WiFi Signal lost", context);
-                    if (Utilities.isAirplaneMode(context) || !Utilities.isConnectedMobile(context)) {
+                    if (Utilities.Companion.isAirplaneMode(context) || !Utilities.Companion.isConnectedMobile(context)) {
                         //Checks that user is not in call
                         if(!util.isCallActive(context)) {
                             //Runs the alternate root command
                             if (prefs.getBoolean("altRootCommand", false)) {
-                                if (Utilities.getCellStatus(context) == 1) {
+                                if (Utilities.Companion.getCellStatus(context) == 1) {
                                     Intent cellIntent = new Intent(context, CellRadioService.class);
                                     context.startService(cellIntent);
                                     Log.d("RadioControl", "Cell Radio has been turned on");
-                                    writeLog("Cell radio has been turned off, SSID: " + Utilities.getCurrentSsid(context), context);
+                                    writeLog("Cell radio has been turned off, SSID: " + Utilities.Companion.getCurrentSsid(context), context);
                                 }
                             } else {
                                 if (prefs.getBoolean("altBTCommand", false)) {
@@ -98,18 +98,18 @@ public class WifiReceiver extends WakefulBroadcastReceiver {
                             while(util.isCallActive(context)){
                                 waitFor(1000);//Wait for call to end
                             }
-                            Utilities.scheduleJob(context);
+                            Utilities.Companion.scheduleJob(context);
                         }
                     }
                 }
             }
 
             //If network is connected and airplane mode is off
-            if (Utilities.isConnectedWifi(context) && !Utilities.isAirplaneMode(context)) {
+            if (Utilities.Companion.isConnectedWifi(context) && !Utilities.Companion.isAirplaneMode(context)) {
                 //boolean isWiFi = activeNetwork.getType() == ConnectivityManager.TYPE_WIFI; //Boolean to check for an active WiFi connection
                 //Check the list of disabled networks
-                if(!disabledPref.contains(Utilities.getCurrentSsid(context))){
-                    Log.d("RadioControl",Utilities.getCurrentSsid(context) + " was not found in the disabled list");
+                if(!disabledPref.contains(Utilities.Companion.getCurrentSsid(context))){
+                    Log.d("RadioControl", Utilities.Companion.getCurrentSsid(context) + " was not found in the disabled list");
                     //Checks that user is not in call
                     if(!util.isCallActive(context)){
                         //Checks if the user doesn't want network alerts
@@ -117,13 +117,13 @@ public class WifiReceiver extends WakefulBroadcastReceiver {
                             //Runs the alternate root command
                             if(prefs.getBoolean("altRootCommand", false)){
 
-                                if(Utilities.getCellStatus(context) == 0){
+                                if(Utilities.Companion.getCellStatus(context) == 0){
                                     Intent cellIntent = new Intent(context, CellRadioService.class);
                                     context.startService(cellIntent);
                                     Log.d("RadioControl", "Cell Radio has been turned off");
-                                    writeLog("Cell radio has been turned off, SSID: " + Utilities.getCurrentSsid(context),context);
+                                    writeLog("Cell radio has been turned off, SSID: " + Utilities.Companion.getCurrentSsid(context),context);
                                 }
-                                else if(Utilities.getCellStatus(context) == 1){
+                                else if(Utilities.Companion.getCellStatus(context) == 1){
                                     Log.d("RadioControl", "Cell Radio is already off");
                                 }
 
@@ -131,7 +131,7 @@ public class WifiReceiver extends WakefulBroadcastReceiver {
                             else{
                                 RootAccess.runCommands(airCmd);
                                 Log.d("RadioControl", "Airplane mode has been turned on");
-                                writeLog("Airplane mode has been turned on, SSID: " + Utilities.getCurrentSsid(context),context);
+                                writeLog("Airplane mode has been turned on, SSID: " + Utilities.Companion.getCurrentSsid(context),context);
                             }
 
                         }
@@ -149,9 +149,9 @@ public class WifiReceiver extends WakefulBroadcastReceiver {
                     }
                 }
                 //Pauses because WiFi network is in the list of disabled SSIDs
-                else if(selections.contains(Utilities.getCurrentSsid(context))){
-                    Log.d("RadioControl",Utilities.getCurrentSsid(context) + " was blocked from list " + selections);
-                    writeLog(Utilities.getCurrentSsid(context) + " was blocked from list " + selections,context);
+                else if(selections.contains(Utilities.Companion.getCurrentSsid(context))){
+                    Log.d("RadioControl", Utilities.Companion.getCurrentSsid(context) + " was blocked from list " + selections);
+                    writeLog(Utilities.Companion.getCurrentSsid(context) + " was blocked from list " + selections,context);
                 }
             }
 
@@ -162,7 +162,7 @@ public class WifiReceiver extends WakefulBroadcastReceiver {
                 new AsyncPingTask(context).execute("");
             }
             //Adds wifi signal lost log for nonrooters
-            if(!Utilities.isConnectedWifi(context)) {
+            if(!Utilities.Companion.isConnectedWifi(context)) {
                 Log.d("RadioControl", "WiFi signal LOST");
                 writeLog("WiFi Signal lost", context);
             }
@@ -196,7 +196,7 @@ public class WifiReceiver extends WakefulBroadcastReceiver {
         Runtime runtime = Runtime.getRuntime();
         try {
             //Wait for network to be connected fully
-            while(!Utilities.isConnected(context)){
+            while(!Utilities.Companion.isConnected(context)){
                 Thread.sleep(1000);
             }
             Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");//Send 1 packet to Cloudflare and check if it came back
@@ -214,14 +214,14 @@ public class WifiReceiver extends WakefulBroadcastReceiver {
             if(sp.getInt("isActive",0) == 0){
                 //If the connection can't reach Google
                 if(exitValue != 0){
-                    Utilities.sendNote(context, context.getString(R.string.not_connected_alert),alertVibrate,alertSounds,alertPriority);
+                    Utilities.Companion.sendNote(context, context.getString(R.string.not_connected_alert),alertVibrate,alertSounds,alertPriority);
                     writeLog("Not connected to the internet",context);
                 }
             }
             else if(sp.getInt("isActive",0) == 1){
                 //If the connection can't reach Google
                 if(exitValue != 0){
-                    Utilities.sendNote(context, context.getString(R.string.not_connected_alert),alertVibrate,alertSounds,alertPriority);
+                    Utilities.Companion.sendNote(context, context.getString(R.string.not_connected_alert),alertVibrate,alertSounds,alertPriority);
                     writeLog("Not connected to the internet",context);
                 }
                 else{
@@ -231,12 +231,12 @@ public class WifiReceiver extends WakefulBroadcastReceiver {
                         context.startService(cellIntent);
                         util.scheduleRootAlarm(context);
                         Log.d("RadioControl", "Cell Radio has been turned off");
-                        writeLog("Cell radio has been turned off, SSID: " + Utilities.getCurrentSsid(context),context);
+                        writeLog("Cell radio has been turned off, SSID: " + Utilities.Companion.getCurrentSsid(context),context);
                     }
                     else if(!prefs.getBoolean("altRootCommand", false)){
                         RootAccess.runCommands(airCmd);
                         Log.d("RadioControl", "Airplane mode has been turned on");
-                        writeLog("Airplane mode has been turned on, SSID: " + Utilities.getCurrentSsid(context),context);
+                        writeLog("Airplane mode has been turned on, SSID: " + Utilities.Companion.getCurrentSsid(context),context);
                     }
                 }
             }
@@ -258,7 +258,7 @@ public class WifiReceiver extends WakefulBroadcastReceiver {
         protected void onPreExecute(){
             try {
                 //Wait for network to be connected fully
-                while(!Utilities.isConnected(context)){
+                while(!Utilities.Companion.isConnected(context)){
                     Thread.sleep(1000);
                 }
             } catch (InterruptedException e) {
@@ -293,25 +293,25 @@ public class WifiReceiver extends WakefulBroadcastReceiver {
             if(sp.getInt("isActive",0) == 0){
                 //If the connection can't reach Google
                 if(!result){
-                    Utilities.sendNote(context, context.getString(R.string.not_connected_alert),alertVibrate,alertSounds,alertPriority);
+                    Utilities.Companion.sendNote(context, context.getString(R.string.not_connected_alert),alertVibrate,alertSounds,alertPriority);
                     writeLog("Not connected to the internet",context);
                 }
             }
             else if(sp.getInt("isActive",0) == 1){
                 //If the connection can't reach Google
                 if(!result){
-                    Utilities.sendNote(context, context.getString(R.string.not_connected_alert),alertVibrate,alertSounds,alertPriority);
+                    Utilities.Companion.sendNote(context, context.getString(R.string.not_connected_alert),alertVibrate,alertSounds,alertPriority);
                     writeLog("Not connected to the internet",context);
                 }
                 else{
                     //Runs the alternate root command
                     if(prefs.getBoolean("altRootCommand", false)){
-                        String d = Utilities.getNetworkType(context);
+                        String d = Utilities.Companion.getNetworkType(context);
                         if(d.equals("WIFI")){
                             Intent cellIntent = new Intent(context, CellRadioService.class);
                             context.startService(cellIntent);
                             Log.d("RadioControl", "Cell Radio has been turned off");
-                            writeLog("Cell radio has been turned off, SSID: " + Utilities.getCurrentSsid(context),context);
+                            writeLog("Cell radio has been turned off, SSID: " + Utilities.Companion.getCurrentSsid(context),context);
                         }
                         else if(!d.equals("WIFI")){
                             Log.d("RadioControl", "Cell Radio is already off");
@@ -321,7 +321,7 @@ public class WifiReceiver extends WakefulBroadcastReceiver {
                     else if(!prefs.getBoolean("altRootCommand", false)){
                         RootAccess.runCommands(airCmd);
                         Log.d("RadioControl", "Airplane mode has been turned on");
-                        writeLog("Airplane mode has been turned on, SSID: " + Utilities.getCurrentSsid(context),context);
+                        writeLog("Airplane mode has been turned on, SSID: " + Utilities.Companion.getCurrentSsid(context),context);
                     }
                 }
             }

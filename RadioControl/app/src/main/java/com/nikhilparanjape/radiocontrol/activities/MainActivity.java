@@ -265,9 +265,9 @@ public class MainActivity extends AppCompatActivity {
         linkSpeedButton.setOnClickListener(v -> {
             //showWifiInfoDialog();
 
-            int linkspeed = Utilities.linkSpeed(getApplicationContext());
-            int GHz = Utilities.frequency(getApplicationContext());
-            Log.i("RadioControl", "Test1: " + Utilities.getCellStatus(getApplicationContext()));
+            int linkspeed = Utilities.Companion.linkSpeed(getApplicationContext());
+            int GHz = Utilities.Companion.frequency(getApplicationContext());
+            Log.i("RadioControl", "Test1: " + Utilities.Companion.getCellStatus(getApplicationContext()));
             if(linkspeed == -1){
                 linkText.setText(R.string.cellNetwork);
             }
@@ -536,7 +536,7 @@ public class MainActivity extends AppCompatActivity {
                         //Donation
                         result.setSelection(item1);
                         Log.d("RadioControl", "Donation button pressed");
-                        if(Utilities.isConnected(getApplicationContext())){
+                        if(Utilities.Companion.isConnected(getApplicationContext())){
                             showDonateDialog();
                         }
                         else{
@@ -1015,7 +1015,7 @@ public class MainActivity extends AppCompatActivity {
                     while((line = buf.readLine()) != null){
                         echo.append(line).append("\n");
                     }
-                    s = Utilities.getPingStats(echo.toString());
+                    s = Utilities.Companion.getPingStats(echo.toString());
                 }
 
                 if(exitValue == 0){
@@ -1089,18 +1089,18 @@ public class MainActivity extends AppCompatActivity {
             boolean result = w.getExitCode();
 
             if(result){
-                if(Utilities.isConnectedWifi(getApplicationContext())){
+                if(Utilities.Companion.isConnectedWifi(getApplicationContext())){
                     connectionStatusText.setText(R.string.connectedWifi);
                     connectionStatusText.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.status_activated));
                     writeLog(getString(R.string.connectedWifi),context);
                 }
-                else if(Utilities.isConnectedMobile(getApplicationContext())){
-                    if(Utilities.isConnectedFast(getApplicationContext())){
+                else if(Utilities.Companion.isConnectedMobile(getApplicationContext())){
+                    if(Utilities.Companion.isConnectedFast(getApplicationContext())){
                         connectionStatusText.setText(R.string.connectedFCell);
                         connectionStatusText.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.status_activated));
                         writeLog(getString(R.string.connectedFCell),context);
                     }
-                    else if(!Utilities.isConnectedFast(getApplicationContext())){
+                    else if(!Utilities.Companion.isConnectedFast(getApplicationContext())){
                         connectionStatusText.setText(R.string.connectedSCell);
                         connectionStatusText.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.status_activated));
                         writeLog(getString(R.string.connectedSCell),context);
@@ -1110,7 +1110,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
             else{
-                if(Utilities.isAirplaneMode(getApplicationContext()) && !Utilities.isConnected(getApplicationContext())){
+                if(Utilities.Companion.isAirplaneMode(getApplicationContext()) && !Utilities.Companion.isConnected(getApplicationContext())){
                     connectionStatusText.setText(R.string.airplaneOn);
                     connectionStatusText.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.status_deactivated));
                 }

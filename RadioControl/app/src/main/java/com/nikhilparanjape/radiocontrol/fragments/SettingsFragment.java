@@ -27,6 +27,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.folderselector.FolderChooserDialog;
 import com.borax12.materialdaterangepicker.time.RadialPickerLayout;
 import com.borax12.materialdaterangepicker.time.TimePickerDialog;
+import com.google.android.material.snackbar.Snackbar;
 import com.nikhilparanjape.radiocontrol.R;
 import com.nikhilparanjape.radiocontrol.receivers.WifiReceiver;
 import com.nikhilparanjape.radiocontrol.rootUtils.RootAccess;
@@ -59,7 +60,7 @@ public class SettingsFragment extends PreferenceFragment implements TimePickerDi
         c = getActivity();
         Utilities util = new Utilities();
 
-        if(Utilities.isWifiOn(c)){
+        if(Utilities.Companion.isWifiOn(c)){
             getPreferenceScreen().findPreference("ssid").setEnabled(true);
         }
         else{
@@ -226,6 +227,12 @@ public class SettingsFragment extends PreferenceFragment implements TimePickerDi
 
             return true;
         });
+        altRootCommand.setOnPreferenceClickListener((preference -> {
+            Snackbar.make(getView(), "Test", Snackbar.LENGTH_LONG)
+                    .show();
+
+            return true;
+        }));
 
 
 

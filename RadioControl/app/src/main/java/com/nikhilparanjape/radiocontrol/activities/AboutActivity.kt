@@ -9,7 +9,6 @@ import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.mikepenz.iconics.IconicsDrawable
 import com.nikhilparanjape.radiocontrol.fragments.AboutFragment
 
-
 /**
  * Created by Nikhil Paranjape on 12/16/2015.
  */
