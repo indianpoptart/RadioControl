@@ -54,6 +54,12 @@
             android:title="@string/title_fabric_analytics"
             android:summary="@string/summary_fabric_analytics"
             android:defaultValue="false" />
+        <CheckBoxPreference
+            android:key="instabugCheck"
+            android:title="Instabug In-app Feedback"
+            android:summary="FillIn"
+            android:defaultValue="false" />
+
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/prefs_title_phone_settings">
         <CheckBoxPreference

@@ -64,7 +64,6 @@ import com.nikhilparanjape.radiocontrol.receivers.ActionReceiver
 import com.nikhilparanjape.radiocontrol.receivers.NightModeReceiver
 import com.nikhilparanjape.radiocontrol.receivers.WifiReceiver
 import com.nikhilparanjape.radiocontrol.rootUtils.PingWrapper
-import com.nikhilparanjape.radiocontrol.rootUtils.RootAccess
 import com.nikhilparanjape.radiocontrol.rootUtils.Utilities
 import com.nikhilparanjape.radiocontrol.services.BackgroundAirplaneService
 import com.nikhilparanjape.radiocontrol.services.CellRadioService
@@ -90,7 +89,7 @@ import java.net.InetAddress
  * Converted to Kotlin on 10/06/2018.
  */
 
-class MainActivityK : AppCompatActivity(), KinAppManager.KinAppListener {
+class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
 
     internal lateinit var icon: Drawable
     internal lateinit var carrierIcon: Drawable
@@ -158,7 +157,7 @@ class MainActivityK : AppCompatActivity(), KinAppManager.KinAppListener {
                 }
 
                 //  Launch app intro
-                val i = Intent(this@MainActivityK, TutorialActivity::class.java)
+                val i = Intent(this@MainActivity, TutorialActivity::class.java)
                 startActivity(i)
 
                 //  Edit preference to make it false because we don't want this to run again
@@ -185,6 +184,7 @@ class MainActivityK : AppCompatActivity(), KinAppManager.KinAppListener {
                 }
                 Log.d("RadioControl", "persist Service launched")
             }
+
 
             if (!getPrefs.getBoolean("workMode", true)) {
                 registerForBroadcasts(applicationContext)
@@ -233,20 +233,20 @@ class MainActivityK : AppCompatActivity(), KinAppManager.KinAppListener {
             linkText.visibility = View.VISIBLE
         }
 
-        linkSpeedButton.setOnClickListener { v ->
+        linkSpeedButton.setOnClickListener { _ ->
             //showWifiInfoDialog();
 
-            val linkspeed = Utilities.linkSpeed(applicationContext)
-            val GHz = Utilities.frequency(applicationContext)
+            val linkSpeed = Utilities.linkSpeed(applicationContext)
+            val gHz = Utilities.frequency(applicationContext)
             Log.i("RadioControl", "Test1: " + Utilities.getCellStatus(applicationContext))
-            if (linkspeed == -1) {
+            if (linkSpeed == -1) {
                 linkText.setText(R.string.cellNetwork)
             } else {
-                if (GHz == 2) {
-                    linkText.text = "Link speed: " + linkspeed + "Mbps @ 2.4 GHz"
+                if (gHz == 2) {
+                    linkText.text = "Link speed: " + linkSpeed + "Mbps @ 2.4 GHz"
 
-                } else if (GHz == 5) {
-                    linkText.text = "Link speed: " + linkspeed + "Mbps @ 5 GHz"
+                } else if (gHz == 5) {
+                    linkText.text = "Link speed: " + linkSpeed + "Mbps @ 5 GHz"
 
                 }
 
@@ -285,7 +285,7 @@ class MainActivityK : AppCompatActivity(), KinAppManager.KinAppListener {
             forceCrashButton.visibility = View.VISIBLE
         }
 
-        conn.setOnClickListener { v ->
+        conn.setOnClickListener { _ ->
             connectionStatusText.setText(R.string.ping)
             connectionStatusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.material_grey_50))
             dialog.visibility = View.VISIBLE
@@ -443,7 +443,7 @@ class MainActivityK : AppCompatActivity(), KinAppManager.KinAppListener {
                         ProfileDrawerItem().withName(deviceName).withEmail("v$versionName").withIcon(icon),
                         ProfileDrawerItem().withName(getString(R.string.profile_root_status)).withEmail(carrierName).withIcon(carrierIcon)
                 )
-                .withOnAccountHeaderListener { view, profile, currentProfile -> false }
+                .withOnAccountHeaderListener { _, profile, _ -> false }
                 .build()
         //Creates navigation drawer items
         val item1 = PrimaryDrawerItem().withIdentifier(1).withName(R.string.home).withIcon(GoogleMaterial.Icon.gmd_wifi)
@@ -473,7 +473,7 @@ class MainActivityK : AppCompatActivity(), KinAppManager.KinAppListener {
                         item5,
                         item7
                 )
-                .withOnDrawerItemClickListener { view, position, _ ->
+                .withOnDrawerItemClickListener { _, position, _ ->
                     Log.d("RadioControl", "The drawer is at position $position")
                     //About button
                     if (position == 3) {
@@ -641,7 +641,7 @@ class MainActivityK : AppCompatActivity(), KinAppManager.KinAppListener {
 
 
         builder.setView(view).setTitle(R.string.donate)//sets title
-                .setPositiveButton(R.string.cancel) { dialog, which ->
+                .setPositiveButton(R.string.cancel) { dialog, _ ->
                     Log.v("RadioControl", "Donation Cancelled")
                     dialog.dismiss()
                 }
@@ -656,17 +656,17 @@ class MainActivityK : AppCompatActivity(), KinAppManager.KinAppListener {
             billingManager.purchase(this, ITEM_ONE_DOLLAR, KinAppProductType.INAPP)
         }
         val threeButton = view.findViewById<Button>(R.id.threeDollar)
-        threeButton.setOnClickListener { v ->
+        threeButton.setOnClickListener {
             alert.cancel() //Closes the donate dialog
             billingManager.purchase(this, ITEM_THREE_DOLLAR, KinAppProductType.INAPP)
         }
         val fiveButton = view.findViewById<Button>(R.id.fiveDollar)
-        fiveButton.setOnClickListener { v ->
+        fiveButton.setOnClickListener {
             alert.cancel() //Closes the donate dialog
             billingManager.purchase(this, ITEM_FIVE_DOLLAR, KinAppProductType.INAPP)
         }
         val tenButton = view.findViewById<Button>(R.id.tenDollar)
-        tenButton.setOnClickListener { v ->
+        tenButton.setOnClickListener {
             alert.cancel() //Closes the donate dialog
             billingManager.purchase(this, ITEM_TEN_DOLLAR, KinAppProductType.INAPP)
         }
@@ -682,7 +682,7 @@ class MainActivityK : AppCompatActivity(), KinAppManager.KinAppListener {
         // Handle your purchase result here
         when (purchaseResult) {
             KinAppPurchaseResult.SUCCESS -> {
-                Toast.makeText(this@MainActivityK, R.string.donationThanks, Toast.LENGTH_LONG).show()
+                Toast.makeText(this@MainActivity, R.string.donationThanks, Toast.LENGTH_LONG).show()
                 Log.d("RadioControl", "In-app purchase succeeded")
                 val pref = PreferenceManager.getDefaultSharedPreferences(applicationContext)
                 val editor = pref.edit()
@@ -694,14 +694,14 @@ class MainActivityK : AppCompatActivity(), KinAppManager.KinAppListener {
 
             }
             KinAppPurchaseResult.ALREADY_OWNED -> {
-                Toast.makeText(this@MainActivityK, R.string.donationExists, Toast.LENGTH_LONG).show()
+                Toast.makeText(this@MainActivity, R.string.donationExists, Toast.LENGTH_LONG).show()
                 Log.d("RadioControl", "Donation already purchased")
             }
             KinAppPurchaseResult.INVALID_PURCHASE -> {
                 // Purchase invalid and cannot be processed
             }
             KinAppPurchaseResult.INVALID_SIGNATURE -> {
-                Toast.makeText(this@MainActivityK, R.string.donationThanks, Toast.LENGTH_LONG).show()
+                Toast.makeText(this@MainActivity, R.string.donationThanks, Toast.LENGTH_LONG).show()
                 Log.d("RadioControl", "In-app purchase succeeded, however verification failed")
                 val pref = PreferenceManager.getDefaultSharedPreferences(applicationContext)
                 val editor = pref.edit()
@@ -733,13 +733,13 @@ class MainActivityK : AppCompatActivity(), KinAppManager.KinAppListener {
 
         builder.setCustomTitle(title)
         builder.setView(view)
-                .setPositiveButton("OK") { dialog, which -> dialog.dismiss() }
+                .setPositiveButton("OK") { dialog, _ -> dialog.dismiss() }
         builder.create().show()
     }
 
     private fun rootInit(): Boolean {
         try {
-            val p = Runtime.getRuntime().exec("su")
+            Runtime.getRuntime().exec("su")
             return true
         } catch (e: IOException) {
             return false
@@ -897,89 +897,89 @@ class MainActivityK : AppCompatActivity(), KinAppManager.KinAppListener {
             } catch (e: InterruptedException) {
                 e.printStackTrace()
             }
-                uiThread {
-                    dialog = findViewById(R.id.pingProgressBar)
-                    dialog.visibility = View.GONE
-                    val connectionStatusText = findViewById<TextView>(R.id.pingStatus)
-                    Log.d("RadioControl", "Status: " + w.status!!)
-                    val status: Double
-                    var isDouble = true
-                    val pStatus: String?
-                    try {
-                        java.lang.Double.parseDouble(s)
-                    } catch (e: Exception) {
-                        isDouble = false
-                        Log.d("RadioControl", "Not a double: $e")
-                        Snackbar.make(clayout, "NumberFormatException " + w.status!!, Snackbar.LENGTH_LONG).show()
-                        Crashlytics.logException(e)
-                    }
-
-                    try {
-                        pStatus = w.status
-
-                        if (isDouble) {
-                            status = java.lang.Double.parseDouble(w.status)
-                            if (status <= 50) {
-                                Snackbar.make(clayout, "Excellent Latency: $status ms", Snackbar.LENGTH_LONG).show()
-                            } else if (status >= 51 && status <= 100) {
-                                Snackbar.make(clayout, "Average Latency: $status ms", Snackbar.LENGTH_LONG).show()
-                            } else if (status >= 101 && status <= 200) {
-                                Snackbar.make(clayout, "Poor Latency: $status ms", Snackbar.LENGTH_LONG).show()
-                            } else if (status >= 201) {
-                                Snackbar.make(clayout, "Poor Latency. VOIP and online gaming may suffer: $status ms", Snackbar.LENGTH_LONG).show()
-                            }
-                        } else {
-                            //Check for packet loss stuff
-                            if (pStatus!!.contains("100% packet loss")) {
-                                Snackbar.make(clayout, "100% packet loss detected", Snackbar.LENGTH_LONG).show()
-                            } else if (pStatus.contains("25% packet loss")) {
-                                Snackbar.make(clayout, "25% packet loss detected", Snackbar.LENGTH_LONG).show()
-                            } else if (pStatus.contains("50% packet loss")) {
-                                Snackbar.make(clayout, "50% packet loss detected", Snackbar.LENGTH_LONG).show()
-                            } else if (pStatus.contains("75% packet loss")) {
-                                Snackbar.make(clayout, "75% packet loss detected", Snackbar.LENGTH_LONG).show()
-                            } else if (pStatus.contains("unknown host")) {
-                                Snackbar.make(clayout, "Unknown host", Snackbar.LENGTH_LONG).show()
-                            }
-                        }
-
-                    } catch (e: Exception) {
-                        Crashlytics.logException(e)
-                        Snackbar.make(findViewById(android.R.id.content), "An error has occurred", Snackbar.LENGTH_LONG).show()
-                    }
-
-                    val result = w.exitCode
-
-                    if (result) {
-                        if (Utilities.isConnectedWifi(applicationContext)) {
-                            connectionStatusText.setText(R.string.connectedWifi)
-                            connectionStatusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_activated))
-                            writeLog(getString(R.string.connectedWifi), applicationContext)
-                        } else if (Utilities.isConnectedMobile(applicationContext)) {
-                            if (Utilities.isConnectedFast(applicationContext)) {
-                                connectionStatusText.setText(R.string.connectedFCell)
-                                connectionStatusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_activated))
-                                writeLog(getString(R.string.connectedFCell), applicationContext)
-                            } else if (!Utilities.isConnectedFast(applicationContext)) {
-                                connectionStatusText.setText(R.string.connectedSCell)
-                                connectionStatusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_activated))
-                                writeLog(getString(R.string.connectedSCell), applicationContext)
-                            }
-
-                        }
-
-                    } else {
-                        if (Utilities.isAirplaneMode(applicationContext) && !Utilities.isConnected(applicationContext)) {
-                            connectionStatusText.setText(R.string.airplaneOn)
-                            connectionStatusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_deactivated))
-                        } else {
-                            connectionStatusText.setText(R.string.connectionUnable)
-                            connectionStatusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_deactivated))
-                            writeLog(getString(R.string.connectionUnable), applicationContext)
-                        }
-
-                    }
+            uiThread {
+                dialog = findViewById(R.id.pingProgressBar)
+                dialog.visibility = View.GONE
+                val connectionStatusText = findViewById<TextView>(R.id.pingStatus)
+                Log.d("RadioControl", "Status: " + w.status!!)
+                val status: Double
+                var isDouble = true
+                val pStatus: String?
+                try {
+                    java.lang.Double.parseDouble(s)
+                } catch (e: Exception) {
+                    isDouble = false
+                    Log.d("RadioControl", "Not a double: $e")
+                    Snackbar.make(clayout, "NumberFormatException " + w.status!!, Snackbar.LENGTH_LONG).show()
+                    Crashlytics.logException(e)
                 }
+
+                try {
+                    pStatus = w.status
+
+                    if (isDouble) {
+                        status = java.lang.Double.parseDouble(s)
+                        if (status <= 50) {
+                            Snackbar.make(clayout, "Excellent Latency: $status ms", Snackbar.LENGTH_LONG).show()
+                        } else if (status in 51.0..100.0) {
+                            Snackbar.make(clayout, "Average Latency: $status ms", Snackbar.LENGTH_LONG).show()
+                        } else if (status in 101.0..200.0) {
+                            Snackbar.make(clayout, "Poor Latency: $status ms", Snackbar.LENGTH_LONG).show()
+                        } else if (status >= 201) {
+                            Snackbar.make(clayout, "Poor Latency. VOIP and online gaming may suffer: $status ms", Snackbar.LENGTH_LONG).show()
+                        }
+                    } else {
+                        //Check for packet loss stuff
+                        if (pStatus!!.contains("100% packet loss")) {
+                            Snackbar.make(clayout, "100% packet loss detected", Snackbar.LENGTH_LONG).show()
+                        } else if (pStatus.contains("25% packet loss")) {
+                            Snackbar.make(clayout, "25% packet loss detected", Snackbar.LENGTH_LONG).show()
+                        } else if (pStatus.contains("50% packet loss")) {
+                            Snackbar.make(clayout, "50% packet loss detected", Snackbar.LENGTH_LONG).show()
+                        } else if (pStatus.contains("75% packet loss")) {
+                            Snackbar.make(clayout, "75% packet loss detected", Snackbar.LENGTH_LONG).show()
+                        } else if (pStatus.contains("unknown host")) {
+                            Snackbar.make(clayout, "Unknown host", Snackbar.LENGTH_LONG).show()
+                        }
+                    }
+
+                } catch (e: Exception) {
+                    Crashlytics.logException(e)
+                    Snackbar.make(findViewById(android.R.id.content), "An error has occurred", Snackbar.LENGTH_LONG).show()
+                }
+
+                val result = w.exitCode
+
+                if (result) {
+                    if (Utilities.isConnectedWifi(applicationContext)) {
+                        connectionStatusText.setText(R.string.connectedWifi)
+                        connectionStatusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_activated))
+                        writeLog(getString(R.string.connectedWifi), applicationContext)
+                    } else if (Utilities.isConnectedMobile(applicationContext)) {
+                        if (Utilities.isConnectedFast(applicationContext)) {
+                            connectionStatusText.setText(R.string.connectedFCell)
+                            connectionStatusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_activated))
+                            writeLog(getString(R.string.connectedFCell), applicationContext)
+                        } else if (!Utilities.isConnectedFast(applicationContext)) {
+                            connectionStatusText.setText(R.string.connectedSCell)
+                            connectionStatusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_activated))
+                            writeLog(getString(R.string.connectedSCell), applicationContext)
+                        }
+
+                    }
+
+                } else {
+                    if (Utilities.isAirplaneMode(applicationContext) && !Utilities.isConnected(applicationContext)) {
+                        connectionStatusText.setText(R.string.airplaneOn)
+                        connectionStatusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_deactivated))
+                    } else {
+                        connectionStatusText.setText(R.string.connectionUnable)
+                        connectionStatusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_deactivated))
+                        writeLog(getString(R.string.connectionUnable), applicationContext)
+                    }
+
+                }
+            }
 
 
         }
