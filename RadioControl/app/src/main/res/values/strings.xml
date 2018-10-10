@@ -145,5 +145,9 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+    <string name="profile_root_status">Root Status</string>
+    <string name="title_service_paused">RadioControl services have been paused</string>
+    <string name="title_standby_dialog">Standby Mode</string>
+    <string name="button_disable_standby">Turn OFF standby mode</string>
 
 </resources>

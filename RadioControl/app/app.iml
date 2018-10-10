@@ -22,14 +22,13 @@
       </configuration>
     </facet>
     <facet type="kotlin-language" name="Kotlin">
-      <configuration version="3" platform="JVM 1.8" useProjectSettings="false">
+      <configuration version="3" platform="JVM 1.6" useProjectSettings="false">
         <compilerSettings />
         <compilerArguments>
           <option name="destination" value="$MODULE_DIR$/build/tmp/kotlin-classes/debug" />
           <option name="noStdlib" value="true" />
           <option name="noReflect" value="true" />
           <option name="moduleName" value="app_debug" />
-          <option name="jvmTarget" value="1.8" />
           <option name="addCompilerBuiltIns" value="true" />
           <option name="loadBuiltInsFromDependencies" value="true" />
           <option name="languageVersion" value="1.2" />
@@ -46,6 +45,7 @@
               <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-android-extensions/1.2.50/a5309d96fd097320a75947d2e9673a86c948f605/kotlin-android-extensions-1.2.50.jar" />
             </array>
           </option>
+          <option name="coroutinesState" value="enable" />
         </compilerArguments>
       </configuration>
     </facet>
@@ -142,98 +142,102 @@
     <orderEntry type="jdk" jdkName="Android API 28 Platform (1)" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Gradle: com.getkeepsafe.taptargetview:taptargetview-1.8.0" level="project" />
-    <orderEntry type="library" name="Gradle: com.mikepenz:google-material-typeface-3.0.1.3.original" level="project" />
-    <orderEntry type="library" name="Gradle: androidx.slidingpanelayout:slidingpanelayout-1.0.0" level="project" />
-    <orderEntry type="library" name="Gradle: androidx.lifecycle:lifecycle-livedata-2.0.0" level="project" />
-    <orderEntry type="library" name="Gradle: com.mikepenz:aboutlibraries-6.1.1" level="project" />
     <orderEntry type="library" name="Gradle: com.crashlytics.sdk.android:crashlytics-core-2.6.4" level="project" />
-    <orderEntry type="library" name="Gradle: androidx.cardview:cardview-1.0.0" level="project" />
     <orderEntry type="library" name="Gradle: androidx.appcompat:appcompat-1.0.0" level="project" />
-    <orderEntry type="library" name="Gradle: com.google.android.gms:play-services-tasks-license-11.4.2" level="project" />
-    <orderEntry type="library" name="Gradle: com.mikepenz:fastadapter-3.3.0" level="project" />
     <orderEntry type="library" name="Gradle: com.google.android.material:material-1.0.0" level="project" />
-    <orderEntry type="library" name="Gradle: com.borax12.materialdaterangepicker:library-1.9" level="project" />
-    <orderEntry type="library" name="Gradle: org.jetbrains.anko:anko-commons-0.10.6" level="project" />
     <orderEntry type="library" name="Gradle: com.appyvet:materialrangebar-1.3" level="project" />
-    <orderEntry type="library" name="Gradle: androidx.versionedparcelable:versionedparcelable-1.0.0" level="project" />
-    <orderEntry type="library" name="Gradle: com.github.jorgecastilloprz:fabprogresscircle-1.01" level="project" />
     <orderEntry type="library" name="Gradle: androidx.fragment:fragment-1.0.0" level="project" />
     <orderEntry type="library" name="Gradle: androidx.swiperefreshlayout:swiperefreshlayout-1.0.0" level="project" />
     <orderEntry type="library" name="Gradle: com.github.bumptech.glide:annotations:4.8.0@jar" level="project" />
     <orderEntry type="library" name="Gradle: org.jetbrains:annotations:13.0@jar" level="project" />
-    <orderEntry type="library" name="Gradle: androidx.lifecycle:lifecycle-viewmodel-2.0.0" level="project" />
-    <orderEntry type="library" name="Gradle: com.mikepenz:fastadapter-extensions-expandable-3.3.0" level="project" />
     <orderEntry type="library" name="Gradle: androidx.coordinatorlayout:coordinatorlayout-1.0.0" level="project" />
-    <orderEntry type="library" name="Gradle: androidx.documentfile:documentfile-1.0.0" level="project" />
     <orderEntry type="library" name="Gradle: com.github.gabrielemariotti.changeloglib:changelog-2.1.0" level="project" />
     <orderEntry type="library" name="Gradle: com.google.firebase:firebase-iid-11.4.2" level="project" />
-    <orderEntry type="library" name="Gradle: androidx.recyclerview:recyclerview-1.0.0" level="project" />
-    <orderEntry type="library" name="Gradle: com.mikepenz:materialize-1.2.0" level="project" />
-    <orderEntry type="library" name="Gradle: com.crashlytics.sdk.android:beta-1.2.10" level="project" />
     <orderEntry type="library" name="Gradle: androidx.interpolator:interpolator-1.0.0" level="project" />
     <orderEntry type="library" name="Gradle: com.google.android.gms:play-services-basement-license-11.4.2" level="project" />
-    <orderEntry type="library" name="Gradle: com.afollestad.material-dialogs:core-0.9.6.0" level="project" />
-    <orderEntry type="library" name="Gradle: androidx.vectordrawable:vectordrawable-1.0.0" level="project" />
     <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib:1.2.60@jar" level="project" />
+    <orderEntry type="library" name="Gradle: org.parceler:parceler-api:1.1.6@jar" level="project" />
     <orderEntry type="library" name="Gradle: com.mikepenz:fastadapter-commons-3.3.0" level="project" />
-    <orderEntry type="library" name="Gradle: androidx.legacy:legacy-support-v4-1.0.0" level="project" />
     <orderEntry type="library" name="Gradle: com.github.bumptech.glide:gifdecoder-4.8.0" level="project" />
     <orderEntry type="library" name="Gradle: io.fabric.sdk.android:fabric-1.4.4" level="project" />
-    <orderEntry type="library" name="Gradle: com.google.firebase:firebase-common-license-11.4.2" level="project" />
     <orderEntry type="library" name="Gradle: com.google.firebase:firebase-analytics-impl-11.4.2" level="project" />
     <orderEntry type="library" name="Gradle: com.github.apl-devs:appintro-v4.2.3" level="project" />
     <orderEntry type="library" name="Gradle: androidx.asynclayoutinflater:asynclayoutinflater-1.0.0" level="project" />
     <orderEntry type="library" name="Gradle: com.google.firebase:firebase-common-11.4.2" level="project" />
     <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.2.60@jar" level="project" />
-    <orderEntry type="library" name="Gradle: com.appeaser.sublimepickerlibrary:sublimepickerlibrary-2.1.1" level="project" />
     <orderEntry type="library" name="Gradle: androidx.constraintlayout:constraintlayout-2.0.0-alpha2" level="project" />
-    <orderEntry type="library" name="Gradle: com.novoda:simple-chrome-custom-tabs-0.1.6" level="project" />
-    <orderEntry type="library" name="Gradle: com.google.firebase:firebase-core-11.4.2" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.kotlinx:kotlinx-coroutines-core:0.18@jar" level="project" />
     <orderEntry type="library" name="Gradle: androidx.lifecycle:lifecycle-runtime-2.0.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.firebase:firebase-core-11.4.2" level="project" />
     <orderEntry type="library" name="Gradle: androidx.drawerlayout:drawerlayout-1.0.0" level="project" />
-    <orderEntry type="library" name="Gradle: androidx.media:media-1.0.0" level="project" />
-    <orderEntry type="library" name="Gradle: androidx.constraintlayout:constraintlayout-solver:2.0.0-alpha2@jar" level="project" />
     <orderEntry type="library" name="Gradle: me.grantland:autofittextview-0.2.1" level="project" />
     <orderEntry type="library" name="Gradle: androidx.lifecycle:lifecycle-livedata-core-2.0.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.github.bumptech.glide:glide-4.8.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.github.asyl.animation:arcanimator-1.0.0" level="project" />
+    <orderEntry type="library" name="Gradle: androidx.browser:browser-1.0.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.firebase:firebase-analytics-impl-license-11.4.2" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.firebase:firebase-iid-license-11.4.2" level="project" />
+    <orderEntry type="library" name="Gradle: androidx.legacy:legacy-support-core-utils-1.0.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.android.gms:play-services-basement-11.4.2" level="project" />
+    <orderEntry type="library" name="Gradle: com.mikepenz:iconics-core-3.1.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.nineoldandroids:library:2.4.0@jar" level="project" />
+    <orderEntry type="library" name="Gradle: androidx.arch.core:core-common:2.0.0@jar" level="project" />
+    <orderEntry type="library" name="Gradle: androidx.viewpager:viewpager-1.0.0" level="project" />
+    <orderEntry type="library" name="Gradle: androidx.loader:loader-1.0.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.crashlytics.sdk.android:crashlytics-2.9.5" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib-common:1.2.60@jar" level="project" />
+    <orderEntry type="library" name="Gradle: com.github.bumptech.glide:disklrucache:4.8.0@jar" level="project" />
+    <orderEntry type="library" name="Gradle: com.mikepenz:materialdrawer-6.1.0" level="project" />
+    <orderEntry type="library" name="Gradle: androidx.print:print-1.0.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.anko:commons-base-0.10.6" level="project" />
+    <orderEntry type="library" name="Gradle: com.mikepenz:google-material-typeface-3.0.1.3.original" level="project" />
+    <orderEntry type="library" name="Gradle: androidx.slidingpanelayout:slidingpanelayout-1.0.0" level="project" />
+    <orderEntry type="library" name="Gradle: androidx.lifecycle:lifecycle-livedata-2.0.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.mikepenz:aboutlibraries-6.1.1" level="project" />
+    <orderEntry type="library" name="Gradle: androidx.cardview:cardview-1.0.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.android.gms:play-services-tasks-license-11.4.2" level="project" />
+    <orderEntry type="library" name="Gradle: com.mikepenz:fastadapter-3.3.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.anko:anko-commons-0.10.6" level="project" />
+    <orderEntry type="library" name="Gradle: com.borax12.materialdaterangepicker:library-1.9" level="project" />
+    <orderEntry type="library" name="Gradle: androidx.versionedparcelable:versionedparcelable-1.0.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.github.jorgecastilloprz:fabprogresscircle-1.01" level="project" />
+    <orderEntry type="library" name="Gradle: com.mikepenz:fastadapter-extensions-expandable-3.3.0" level="project" />
+    <orderEntry type="library" name="Gradle: androidx.lifecycle:lifecycle-viewmodel-2.0.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.github.StephenVinouze:KinApp-1.0.2" level="project" />
+    <orderEntry type="library" name="Gradle: androidx.documentfile:documentfile-1.0.0" level="project" />
+    <orderEntry type="library" name="Gradle: androidx.recyclerview:recyclerview-1.0.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.mikepenz:materialize-1.2.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.crashlytics.sdk.android:beta-1.2.10" level="project" />
+    <orderEntry type="library" name="Gradle: com.afollestad.material-dialogs:core-0.9.6.0" level="project" />
+    <orderEntry type="library" name="Gradle: androidx.vectordrawable:vectordrawable-1.0.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.kotlinx:kotlinx-coroutines-android:0.18@jar" level="project" />
+    <orderEntry type="library" name="Gradle: androidx.legacy:legacy-support-v4-1.0.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.firebase:firebase-common-license-11.4.2" level="project" />
+    <orderEntry type="library" name="Gradle: com.appeaser.sublimepickerlibrary:sublimepickerlibrary-2.1.1" level="project" />
+    <orderEntry type="library" name="Gradle: com.novoda:simple-chrome-custom-tabs-0.1.6" level="project" />
+    <orderEntry type="library" name="Gradle: androidx.media:media-1.0.0" level="project" />
+    <orderEntry type="library" name="Gradle: androidx.constraintlayout:constraintlayout-solver:2.0.0-alpha2@jar" level="project" />
     <orderEntry type="library" name="Gradle: com.google.firebase:firebase-analytics-license-11.4.2" level="project" />
     <orderEntry type="library" name="Gradle: androidx.core:core-1.0.0" level="project" />
     <orderEntry type="library" name="Gradle: androidx.gridlayout:gridlayout-1.0.0-beta01" level="project" />
     <orderEntry type="library" name="Gradle: me.zhanghai.android.materialprogressbar:library-1.4.2" level="project" />
-    <orderEntry type="library" name="Gradle: com.github.bumptech.glide:glide-4.8.0" level="project" />
     <orderEntry type="library" name="Gradle: com.diogobernardino:williamchart-2.2" level="project" />
     <orderEntry type="library" name="Gradle: me.zhanghai.android.customtabshelper:library-1.0.4" level="project" />
-    <orderEntry type="library" name="Gradle: com.github.asyl.animation:arcanimator-1.0.0" level="project" />
     <orderEntry type="library" name="Gradle: com.gordonwong:material-sheet-fab-1.2.1" level="project" />
-    <orderEntry type="library" name="Gradle: androidx.browser:browser-1.0.0" level="project" />
-    <orderEntry type="library" name="Gradle: com.google.firebase:firebase-analytics-impl-license-11.4.2" level="project" />
     <orderEntry type="library" name="Gradle: androidx.transition:transition-1.0.0" level="project" />
-    <orderEntry type="library" name="Gradle: com.google.firebase:firebase-iid-license-11.4.2" level="project" />
     <orderEntry type="library" name="Gradle: com.github.bmelnychuk:AndroidTreeView-d051ce75f5" level="project" />
-    <orderEntry type="library" name="Gradle: androidx.legacy:legacy-support-core-utils-1.0.0" level="project" />
     <orderEntry type="library" name="Gradle: androidx.lifecycle:lifecycle-common:2.0.0@jar" level="project" />
-    <orderEntry type="library" name="Gradle: com.mikepenz:iconics-core-3.1.0" level="project" />
     <orderEntry type="library" name="Gradle: com.afollestad.material-dialogs:commons-0.9.6.0" level="project" />
-    <orderEntry type="library" name="Gradle: com.google.android.gms:play-services-basement-11.4.2" level="project" />
-    <orderEntry type="library" name="Gradle: com.nineoldandroids:library:2.4.0@jar" level="project" />
-    <orderEntry type="library" name="Gradle: androidx.arch.core:core-common:2.0.0@jar" level="project" />
-    <orderEntry type="library" name="Gradle: androidx.viewpager:viewpager-1.0.0" level="project" />
     <orderEntry type="library" name="Gradle: androidx.arch.core:core-runtime-2.0.0" level="project" />
     <orderEntry type="library" name="Gradle: androidx.legacy:legacy-support-core-ui-1.0.0" level="project" />
     <orderEntry type="library" name="Gradle: androidx.annotation:annotation:1.0.0@jar" level="project" />
     <orderEntry type="library" name="Gradle: androidx.vectordrawable:vectordrawable-animated-1.0.0" level="project" />
-    <orderEntry type="library" name="Gradle: androidx.loader:loader-1.0.0" level="project" />
-    <orderEntry type="library" name="Gradle: com.crashlytics.sdk.android:crashlytics-2.9.5" level="project" />
     <orderEntry type="library" name="Gradle: androidx.customview:customview-1.0.0" level="project" />
-    <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib-common:1.2.60@jar" level="project" />
-    <orderEntry type="library" name="Gradle: com.github.bumptech.glide:disklrucache:4.8.0@jar" level="project" />
     <orderEntry type="library" name="Gradle: com.google.firebase:firebase-analytics-11.4.2" level="project" />
     <orderEntry type="library" name="Gradle: androidx.localbroadcastmanager:localbroadcastmanager-1.0.0" level="project" />
     <orderEntry type="library" name="Gradle: com.crashlytics.sdk.android:answers-1.4.3" level="project" />
     <orderEntry type="library" name="Gradle: androidx.cursoradapter:cursoradapter-1.0.0" level="project" />
-    <orderEntry type="library" name="Gradle: com.mikepenz:materialdrawer-6.1.0" level="project" />
-    <orderEntry type="library" name="Gradle: androidx.print:print-1.0.0" level="project" />
     <orderEntry type="library" name="Gradle: com.google.android.gms:play-services-tasks-11.4.2" level="project" />
-    <orderEntry type="library" name="Gradle: org.jetbrains.anko:commons-base-0.10.6" level="project" />
     <orderEntry type="library" name="Gradle: androidx.collection:collection:1.0.0@jar" level="project" />
   </component>
 </module>

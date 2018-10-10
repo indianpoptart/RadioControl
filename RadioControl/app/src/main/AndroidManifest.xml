@@ -48,6 +48,11 @@
                 android:resource="@xml/shortcuts" />
         </activity>
 
+        <activity
+            android:name=".activities.MainActivityK"
+            android:label="@string/app_name" />
+
+
         <!-- Tutorial Activity -->
         <activity
             android:name=".activities.TutorialActivity"

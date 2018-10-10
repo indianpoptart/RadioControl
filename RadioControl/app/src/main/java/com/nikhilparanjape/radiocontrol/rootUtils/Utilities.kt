@@ -326,31 +326,37 @@ class Utilities {
         }
 
         fun getPingStats(s: String): String {
-            var s = s
             try {
                 val status: String
-                if (s.contains("0% packet loss")) {
-                    val start = s.indexOf("/mdev = ")
-                    val end = s.indexOf(" ms\n", start)
-                    s = s.substring(start + 8, end)
-                    val stats = s.split("/".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
-                    return stats[2]
-                } else if (s.contains("100% packet loss")) {
-                    status = "100% packet loss"
-                    return status
+                when {
+                    s.contains("0% packet loss") -> {
+                        val start = s.indexOf("/mdev = ")
+                        val end = s.indexOf(" ms\n", start)
+                        s.substring(start + 8, end)
+                        val stats = s.split("/".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+                        return stats[2]
+                    }
+                    s.contains("100% packet loss") -> {
+                        status = "100% packet loss"
+                        return status
 
-                } else if (s.contains("50% packet loss")) {
-                    status = "50% packet loss"
-                    return status
-                } else if (s.contains("25% packet loss")) {
-                    status = "25% packet loss"
-                    return status
-                } else if (s.contains("unknown host")) {
-                    status = "unknown host"
-                    return status
-                } else {
-                    status = "unknown error in getPingStats"
-                    return status
+                    }
+                    s.contains("50% packet loss") -> {
+                        status = "50% packet loss"
+                        return status
+                    }
+                    s.contains("25% packet loss") -> {
+                        status = "25% packet loss"
+                        return status
+                    }
+                    s.contains("unknown host") -> {
+                        status = "unknown host"
+                        return status
+                    }
+                    else -> {
+                        status = "unknown error in getPingStats"
+                        return status
+                    }
                 }
             } catch (e: StringIndexOutOfBoundsException) {
                 return "An error occurred"

@@ -264,6 +264,8 @@ public class MainActivity extends AppCompatActivity {
 
         linkSpeedButton.setOnClickListener(v -> {
             //showWifiInfoDialog();
+            Intent intent = new Intent(this, MainActivityK.class);
+            startActivity(intent);
 
             int linkspeed = Utilities.Companion.linkSpeed(getApplicationContext());
             int GHz = Utilities.Companion.frequency(getApplicationContext());
