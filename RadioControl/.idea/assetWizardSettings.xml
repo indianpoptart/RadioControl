@@ -94,8 +94,9 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="outputName" value="ic_timer_black_24dp" />
-                            <entry key="sourceFile" value="C:\Users\admin\Downloads\baseline-signal_cellular_connected_no_internet_2_bar-24px.svg" />
+                            <entry key="assetSourceType" value="FILE" />
+                            <entry key="outputName" value="ic_nexus_logo" />
+                            <entry key="sourceFile" value="C:\Users\admin\Downloads\nexus_logo.svg" />
                           </map>
                         </option>
                       </PersistentState>

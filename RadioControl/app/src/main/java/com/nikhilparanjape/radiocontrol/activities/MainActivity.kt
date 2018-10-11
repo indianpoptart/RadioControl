@@ -385,20 +385,15 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
 
 
         //Drawable lg = getResources().getDrawable(R.mipmap.lg);
-        if (deviceName.contains("Nexus 6P")) {
-            icon = AppCompatResources.getDrawable(applicationContext, R.mipmap.huawei)!!
-        } else if (deviceName.contains("Motorola")) {
-            icon = AppCompatResources.getDrawable(applicationContext, R.mipmap.moto2)!!
-        } else if (deviceName.contains("Pixel")) {
-            icon = AppCompatResources.getDrawable(applicationContext, R.mipmap.google)!!
-        } else if (deviceName.contains("LG")) {
-            icon = AppCompatResources.getDrawable(applicationContext, R.mipmap.lg)!!
-        } else if (deviceName.contains("Samsung")) {
-            icon = AppCompatResources.getDrawable(applicationContext, R.mipmap.samsung)!!
-        } else if (deviceName.contains("OnePlus")) {
-            icon = AppCompatResources.getDrawable(applicationContext, R.mipmap.oneplus)!!
-        } else {
-            icon = AppCompatResources.getDrawable(applicationContext, R.mipmap.ic_launcher)!!
+        icon = when {
+            deviceName.contains("Nexus 6P") -> AppCompatResources.getDrawable(applicationContext, R.mipmap.huawei)!!
+            deviceName.contains("Nexus") -> AppCompatResources.getDrawable(applicationContext, R.drawable.ic_google__g__logo)!!
+            deviceName.contains("Motorola") -> AppCompatResources.getDrawable(applicationContext, R.mipmap.moto2)!!
+            deviceName.contains("Pixel") -> AppCompatResources.getDrawable(applicationContext, R.drawable.ic_google__g__logo)!!
+            deviceName.contains("LG") -> AppCompatResources.getDrawable(applicationContext, R.mipmap.lg)!!
+            deviceName.contains("Samsung") -> AppCompatResources.getDrawable(applicationContext, R.mipmap.samsung)!!
+            deviceName.contains("OnePlus") -> AppCompatResources.getDrawable(applicationContext, R.mipmap.oneplus)!!
+            else -> AppCompatResources.getDrawable(applicationContext, R.mipmap.ic_launcher)!!
         }
 
         // root icon

@@ -78,7 +78,7 @@ class SettingsFragment : PreferenceFragment(), TimePickerDialog.OnTimeSetListene
         airplaneResetPref.setOnPreferenceClickListener { _ ->
             MaterialDialog(activity)
                     .icon(R.mipmap.wifi_off)
-                    .title(R.string.title_airplane_reset)
+                    .message(R.string.title_airplane_reset)
                     .positiveButton(R.string.text_ok) {
                         val airOffCmd2 = arrayOf("su", "settings put global airplane_mode_radios  \"cell,bluetooth,nfc,wimax\"", "content update --uri content://settings/global --bind value:s:'cell,bluetooth,nfc,wimax' --where \"name='airplane_mode_radios'\"")
                         RootAccess.runCommands(airOffCmd2)

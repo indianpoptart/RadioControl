@@ -25,6 +25,8 @@ import com.db.chart.view.animation.easing.*
 import com.google.android.material.snackbar.Snackbar
 import com.gordonwong.materialsheetfab.MaterialSheetFab
 import com.gordonwong.materialsheetfab.MaterialSheetFabEventListener
+import com.mikepenz.google_material_typeface_library.GoogleMaterial
+import com.mikepenz.iconics.IconicsDrawable
 import com.nikhilparanjape.radiocontrol.R
 import com.nikhilparanjape.radiocontrol.rootUtils.Fab
 import me.grantland.widget.AutofitHelper
@@ -106,9 +108,10 @@ class StatsActivity : AppCompatActivity() {
         findViewById<CoordinatorLayout>(R.id.clayout)
 
         if (actionBar != null) {
-            //actionBar.setHomeAsUpIndicator(IconicsDrawable(this, GoogleMaterial.Icon.gmd_arrow_back).color(Color.WHITE).sizeDp(IconicsDrawable.TOOLBAR_ICON_SIZE).paddingDp(IconicsDrawable.TOOLBAR_ICON_PADDING))
-            //actionBar.setDisplayHomeAsUpEnabled(true)
+            supportActionBar?.setHomeAsUpIndicator(IconicsDrawable(this, GoogleMaterial.Icon.gmd_arrow_back).color(Color.WHITE).sizeDp(IconicsDrawable.TOOLBAR_ICON_SIZE).paddingDp(IconicsDrawable.TOOLBAR_ICON_PADDING))
+            supportActionBar?.setDisplayHomeAsUpEnabled(true)
             actionBar.title = "Statistics"
+
         }
 
         val fab = findViewById<Fab>(R.id.fab)
@@ -726,15 +729,13 @@ class StatsActivity : AppCompatActivity() {
     }
 
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-        // Respond to the action bar's Up/Home button
-            android.R.id.home -> {
-                finish()
-                return true
-            }
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        return if (item?.itemId == android.R.id.home) {
+            finish()
+            true
+        } else {
+            super.onOptionsItemSelected(item)
         }
-        return super.onOptionsItemSelected(item)
     }
 
 
