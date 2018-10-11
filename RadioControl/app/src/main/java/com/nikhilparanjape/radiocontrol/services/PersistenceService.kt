@@ -1,20 +1,19 @@
 package com.nikhilparanjape.radiocontrol.services
 
 import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.app.Service
+import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.net.ConnectivityManager
+import android.os.Build
 import android.os.IBinder
 import android.util.Log
-
+import androidx.core.app.NotificationCompat
 import com.nikhilparanjape.radiocontrol.R
 import com.nikhilparanjape.radiocontrol.receivers.WifiReceiver
-import android.os.Build
-import android.app.NotificationManager
-import android.app.NotificationChannel
-import android.content.Context
-import androidx.core.app.NotificationCompat
 
 /**
  * Created by admin on 7/9/2017.

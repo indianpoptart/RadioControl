@@ -4,9 +4,8 @@ package com.nikhilparanjape.radiocontrol.receivers
 
 import android.content.Context
 import android.content.Intent
-import androidx.legacy.content.WakefulBroadcastReceiver
 import android.util.Log
-
+import androidx.legacy.content.WakefulBroadcastReceiver
 import com.nikhilparanjape.radiocontrol.rootUtils.Utilities
 import com.nikhilparanjape.radiocontrol.services.CellRadioService
 

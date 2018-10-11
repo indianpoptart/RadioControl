@@ -9,18 +9,16 @@ import android.content.Intent
 import android.os.Build
 import android.os.IBinder
 import android.preference.PreferenceManager
-import androidx.core.app.NotificationCompat
 import android.text.format.DateFormat
 import android.util.Log
-
+import androidx.core.app.NotificationCompat
 import com.nikhilparanjape.radiocontrol.R
 import com.nikhilparanjape.radiocontrol.rootUtils.RootAccess
 import com.nikhilparanjape.radiocontrol.rootUtils.Utilities
 import org.jetbrains.anko.doAsync
-
 import java.io.File
 import java.io.IOException
-import java.util.HashSet
+import java.util.*
 
 /**
  * Created by admin on 8/20/2016.

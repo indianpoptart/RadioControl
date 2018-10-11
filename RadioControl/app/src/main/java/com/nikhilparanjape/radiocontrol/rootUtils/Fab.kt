@@ -3,15 +3,15 @@ package com.nikhilparanjape.radiocontrol.rootUtils
 /**
  * Added and modified by Nikhil on 5/17/2016.
  */
+
 import android.content.Context
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import android.util.AttributeSet
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.view.animation.Interpolator
 import android.view.animation.ScaleAnimation
-
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.gordonwong.materialsheetfab.AnimatedFab
 import com.nikhilparanjape.radiocontrol.R
 

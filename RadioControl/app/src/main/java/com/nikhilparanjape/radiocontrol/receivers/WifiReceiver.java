@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
-import androidx.legacy.content.WakefulBroadcastReceiver;
 import android.text.format.DateFormat;
 import android.util.Log;
 
@@ -21,6 +20,8 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+
+import androidx.legacy.content.WakefulBroadcastReceiver;
 
 
 /**

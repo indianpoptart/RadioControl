@@ -2,9 +2,8 @@ package com.nikhilparanjape.radiocontrol.activities
 
 import android.graphics.Color
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import android.view.MenuItem
-
+import androidx.appcompat.app.AppCompatActivity
 import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.mikepenz.iconics.IconicsDrawable
 import com.nikhilparanjape.radiocontrol.R
