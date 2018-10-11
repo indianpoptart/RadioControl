@@ -16,6 +16,6 @@ class TimedAlarmReceiver : WakefulBroadcastReceiver() {
     }
 
     companion object {
-        const val REQUEST_CODE = 12345
+        const val REQUEST_CODE = 142456
     }
 }

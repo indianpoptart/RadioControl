@@ -6,8 +6,6 @@ import android.graphics.Color
 import android.net.wifi.WifiConfiguration
 import android.net.wifi.WifiManager
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.SwitchCompat
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -15,7 +13,8 @@ import android.view.ViewGroup
 import android.widget.ListAdapter
 import android.widget.ListView
 import android.widget.TextView
-
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SwitchCompat
 import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.mikepenz.iconics.IconicsDrawable
 import com.nikhilparanjape.radiocontrol.R
@@ -87,9 +86,9 @@ class NetworkListActivity : AppCompatActivity() {
 
                     val net = getItem(position) as WifiConfiguration
                     convertView = vi.inflate(R.layout.wifi_network, parent, false)
-                    val Name = convertView!!.findViewById<TextView>(R.id.net_name)
+                    val name = convertView!!.findViewById<TextView>(R.id.net_name)
                     val ssid = net.SSID.substring(1, net.SSID.length - 1)
-                    Name.text = ssid
+                    name.text = ssid
                     val on = convertView.findViewById<SwitchCompat>(R.id.network_on)
                     val isEnabled = prefs.getBoolean(net.SSID.substring(1, net.SSID.length - 1), false)
                     on.isChecked = isEnabled

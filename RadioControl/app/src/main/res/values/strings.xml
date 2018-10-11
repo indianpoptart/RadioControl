@@ -150,5 +150,6 @@
     <string name="title_standby_dialog">Standby Mode</string>
     <string name="button_disable_standby">Turn OFF standby mode</string>
     <string name="instabug_d">e3a38217dc9df5bef039e4df338f81f8</string>
+    <string name="text_not_set">not set</string>
 
 </resources>

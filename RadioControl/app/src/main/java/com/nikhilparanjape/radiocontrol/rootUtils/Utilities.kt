@@ -1,11 +1,9 @@
 package com.nikhilparanjape.radiocontrol.rootUtils
 
 import android.annotation.SuppressLint
-import android.app.AlarmManager
-import android.app.Notification
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.PendingIntent
+import android.app.*
+import android.app.AlarmManager.RTC
+import android.app.AlarmManager.RTC_WAKEUP
 import android.app.job.JobInfo
 import android.app.job.JobScheduler
 import android.content.ComponentName
@@ -21,21 +19,12 @@ import android.provider.Settings
 import android.telephony.TelephonyManager
 import android.text.format.DateFormat
 import android.util.Log
-
 import com.nikhilparanjape.radiocontrol.R
-import com.nikhilparanjape.radiocontrol.receivers.ActionReceiver
-import com.nikhilparanjape.radiocontrol.receivers.NightModeReceiver
-import com.nikhilparanjape.radiocontrol.receivers.RootServiceReceiver
-import com.nikhilparanjape.radiocontrol.receivers.TimedAlarmReceiver
-import com.nikhilparanjape.radiocontrol.receivers.WakeupReceiver
+import com.nikhilparanjape.radiocontrol.receivers.*
 import com.nikhilparanjape.radiocontrol.services.TestJobService
-
 import java.io.File
 import java.io.IOException
-import java.util.Calendar
-
-import android.app.AlarmManager.RTC
-import android.app.AlarmManager.RTC_WAKEUP
+import java.util.*
 
 
 /**
@@ -313,11 +302,11 @@ class Utilities {
         fun frequency(c: Context): Int {
             val wifiManager = c.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
             val freq = wifiManager.connectionInfo.frequency
-            val GHz = freq / 1000
-            if (GHz == 2) {
+            val gHz = freq / 1000
+            if (gHz == 2) {
                 Log.d("RadioControl", "Frequency = " + freq + "MHz")
                 return 2
-            } else if (GHz == 5) {
+            } else if (gHz == 5) {
                 Log.d("RadioControl", "Frequency = " + freq + "MHz")
                 return 5
             } else

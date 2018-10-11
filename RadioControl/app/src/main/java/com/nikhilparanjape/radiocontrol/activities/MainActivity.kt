@@ -4,11 +4,7 @@ import android.app.AlarmManager
 import android.app.AlertDialog
 import android.app.NotificationManager
 import android.app.PendingIntent
-import android.content.ComponentName
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
-import android.content.ServiceConnection
+import android.content.*
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.drawable.Drawable
@@ -17,13 +13,6 @@ import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
 import android.preference.PreferenceManager
-import androidx.coordinatorlayout.widget.CoordinatorLayout
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.snackbar.Snackbar
-import androidx.core.app.NotificationCompat
-import androidx.core.content.ContextCompat
-import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import android.text.Html
 import android.text.format.DateFormat
 import android.util.Log
@@ -31,13 +20,13 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
-import android.widget.Button
-import android.widget.ProgressBar
-import android.widget.Switch
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
-
+import androidx.appcompat.widget.Toolbar
+import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.Theme
 import com.android.vending.billing.IInAppBillingService
@@ -49,6 +38,8 @@ import com.github.stephenvinouze.core.managers.KinAppManager
 import com.github.stephenvinouze.core.models.KinAppProductType
 import com.github.stephenvinouze.core.models.KinAppPurchase
 import com.github.stephenvinouze.core.models.KinAppPurchaseResult
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.snackbar.Snackbar
 import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.mikepenz.iconics.IconicsDrawable
 import com.mikepenz.materialdrawer.AccountHeaderBuilder
@@ -69,17 +60,15 @@ import com.nikhilparanjape.radiocontrol.services.BackgroundAirplaneService
 import com.nikhilparanjape.radiocontrol.services.CellRadioService
 import com.nikhilparanjape.radiocontrol.services.PersistenceService
 import com.nikhilparanjape.radiocontrol.services.TestJobService
-
-import java.io.BufferedReader
-import java.io.File
-import java.io.IOException
-import java.io.InputStreamReader
-
 import io.fabric.sdk.android.Fabric
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
+import java.io.BufferedReader
+import java.io.File
+import java.io.IOException
+import java.io.InputStreamReader
 import java.net.InetAddress
 
 
@@ -105,6 +94,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
     private val billingManager = KinAppManager(this, base64EncodedPublicKey)
 
 
+
     internal var mServiceConn: ServiceConnection = object : ServiceConnection {
         override fun onServiceDisconnected(name: ComponentName) {
             mService = null
@@ -122,6 +112,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
         clayout = findViewById(R.id.clayout)
         val dialog = findViewById<ProgressBar>(R.id.pingProgressBar)
         mServiceComponent = ComponentName(this, TestJobService::class.java)
+
 
         // Handle Toolbar
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
@@ -157,7 +148,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
                 }
 
                 //  Launch app intro
-                val i = Intent(this@MainActivity, TutorialActivity::class.java)
+                val i = Intent(applicationContext, TutorialActivity::class.java)
                 startActivity(i)
 
                 //  Edit preference to make it false because we don't want this to run again
@@ -651,7 +642,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
 
         //Sets the purchase options
         val oneButton = view.findViewById<Button>(R.id.oneDollar)
-        oneButton.setOnClickListener { v ->
+        oneButton.setOnClickListener {
             alert.cancel() //Closes the donate dialog
             billingManager.purchase(this, ITEM_ONE_DOLLAR, KinAppProductType.INAPP)
         }
@@ -682,7 +673,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
         // Handle your purchase result here
         when (purchaseResult) {
             KinAppPurchaseResult.SUCCESS -> {
-                Toast.makeText(this@MainActivity, R.string.donationThanks, Toast.LENGTH_LONG).show()
+                Toast.makeText(applicationContext, R.string.donationThanks, Toast.LENGTH_LONG).show()
                 Log.d("RadioControl", "In-app purchase succeeded")
                 val pref = PreferenceManager.getDefaultSharedPreferences(applicationContext)
                 val editor = pref.edit()
@@ -694,14 +685,14 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
 
             }
             KinAppPurchaseResult.ALREADY_OWNED -> {
-                Toast.makeText(this@MainActivity, R.string.donationExists, Toast.LENGTH_LONG).show()
+                Toast.makeText(applicationContext, R.string.donationExists, Toast.LENGTH_LONG).show()
                 Log.d("RadioControl", "Donation already purchased")
             }
             KinAppPurchaseResult.INVALID_PURCHASE -> {
                 // Purchase invalid and cannot be processed
             }
             KinAppPurchaseResult.INVALID_SIGNATURE -> {
-                Toast.makeText(this@MainActivity, R.string.donationThanks, Toast.LENGTH_LONG).show()
+                Toast.makeText(applicationContext, R.string.donationThanks, Toast.LENGTH_LONG).show()
                 Log.d("RadioControl", "In-app purchase succeeded, however verification failed")
                 val pref = PreferenceManager.getDefaultSharedPreferences(applicationContext)
                 val editor = pref.edit()
@@ -834,7 +825,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
         }
     }
 
-    fun writeLog(data: String, c: Context) {
+    private fun writeLog(data: String, c: Context) {
         val preferences = PreferenceManager.getDefaultSharedPreferences(c)
         if (preferences.getBoolean("enableLogs", false)) {
             try {
@@ -866,7 +857,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
             val address = InetAddress.getByName("1.1.1.1")
             val reachable = address.isReachable(4000)
             Log.d("RadioControl", "Reachable?: $reachable")
-            var pingCmd = arrayOf("su", "ping -c 4 8.8.8.8")
+            //var pingCmd = arrayOf("su", "ping -c 4 8.8.8.8")
 
             try {
                 val ipProcess = runtime.exec("/system/bin/ping -c 4 8.8.8.8")
@@ -985,7 +976,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
         }
     }
 
-    fun forceCrash(view: View) {
+    private fun forceCrash(view: View) {
         throw RuntimeException("This is a test crash")
     }
 

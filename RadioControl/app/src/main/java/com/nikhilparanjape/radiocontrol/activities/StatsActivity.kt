@@ -4,17 +4,15 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.os.Bundle
 import android.preference.PreferenceManager
-import androidx.coordinatorlayout.widget.CoordinatorLayout
-import com.google.android.material.snackbar.Snackbar
-import androidx.core.content.ContextCompat
-import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.TextView
-
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.core.content.ContextCompat
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.Theme
 import com.db.chart.model.LineSet
@@ -22,81 +20,65 @@ import com.db.chart.view.AxisController
 import com.db.chart.view.ChartView
 import com.db.chart.view.LineChartView
 import com.db.chart.view.animation.Animation
-import com.db.chart.view.animation.easing.BounceEase
-import com.db.chart.view.animation.easing.CircEase
-import com.db.chart.view.animation.easing.CubicEase
-import com.db.chart.view.animation.easing.ElasticEase
-import com.db.chart.view.animation.easing.ExpoEase
-import com.db.chart.view.animation.easing.LinearEase
-import com.db.chart.view.animation.easing.QuadEase
-import com.db.chart.view.animation.easing.QuartEase
-import com.db.chart.view.animation.easing.QuintEase
-import com.db.chart.view.animation.easing.SineEase
+import com.db.chart.view.animation.easing.*
+import com.google.android.material.snackbar.Snackbar
 import com.gordonwong.materialsheetfab.MaterialSheetFab
 import com.gordonwong.materialsheetfab.MaterialSheetFabEventListener
 import com.nikhilparanjape.radiocontrol.R
 import com.nikhilparanjape.radiocontrol.rootUtils.Fab
-
-import java.io.BufferedReader
-import java.io.File
-import java.io.FileInputStream
-import java.io.IOException
-import java.io.InputStreamReader
-import java.text.SimpleDateFormat
-import java.util.Arrays
-import java.util.Collections
-import java.util.Date
-
 import me.grantland.widget.AutofitHelper
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
+import java.io.*
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 class StatsActivity : AppCompatActivity() {
-    internal var wifiSigLost = 0
+    private var wifiSigLost = 0
     //Sets float for wifiLost
-    internal var janWifiLost = 0f
-    internal var febWifiLost = 0f
-    internal var marWifiLost = 0f
-    internal var aprWifiLost = 0f
-    internal var mayWifiLost = 0f
-    internal var junWifiLost = 0f
-    internal var julWifiLost = 0f
-    internal var augWifiLost = 0f
-    internal var sepWifiLost = 0f
-    internal var octWifiLost = 0f
-    internal var novWifiLost = 0f
-    internal var decWifiLost = 0f
+    private var janWifiLost = 0f
+    private var febWifiLost = 0f
+    private var marWifiLost = 0f
+    private var aprWifiLost = 0f
+    private var mayWifiLost = 0f
+    private var junWifiLost = 0f
+    private var julWifiLost = 0f
+    private var augWifiLost = 0f
+    private var sepWifiLost = 0f
+    private var octWifiLost = 0f
+    private var novWifiLost = 0f
+    private var decWifiLost = 0f
 
     internal var airplaneOn = 0
     //Sets float for airplane on
-    internal var janAirOn = 0f
-    internal var febAirOn = 0f
-    internal var marAirOn = 0f
-    internal var aprAirOn = 0f
-    internal var mayAirOn = 0f
-    internal var junAirOn = 0f
-    internal var julAirOn = 0f
-    internal var augAirOn = 0f
-    internal var sepAirOn = 0f
-    internal var octAirOn = 0f
-    internal var novAirOn = 0f
-    internal var decAirOn = 0f
+    private var janAirOn = 0f
+    private var febAirOn = 0f
+    private var marAirOn = 0f
+    private var aprAirOn = 0f
+    private var mayAirOn = 0f
+    private var junAirOn = 0f
+    private var julAirOn = 0f
+    private var augAirOn = 0f
+    private var sepAirOn = 0f
+    private var octAirOn = 0f
+    private var novAirOn = 0f
+    private var decAirOn = 0f
 
-    internal var rootOn = 0
+    private var rootOn = 0
     //Sets float for airplane on
-    internal var janRootOn = 0f
-    internal var febRootOn = 0f
-    internal var marRootOn = 0f
-    internal var aprRootOn = 0f
-    internal var mayRootOn = 0f
-    internal var junRootOn = 0f
-    internal var julRootOn = 0f
-    internal var augRootOn = 0f
-    internal var sepRootOn = 0f
-    internal var octRootOn = 0f
-    internal var novRootOn = 0f
-    internal var decRootOn = 0f
+    private var janRootOn = 0f
+    private var febRootOn = 0f
+    private var marRootOn = 0f
+    private var aprRootOn = 0f
+    private var mayRootOn = 0f
+    private var junRootOn = 0f
+    private var julRootOn = 0f
+    private var augRootOn = 0f
+    private var sepRootOn = 0f
+    private var octRootOn = 0f
+    private var novRootOn = 0f
+    private var decRootOn = 0f
 
     lateinit var chart: LineChartView
     lateinit var chart1: LineChartView
@@ -195,15 +177,12 @@ class StatsActivity : AppCompatActivity() {
 
                 rootAccessGraph()
             }catch (e: Exception){
-                Log.d("RadioControl", "Error: $e");
+                Log.d("RadioControl", "Error: $e")
             }
-
         }
-
-
     }
 
-    fun showLongList() {
+    private fun showLongList() {
         val prefs = PreferenceManager.getDefaultSharedPreferences(applicationContext)
         val editor = prefs.edit()
 
@@ -241,7 +220,7 @@ class StatsActivity : AppCompatActivity() {
                 .show()
     }
 
-    fun showDurationDialog() {
+    private fun showDurationDialog() {
         val prefs = PreferenceManager.getDefaultSharedPreferences(applicationContext)
         val editor = prefs.edit()
         var index = prefs.getInt("duration", 2)
@@ -279,7 +258,7 @@ class StatsActivity : AppCompatActivity() {
                 .show()
     }
 
-    fun showGridlineDialog() {
+    private fun showGridlineDialog() {
         val prefs = PreferenceManager.getDefaultSharedPreferences(applicationContext)
         val editor = prefs.edit()
         val index = prefs.getInt("gridlines", 2)
@@ -312,7 +291,7 @@ class StatsActivity : AppCompatActivity() {
                 .show()
     }
 
-    fun wifiLostGraph() {
+    private fun wifiLostGraph() {
         val progress1 = findViewById<ProgressBar>(R.id.progressWifiOff)
         progress1.visibility = View.VISIBLE
 
@@ -415,7 +394,7 @@ class StatsActivity : AppCompatActivity() {
     }
 
     //Airplane on graph
-    fun airplaneOnGraph() {
+    private fun airplaneOnGraph() {
         val progress2 = findViewById<ProgressBar>(R.id.progressAirplaneOn)
         progress2.visibility = View.VISIBLE
         doAsync {
@@ -518,7 +497,7 @@ class StatsActivity : AppCompatActivity() {
         }
     }
 
-    fun rootAccessGraph(){
+    private fun rootAccessGraph(){
         val progress3 = findViewById<ProgressBar>(R.id.progressRootAccess)
         progress3.visibility = View.VISIBLE
         doAsync {
@@ -623,7 +602,7 @@ class StatsActivity : AppCompatActivity() {
         }
     }
 
-    fun getWifiLost() {
+    private fun getWifiLost() {
         val formatter = SimpleDateFormat("yyyy")
         val year = formatter.format(Date())
         val log = File(applicationContext.filesDir, "radiocontrol.log")
@@ -680,7 +659,7 @@ class StatsActivity : AppCompatActivity() {
 
     }
 
-    fun getAirplaneModeOn() {
+    private fun getAirplaneModeOn() {
         val formatter = SimpleDateFormat("yyyy")
         val year = formatter.format(Date())
         val log = File(applicationContext.filesDir, "radiocontrol.log")
@@ -737,7 +716,7 @@ class StatsActivity : AppCompatActivity() {
         }
 
     }
-    fun getRootAccessTimes(){
+    private fun getRootAccessTimes(){
         val formatter = SimpleDateFormat("yyyy")
         val year = formatter.format(Date())
         val log = File(applicationContext.filesDir, "radiocontrol.log")
@@ -800,7 +779,7 @@ class StatsActivity : AppCompatActivity() {
         finish()
     }
 
-    fun countMatches(str: String?, sub: String): Int {
+    private fun countMatches(str: String?, sub: String): Int {
         try {
             return if (str!!.contains(sub)) {
                 1

@@ -7,9 +7,6 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.preference.PreferenceManager
-import androidx.core.app.NotificationCompat
-import androidx.core.content.ContextCompat
-import androidx.appcompat.app.AppCompatActivity
 import android.text.Html
 import android.util.Log
 import android.view.MenuItem
@@ -18,7 +15,9 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
-
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat
 import com.afollestad.materialdialogs.MaterialDialog
 import com.appyvet.rangebar.RangeBar
 import com.mikepenz.google_material_typeface_library.GoogleMaterial
@@ -54,7 +53,7 @@ class DoNotDisturbActivity : AppCompatActivity() {
             hourStatus.text = "set for " + pref.getInt("dndHours", 0) + " hour(s)"
             cancelButton.visibility = View.VISIBLE
         } else {
-            hourStatus.text = "not set"
+            hourStatus.text = getString(R.string.text_not_set)
             status.setImageDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.ic_do_not_disturb_off_white_48px))
             cancelButton.visibility = View.GONE
         }
@@ -147,13 +146,13 @@ class DoNotDisturbActivity : AppCompatActivity() {
         Toast.makeText(applicationContext, "Standby Mode enabled",
                 Toast.LENGTH_LONG).show()
 
-        val pIntentlogin = PendingIntent.getBroadcast(applicationContext, 1, intentAction, PendingIntent.FLAG_UPDATE_CURRENT)
+        val pIntentLogin = PendingIntent.getBroadcast(applicationContext, 1, intentAction, PendingIntent.FLAG_UPDATE_CURRENT)
         val note = NotificationCompat.Builder(applicationContext)
                 .setSmallIcon(R.drawable.ic_warning_black_48dp)
                 .setContentTitle("Standby Mode")
                 .setContentText("RadioControl services have been paused")
                 //Using this action button I would like to call logTest
-                .addAction(R.drawable.ic_done, "Turn OFF standby mode", pIntentlogin)
+                .addAction(R.drawable.ic_done, "Turn OFF standby mode", pIntentLogin)
                 .setPriority(-2)
                 .setOngoing(true)
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -161,7 +160,7 @@ class DoNotDisturbActivity : AppCompatActivity() {
     }
 
     companion object {
-        private val PRIVATE_PREF = "prefs"
+        private const val PRIVATE_PREF = "prefs"
     }
 
 }

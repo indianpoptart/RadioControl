@@ -1,38 +1,34 @@
 package com.nikhilparanjape.radiocontrol.fragments
 
+
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.preference.Preference
 import android.preference.PreferenceFragment
-import androidx.browser.customtabs.CustomTabsIntent
-import com.google.android.material.snackbar.Snackbar
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.browser.customtabs.CustomTabsIntent
+import com.google.android.material.snackbar.Snackbar
 import com.mikepenz.aboutlibraries.LibTaskCallback
 import com.mikepenz.aboutlibraries.Libs
 import com.mikepenz.aboutlibraries.LibsBuilder
 import com.mikepenz.aboutlibraries.LibsConfiguration
 import com.mikepenz.aboutlibraries.entity.Library
 import com.mikepenz.fastadapter.adapters.ItemAdapter
-
-
 import com.nikhilparanjape.radiocontrol.BuildConfig
-import com.nikhilparanjape.radiocontrol.activities.ChangeLogActivity
 import com.nikhilparanjape.radiocontrol.R
+import com.nikhilparanjape.radiocontrol.activities.ChangeLogActivity
 import com.nikhilparanjape.radiocontrol.activities.TutorialActivity
 import com.nikhilparanjape.radiocontrol.rootUtils.Utilities
 import com.novoda.simplechromecustomtabs.SimpleChromeCustomTabs
 import org.jetbrains.anko.doAsync
-
 import org.w3c.dom.Document
 import org.xml.sax.SAXException
-
 import java.io.IOException
 import java.net.URL
-
 import javax.xml.parsers.DocumentBuilderFactory
 import javax.xml.parsers.ParserConfigurationException
 
@@ -41,7 +37,7 @@ import javax.xml.parsers.ParserConfigurationException
  */
 
 class AboutFragment : PreferenceFragment() {
-    internal var versionName = BuildConfig.VERSION_NAME
+    private var versionName = BuildConfig.VERSION_NAME
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -62,7 +58,7 @@ class AboutFragment : PreferenceFragment() {
         val cs = versionName
         versionPref.summary = "v$cs"
         versionPref.onPreferenceClickListener = object : Preference.OnPreferenceClickListener {
-            internal var z = 0
+            var z = 0
 
             override fun onPreferenceClick(preference: Preference): Boolean {
                 val sp = c.getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE) //Initializes prefs.xml

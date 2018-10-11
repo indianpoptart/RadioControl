@@ -19,6 +19,6 @@ class NightModeReceiver : BroadcastReceiver() {
 
     companion object {
 
-        const val REQUEST_CODE = 12345
+        const val REQUEST_CODE = 17545
     }
 }
