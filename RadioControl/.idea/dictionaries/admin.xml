@@ -1,9 +1,11 @@
 <component name="ProjectDictionaryState">
   <dictionary name="admin">
     <words>
+      <w>alertdialog</w>
       <w>clayout</w>
       <w>dataset</w>
       <w>dura</w>
+      <w>inflator</w>
       <w>radiocontrol</w>
       <w>ssid</w>
       <w>timepickerdialog</w>

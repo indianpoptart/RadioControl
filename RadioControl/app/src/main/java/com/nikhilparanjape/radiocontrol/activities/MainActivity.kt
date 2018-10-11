@@ -135,7 +135,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
                     .getDefaultSharedPreferences(baseContext)
 
             //  Create a new boolean and preference and set it to true if it's not already there
-            val isFirstStart = getPrefs.getBoolean("firstStart", true)
+            val isFirstStart = getPrefs.getBoolean(getString(R.string.preference_first_start), true)
             //Gets the current android build version on device
             val currentapiVersion = Build.VERSION.SDK_INT
 
@@ -145,7 +145,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
                 val e = getPrefs.edit()
 
                 if (currentapiVersion >= 24) {
-                    e.putBoolean("workMode", true)
+                    e.putBoolean(getString(R.string.preference_work_mode), true)
                 }
 
                 //  Launch app intro
@@ -153,13 +153,13 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
                 startActivity(i)
 
                 //  Edit preference to make it false because we don't want this to run again
-                e.putBoolean("firstStart", false)
+                e.putBoolean(getString(R.string.preference_first_start), false)
 
                 //  Apply changes
                 e.apply()
             }
             val intervalTime = getPrefs.getString("interval_prefs", "10")
-            val airplaneService = getPrefs.getBoolean("isAirplaneService", false)
+            val airplaneService = getPrefs.getBoolean(getString(R.string.preference_airplane_service), false)
 
             //Begin background service
             if (intervalTime != "0" && airplaneService) {
@@ -167,7 +167,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
                 baseContext.startService(i)
                 Log.d("RadioControl", "back Service launched")
             }
-            if (getPrefs.getBoolean("workMode", true)) {
+            if (getPrefs.getBoolean(getString(R.string.preference_work_mode), true)) {
                 val i = Intent(applicationContext, PersistenceService::class.java)
                 if (Build.VERSION.SDK_INT >= 26) {
                     baseContext.startForegroundService(i)
@@ -178,7 +178,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
             }
 
 
-            if (!getPrefs.getBoolean("workMode", true)) {
+            if (!getPrefs.getBoolean(getString(R.string.preference_work_mode), true)) {
                 registerForBroadcasts(applicationContext)
             }
 
@@ -196,7 +196,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
         val connectionStatusText = findViewById<TextView>(R.id.pingStatus)
         val toggle = findViewById<Switch>(R.id.enableSwitch)
 
-        if (pref.getBoolean("allowFabric", false)) {
+        if (pref.getBoolean(getString(R.string.preference_allow_fabric), false)) {
             Fabric.with(this, Crashlytics())
         } else {
             Fabric.with(this, Crashlytics.Builder()
@@ -211,10 +211,10 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
         val linkSpeedButton = findViewById<Button>(R.id.linkSpeedButton)
 
         //Check if the easter egg is NOT activated
-        if (!sharedPref.getBoolean("isDeveloper", false)) {
+        if (!sharedPref.getBoolean(getString(R.string.preference_is_developer), false)) {
             linkSpeedButton.visibility = View.GONE
             linkText.visibility = View.GONE
-        } else if (sharedPref.getBoolean("isDeveloper", false)) {
+        } else if (sharedPref.getBoolean(getString(R.string.preference_is_developer), false)) {
             linkSpeedButton.visibility = View.VISIBLE
             linkText.visibility = View.VISIBLE
         }
@@ -255,14 +255,14 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
         val radioOffButton = findViewById<Button>(R.id.cellRadioOff)
         val forceCrashButton = findViewById<Button>(R.id.forceCrashButton)
         //Check if the easter egg is NOT activated
-        if (!sharedPref.getBoolean("isDeveloper", false)) {
+        if (!sharedPref.getBoolean(getString(R.string.preference_is_developer), false)) {
             conn.visibility = View.GONE
             serviceTest.visibility = View.GONE
             nightCancel.visibility = View.GONE
             connectionStatusText.visibility = View.GONE
             radioOffButton.visibility = View.GONE
             forceCrashButton.visibility = View.GONE
-        } else if (sharedPref.getBoolean("isDeveloper", false)) {
+        } else if (sharedPref.getBoolean(getString(R.string.preference_is_developer), false)) {
             conn.visibility = View.VISIBLE
             serviceTest.visibility = View.VISIBLE
             nightCancel.visibility = View.VISIBLE
@@ -313,13 +313,13 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
 
         toggle.setOnCheckedChangeListener { _, isChecked ->
             if (!isChecked) {
-                editor.putInt("isActive", 0)
+                editor.putInt(getString(R.string.preference_app_active), 0)
                 statusText.setText(R.string.showDisabled)
                 statusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_deactivated))
                 editor.apply()
 
             } else {
-                editor.putInt("isActive", 1)
+                editor.putInt(getString(R.string.preference_app_active), 1)
                 statusText.setText(R.string.showEnabled)
                 statusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_activated))
                 editor.apply()
@@ -350,8 +350,8 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
             editor.putInt(VERSION_KEY, currentVersionNumber)
             editor.apply()
         }
-        if (android.os.Build.VERSION.SDK_INT >= 24 && !sharedPref.getBoolean("workMode", false)) {
-            editor.putBoolean("workMode", true)
+        if (android.os.Build.VERSION.SDK_INT >= 24 && !sharedPref.getBoolean(getString(R.string.preference_work_mode), false)) {
+            editor.putBoolean(getString(R.string.preference_work_mode), true)
             editor.apply()
         }
     }
@@ -417,7 +417,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
         }
         var headerIcon = ContextCompat.getDrawable(applicationContext, R.mipmap.header)
 
-        if (sharedPref.getBoolean("isDeveloper", false)) {
+        if (sharedPref.getBoolean(getString(R.string.preference_is_developer), false)) {
             headerIcon = ContextCompat.getDrawable(applicationContext, R.mipmap.header2)
         }
 
@@ -527,10 +527,10 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
         val sharedPref = getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE)
         val editor = sharedPref.edit()
         if (message.equals("true", ignoreCase = true)) {
-            editor.putBoolean("isStandbyDialog", true)
+            editor.putBoolean(getString(R.string.preference_standby_dialog), true)
             editor.apply()
         } else {
-            editor.putBoolean("isStandbyDialog", false)
+            editor.putBoolean(getString(R.string.preference_standby_dialog), false)
             editor.apply()
         }
 
@@ -540,7 +540,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
         val sharedPref = getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE)
         val editor = sharedPref.edit()
 
-        if (!sharedPref.getBoolean("isStandbyDialog", false)) {
+        if (!sharedPref.getBoolean(getString(R.string.preference_standby_dialog), false)) {
             MaterialDialog(this)
                     .icon(R.mipmap.ic_launcher)
                     .title(R.string.permissionSample, "RadioControl")
@@ -548,7 +548,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
                     .show()
         }
 
-        editor.putInt("isActive", 0)
+        editor.putInt(getString(R.string.preference_app_active), 0)
         editor.apply()
         val intentAction = Intent(applicationContext, ActionReceiver::class.java)
         Log.d("RadioControl", "Value Changed")
@@ -660,7 +660,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
                 Log.d("RadioControl", "In-app purchase succeeded")
                 val pref = PreferenceManager.getDefaultSharedPreferences(applicationContext)
                 val editor = pref.edit()
-                editor.putBoolean("isDonated", true)
+                editor.putBoolean(getString(R.string.preference_is_donated), true)
                 editor.apply()
                 launch(UI) {
                     val success = billingManager.consumePurchase(purchase!!).await()
@@ -679,7 +679,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
                 Log.d("RadioControl", "In-app purchase succeeded, however verification failed")
                 val pref = PreferenceManager.getDefaultSharedPreferences(applicationContext)
                 val editor = pref.edit()
-                editor.putBoolean("isDonated", true)
+                editor.putBoolean(getString(R.string.preference_is_donated), true)
                 editor.apply()
             }
             KinAppPurchaseResult.CANCEL -> {
@@ -707,7 +707,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
 
         builder.setCustomTitle(title)
         builder.setView(view)
-                .setPositiveButton("OK") { dialog, _ -> dialog.dismiss() }
+                .setPositiveButton(R.string.text_ok) { dialog, _ -> dialog.dismiss() }
         builder.create().show()
     }
 
@@ -726,7 +726,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
         val sharedPref = getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE)
         val pref = PreferenceManager.getDefaultSharedPreferences(applicationContext)
         doAsync {
-            if (pref.getBoolean("workMode", true)) {
+            if (pref.getBoolean(getString(R.string.preference_work_mode), true)) {
 
             } else {
                 registerForBroadcasts(applicationContext)
@@ -735,7 +735,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
         drawerCreate()
 
 
-        if (pref.getBoolean("allowFabric", true)) {
+        if (pref.getBoolean(getString(R.string.preference_allow_fabric), true)) {
             Fabric.with(this, Crashlytics())
         } else {
             Fabric.with(this, Crashlytics.Builder()
@@ -757,7 +757,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
         val toggle = findViewById<Switch>(R.id.enableSwitch)
 
         //Check if the easter egg is NOT activated
-        if (!sharedPref.getBoolean("isDeveloper", false)) {
+        if (!sharedPref.getBoolean(getString(R.string.preference_is_developer), false)) {
             conn.visibility = View.GONE
             serviceTest.visibility = View.GONE
             nightCancel.visibility = View.GONE
@@ -766,7 +766,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
             forceCrashButton.visibility = View.GONE
             btn3.visibility = View.GONE
             linkText.visibility = View.GONE
-        } else if (sharedPref.getBoolean("isDeveloper", false)) {
+        } else if (sharedPref.getBoolean(getString(R.string.preference_is_developer), false)) {
             conn.visibility = View.VISIBLE
             serviceTest.visibility = View.VISIBLE
             nightCancel.visibility = View.VISIBLE
@@ -783,7 +783,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
             statusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_deactivated))
         }
 
-        if (sharedPref.getInt("isActive", 1) == 1) {
+        if (sharedPref.getInt(getString(R.string.preference_app_active), 1) == 1) {
             if (!rootInit()) {
                 toggle.isClickable = false
                 statusText.setText(R.string.noRoot)
@@ -794,7 +794,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
                 toggle.isChecked = true
             }
 
-        } else if (sharedPref.getInt("isActive", 0) == 0) {
+        } else if (sharedPref.getInt(getString(R.string.preference_app_active), 0) == 0) {
             if (!rootInit()) {
                 toggle.isClickable = false
                 statusText.setText(R.string.noRoot)

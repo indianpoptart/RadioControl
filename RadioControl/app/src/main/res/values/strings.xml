@@ -166,5 +166,13 @@
     <string name="title_gridlines">Gridlines</string>
     <string name="preference_gridlines">gridlines</string>
     <string name="error_count_return_null">Counting returned null</string>
+    <string name="preference_work_mode">workMode</string>
+    <string name="preference_is_donated">isDonated</string>
+    <string name="preference_allow_fabric">allowFabric</string>
+    <string name="preference_is_developer">isDeveloper</string>
+    <string name="preference_app_active">isActive</string>
+    <string name="preference_first_start">firstStart</string>
+    <string name="preference_airplane_service">isAirplaneService</string>
+    <string name="preference_standby_dialog">isStandbyDialog</string>
 
 </resources>
