@@ -120,9 +120,9 @@
     <string name="summary_firebase_analytics">General usage reporting. Nothing personally identifiable</string>
     <string name="standby_drawer_name">Standby Mode</string>
     <string name="dont_ask_again">Don\'t show again</string>
-    <string name="permissionSample">Standby mode disables all <b>%1$s</b> services (Useful for airplanes) This can be disabled from notifications</string>
-    <string name="permissionSampleFirebase">Allow <b>%1$s</b> to collect general usage data through Firebase</string>
-    <string name="permissionSampleFabric">Allow <b>%1$s</b> to send crash and error reports to Fabric Crashlytics</string>
+    <string name="permissionSample">Standby mode disables all <b>RadioControl</b> services (Useful for airplanes) This can be disabled from notifications</string>
+    <string name="permissionSampleFirebase">Allow <b>RadioControl</b> to collect general usage data through Firebase</string>
+    <string name="permissionSampleFabric">Allow <b>RadioControl</b> to send crash and error reports to Fabric Crashlytics</string>
     <string name="showDisabled">is Disabled</string>
     <string name="showEnabled">is Enabled</string>
     <string name="not_set">not set</string>
@@ -174,5 +174,6 @@
     <string name="preference_first_start">firstStart</string>
     <string name="preference_airplane_service">isAirplaneService</string>
     <string name="preference_standby_dialog">isStandbyDialog</string>
+    <string name="title_allow_fabric">Allow Fabric Crashlytics</string>
 
 </resources>

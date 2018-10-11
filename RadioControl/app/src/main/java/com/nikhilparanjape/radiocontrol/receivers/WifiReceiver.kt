@@ -1,31 +1,33 @@
-package com.nikhilparanjape.radiocontrol.services
+package com.nikhilparanjape.radiocontrol.receivers
 
-import android.app.IntentService
-import android.app.Notification
-import android.app.NotificationChannel
-import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
-import android.os.Build
-import android.os.IBinder
 import android.preference.PreferenceManager
 import android.text.format.DateFormat
 import android.util.Log
-import androidx.core.app.NotificationCompat
+import androidx.legacy.content.WakefulBroadcastReceiver
 import com.nikhilparanjape.radiocontrol.R
-import com.nikhilparanjape.radiocontrol.receivers.WifiReceiver
 import com.nikhilparanjape.radiocontrol.rootUtils.RootAccess
 import com.nikhilparanjape.radiocontrol.rootUtils.Utilities
+import com.nikhilparanjape.radiocontrol.services.BackgroundAirplaneService
+import com.nikhilparanjape.radiocontrol.services.CellRadioService
 import org.jetbrains.anko.doAsync
 import java.io.File
 import java.io.IOException
 import java.net.InetAddress
 import java.util.*
 
+
+@Suppress("DEPRECATION")
 /**
- * Created by admin on 8/20/2016.
+ * Created by Nikhil Paranjape on 11/8/2015.
+ *
+ * This file will get deprecated soon :( Sad, as it's the backbone of this app
+ *
+ * No longer the "backbone" testing if it still is
  */
-class BackgroundAirplaneService : IntentService("BackgroundAirplaneService") {
+//This file is kept for backwards compatibility
+class WifiReceiver : WakefulBroadcastReceiver() {
 
     //Root commands which disable cell only
     private var airCmd = arrayOf("su", "settings put global airplane_mode_radios  \"cell\"", "content update --uri content://settings/global --bind value:s:'cell' --where \"name='airplane_mode_radios'\"", "settings put global airplane_mode_on 1", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state true")
@@ -33,72 +35,14 @@ class BackgroundAirplaneService : IntentService("BackgroundAirplaneService") {
     private var airOffCmd2 = arrayOf("su", "settings put global airplane_mode_on 0", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state false", "settings put global airplane_mode_radios  \"cell,bluetooth,nfc,wimax\"", "content update --uri content://settings/global --bind value:s:'cell,bluetooth,nfc,wimax' --where \"name='airplane_mode_radios'\"")
     private var airOffCmd3 = arrayOf("su", "settings put global airplane_mode_on 0", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state false")
 
+
     internal var util = Utilities() //Network and other related utilities
 
-    override fun onBind(intent: Intent): IBinder? {
-        return null
-    }
 
-    override fun onCreate() {
-        super.onCreate()
-        createNotificationChannel()
-        createBackgroundNotification("Airplane Service", "Background Process Running...")
-        Log.d("RadioControl-background", "Notified")
+    override fun onReceive(context: Context, intent: Intent) {
+        intent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND)
+        Log.d("RadioControl", "Get action-wfr: " + intent.action!!)
 
-    }
-
-    private fun createBackgroundNotification(title: String, message: String) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-
-            val builder = Notification.Builder(this, "airplane")
-                    .setContentTitle(title)
-                    .setSmallIcon(R.drawable.ic_info_white_24dp)
-                    .setContentText(message)
-                    .setAutoCancel(true)
-
-            val notification = builder.build()
-            startForeground(1, notification)
-
-        } else {
-
-            @Suppress("DEPRECATION") //For backwards compatibility
-            val builder = NotificationCompat.Builder(this)
-                    .setContentTitle(title)
-                    .setSmallIcon(R.drawable.ic_info_white_24dp)
-                    .setContentText(message)
-                    .setPriority(NotificationCompat.PRIORITY_LOW)
-                    .setAutoCancel(true)
-
-            val notification = builder.build()
-
-            startForeground(1, notification)
-        }
-
-
-    }
-    private fun createNotificationChannel() {
-        // Create the NotificationChannel, but only on API 26+ because
-        // the NotificationChannel class is new and not in the support library
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val name = "Airplane Service"
-            val description = getString(R.string.summary_airplane_service_notification)
-            val importance = NotificationManager.IMPORTANCE_NONE
-            val channel = NotificationChannel("airplane", name, importance)
-            channel.description = description
-            // Register the channel with the system; you can't change the importance
-            // or other notification behaviors after this
-            val notificationManager = getSystemService(NotificationManager::class.java)
-            notificationManager!!.createNotificationChannel(channel)
-        }
-    }
-
-    override fun onHandleIntent(intent: Intent?) {
-        if (intent != null) {
-            Log.d("RadioControl", "Get action-bas: " + intent.action)
-        }
-        // Start Alarm Task
-        Log.d("RadioControl", "Background Service running")
-        val context = applicationContext
         val sp = context.getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE)
         val prefs = PreferenceManager.getDefaultSharedPreferences(context)
         val disabledPref = context.getSharedPreferences("disabled-networks", Context.MODE_PRIVATE)
@@ -106,45 +50,50 @@ class BackgroundAirplaneService : IntentService("BackgroundAirplaneService") {
         val h = HashSet(listOf("")) //Set default set for SSID check
         val selections = prefs.getStringSet("ssid", h) //Gets stringset, if empty sets default
         val networkAlert = prefs.getBoolean("isNetworkAlive", false)
-        prefs.getBoolean("isBatteryOn", true)
+        val batteryOptimize = prefs.getBoolean("isBatteryOn", true)
 
-        //Log.i("RadioControl","Battery Optimized");
+        Log.i("RadioControl", "WifiReceiver Triggered")
         //Check if user wants the app on
         if (sp.getInt("isActive", 0) == 1) {
-            //Check if we just lost WiFi signal
-            if (!Utilities.isConnectedWifi(context)) {
-                Log.d("RadioControl", "WiFi signal LOST")
-                writeLog("WiFi Signal lost", context)
-                if (Utilities.isAirplaneMode(context) || !Utilities.isConnectedMobile(context)) {
-                    //Checks that user is not in call
-                    if (!util.isCallActive(context)) {
-                        //Runs the alternate root command
-                        if (prefs.getBoolean("altRootCommand", true)) {
-                            if (Utilities.getCellStatus(context) == 1) {
-                                val cellIntent = Intent(context, CellRadioService::class.java)
-                                context.startService(cellIntent)
-                                Log.d("RadioControl", "Cell Radio has been turned on")
-                                writeLog("Cell radio has been turned off, SSID: " + Utilities.getCurrentSsid(context)!!, context)
-                            }
-                        } else {
-                            if (prefs.getBoolean("altBTCommand", false)) {
-                                RootAccess.runCommands(airOffCmd3)
-                                Log.d("RadioControl", "Airplane mode has been turned off(with bt cmd)")
-                                writeLog("Airplane mode has been turned off", context)
+            if (batteryOptimize) {
+                //Log.d("RadioControl","Battery Optimization ON");
+                val i = Intent(context, BackgroundAirplaneService::class.java)
+                context.startService(i)
+            } else {
+                Log.d("RadioControl", "Battery Optimization OFF")
+                //Check if we just lost WiFi signal
+                if (!Utilities.isConnectedWifi(context)) {
+                    Log.d("RadioControl", "WiFi signal LOST")
+                    writeLog("WiFi Signal lost", context)
+                    if (Utilities.isAirplaneMode(context) || !Utilities.isConnectedMobile(context)) {
+                        //Checks that user is not in call
+                        if (!util.isCallActive(context)) {
+                            //Runs the alternate root command
+                            if (prefs.getBoolean("altRootCommand", false)) {
+                                if (Utilities.getCellStatus(context) == 1) {
+                                    val cellIntent = Intent(context, CellRadioService::class.java)
+                                    context.startService(cellIntent)
+                                    Log.d("RadioControl", "Cell Radio has been turned on")
+                                    writeLog("Cell radio has been turned off, SSID: " + Utilities.getCurrentSsid(context)!!, context)
+                                }
                             } else {
-                                RootAccess.runCommands(airOffCmd2)
-                                Log.d("RadioControl", "Airplane mode has been turned off")
-                                writeLog("Airplane mode has been turned off", context)
+                                if (prefs.getBoolean("altBTCommand", false)) {
+                                    RootAccess.runCommands(airOffCmd3)
+                                    Log.d("RadioControl", "Airplane mode has been turned off(with bt cmd)")
+                                    writeLog("Airplane mode has been turned off", context)
+                                } else {
+                                    RootAccess.runCommands(airOffCmd2)
+                                    Log.d("RadioControl", "Airplane mode has been turned off")
+                                    writeLog("Airplane mode has been turned off", context)
+                                }
                             }
-
-                        }
-                    } else if (util.isCallActive(context)) {
-                        while (util.isCallActive(context)) {
-                            waitFor(1000)//Wait for call to end
-                            Log.d("RadioControl", "waiting for call to end")
-                        }
-                        //Utilities.scheduleJob(context)
-                    }//Checks that user is currently in call and pauses execution till the call ends
+                        } else if (util.isCallActive(context)) {
+                            while (util.isCallActive(context)) {
+                                waitFor(1000)//Wait for call to end
+                            }
+                            Utilities.scheduleJob(context)
+                        }//Checks that user is currently in call and pauses execution till the call ends
+                    }
                 }
             }
 
@@ -160,7 +109,6 @@ class BackgroundAirplaneService : IntentService("BackgroundAirplaneService") {
                         if (!networkAlert) {
                             //Runs the alternate root command
                             if (prefs.getBoolean("altRootCommand", false)) {
-
                                 if (Utilities.getCellStatus(context) == 0) {
                                     val cellIntent = Intent(context, CellRadioService::class.java)
                                     context.startService(cellIntent)
@@ -183,7 +131,6 @@ class BackgroundAirplaneService : IntentService("BackgroundAirplaneService") {
                     } else if (util.isCallActive(context)) {
                         while (util.isCallActive(context)) {
                             waitFor(1000)//Wait for call to end
-                            Log.d("RadioControl", "waiting for call to end")
                         }
                     }//Checks that user is currently in call and pauses execution till the call ends
                 } else if (selections!!.contains(Utilities.getCurrentSsid(context))) {
@@ -204,7 +151,6 @@ class BackgroundAirplaneService : IntentService("BackgroundAirplaneService") {
                 writeLog("WiFi Signal lost", context)
             }
         }
-
     }
 
     private fun writeLog(data: String, c: Context) {
@@ -223,7 +169,7 @@ class BackgroundAirplaneService : IntentService("BackgroundAirplaneService") {
                 fos.write(string.toByteArray())
                 fos.close()
             } catch (e: IOException) {
-                Log.d("RadioControl", "There was an error saving the log: $e")
+                Log.e("RadioControl", "Error writing log")
             }
 
         }
@@ -290,24 +236,10 @@ class BackgroundAirplaneService : IntentService("BackgroundAirplaneService") {
         } catch (e: InterruptedException) {
             e.printStackTrace()
         }
-
-    }
-
-
-    override fun onDestroy() {
-        super.onDestroy()
-        val preferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)
-        val airplaneService = preferences.getBoolean("isAirplaneService", false)
-        if (airplaneService) {
-            util.scheduleAlarm(applicationContext)
-        }
-
-        Log.d("RadioControl", "Background Service destroyed")
     }
 
     companion object {
 
         private const val PRIVATE_PREF = "prefs"
     }
-
 }

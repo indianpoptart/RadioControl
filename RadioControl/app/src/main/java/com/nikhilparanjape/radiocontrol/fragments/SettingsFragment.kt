@@ -122,7 +122,8 @@ class SettingsFragment : PreferenceFragment(), TimePickerDialog.OnTimeSetListene
                 } else {
                     MaterialDialog(activity)
                             .icon(R.mipmap.ic_launcher)
-                            .title(R.string.permissionIntelligent)
+                            .title(R.string.title_intelligent_mode)
+                            .message(R.string.permissionIntelligent)
                             .positiveButton(R.string.button_text_allow) {
                                 batteryOptimizePref.isChecked = true
                                 if (pref.getBoolean("workMode", true)) {
@@ -262,7 +263,8 @@ class SettingsFragment : PreferenceFragment(), TimePickerDialog.OnTimeSetListene
             if (newValue.toString() == "true") {
                 MaterialDialog(activity)
                         .icon(R.mipmap.ic_launcher)
-                        .title(R.string.permissionSampleFabric, "RadioControl")
+                        .title(R.string.title_allow_fabric)
+                        .message(R.string.permissionSampleFabric)
                         .positiveButton(R.string.button_text_allow) {
                             editor12.putBoolean("allowFabric", true)
                             editor12.apply()

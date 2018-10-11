@@ -52,7 +52,6 @@ import com.nikhilparanjape.radiocontrol.R
 import com.nikhilparanjape.radiocontrol.receivers.ActionReceiver
 import com.nikhilparanjape.radiocontrol.receivers.NightModeReceiver
 import com.nikhilparanjape.radiocontrol.receivers.WifiReceiver
-import com.nikhilparanjape.radiocontrol.rootUtils.PingWrapper
 import com.nikhilparanjape.radiocontrol.rootUtils.Utilities
 import com.nikhilparanjape.radiocontrol.services.BackgroundAirplaneService
 import com.nikhilparanjape.radiocontrol.services.CellRadioService
@@ -63,10 +62,8 @@ import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
-import java.io.BufferedReader
 import java.io.File
 import java.io.IOException
-import java.io.InputStreamReader
 import java.net.InetAddress
 
 
@@ -833,98 +830,36 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
     private fun pingCheck(){
         var dialog: ProgressBar
         doAsync {
-            val runtime = Runtime.getRuntime()
-            val echo = StringBuilder()
-            val w = PingWrapper()
-            var s = ""
-            val address = InetAddress.getByName("1.1.1.1")
+            val address = InetAddress.getByName("8.8.8.8")
+            val beforeTime = System.currentTimeMillis()
             val reachable = address.isReachable(4000)
-            Log.d("RadioControl", "Reachable?: $reachable")
+            val afterTime = System.currentTimeMillis()
+            val timeDifference = afterTime - beforeTime
+            Log.d("RadioControl", "Reachable?: $reachable, Time: $timeDifference")
             //var pingCmd = arrayOf("su", "ping -c 4 8.8.8.8")
 
-            try {
-                val ipProcess = runtime.exec("/system/bin/ping -c 4 8.8.8.8")
-                val exitValue = ipProcess.waitFor()
-                Log.d("RadioControl", "Latency Test returned $exitValue")
-                if (exitValue == 0) {
-                    val reader = InputStreamReader(ipProcess.inputStream)
-                    val buf = BufferedReader(reader)
-                    val line = ""
-                    while (buf.readLine() != null) echo.append(line).append("\n")
-                    s = Utilities.getPingStats(echo.toString())
-
-                    w.exitCode = true
-                }
-
-                w.status = s
-
-                try {
-                    java.lang.Double.parseDouble(s)
-                    Log.d("RadioControl", "S returned $s")
-                } catch (e: Exception) {
-                    Log.d("RadioControl", "Not a double: $e")
-                    Snackbar.make(clayout, "NumberFormatException " + w.status!!, Snackbar.LENGTH_LONG).show()
-                    Crashlytics.logException(e)
-                }
-            } catch (e: IOException) {
-                e.printStackTrace()
-            } catch (e: InterruptedException) {
-                e.printStackTrace()
-            }
             uiThread {
                 dialog = findViewById(R.id.pingProgressBar)
                 dialog.visibility = View.GONE
                 val connectionStatusText = findViewById<TextView>(R.id.pingStatus)
-                Log.d("RadioControl", "Status: " + w.status!!)
-                val status: Double
-                var isDouble = true
-                val pStatus: String?
-                try {
-                    java.lang.Double.parseDouble(s)
-                } catch (e: Exception) {
-                    isDouble = false
-                    Log.d("RadioControl", "Not a double: $e")
-                    Snackbar.make(clayout, "NumberFormatException " + w.status!!, Snackbar.LENGTH_LONG).show()
-                    Crashlytics.logException(e)
-                }
-
-                try {
-                    pStatus = w.status
-
-                    if (isDouble) {
-                        status = java.lang.Double.parseDouble(s)
-                        if (status <= 50) {
-                            Snackbar.make(clayout, "Excellent Latency: $status ms", Snackbar.LENGTH_LONG).show()
-                        } else if (status in 51.0..100.0) {
-                            Snackbar.make(clayout, "Average Latency: $status ms", Snackbar.LENGTH_LONG).show()
-                        } else if (status in 101.0..200.0) {
-                            Snackbar.make(clayout, "Poor Latency: $status ms", Snackbar.LENGTH_LONG).show()
-                        } else if (status >= 201) {
-                            Snackbar.make(clayout, "Poor Latency. VOIP and online gaming may suffer: $status ms", Snackbar.LENGTH_LONG).show()
-                        }
-                    } else {
-                        //Check for packet loss stuff
-                        if (pStatus!!.contains("100% packet loss")) {
-                            Snackbar.make(clayout, "100% packet loss detected", Snackbar.LENGTH_LONG).show()
-                        } else if (pStatus.contains("25% packet loss")) {
-                            Snackbar.make(clayout, "25% packet loss detected", Snackbar.LENGTH_LONG).show()
-                        } else if (pStatus.contains("50% packet loss")) {
-                            Snackbar.make(clayout, "50% packet loss detected", Snackbar.LENGTH_LONG).show()
-                        } else if (pStatus.contains("75% packet loss")) {
-                            Snackbar.make(clayout, "75% packet loss detected", Snackbar.LENGTH_LONG).show()
-                        } else if (pStatus.contains("unknown host")) {
-                            Snackbar.make(clayout, "Unknown host", Snackbar.LENGTH_LONG).show()
-                        }
+                if(reachable){
+                    when {
+                        timeDifference <= 50 -> Snackbar.make(clayout, "Excellent Latency: $timeDifference ms", Snackbar.LENGTH_LONG).show()
+                        timeDifference in 51.0..100.0 -> Snackbar.make(clayout, "Average Latency: $timeDifference ms", Snackbar.LENGTH_LONG).show()
+                        timeDifference in 101.0..200.0 -> Snackbar.make(clayout, "Poor Latency: $timeDifference ms", Snackbar.LENGTH_LONG).show()
+                        timeDifference >= 201 -> Snackbar.make(clayout, "Poor Latency. VOIP and online gaming may suffer: $timeDifference ms", Snackbar.LENGTH_LONG).show()
                     }
-
-                } catch (e: Exception) {
-                    Crashlytics.logException(e)
-                    Snackbar.make(findViewById(android.R.id.content), "An error has occurred", Snackbar.LENGTH_LONG).show()
                 }
+                /*//Check for packet loss stuff
+                when {
+                    pStatus!!.contains("100% packet loss") -> Snackbar.make(clayout, "100% packet loss detected", Snackbar.LENGTH_LONG).show()
+                    pStatus.contains("25% packet loss") -> Snackbar.make(clayout, "25% packet loss detected", Snackbar.LENGTH_LONG).show()
+                    pStatus.contains("50% packet loss") -> Snackbar.make(clayout, "50% packet loss detected", Snackbar.LENGTH_LONG).show()
+                    pStatus.contains("75% packet loss") -> Snackbar.make(clayout, "75% packet loss detected", Snackbar.LENGTH_LONG).show()
+                    pStatus.contains("unknown host") -> Snackbar.make(clayout, "Unknown host", Snackbar.LENGTH_LONG).show()
+                }*/
 
-                val result = w.exitCode
-
-                if (result) {
+                if (reachable) {
                     if (Utilities.isConnectedWifi(applicationContext)) {
                         connectionStatusText.setText(R.string.connectedWifi)
                         connectionStatusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_activated))

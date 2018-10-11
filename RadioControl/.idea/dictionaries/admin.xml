@@ -6,8 +6,10 @@
       <w>dataset</w>
       <w>dura</w>
       <w>inflator</w>
+      <w>nonrooters</w>
       <w>radiocontrol</w>
       <w>ssid</w>
+      <w>stringset</w>
       <w>timepickerdialog</w>
     </words>
   </dictionary>
