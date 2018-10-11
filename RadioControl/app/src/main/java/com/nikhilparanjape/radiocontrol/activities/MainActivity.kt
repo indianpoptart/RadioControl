@@ -13,7 +13,6 @@ import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
 import android.preference.PreferenceManager
-import android.text.Html
 import android.text.format.DateFormat
 import android.util.Log
 import android.view.Gravity
@@ -28,7 +27,6 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import com.afollestad.materialdialogs.MaterialDialog
-import com.afollestad.materialdialogs.Theme
 import com.android.vending.billing.IInAppBillingService
 import com.crashlytics.android.Crashlytics
 import com.crashlytics.android.answers.Answers
@@ -125,10 +123,13 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
             actionBar.setDisplayHomeAsUpEnabled(true)
 
         }
-
+        init()//initializes the whats new dialog
 
         //Async thread to do a preference checks
         doAsync{
+            //Checks for root
+            rootInit()
+
             //  Initialize SharedPreferences
             val getPrefs = PreferenceManager
                     .getDefaultSharedPreferences(baseContext)
@@ -144,7 +145,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
                 val e = getPrefs.edit()
 
                 if (currentapiVersion >= 24) {
-                    e.putBoolean("workmode", true)
+                    e.putBoolean("workMode", true)
                 }
 
                 //  Launch app intro
@@ -183,12 +184,6 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
 
             //Hides the progress dialog
             dialog.visibility = View.GONE
-
-
-            init()//initializes the whats new dialog
-
-            //Checks for root
-            rootInit()
 
             //EndAsync
 
@@ -351,7 +346,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
         }
 
         if (currentVersionNumber > savedVersionNumber) {
-            showUpdated()
+            showUpdated(this)
             editor.putInt(VERSION_KEY, currentVersionNumber)
             editor.apply()
         }
@@ -546,14 +541,10 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
         val editor = sharedPref.edit()
 
         if (!sharedPref.getBoolean("isStandbyDialog", false)) {
-            MaterialDialog.Builder(this)
-                    .iconRes(R.mipmap.ic_launcher)
-                    .limitIconToDefaultSize()
-                    .title(Html.fromHtml(getString(R.string.permissionSample, getString(R.string.app_name))))
-                    .positiveText("Ok")
-                    .backgroundColorRes(R.color.material_drawer_dark_background)
-                    .onAny { dialog, _ -> showToast("" + dialog.isPromptCheckBoxChecked) }
-                    .checkBoxPromptRes(R.string.dont_ask_again, false, null)
+            MaterialDialog(this)
+                    .icon(R.mipmap.ic_launcher)
+                    .title(R.string.permissionSample, "RadioControl")
+                    .positiveButton(R.string.text_ok)
                     .show()
         }
 
@@ -606,23 +597,15 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
         startActivity(intent)
     }
 
-    private fun showUpdated() {
-        MaterialDialog.Builder(this)
-                .title("RadioControl has been updated")
-                .theme(Theme.DARK)
-                .positiveText("GOT IT")
-                .negativeText("WHAT'S NEW")
-                .onAny { dialog, which ->
-                    val chk = which.name
-                    Log.d("RadioControl", "Updated: $chk")
-                    if (chk == "POSITIVE") {
-                        dialog.dismiss()
-                    } else if (chk == "NEGATIVE") {
-                        startChangelogActivity()
-                    }
-                }
-                .show()
-    }
+    private fun showUpdated(c: Context) = MaterialDialog(c)
+            .title(R.string.title_whats_new)
+            .positiveButton(R.string.text_got_it) { dialog ->
+                dialog.dismiss()
+            }
+            .negativeButton(R.string.text_whats_new) { _ ->
+                startChangelogActivity()
+            }
+            .show()
 
     //donate dialog
     private fun showDonateDialog() {
@@ -729,11 +712,11 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
     }
 
     private fun rootInit(): Boolean {
-        try {
+        return try {
             Runtime.getRuntime().exec("su")
-            return true
+            true
         } catch (e: IOException) {
-            return false
+            false
         }
 
     }
@@ -976,10 +959,6 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
         }
     }
 
-    private fun forceCrash(view: View) {
-        throw RuntimeException("This is a test crash")
-    }
-
     override fun onStart() {
         super.onStart()
         // Start service and provide it a way to communicate with this class.
@@ -1011,13 +990,13 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
     }
 
     companion object {
-        private val PRIVATE_PREF = "prefs"
-        private val VERSION_KEY = "version_number"
+        private const val PRIVATE_PREF = "prefs"
+        private const val VERSION_KEY = "version_number"
         internal val ITEM_SKU = "com.nikhilparanjape.radiocontrol.test_donate1"
-        internal val ITEM_ONE_DOLLAR = "com.nikihlparanjape.radiocontrol.donate.one"
-        internal val ITEM_THREE_DOLLAR = "com.nikihlparanjape.radiocontrol.donate.three"
-        internal val ITEM_FIVE_DOLLAR = "com.nikihlparanjape.radiocontrol.donate.five"
-        internal val ITEM_TEN_DOLLAR = "com.nikihlparanjape.radiocontrol.donate.ten"
+        internal const val ITEM_ONE_DOLLAR = "com.nikihlparanjape.radiocontrol.donate.one"
+        internal const val ITEM_THREE_DOLLAR = "com.nikihlparanjape.radiocontrol.donate.three"
+        internal const val ITEM_FIVE_DOLLAR = "com.nikihlparanjape.radiocontrol.donate.five"
+        internal const val ITEM_TEN_DOLLAR = "com.nikihlparanjape.radiocontrol.donate.ten"
         //Grab device make and model for drawer
         val deviceName: String
             get() {

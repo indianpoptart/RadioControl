@@ -1,5 +1,6 @@
 package com.nikhilparanjape.radiocontrol.activities
 
+import android.annotation.SuppressLint
 import android.graphics.Color
 import android.graphics.Paint
 import android.os.Bundle
@@ -14,7 +15,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
 import com.afollestad.materialdialogs.MaterialDialog
-import com.afollestad.materialdialogs.Theme
+import com.afollestad.materialdialogs.list.listItemsSingleChoice
 import com.db.chart.model.LineSet
 import com.db.chart.view.AxisController
 import com.db.chart.view.ChartView
@@ -80,10 +81,10 @@ class StatsActivity : AppCompatActivity() {
     private var novRootOn = 0f
     private var decRootOn = 0f
 
-    lateinit var chart: LineChartView
-    lateinit var chart1: LineChartView
-    lateinit var chart2: LineChartView
-    lateinit var materialSheetFab: MaterialSheetFab<*>
+    private lateinit var chart: LineChartView
+    private lateinit var chart1: LineChartView
+    private lateinit var chart2: LineChartView
+    private lateinit var materialSheetFab: MaterialSheetFab<*>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -124,27 +125,22 @@ class StatsActivity : AppCompatActivity() {
             override fun onShowSheet() {
                 // Called when the material sheet's "show" animation starts.
             }
-
             override fun onSheetShown() {
                 // Called when the material sheet's "show" animation ends.
             }
-
             override fun onHideSheet() {
                 // Called when the material sheet's "hide" animation starts.
             }
-
             override fun onSheetHidden() {
                 // Called when the material sheet's "hide" animation ends.
             }
         })
 
-
         val btn = findViewById<TextView>(R.id.fab_sheet_item_grid)!!
         btn.setOnClickListener { _ ->
             materialSheetFab.hideSheet()
-            showGridlineDialog()
+            showGridLineDialog()
         }
-
         val btn1 = findViewById<TextView>(R.id.fab_sheet_item_easing)
         AutofitHelper.create(btn1)
         btn1.setOnClickListener { _ ->
@@ -157,18 +153,14 @@ class StatsActivity : AppCompatActivity() {
         btn2.setOnClickListener { _ ->
             materialSheetFab.hideSheet()
             showDurationDialog()
-
         }
-
     }
 
     override fun onResume() {
         super.onResume()
-
         //chart.notifyDataUpdate()
         //chart1.notifyDataUpdate()
         //chart2.notifyDataUpdate()
-
         doAsync {
             try{
                 wifiLostGraph()
@@ -186,37 +178,26 @@ class StatsActivity : AppCompatActivity() {
         val prefs = PreferenceManager.getDefaultSharedPreferences(applicationContext)
         val editor = prefs.edit()
 
-        MaterialDialog.Builder(this)
-                .title("Easing Animation")
-                .theme(Theme.DARK)
-                .items(R.array.easing)
-                .itemsCallback { _, _, which, _ ->
-                    Log.d("RadioControl", "Easing: $which")
-                    if (which == 0) {
-                        editor.putInt("easing", 0)
-                    } else if (which == 1) {
-                        editor.putInt("easing", 1)
-                    } else if (which == 2) {
-                        editor.putInt("easing", 2)
-                    } else if (which == 3) {
-                        editor.putInt("easing", 3)
-                    } else if (which == 4) {
-                        editor.putInt("easing", 4)
-                    } else if (which == 5) {
-                        editor.putInt("easing", 5)
-                    } else if (which == 6) {
-                        editor.putInt("easing", 6)
-                    } else if (which == 7) {
-                        editor.putInt("easing", 7)
-                    } else if (which == 8) {
-                        editor.putInt("easing", 8)
-                    } else if (which == 9) {
-                        editor.putInt("easing", 9)
+        MaterialDialog(this)
+                .title(R.string.title_easing_animation)
+                .listItemsSingleChoice(R.array.easing){ _, index, _ ->
+                    Log.d("RadioControl", "Easing: $index")
+                    when (index) {
+                        0 -> editor.putInt("easing", 0)
+                        1 -> editor.putInt("easing", 1)
+                        2 -> editor.putInt("easing", 2)
+                        3 -> editor.putInt("easing", 3)
+                        4 -> editor.putInt("easing", 4)
+                        5 -> editor.putInt("easing", 5)
+                        6 -> editor.putInt("easing", 6)
+                        7 -> editor.putInt("easing", 7)
+                        8 -> editor.putInt("easing", 8)
+                        9 -> editor.putInt("easing", 9)
                     }
                     editor.apply()
                     recreate()
                 }
-                .positiveText(android.R.string.cancel)
+                .positiveButton(R.string.button_text_choose)
                 .show()
     }
 
@@ -226,68 +207,53 @@ class StatsActivity : AppCompatActivity() {
         var index = prefs.getInt("duration", 2)
         index -= 1
 
-        MaterialDialog.Builder(this)
-                .title("Animation Duration")
-                .theme(Theme.DARK)
-                .items(R.array.animation_duration_values)
-                .itemsCallbackSingleChoice(index) { _, _, which, _ ->
-                    Log.d("RadioControl", "You chose $which")
+        MaterialDialog(this)
+                .title(R.string.title_animation_duration)
+                .listItemsSingleChoice(R.array.animation_duration_values){ _, index, _ ->
+                    Log.d("RadioControl", "You chose $index")
                     floatArrayOf(0f, 0f)
-                    if (which == 0) {
-                        //1 second delay
-                        editor.putInt("duration", 1)
-                    } else if (which == 1) {
-                        //2 second delay
-                        editor.putInt("duration", 2)
-                    } else if (which == 2) {
-                        //3 Second delay
-                        editor.putInt("duration", 3)
-                    } else if (which == 3) {
-                        //4 second delay
-                        editor.putInt("duration", 4)
-                    }
-                    else if (which == 4) {
-                        //5 second delay
-                        editor.putInt("duration", 5)
+                    when (index) {
+                        0 -> //1 second delay
+                            editor.putInt("duration", 1)
+                        1 -> //2 second delay
+                            editor.putInt("duration", 2)
+                        2 -> //3 Second delay
+                            editor.putInt("duration", 3)
+                        3 -> //4 second delay
+                            editor.putInt("duration", 4)
+                        4 -> //5 second delay
+                            editor.putInt("duration", 5)
                     }
                     editor.apply()
                     recreate()
-                    true // allow selection
                 }
-                .positiveText("Choose")
+                .positiveButton(R.string.button_text_choose)
                 .show()
     }
 
-    private fun showGridlineDialog() {
+    private fun showGridLineDialog() {
         val prefs = PreferenceManager.getDefaultSharedPreferences(applicationContext)
         val editor = prefs.edit()
-        val index = prefs.getInt("gridlines", 2)
 
-        MaterialDialog.Builder(this)
-                .title("Gridlines")
-                .theme(Theme.DARK)
-                .items(R.array.preference_values)
-                .itemsCallbackSingleChoice(index) { _, _, which, _ ->
-                    Log.d("RadioControl", "You chose $which")
+        MaterialDialog(this)
+                .title(R.string.title_gridlines)
+                .listItemsSingleChoice(R.array.preference_values){_, index, _ ->
+                    Log.d(R.string.app_name.toString(), "You chose $index")
                     floatArrayOf(0f, 0f)
-                    if (which == 0) {
-                        //Full Grids
-                        editor.putInt("gridlines", 0)
-                    } else if (which == 1) {
-                        //Horizontal Grids
-                        editor.putInt("gridlines", 1)
-                    } else if (which == 2) {
-                        //Vertical Grids
-                        editor.putInt("gridlines", 2)
-                    } else if (which == 3) {
-                        //No Grids
-                        editor.putInt("gridlines", 3)
+                    when (index) {
+                        0 -> //Full Grids
+                            editor.putInt(getString(R.string.preference_gridlines), 0)
+                        1 -> //Horizontal Grids
+                            editor.putInt(getString(R.string.preference_gridlines), 1)
+                        2 -> //Vertical Grids
+                            editor.putInt(getString(R.string.preference_gridlines), 2)
+                        3 -> //No Grids
+                            editor.putInt(getString(R.string.preference_gridlines), 3)
                     }
                     editor.apply()
                     recreate()
-                    true // allow selection
                 }
-                .positiveText("Choose")
+                .positiveButton(R.string.button_text_choose)
                 .show()
     }
 
@@ -306,31 +272,26 @@ class StatsActivity : AppCompatActivity() {
 
             val anim = Animation()
             anim.setDuration(dura*1000)
-            if (prefs.getInt("easing", 4) == 0) {
-                anim.setEasing(BounceEase())
-            } else if (prefs.getInt("easing", 4) == 1) {
-                anim.setEasing(CircEase())
-            } else if (prefs.getInt("easing", 4) == 2) {
-                anim.setEasing(CubicEase())
-            } else if (prefs.getInt("easing", 4) == 3) {
-                anim.setEasing(ElasticEase())
-            } else if (prefs.getInt("easing", 4) == 4) {
-                anim.setEasing(ExpoEase())
-            } else if (prefs.getInt("easing", 4) == 5) {
-                anim.setEasing(LinearEase())
-            } else if (prefs.getInt("easing", 4) == 6) {
-                anim.setEasing(QuadEase())
-            } else if (prefs.getInt("easing", 4) == 7) {
-                anim.setEasing(QuartEase())
-            } else if (prefs.getInt("easing", 4) == 8) {
-                anim.setEasing(QuintEase())
-            } else if (prefs.getInt("easing", 4) == 9) {
-                anim.setEasing(SineEase())
+            when {
+                prefs.getInt("easing", 4) == 0 -> anim.setEasing(BounceEase())
+                prefs.getInt("easing", 4) == 1 -> anim.setEasing(CircEase())
+                prefs.getInt("easing", 4) == 2 -> anim.setEasing(CubicEase())
+                prefs.getInt("easing", 4) == 3 -> anim.setEasing(ElasticEase())
+                prefs.getInt("easing", 4) == 4 -> anim.setEasing(ExpoEase())
+                prefs.getInt("easing", 4) == 5 -> anim.setEasing(LinearEase())
+                prefs.getInt("easing", 4) == 6 -> anim.setEasing(QuadEase())
+                prefs.getInt("easing", 4) == 7 -> anim.setEasing(QuartEase())
+                prefs.getInt("easing", 4) == 8 -> anim.setEasing(QuintEase())
+                prefs.getInt("easing", 4) == 9 -> anim.setEasing(SineEase())
             }
 
             val ovLap = intArrayOf(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11)
             anim.setOverlap(1.0f, ovLap)
             anim.setAlpha(1)
+
+                    //Set chart defaults
+
+            //Sets dataset points
 
             //Set chart defaults
             chart.addData(dataset)
@@ -376,14 +337,11 @@ class StatsActivity : AppCompatActivity() {
 
             val p = Paint()
             p.color = Color.BLACK
-            if (prefs.getInt("gridlines", 0) == 0) {
-                chart.setGrid(ChartView.GridType.FULL, p)
-            } else if (prefs.getInt("gridlines", 0) == 1) {
-                chart.setGrid(ChartView.GridType.HORIZONTAL, p)
-            } else if (prefs.getInt("gridlines", 0) == 2) {
-                chart.setGrid(ChartView.GridType.VERTICAL, p)
-            } else if (prefs.getInt("gridlines", 0) == 3) {
-                chart.setGrid(ChartView.GridType.NONE, p)
+            when {
+                prefs.getInt("gridlines", 0) == 0 -> chart.setGrid(ChartView.GridType.FULL, p)
+                prefs.getInt("gridlines", 0) == 1 -> chart.setGrid(ChartView.GridType.HORIZONTAL, p)
+                prefs.getInt("gridlines", 0) == 2 -> chart.setGrid(ChartView.GridType.VERTICAL, p)
+                prefs.getInt("gridlines", 0) == 3 -> chart.setGrid(ChartView.GridType.NONE, p)
             }
 
             uiThread {
@@ -407,31 +365,32 @@ class StatsActivity : AppCompatActivity() {
             val dura = prefs.getInt("duration", 2)
             val anim = Animation()
             anim.setDuration(dura*1000)
-            if (prefs.getInt("easing", 4) == 0) {
-                anim.setEasing(BounceEase())
-            } else if (prefs.getInt("easing", 4) == 1) {
-                anim.setEasing(CircEase())
-            } else if (prefs.getInt("easing", 4) == 2) {
-                anim.setEasing(CubicEase())
-            } else if (prefs.getInt("easing", 4) == 3) {
-                anim.setEasing(ElasticEase())
-            } else if (prefs.getInt("easing", 4) == 4) {
-                anim.setEasing(ExpoEase())
-            } else if (prefs.getInt("easing", 4) == 5) {
-                anim.setEasing(LinearEase())
-            } else if (prefs.getInt("easing", 4) == 6) {
-                anim.setEasing(QuadEase())
-            } else if (prefs.getInt("easing", 4) == 7) {
-                anim.setEasing(QuartEase())
-            } else if (prefs.getInt("easing", 4) == 8) {
-                anim.setEasing(QuintEase())
-            } else if (prefs.getInt("easing", 4) == 9) {
-                anim.setEasing(SineEase())
+            when {
+                prefs.getInt("easing", 4) == 0 -> anim.setEasing(BounceEase())
+                prefs.getInt("easing", 4) == 1 -> anim.setEasing(CircEase())
+                prefs.getInt("easing", 4) == 2 -> anim.setEasing(CubicEase())
+                prefs.getInt("easing", 4) == 3 -> anim.setEasing(ElasticEase())
+                prefs.getInt("easing", 4) == 4 -> anim.setEasing(ExpoEase())
+                prefs.getInt("easing", 4) == 5 -> anim.setEasing(LinearEase())
+                prefs.getInt("easing", 4) == 6 -> anim.setEasing(QuadEase())
+                prefs.getInt("easing", 4) == 7 -> anim.setEasing(QuartEase())
+                prefs.getInt("easing", 4) == 8 -> anim.setEasing(QuintEase())
+                prefs.getInt("easing", 4) == 9 -> anim.setEasing(SineEase())
             }
 
             val ovLap = intArrayOf(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11)
             anim.setOverlap(1.0f, ovLap)
             anim.setAlpha(1)
+
+                    //Set chart defaults
+
+            //Sets color of dataset points
+            //gets airplane mode stats
+
+            //Sets dataset points
+
+
+            //Checker of
 
             //Set chart defaults
             chart1.addData(dataset)
@@ -479,14 +438,11 @@ class StatsActivity : AppCompatActivity() {
 
             val p = Paint()
             p.color = Color.BLACK
-            if (prefs.getInt("gridlines", 0) == 0) {
-                chart1.setGrid(ChartView.GridType.FULL, p)
-            } else if (prefs.getInt("gridlines", 0) == 1) {
-                chart1.setGrid(ChartView.GridType.HORIZONTAL, p)
-            } else if (prefs.getInt("gridlines", 0) == 2) {
-                chart1.setGrid(ChartView.GridType.VERTICAL, p)
-            } else if (prefs.getInt("gridlines", 0) == 3) {
-                chart1.setGrid(ChartView.GridType.NONE, p)
+            when {
+                prefs.getInt(getString(R.string.preference_gridlines), 0) == 0 -> chart1.setGrid(ChartView.GridType.FULL, p)
+                prefs.getInt(getString(R.string.preference_gridlines), 0) == 1 -> chart1.setGrid(ChartView.GridType.HORIZONTAL, p)
+                prefs.getInt(getString(R.string.preference_gridlines), 0) == 2 -> chart1.setGrid(ChartView.GridType.VERTICAL, p)
+                prefs.getInt(getString(R.string.preference_gridlines), 0) == 3 -> chart1.setGrid(ChartView.GridType.NONE, p)
             }
 
             uiThread {
@@ -511,31 +467,32 @@ class StatsActivity : AppCompatActivity() {
 
             val anim = Animation()
             anim.setDuration(dura*1000)
-            if (prefs.getInt("easing", 4) == 0) {
-                anim.setEasing(BounceEase())
-            } else if (prefs.getInt("easing", 4) == 1) {
-                anim.setEasing(CircEase())
-            } else if (prefs.getInt("easing", 4) == 2) {
-                anim.setEasing(CubicEase())
-            } else if (prefs.getInt("easing", 4) == 3) {
-                anim.setEasing(ElasticEase())
-            } else if (prefs.getInt("easing", 4) == 4) {
-                anim.setEasing(ExpoEase())
-            } else if (prefs.getInt("easing", 4) == 5) {
-                anim.setEasing(LinearEase())
-            } else if (prefs.getInt("easing", 4) == 6) {
-                anim.setEasing(QuadEase())
-            } else if (prefs.getInt("easing", 4) == 7) {
-                anim.setEasing(QuartEase())
-            } else if (prefs.getInt("easing", 4) == 8) {
-                anim.setEasing(QuintEase())
-            } else if (prefs.getInt("easing", 4) == 9) {
-                anim.setEasing(SineEase())
+            when {
+                prefs.getInt("easing", 4) == 0 -> anim.setEasing(BounceEase())
+                prefs.getInt("easing", 4) == 1 -> anim.setEasing(CircEase())
+                prefs.getInt("easing", 4) == 2 -> anim.setEasing(CubicEase())
+                prefs.getInt("easing", 4) == 3 -> anim.setEasing(ElasticEase())
+                prefs.getInt("easing", 4) == 4 -> anim.setEasing(ExpoEase())
+                prefs.getInt("easing", 4) == 5 -> anim.setEasing(LinearEase())
+                prefs.getInt("easing", 4) == 6 -> anim.setEasing(QuadEase())
+                prefs.getInt("easing", 4) == 7 -> anim.setEasing(QuartEase())
+                prefs.getInt("easing", 4) == 8 -> anim.setEasing(QuintEase())
+                prefs.getInt("easing", 4) == 9 -> anim.setEasing(SineEase())
             }
 
             val ovLap = intArrayOf(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11)
             anim.setOverlap(1.0f, ovLap)
             anim.setAlpha(1)
+
+                    //Set chart defaults
+
+            //Sets color of dataset points
+            //gets airplane mode stats
+
+            //Sets dataset points
+
+
+            //Checker of
 
             //Set chart defaults
             chart2.addData(dataset)
@@ -583,14 +540,11 @@ class StatsActivity : AppCompatActivity() {
 
             val p = Paint()
             p.color = Color.BLACK
-            if (prefs.getInt("gridlines", 0) == 0) {
-                chart2.setGrid(ChartView.GridType.FULL, p)
-            } else if (prefs.getInt("gridlines", 0) == 1) {
-                chart2.setGrid(ChartView.GridType.HORIZONTAL, p)
-            } else if (prefs.getInt("gridlines", 0) == 2) {
-                chart2.setGrid(ChartView.GridType.VERTICAL, p)
-            } else if (prefs.getInt("gridlines", 0) == 3) {
-                chart2.setGrid(ChartView.GridType.NONE, p)
+            when {
+                prefs.getInt("gridlines", 0) == 0 -> chart2.setGrid(ChartView.GridType.FULL, p)
+                prefs.getInt("gridlines", 0) == 1 -> chart2.setGrid(ChartView.GridType.HORIZONTAL, p)
+                prefs.getInt("gridlines", 0) == 2 -> chart2.setGrid(ChartView.GridType.VERTICAL, p)
+                prefs.getInt("gridlines", 0) == 3 -> chart2.setGrid(ChartView.GridType.NONE, p)
             }
 
 
@@ -602,6 +556,8 @@ class StatsActivity : AppCompatActivity() {
         }
     }
 
+    //Required for functionality
+    @SuppressLint("SimpleDateFormat")
     private fun getWifiLost() {
         val formatter = SimpleDateFormat("yyyy")
         val year = formatter.format(Date())
@@ -618,30 +574,19 @@ class StatsActivity : AppCompatActivity() {
                 while (line != null) {
                     line = reader.readLine()
                     if (countMatches(line, "lost") == 1) {
-                        if (line!!.contains("$year-01")) {
-                            janWifiLost++
-                        } else if (line.contains("$year-02")) {
-                            febWifiLost++
-                        } else if (line.contains("$year-03")) {
-                            marWifiLost++
-                        } else if (line.contains("$year-04")) {
-                            aprWifiLost++
-                        } else if (line.contains("$year-05")) {
-                            mayWifiLost++
-                        } else if (line.contains("$year-06")) {
-                            junWifiLost++
-                        } else if (line.contains("$year-07")) {
-                            julWifiLost++
-                        } else if (line.contains("$year-08")) {
-                            augWifiLost++
-                        } else if (line.contains("$year-09")) {
-                            sepWifiLost++
-                        } else if (line.contains("$year-10")) {
-                            octWifiLost++
-                        } else if (line.contains("$year-11")) {
-                            novWifiLost++
-                        } else if (line.contains("$year-12")) {
-                            decWifiLost++
+                        when {
+                            line!!.contains("$year-01") -> janWifiLost++
+                            line.contains("$year-02") -> febWifiLost++
+                            line.contains("$year-03") -> marWifiLost++
+                            line.contains("$year-04") -> aprWifiLost++
+                            line.contains("$year-05") -> mayWifiLost++
+                            line.contains("$year-06") -> junWifiLost++
+                            line.contains("$year-07") -> julWifiLost++
+                            line.contains("$year-08") -> augWifiLost++
+                            line.contains("$year-09") -> sepWifiLost++
+                            line.contains("$year-10") -> octWifiLost++
+                            line.contains("$year-11") -> novWifiLost++
+                            line.contains("$year-12") -> decWifiLost++
                         }
                         wifiSigLost++
                     }
@@ -659,6 +604,8 @@ class StatsActivity : AppCompatActivity() {
 
     }
 
+    //Required for functionality
+    @SuppressLint("SimpleDateFormat")
     private fun getAirplaneModeOn() {
         val formatter = SimpleDateFormat("yyyy")
         val year = formatter.format(Date())
@@ -675,30 +622,19 @@ class StatsActivity : AppCompatActivity() {
                 while (line != null) {
                     line = reader.readLine()
                     if (countMatches(line, "Airplane mode has been turned off") == 1 || countMatches(line, "Cell radio has been turned") == 1) {
-                        if (line!!.contains("$year-01")) {
-                            janAirOn++
-                        } else if (line.contains("$year-02")) {
-                            febAirOn++
-                        } else if (line.contains("$year-03")) {
-                            marAirOn++
-                        } else if (line.contains("$year-04")) {
-                            aprAirOn++
-                        } else if (line.contains("$year-05")) {
-                            mayAirOn++
-                        } else if (line.contains("$year-06")) {
-                            junAirOn++
-                        } else if (line.contains("$year-07")) {
-                            julAirOn++
-                        } else if (line.contains("$year-08")) {
-                            augAirOn++
-                        } else if (line.contains("$year-09")) {
-                            sepAirOn++
-                        } else if (line.contains("$year-10")) {
-                            octAirOn++
-                        } else if (line.contains("$year-11")) {
-                            novAirOn++
-                        } else if (line.contains("$year-12")) {
-                            decAirOn++
+                        when {
+                            line!!.contains("$year-01") -> janAirOn++
+                            line.contains("$year-02") -> febAirOn++
+                            line.contains("$year-03") -> marAirOn++
+                            line.contains("$year-04") -> aprAirOn++
+                            line.contains("$year-05") -> mayAirOn++
+                            line.contains("$year-06") -> junAirOn++
+                            line.contains("$year-07") -> julAirOn++
+                            line.contains("$year-08") -> augAirOn++
+                            line.contains("$year-09") -> sepAirOn++
+                            line.contains("$year-10") -> octAirOn++
+                            line.contains("$year-11") -> novAirOn++
+                            line.contains("$year-12") -> decAirOn++
                         }
                         airplaneOn++
                     }
@@ -716,6 +652,8 @@ class StatsActivity : AppCompatActivity() {
         }
 
     }
+    //Required for functionality
+    @SuppressLint("SimpleDateFormat")
     private fun getRootAccessTimes(){
         val formatter = SimpleDateFormat("yyyy")
         val year = formatter.format(Date())
@@ -732,30 +670,19 @@ class StatsActivity : AppCompatActivity() {
                 while (line != null) {
                     line = reader.readLine()
                     if (countMatches(line, "root") == 1) {
-                        if (line!!.contains("$year-01")) {
-                            janRootOn++
-                        } else if (line.contains("$year-02")) {
-                            febRootOn++
-                        } else if (line.contains("$year-03")) {
-                            marRootOn++
-                        } else if (line.contains("$year-04")) {
-                            aprRootOn++
-                        } else if (line.contains("$year-05")) {
-                            mayRootOn++
-                        } else if (line.contains("$year-06")) {
-                            junRootOn++
-                        } else if (line.contains("$year-07")) {
-                            julRootOn++
-                        } else if (line.contains("$year-08")) {
-                            augRootOn++
-                        } else if (line.contains("$year-09")) {
-                            sepRootOn++
-                        } else if (line.contains("$year-10")) {
-                            octRootOn++
-                        } else if (line.contains("$year-11")) {
-                            novRootOn++
-                        } else if (line.contains("$year-12")) {
-                            decRootOn++
+                        when {
+                            line!!.contains("$year-01") -> janRootOn++
+                            line.contains("$year-02") -> febRootOn++
+                            line.contains("$year-03") -> marRootOn++
+                            line.contains("$year-04") -> aprRootOn++
+                            line.contains("$year-05") -> mayRootOn++
+                            line.contains("$year-06") -> junRootOn++
+                            line.contains("$year-07") -> julRootOn++
+                            line.contains("$year-08") -> augRootOn++
+                            line.contains("$year-09") -> sepRootOn++
+                            line.contains("$year-10") -> octRootOn++
+                            line.contains("$year-11") -> novRootOn++
+                            line.contains("$year-12") -> decRootOn++
                         }
                         rootOn++
                     }
@@ -781,16 +708,11 @@ class StatsActivity : AppCompatActivity() {
 
     private fun countMatches(str: String?, sub: String): Int {
         try {
-            return if (str!!.contains(sub)) {
-                1
-
-            } else {
-                0
-            }
+            return if (str!!.contains(sub)) { 1 }
+            else { 0 }
         } catch (e: NullPointerException) {
-            Log.d("RadioControl", "Counting returned null")
+            Log.d("RadioControl", getString(R.string.error_count_return_null))
         }
-
         return 0
 
     }

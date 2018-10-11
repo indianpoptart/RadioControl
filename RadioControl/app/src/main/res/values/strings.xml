@@ -120,9 +120,9 @@
     <string name="summary_firebase_analytics">General usage reporting. Nothing personally identifiable</string>
     <string name="standby_drawer_name">Standby Mode</string>
     <string name="dont_ask_again">Don\'t show again</string>
-    <string name="permissionSample"><![CDATA[Standby mode disables all <b>%1$s</b> services (Useful for airplanes) This can be disabled from notifications]]></string>
-    <string name="permissionSampleFirebase"><![CDATA[Allow <b>%1$s</b> to collect general usage data through Firebase]]></string>
-    <string name="permissionSampleFabric"><![CDATA[Allow <b>%1$s</b> to send crash and error reports to Fabric Crashlytics]]></string>
+    <string name="permissionSample">Standby mode disables all <b>%1$s</b> services (Useful for airplanes) This can be disabled from notifications</string>
+    <string name="permissionSampleFirebase">Allow <b>%1$s</b> to collect general usage data through Firebase</string>
+    <string name="permissionSampleFabric">Allow <b>%1$s</b> to send crash and error reports to Fabric Crashlytics</string>
     <string name="showDisabled">is Disabled</string>
     <string name="showEnabled">is Enabled</string>
     <string name="not_set">not set</string>
@@ -151,5 +151,20 @@
     <string name="button_disable_standby">Turn OFF standby mode</string>
     <string name="instabug_d">e3a38217dc9df5bef039e4df338f81f8</string>
     <string name="text_not_set">not set</string>
+    <string name="title_whats_new">RadioControl has been updated</string>
+    <string name="text_got_it">GOT IT</string>
+    <string name="text_whats_new">WHAT\'S NEW</string>
+    <string name="title_airplane_reset">Please disable WiFi and Airplane mode and make sure the cell radio is on before pressing OK</string>
+    <string name="text_ok">Ok</string>
+    <string name="text_set_for_hours">set for %1$d hour(s)</string>
+    <string name="text_cancel">Cancel</string>
+    <string name="title_easing_animation">Easing Animation</string>
+    <string name="title_animation_duration">Animation Duration</string>
+    <string name="button_text_choose">Choose</string>
+    <string name="button_text_allow">Allow</string>
+    <string name="button_text_deny">Deny</string>
+    <string name="title_gridlines">Gridlines</string>
+    <string name="preference_gridlines">gridlines</string>
+    <string name="error_count_return_null">Counting returned null</string>
 
 </resources>

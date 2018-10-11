@@ -70,12 +70,12 @@ class DoNotDisturbActivity : AppCompatActivity() {
                 editor.putBoolean("isNoDisturbEnabled", true)
                 editor.putInt("dndHours", hours)
                 editor.apply()
-                hourStatus.text = "set for $hours hour(s)"
+                hourStatus.text = getString(R.string.text_set_for_hours, hours)
                 Log.d("RadioControl", "I've set do not disturb on for $hours hours")
                 startStandbyMode()
                 util.cancelAlarm(applicationContext) // Cancels the recurring alarm that starts airplane service
                 util.scheduleWakeupAlarm(applicationContext, hours)
-                Toast.makeText(this@DoNotDisturbActivity, "Do not disturb set for $hours hours", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, "Do not disturb set for $hours hours", Toast.LENGTH_LONG).show()
                 //onBackPressed();
             } else {
                 editor.putBoolean("isNoDisturbEnabled", false)
@@ -93,7 +93,7 @@ class DoNotDisturbActivity : AppCompatActivity() {
             status.setImageDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.ic_do_not_disturb_off_white_48px))
             cancelButton.visibility = View.GONE
             util.cancelWakeupAlarm(applicationContext)
-            Toast.makeText(this@DoNotDisturbActivity, "Do not disturb cancelled", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "Do not disturb cancelled", Toast.LENGTH_LONG).show()
 
         }
 
@@ -123,19 +123,15 @@ class DoNotDisturbActivity : AppCompatActivity() {
 
     }
 
-    fun startStandbyMode() {
+    private fun startStandbyMode() {
         val sharedPref = getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE)
         val editor = sharedPref.edit()
 
         if (!sharedPref.getBoolean("isStandbyDialog", false)) {
-            MaterialDialog.Builder(this)
-                    .iconRes(R.mipmap.ic_launcher)
-                    .limitIconToDefaultSize()
-                    .title(Html.fromHtml(getString(R.string.permissionSample, getString(R.string.app_name))))
-                    .positiveText("Ok")
-                    .backgroundColorRes(R.color.material_drawer_dark_background)
-                    .onAny { dialog, _ -> showToast("" + dialog.isPromptCheckBoxChecked) }
-                    .checkBoxPromptRes(R.string.dont_ask_again, false, null)
+            MaterialDialog(this)
+                    .title(R.string.permissionSample, "RadioControl")
+                    .icon(R.mipmap.ic_launcher)
+                    .positiveButton(R.string.text_ok)
                     .show()
         }
 
