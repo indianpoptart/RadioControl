@@ -17,10 +17,11 @@ import com.nikhilparanjape.radiocontrol.receivers.WifiReceiver
 
 /**
  * Created by admin on 7/9/2017.
+ *
+ * @author Nikhil Paranjape
  */
-
 class PersistenceService : Service() {
-    private val mybroadcast = WifiReceiver()
+    private val myBroadcast = WifiReceiver()
     var context: Context = this
     override fun onCreate() {
         super.onCreate()
@@ -34,7 +35,7 @@ class PersistenceService : Service() {
 
 
         try {
-            this.registerReceiver(mybroadcast, filter)
+            this.registerReceiver(myBroadcast, filter)
         } catch (e: Exception) {
             Log.e("RadioControl-register", "Registration Failed")
         }
@@ -103,7 +104,7 @@ class PersistenceService : Service() {
     }
 
     override fun onDestroy() {
-        unregisterReceiver(mybroadcast)
+        unregisterReceiver(myBroadcast)
         super.onDestroy()
 
     }

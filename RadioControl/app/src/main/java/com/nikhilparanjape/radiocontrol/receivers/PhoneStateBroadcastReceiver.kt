@@ -2,10 +2,6 @@
 
 package com.nikhilparanjape.radiocontrol.receivers
 
-/**
- * Created by admin on 3/4/2017.
- */
-
 import android.content.Context
 import android.content.Intent
 import android.telephony.PhoneStateListener
@@ -14,6 +10,12 @@ import android.util.Log
 import androidx.legacy.content.WakefulBroadcastReceiver
 import com.nikhilparanjape.radiocontrol.listeners.CustomPhoneStateListener
 
+/**
+ * Created by Nikhil on 10/12/2018.
+ *
+ * @author
+ * An adapter class for TroubleShooting Activity
+ */
 class PhoneStateBroadcastReceiver : WakefulBroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {

@@ -9,9 +9,10 @@ import com.nikhilparanjape.radiocontrol.utilities.Utilities
 
 
 /**
- * Created by admin on 9/23/2016.
+ * Created by admin on 09/23/2016.
+ *
+ * @author Nikhil Paranjape
  */
-
 class CellRadioService : IntentService("CellRadioService") {
     private var mRunning: Boolean = false
 

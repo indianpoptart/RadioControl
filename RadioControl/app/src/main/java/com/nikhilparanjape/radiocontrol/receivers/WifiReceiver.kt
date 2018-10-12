@@ -26,7 +26,10 @@ import java.util.*
  * This file will get deprecated soon :( Sad, as it's the backbone of this app
  *
  * No longer the "backbone" testing if it still is
+ *
+ * @author Nikhil Paranjape
  */
+
 //This file is kept for backwards compatibility
 class WifiReceiver : WakefulBroadcastReceiver() {
 

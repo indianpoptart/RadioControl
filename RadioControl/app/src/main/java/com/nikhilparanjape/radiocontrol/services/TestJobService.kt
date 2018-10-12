@@ -10,10 +10,7 @@ import com.nikhilparanjape.radiocontrol.utilities.Utilities
 /**
  * This service starts the BackgroundAirplaneService as a foreground service if on Android Oreo or higher.
  *
- * @configuration searchInNestedClass - if nested classes should be searched (default: true)
- * @configuration searchInInnerClass - if inner classes should be searched (default: true)
- * @configuration searchInInnerObject - if inner objects should be searched (default: true)
- * @configuration searchInInnerInterface - if inner interfaces should be searched (default: true)
+ *
  *
  * @author Nikhil Paranjape
  */
