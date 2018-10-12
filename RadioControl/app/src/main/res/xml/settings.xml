@@ -127,7 +127,12 @@
             android:defaultValue="@array/empty_array"
             android:summary="This will delete the log file used in Stats" />
     </PreferenceCategory>
-
-
+    <PreferenceCategory android:title="User Variables">
+        <EditTextPreference
+            android:key="prefPingIp"
+            android:title="Latency Test Ip Address"
+            android:defaultValue="8.8.8.8"
+            android:summary="8.8.8.8" />
+    </PreferenceCategory>
 
 </PreferenceScreen>

@@ -26,6 +26,8 @@ import androidx.appcompat.widget.Toolbar
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
+import com.afollestad.aesthetic.Aesthetic
+import com.afollestad.aesthetic.AestheticActivity
 import com.afollestad.materialdialogs.MaterialDialog
 import com.android.vending.billing.IInAppBillingService
 import com.crashlytics.android.Crashlytics
@@ -88,18 +90,6 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
 
     private val billingManager = KinAppManager(this, base64EncodedPublicKey)
 
-
-
-    internal var mServiceConn: ServiceConnection = object : ServiceConnection {
-        override fun onServiceDisconnected(name: ComponentName) {
-            mService = null
-        }
-
-        override fun onServiceConnected(name: ComponentName,
-                                        service: IBinder) {
-            mService = IInAppBillingService.Stub.asInterface(service)
-        }
-    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -107,6 +97,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
         clayout = findViewById(R.id.clayout)
         val dialog = findViewById<ProgressBar>(R.id.pingProgressBar)
         mServiceComponent = ComponentName(this, TestJobService::class.java)
+
 
 
         // Handle Toolbar
@@ -387,12 +378,12 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
         //Drawable lg = getResources().getDrawable(R.mipmap.lg);
         icon = when {
             deviceName.contains("Nexus 6P") -> AppCompatResources.getDrawable(applicationContext, R.mipmap.huawei)!!
-            deviceName.contains("Nexus") -> AppCompatResources.getDrawable(applicationContext, R.drawable.ic_google__g__logo)!!
             deviceName.contains("Motorola") -> AppCompatResources.getDrawable(applicationContext, R.mipmap.moto2)!!
             deviceName.contains("Pixel") -> AppCompatResources.getDrawable(applicationContext, R.drawable.ic_google__g__logo)!!
             deviceName.contains("LG") -> AppCompatResources.getDrawable(applicationContext, R.mipmap.lg)!!
             deviceName.contains("Samsung") -> AppCompatResources.getDrawable(applicationContext, R.mipmap.samsung)!!
             deviceName.contains("OnePlus") -> AppCompatResources.getDrawable(applicationContext, R.mipmap.oneplus)!!
+            deviceName.contains("Nexus") -> AppCompatResources.getDrawable(applicationContext, R.drawable.ic_google__g__logo)!!
             else -> AppCompatResources.getDrawable(applicationContext, R.mipmap.ic_launcher)!!
         }
 
@@ -824,8 +815,10 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
 
     private fun pingCheck(){
         var dialog: ProgressBar
+        val preferences = PreferenceManager.getDefaultSharedPreferences(baseContext)
+        val ip = preferences.getString("prefPingIp","8.8.8.8")
         doAsync {
-            val address = InetAddress.getByName("8.8.8.8")
+            val address = InetAddress.getByName(ip)
             val beforeTime = System.currentTimeMillis()
             val reachable = address.isReachable(4000)
             val afterTime = System.currentTimeMillis()
@@ -904,9 +897,6 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
 
     public override fun onDestroy() {
         super.onDestroy()
-        if (mService != null) {
-            unbindService(mServiceConn)
-        }
         billingManager.unbind()
     }
 

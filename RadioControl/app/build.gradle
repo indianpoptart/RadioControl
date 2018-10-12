@@ -38,6 +38,9 @@ android {
         debug {
         }
     }
+    packagingOptions {
+        exclude 'META-INF/library_release.kotlin_module'
+    }
     productFlavors {
 
     }
@@ -88,6 +91,7 @@ dependencies {
     implementation 'me.zhanghai.android.customtabshelper:library:1.0.4'
 
     // Third party - UI/UX
+    implementation 'com.afollestad:aesthetic:0.7.2'
     implementation 'com.afollestad.material-dialogs:core:2.0.0-beta2'
     implementation 'com.appeaser.sublimepickerlibrary:sublimepickerlibrary:2.1.2'
     implementation 'com.appyvet:materialrangebar:1.3'

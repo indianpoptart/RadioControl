@@ -14,6 +14,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
+import com.afollestad.aesthetic.Aesthetic
+import com.afollestad.aesthetic.AestheticActivity
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.list.listItemsSingleChoice
 import com.db.chart.model.LineSet
@@ -37,7 +39,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
-class StatsActivity : AppCompatActivity() {
+class StatsActivity : AestheticActivity() {
     private var wifiSigLost = 0
     //Sets float for wifiLost
     private var janWifiLost = 0f
@@ -91,7 +93,23 @@ class StatsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_stats)
+        // If we haven't set any defaults, do that now
+        if (Aesthetic.isFirstTime) {
+            Aesthetic.config {
+                isDark(true)
 
+                // Causes an Activity recreate, calls setTheme(Int) on it.
+                activityTheme(R.style.MaterialDarkThemenoab)
+            }
+        }
+
+        Aesthetic.config {
+            isDark(true)
+            colorPrimaryRes(R.color.primary_dark)
+
+            // Causes an Activity recreate, calls setTheme(Int) on it.
+            activityTheme(R.style.MaterialDarkThemenoab)
+        }
         val prefs = PreferenceManager.getDefaultSharedPreferences(applicationContext)
         val editor = prefs.edit()
         if (!prefs.contains("gridlines")) {

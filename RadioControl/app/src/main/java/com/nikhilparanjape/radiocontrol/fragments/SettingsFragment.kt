@@ -60,6 +60,15 @@ class SettingsFragment : PreferenceFragment(), TimePickerDialog.OnTimeSetListene
         ssidListPref.setOnPreferenceClickListener { false }
 
 
+        val pingIpPref = findPreference("prefPingIp")
+        val preferences = PreferenceManager.getDefaultSharedPreferences(activity)
+        val ip = preferences.getString("prefPingIp",null)
+        pingIpPref.summary = ip
+        pingIpPref.setOnPreferenceChangeListener { _, _ ->
+            pingIpPref.summary = ip
+            true
+        }
+
         val clearPref = findPreference("clear-ssid")
         clearPref.setOnPreferenceClickListener {
             ssidClearButton()
@@ -344,6 +353,8 @@ class SettingsFragment : PreferenceFragment(), TimePickerDialog.OnTimeSetListene
             tpd.show(fragmentManager, "Timepickerdialog")
             false
         }
+
+
 
     }
 
