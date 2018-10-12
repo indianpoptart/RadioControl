@@ -13,6 +13,7 @@ Feel free to ask questions related to Android programming or this project in the
 
 This project sometimes follows [Semantic Versioning](http://semver.org/) but not all the time.
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/9eafc4915e3747c4b6169118ad946051)](https://app.codacy.com/app/indianpoptart/RadioControl?utm_source=github.com&utm_medium=referral&utm_content=indianpoptart/RadioControl&utm_campaign=Badge_Grade_Dashboard)
 [![Join the chat at https://gitter.im/indianpoptart/RadioControl](https://badges.gitter.im/indianpoptart/RadioControl.svg)](https://gitter.im/indianpoptart/RadioControl?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 # Battery Usage by RadioControl
