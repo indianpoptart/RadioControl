@@ -1,6 +1,9 @@
 # RadioControl
 ![icon](https://nikhilp.org/images/ic_launcher.png)
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/af8dea9ae1fe437f975a8326cbd45847)](https://www.codacy.com/app/indianpoptart/RadioControl?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=indianpoptart/RadioControl&amp;utm_campaign=Badge_Grade)
+[![Join the chat at https://gitter.im/indianpoptart/RadioControl](https://badges.gitter.im/indianpoptart/RadioControl.svg)](https://gitter.im/indianpoptart/RadioControl?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 **Root Required!**
 
 I created this app because of the lack of apps on the play store that enable airplane mode, while keeping wifi on. Probably because not many carriers have WiFi calling and SMS over WiFi
@@ -13,7 +16,7 @@ Feel free to ask questions related to Android programming or this project in the
 
 This project sometimes follows [Semantic Versioning](http://semver.org/) but not all the time.
 
-[![Join the chat at https://gitter.im/indianpoptart/RadioControl](https://badges.gitter.im/indianpoptart/RadioControl.svg)](https://gitter.im/indianpoptart/RadioControl?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 
 # Battery Usage by RadioControl
 
