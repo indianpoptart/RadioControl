@@ -10,7 +10,6 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
@@ -30,7 +29,7 @@ import com.gordonwong.materialsheetfab.MaterialSheetFabEventListener
 import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.mikepenz.iconics.IconicsDrawable
 import com.nikhilparanjape.radiocontrol.R
-import com.nikhilparanjape.radiocontrol.rootUtils.Fab
+import com.nikhilparanjape.radiocontrol.utilities.Fab
 import me.grantland.widget.AutofitHelper
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread

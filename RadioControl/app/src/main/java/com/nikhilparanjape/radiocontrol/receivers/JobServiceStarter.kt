@@ -5,7 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 
-import com.nikhilparanjape.radiocontrol.rootUtils.Utilities
+import com.nikhilparanjape.radiocontrol.utilities.Utilities
 import com.nikhilparanjape.radiocontrol.services.OnBootIntentService
 
 class JobServiceStarter : BroadcastReceiver() {

@@ -1,4 +1,4 @@
-package com.nikhilparanjape.radiocontrol.rootUtils
+package com.nikhilparanjape.radiocontrol.utilities
 
 import org.jetbrains.anko.doAsync
 import java.io.DataOutputStream

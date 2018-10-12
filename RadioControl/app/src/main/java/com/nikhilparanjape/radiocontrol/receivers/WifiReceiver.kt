@@ -7,10 +7,11 @@ import android.text.format.DateFormat
 import android.util.Log
 import androidx.legacy.content.WakefulBroadcastReceiver
 import com.nikhilparanjape.radiocontrol.R
-import com.nikhilparanjape.radiocontrol.rootUtils.RootAccess
-import com.nikhilparanjape.radiocontrol.rootUtils.Utilities
+import com.nikhilparanjape.radiocontrol.utilities.RootAccess
+import com.nikhilparanjape.radiocontrol.utilities.Utilities
 import com.nikhilparanjape.radiocontrol.services.BackgroundAirplaneService
 import com.nikhilparanjape.radiocontrol.services.CellRadioService
+import com.nikhilparanjape.radiocontrol.utilities.AlarmSchedulers
 import org.jetbrains.anko.doAsync
 import java.io.File
 import java.io.IOException
@@ -37,6 +38,7 @@ class WifiReceiver : WakefulBroadcastReceiver() {
 
 
     internal var util = Utilities() //Network and other related utilities
+    internal var alarmUtil = AlarmSchedulers()
 
 
     override fun onReceive(context: Context, intent: Intent) {
@@ -210,7 +212,7 @@ class WifiReceiver : WakefulBroadcastReceiver() {
                         if (prefs.getBoolean("altRootCommand", false)) {
                             val cellIntent = Intent(context, CellRadioService::class.java)
                             context.startService(cellIntent)
-                            util.scheduleRootAlarm(context)
+                            alarmUtil.scheduleRootAlarm(context)
                             Log.d("RadioControl", "Cell Radio has been turned off")
                             writeLog("Cell radio has been turned off, SSID: " + Utilities.getCurrentSsid(context)!!, context)
                         } else if (!prefs.getBoolean("altRootCommand", false)) {

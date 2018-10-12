@@ -1,4 +1,4 @@
-package com.nikhilparanjape.radiocontrol.rootUtils
+package com.nikhilparanjape.radiocontrol.utilities
 
 /**
  * Added and modified by Nikhil on 5/17/2016.
@@ -98,6 +98,6 @@ class Fab : FloatingActionButton, AnimatedFab {
 
     companion object {
 
-        private val FAB_ANIM_DURATION = 200
+        private const val FAB_ANIM_DURATION = 200
     }
 }

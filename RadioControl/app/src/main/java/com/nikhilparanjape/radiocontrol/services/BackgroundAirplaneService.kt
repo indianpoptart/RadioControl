@@ -13,9 +13,9 @@ import android.text.format.DateFormat
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.nikhilparanjape.radiocontrol.R
-import com.nikhilparanjape.radiocontrol.receivers.WifiReceiver
-import com.nikhilparanjape.radiocontrol.rootUtils.RootAccess
-import com.nikhilparanjape.radiocontrol.rootUtils.Utilities
+import com.nikhilparanjape.radiocontrol.utilities.RootAccess
+import com.nikhilparanjape.radiocontrol.utilities.Utilities
+import com.nikhilparanjape.radiocontrol.utilities.AlarmSchedulers
 import org.jetbrains.anko.doAsync
 import java.io.File
 import java.io.IOException
@@ -34,6 +34,7 @@ class BackgroundAirplaneService : IntentService("BackgroundAirplaneService") {
     private var airOffCmd3 = arrayOf("su", "settings put global airplane_mode_on 0", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state false")
 
     internal var util = Utilities() //Network and other related utilities
+    internal var alarmUtil = AlarmSchedulers()
 
     override fun onBind(intent: Intent): IBinder? {
         return null
@@ -264,7 +265,7 @@ class BackgroundAirplaneService : IntentService("BackgroundAirplaneService") {
                         if (prefs.getBoolean("altRootCommand", false)) {
                             val cellIntent = Intent(context, CellRadioService::class.java)
                             context.startService(cellIntent)
-                            util.scheduleRootAlarm(context)
+                            alarmUtil.scheduleRootAlarm(context)
                             Log.d("RadioControl", "Cell Radio has been turned off")
                             writeLog("Cell radio has been turned off, SSID: " + Utilities.getCurrentSsid(context)!!, context)
                         } else if (!prefs.getBoolean("altRootCommand", false)) {
@@ -299,7 +300,7 @@ class BackgroundAirplaneService : IntentService("BackgroundAirplaneService") {
         val preferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)
         val airplaneService = preferences.getBoolean("isAirplaneService", false)
         if (airplaneService) {
-            util.scheduleAlarm(applicationContext)
+            alarmUtil.scheduleAlarm(applicationContext)
         }
 
         Log.d("RadioControl", "Background Service destroyed")

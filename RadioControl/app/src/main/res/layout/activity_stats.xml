@@ -165,7 +165,7 @@
 
 
     <!-- Overlay that dims the screen -->
-    <com.nikhilparanjape.radiocontrol.rootUtils.Fab
+    <com.nikhilparanjape.radiocontrol.utilities.Fab
         android:id="@+id/fab"
         style="@style/Widget.MaterialSheetFab.Fab"
         android:layout_width="match_parent"

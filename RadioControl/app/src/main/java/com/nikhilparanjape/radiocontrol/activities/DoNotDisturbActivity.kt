@@ -7,7 +7,6 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.preference.PreferenceManager
-import android.text.Html
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
@@ -24,7 +23,7 @@ import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.mikepenz.iconics.IconicsDrawable
 import com.nikhilparanjape.radiocontrol.R
 import com.nikhilparanjape.radiocontrol.receivers.ActionReceiver
-import com.nikhilparanjape.radiocontrol.rootUtils.Utilities
+import com.nikhilparanjape.radiocontrol.utilities.AlarmSchedulers
 
 class DoNotDisturbActivity : AppCompatActivity() {
 
@@ -35,7 +34,7 @@ class DoNotDisturbActivity : AppCompatActivity() {
         setContentView(R.layout.activity_do_not_disturb)
 
         val actionBar = supportActionBar
-        val util = Utilities()
+        val alarmUtil = AlarmSchedulers()
         val pref = PreferenceManager.getDefaultSharedPreferences(applicationContext)
         val editor = pref.edit()
 
@@ -58,14 +57,14 @@ class DoNotDisturbActivity : AppCompatActivity() {
             cancelButton.visibility = View.GONE
         }
 
-        val rangebar = findViewById<RangeBar>(R.id.rangebar)
+        val rangeBar = findViewById<RangeBar>(R.id.rangebar)
 
-        rangebar.setOnRangeBarChangeListener { _, _, rightPinIndex, _, _ -> hours = rightPinIndex }
+        rangeBar.setOnRangeBarChangeListener { _, _, rightPinIndex, _, _ -> hours = rightPinIndex }
 
         //Initialize set button
-        val set_button = findViewById<Button>(R.id.set_button)
+        val setButton = findViewById<Button>(R.id.set_button)
 
-        set_button.setOnClickListener { _ ->
+        setButton.setOnClickListener { _ ->
             if (hours > 0) {
                 editor.putBoolean("isNoDisturbEnabled", true)
                 editor.putInt("dndHours", hours)
@@ -73,8 +72,8 @@ class DoNotDisturbActivity : AppCompatActivity() {
                 hourStatus.text = getString(R.string.text_set_for_hours, hours)
                 Log.d("RadioControl", "I've set do not disturb on for $hours hours")
                 startStandbyMode()
-                util.cancelAlarm(applicationContext) // Cancels the recurring alarm that starts airplane service
-                util.scheduleWakeupAlarm(applicationContext, hours)
+                alarmUtil.cancelAlarm(applicationContext) // Cancels the recurring alarm that starts airplane service
+                alarmUtil.scheduleWakeupAlarm(applicationContext, hours)
                 Toast.makeText(this, "Do not disturb set for $hours hours", Toast.LENGTH_LONG).show()
                 //onBackPressed();
             } else {
@@ -82,17 +81,14 @@ class DoNotDisturbActivity : AppCompatActivity() {
                 editor.apply()
                 hourStatus.setText(R.string.not_set)
             }
-
-
         }
-
         cancelButton.setOnClickListener { _ ->
             editor.putBoolean("isNoDisturbEnabled", false)
             editor.apply()
             hourStatus.setText(R.string.not_set)
             status.setImageDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.ic_do_not_disturb_off_white_48px))
             cancelButton.visibility = View.GONE
-            util.cancelWakeupAlarm(applicationContext)
+            alarmUtil.cancelWakeupAlarm(applicationContext)
             Toast.makeText(this, "Do not disturb cancelled", Toast.LENGTH_LONG).show()
 
         }
@@ -108,19 +104,6 @@ class DoNotDisturbActivity : AppCompatActivity() {
             }
         }
         return super.onOptionsItemSelected(item)
-    }
-
-    private fun showToast(message: String) {
-        val sharedPref = getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE)
-        val editor = sharedPref.edit()
-        if (message.equals("true", ignoreCase = true)) {
-            editor.putBoolean("isStandbyDialog", true)
-            editor.apply()
-        } else {
-            editor.putBoolean("isStandbyDialog", false)
-            editor.apply()
-        }
-
     }
 
     private fun startStandbyMode() {

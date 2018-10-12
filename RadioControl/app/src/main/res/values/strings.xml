@@ -155,7 +155,7 @@
     <string name="text_got_it">GOT IT</string>
     <string name="text_whats_new">WHAT\'S NEW</string>
     <string name="title_airplane_reset">Please disable WiFi and Airplane mode and make sure the cell radio is on before pressing OK</string>
-    <string name="text_ok">Ok</string>
+    <string name="text_ok">OK</string>
     <string name="text_set_for_hours">set for %1$d hour(s)</string>
     <string name="text_cancel">Cancel</string>
     <string name="title_easing_animation">Easing Animation</string>
@@ -175,5 +175,13 @@
     <string name="preference_airplane_service">isAirplaneService</string>
     <string name="preference_standby_dialog">isStandbyDialog</string>
     <string name="title_allow_fabric">Allow Fabric Crashlytics</string>
+    <string name="title_preference_instabug">Instabug In-app Feedback</string>
+    <string name="summary_preference_instabug">Instabug is providing in-app feedback and bug reporting to mobile apps. It provides a seamless way for two-way communication with users, while providing detailed environment report for developers. Shake to activate</string>
+    <string name="pref_instabug_check">instabugCheck</string>
+    <string name="log_persistence_created">PERSISTENCE Created</string>
+    <string name="log_persistence_started">PERSISTENCE Started</string>
+    <string name="log_persistence_bound">PERSISTENCE Bound</string>
+    <string name="link_speed_24">Link speed: %1$d Mbps @ 2.4 GHz</string>
+    <string name="link_speed_5">Link speed: %1$d Mbps @ 5 GHz</string>
 
 </resources>

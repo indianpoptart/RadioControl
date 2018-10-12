@@ -8,7 +8,12 @@ import android.view.ViewGroup
 import com.nikhilparanjape.radiocontrol.R
 import com.nikhilparanjape.radiocontrol.holders.RecyclerHolder
 
-class RecyclerAdapter(internal var c: Context, internal var troubleshoot: Array<String>) : RecyclerView.Adapter<RecyclerHolder>() {
+/**
+ * Created by Nikhil on 10/12/2018.
+ *
+ * An adapter class for TroubleShooting Activity
+ */
+class RecyclerAdapter(internal var c: Context, private var troubleshoot: Array<String>) : RecyclerView.Adapter<RecyclerHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerHolder {
         val v = LayoutInflater.from(parent.context).inflate(R.layout.model, parent, false)

@@ -24,9 +24,10 @@ import com.borax12.materialdaterangepicker.time.TimePickerDialog
 import com.google.android.material.snackbar.Snackbar
 import com.nikhilparanjape.radiocontrol.R
 import com.nikhilparanjape.radiocontrol.receivers.WifiReceiver
-import com.nikhilparanjape.radiocontrol.rootUtils.RootAccess
-import com.nikhilparanjape.radiocontrol.rootUtils.Utilities
+import com.nikhilparanjape.radiocontrol.utilities.RootAccess
+import com.nikhilparanjape.radiocontrol.utilities.Utilities
 import com.nikhilparanjape.radiocontrol.services.PersistenceService
+import com.nikhilparanjape.radiocontrol.utilities.AlarmSchedulers
 import java.io.File
 import java.util.*
 
@@ -52,6 +53,7 @@ class SettingsFragment : PreferenceFragment(), TimePickerDialog.OnTimeSetListene
 
         c = activity
         val util = Utilities()
+        val alarmUtil = AlarmSchedulers()
 
         preferenceScreen.findPreference("ssid").isEnabled = Utilities.isWifiOn(c)
 
@@ -323,11 +325,11 @@ class SettingsFragment : PreferenceFragment(), TimePickerDialog.OnTimeSetListene
 
                 if (intervalTime != 0 && airplaneService) {
                     Log.d("RadioControl", "Alarm Scheduled")
-                    util.scheduleAlarm(c)
+                    alarmUtil.scheduleAlarm(c)
                 }
             } else {
                 Log.d("RadioControl", "Alarm Cancelled")
-                util.cancelAlarm(c)
+                alarmUtil.cancelAlarm(c)
             }
 
 
@@ -368,7 +370,7 @@ class SettingsFragment : PreferenceFragment(), TimePickerDialog.OnTimeSetListene
     }
 
     override fun onTimeSet(view: RadialPickerLayout, hourOfDay: Int, minute: Int, hourOfDayEnd: Int, minuteEnd: Int) {
-        val util = Utilities()
+        val alarmUtil = AlarmSchedulers()
         val c = activity
         val hourString = if (hourOfDay < 10) "0$hourOfDay" else "" + hourOfDay
         val minuteString = if (minute < 10) "0$minute" else "" + minute
@@ -376,9 +378,9 @@ class SettingsFragment : PreferenceFragment(), TimePickerDialog.OnTimeSetListene
         val minuteStringEnd = if (minuteEnd < 10) "0$minuteEnd" else "" + minuteEnd
         val time = "You picked the following time: From - " + hourString + "h" + minuteString + " To - " + hourStringEnd + "h" + minuteStringEnd
 
-        util.cancelNightAlarm(c, hourOfDay, minute)
+        alarmUtil.cancelNightAlarm(c, hourOfDay, minute)
 
-        util.scheduleNightWakeupAlarm(c, hourOfDayEnd, minuteEnd)
+        alarmUtil.scheduleNightWakeupAlarm(c, hourOfDayEnd, minuteEnd)
         Log.d("RadioControl", "Night Mode: $time")
         Toast.makeText(activity, "Night mode set from $hourOfDay:$minuteString to $hourOfDayEnd:$minuteStringEnd", Toast.LENGTH_LONG).show()
     }
@@ -405,5 +407,4 @@ class SettingsFragment : PreferenceFragment(), TimePickerDialog.OnTimeSetListene
         Toast.makeText(activity,
                 "Log Deleted", Toast.LENGTH_LONG).show()
     }
-
 }

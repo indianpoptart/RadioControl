@@ -24,11 +24,11 @@ class PersistenceService : Service() {
     var context: Context = this
     override fun onCreate() {
         super.onCreate()
-        Log.i("RadioControl", "PERSISTENCE Created")
+        Log.i("RadioControl", getString(R.string.log_persistence_created))
         createNotificationChannel()
     }
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
-        Log.i("RadioControl", "PERSISTENCE Started")
+        Log.i("RadioControl", getString(R.string.log_persistence_started))
         val filter = IntentFilter()
         filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION)
 
@@ -97,7 +97,7 @@ class PersistenceService : Service() {
     }
 
     override fun onBind(intent: Intent): IBinder? {
-        Log.i("RadioControl", "PERSISTENCE Bound")
+        Log.i("RadioControl", getString(R.string.log_persistence_bound))
 
         return null
     }

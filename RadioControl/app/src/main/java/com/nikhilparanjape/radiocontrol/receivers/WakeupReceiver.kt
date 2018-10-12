@@ -5,13 +5,13 @@ import android.content.Context
 import android.content.Intent
 import android.preference.PreferenceManager
 
-import com.nikhilparanjape.radiocontrol.rootUtils.Utilities
+import com.nikhilparanjape.radiocontrol.utilities.AlarmSchedulers
 
 class WakeupReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
-        val util = Utilities()
-        util.scheduleAlarm(context)
+        val alarmUtil = AlarmSchedulers()
+        alarmUtil.scheduleAlarm(context)
 
         val pref = PreferenceManager.getDefaultSharedPreferences(context)
         val editor = pref.edit()

@@ -56,8 +56,8 @@
             android:defaultValue="false" />
         <CheckBoxPreference
             android:key="instabugCheck"
-            android:title="Instabug In-app Feedback"
-            android:summary="FillIn"
+            android:title="@string/title_preference_instabug"
+            android:summary="@string/summary_preference_instabug"
             android:defaultValue="false" />
 
     </PreferenceCategory>

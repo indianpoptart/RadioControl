@@ -10,9 +10,9 @@ import android.preference.PreferenceManager
 import android.telephony.PhoneStateListener
 import android.telephony.TelephonyManager
 import android.util.Log
-import com.nikhilparanjape.radiocontrol.rootUtils.RootAccess
+import com.nikhilparanjape.radiocontrol.utilities.RootAccess
 
-import com.nikhilparanjape.radiocontrol.rootUtils.Utilities
+import com.nikhilparanjape.radiocontrol.utilities.Utilities
 import com.nikhilparanjape.radiocontrol.services.CellRadioService
 
 class CustomPhoneStateListener(//private static final String TAG = "PhoneStateChanged";
@@ -22,7 +22,6 @@ class CustomPhoneStateListener(//private static final String TAG = "PhoneStateCh
     internal var airCmd = arrayOf("su", "settings put global airplane_mode_radios  \"cell\"", "content update --uri content://settings/global --bind value:s:'cell' --where \"name='airplane_mode_radios'\"", "settings put global airplane_mode_on 1", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state true")
     //runs command to disable airplane mode on wifi loss, while restoring previous airplane settings
     private val airOffCmd2 = arrayOf("su", "settings put global airplane_mode_on 0", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state false", "settings put global airplane_mode_radios  \"cell,bluetooth,nfc,wimax\"", "content update --uri content://settings/global --bind value:s:'cell,bluetooth,nfc,wimax' --where \"name='airplane_mode_radios'\"")
-    internal var airOffCmd3 = arrayOf("su", "settings put global airplane_mode_on 0", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state false")
 
     private var lastState = TelephonyManager.CALL_STATE_IDLE
     private val isIncoming: Boolean = false
@@ -45,12 +44,14 @@ class CustomPhoneStateListener(//private static final String TAG = "PhoneStateCh
                 cellChange()
             }
             TelephonyManager.CALL_STATE_IDLE -> {
-                if(lastState == TelephonyManager.CALL_STATE_RINGING){
-
-                } else if(isIncoming){}
-                else{
-                    Log.d("RadioControl", "DoThing")
-                    cellChange()
+                when {
+                    lastState == TelephonyManager.CALL_STATE_RINGING -> {
+                    }
+                    isIncoming -> {}
+                    else -> {
+                        Log.d("RadioControl", "DoThing")
+                        cellChange()
+                    }
                 }
 
             }
@@ -70,7 +71,7 @@ class CustomPhoneStateListener(//private static final String TAG = "PhoneStateCh
 
         //Check if user wants the app on
         if (sp.getInt("isActive", 0) == 1 && prefs.getBoolean("isPhoneStateCheck", true)) {
-            //If airplanemode is on or cell is off
+            //If airplane mode is on or cell is off
             if (Utilities.isAirplaneMode(context) || !Utilities.isConnectedMobile(context)) {
                 //If Wifi is not connected
                 if(!Utilities.isConnectedWifi(context)){
@@ -113,7 +114,7 @@ class CustomPhoneStateListener(//private static final String TAG = "PhoneStateCh
     }
 
     companion object {
-        private val PRIVATE_PREF = "prefs"
+        private const val PRIVATE_PREF = "prefs"
     }
 
 }

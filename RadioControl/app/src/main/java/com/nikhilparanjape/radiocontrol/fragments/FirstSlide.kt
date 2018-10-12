@@ -12,6 +12,12 @@ import android.view.ViewGroup
 
 import com.nikhilparanjape.radiocontrol.R
 
+
+/**
+ * Created by Nikhil on 10/12/2018.
+ *
+ * The first slide in the Tutorial
+ */
 class FirstSlide : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.intro1, container, false)

@@ -22,7 +22,7 @@ import com.nikhilparanjape.radiocontrol.BuildConfig
 import com.nikhilparanjape.radiocontrol.R
 import com.nikhilparanjape.radiocontrol.activities.ChangeLogActivity
 import com.nikhilparanjape.radiocontrol.activities.TutorialActivity
-import com.nikhilparanjape.radiocontrol.rootUtils.Utilities
+import com.nikhilparanjape.radiocontrol.utilities.Utilities
 import com.novoda.simplechromecustomtabs.SimpleChromeCustomTabs
 import org.jetbrains.anko.doAsync
 import org.w3c.dom.Document

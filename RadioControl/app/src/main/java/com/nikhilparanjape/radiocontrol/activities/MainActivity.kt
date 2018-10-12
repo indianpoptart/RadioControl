@@ -11,7 +11,6 @@ import android.graphics.drawable.Drawable
 import android.net.ConnectivityManager
 import android.os.Build
 import android.os.Bundle
-import android.os.IBinder
 import android.preference.PreferenceManager
 import android.text.format.DateFormat
 import android.util.Log
@@ -26,10 +25,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
-import com.afollestad.aesthetic.Aesthetic
-import com.afollestad.aesthetic.AestheticActivity
 import com.afollestad.materialdialogs.MaterialDialog
-import com.android.vending.billing.IInAppBillingService
 import com.crashlytics.android.Crashlytics
 import com.crashlytics.android.answers.Answers
 import com.crashlytics.android.answers.RatingEvent
@@ -54,11 +50,12 @@ import com.nikhilparanjape.radiocontrol.R
 import com.nikhilparanjape.radiocontrol.receivers.ActionReceiver
 import com.nikhilparanjape.radiocontrol.receivers.NightModeReceiver
 import com.nikhilparanjape.radiocontrol.receivers.WifiReceiver
-import com.nikhilparanjape.radiocontrol.rootUtils.Utilities
+import com.nikhilparanjape.radiocontrol.utilities.Utilities
 import com.nikhilparanjape.radiocontrol.services.BackgroundAirplaneService
 import com.nikhilparanjape.radiocontrol.services.CellRadioService
 import com.nikhilparanjape.radiocontrol.services.PersistenceService
 import com.nikhilparanjape.radiocontrol.services.TestJobService
+import com.nikhilparanjape.radiocontrol.utilities.AlarmSchedulers
 import io.fabric.sdk.android.Fabric
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
@@ -78,11 +75,11 @@ import java.net.InetAddress
 class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
 
     internal lateinit var icon: Drawable
-    internal lateinit var carrierIcon: Drawable
+    private lateinit var carrierIcon: Drawable
     internal lateinit var result: Drawer
-    internal var versionName = BuildConfig.VERSION_NAME
+    var versionName = BuildConfig.VERSION_NAME
     internal var util = Utilities()
-    internal var mService: IInAppBillingService? = null
+    internal var alarmUtil = AlarmSchedulers()
     internal lateinit var clayout: CoordinatorLayout
     private var mServiceComponent: ComponentName? = null
     //test code
@@ -99,11 +96,14 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
         mServiceComponent = ComponentName(this, TestJobService::class.java)
 
 
-
         // Handle Toolbar
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
         val actionBar = supportActionBar
+        val fab = findViewById<FloatingActionButton>(R.id.fab)
+
+        val filter = IntentFilter()
+        filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION)
 
         //Sets the actionbar with hamburger
         if (actionBar != null) {
@@ -111,21 +111,49 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
             actionBar.setDisplayHomeAsUpEnabled(true)
 
         }
+
+        fab.setImageDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.ic_network_check_white_48dp))
+        fab.setOnClickListener {
+            dialog.visibility = View.VISIBLE
+            pingCheck()
+        }
+
+        //Pref values
+        //  Initialize SharedPreferences
+        val getPrefs = PreferenceManager.getDefaultSharedPreferences(baseContext)
+        val sharedPref = getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE)
+        val editor = sharedPref.edit()
+
+        //TextViews
+        val statusText = findViewById<TextView>(R.id.statusText)
+        val linkText = findViewById<TextView>(R.id.linkSpeed)
+        val connectionStatusText = findViewById<TextView>(R.id.pingStatus)
+
+        //Switches and Buttons
+        val linkSpeedButton = findViewById<Button>(R.id.linkSpeedButton)
+        val toggle = findViewById<Switch>(R.id.enableSwitch)
+
+        //Dev buttons
+        val conn = findViewById<Button>(R.id.pingTestButton)
+        val serviceTest = findViewById<Button>(R.id.airplane_service_test)
+        val nightCancel = findViewById<Button>(R.id.night_mode_cancel)
+        val radioOffButton = findViewById<Button>(R.id.cellRadioOff)
+        val forceCrashButton = findViewById<Button>(R.id.forceCrashButton)
+
+        //Other Values
+        //  Create a new boolean and preference and set it to true if it's not already there
+        val isFirstStart = getPrefs.getBoolean(getString(R.string.preference_first_start), true)
+        //Gets the current android build version on device
+        val currentapiVersion = Build.VERSION.SDK_INT
+        val intervalTime = getPrefs.getString("interval_prefs", "10")
+        val airplaneService = getPrefs.getBoolean(getString(R.string.preference_airplane_service), false)
+
         init()//initializes the whats new dialog
 
         //Async thread to do a preference checks
         doAsync{
             //Checks for root
             rootInit()
-
-            //  Initialize SharedPreferences
-            val getPrefs = PreferenceManager
-                    .getDefaultSharedPreferences(baseContext)
-
-            //  Create a new boolean and preference and set it to true if it's not already there
-            val isFirstStart = getPrefs.getBoolean(getString(R.string.preference_first_start), true)
-            //Gets the current android build version on device
-            val currentapiVersion = Build.VERSION.SDK_INT
 
             //  If the activity has never started before...
             if (isFirstStart) {
@@ -146,8 +174,6 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
                 //  Apply changes
                 e.apply()
             }
-            val intervalTime = getPrefs.getString("interval_prefs", "10")
-            val airplaneService = getPrefs.getBoolean(getString(R.string.preference_airplane_service), false)
 
             //Begin background service
             if (intervalTime != "0" && airplaneService) {
@@ -164,7 +190,11 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
                 }
                 Log.d("RadioControl", "persist Service launched")
             }
-
+            if(getPrefs.getBoolean(getString(R.string.pref_instabug_check),true)){
+                //Instabug.Builder(applicationContext, "5ef04d81ac921706082e840ceb7b82ec")
+                        //.setInvocationEvents(InstabugInvocationEvent.SHAKE, InstabugInvocationEvent.SCREENSHOT)
+                        //.build()
+            }
 
             if (!getPrefs.getBoolean(getString(R.string.preference_work_mode), true)) {
                 registerForBroadcasts(applicationContext)
@@ -174,29 +204,18 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
             dialog.visibility = View.GONE
 
             //EndAsync
-
         }
-        val sharedPref = getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE)
-        val pref = PreferenceManager.getDefaultSharedPreferences(applicationContext)
-        val editor = sharedPref.edit()
-        val statusText = findViewById<TextView>(R.id.statusText)
-        val linkText = findViewById<TextView>(R.id.linkSpeed)
-        val connectionStatusText = findViewById<TextView>(R.id.pingStatus)
-        val toggle = findViewById<Switch>(R.id.enableSwitch)
 
-        if (pref.getBoolean(getString(R.string.preference_allow_fabric), false)) {
+        drawerCreate() //Initializes Drawer
+
+        //Initialize Fabric Crashlytics
+        if (getPrefs.getBoolean(getString(R.string.preference_allow_fabric), false)) {
             Fabric.with(this, Crashlytics())
         } else {
             Fabric.with(this, Crashlytics.Builder()
                     .core(CrashlyticsCore.Builder()
                             .disabled(true).build()).build())
         }
-
-        val filter = IntentFilter()
-        filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION)
-
-        //LinkSpeed Button
-        val linkSpeedButton = findViewById<Button>(R.id.linkSpeedButton)
 
         //Check if the easter egg is NOT activated
         if (!sharedPref.getBoolean(getString(R.string.preference_is_developer), false)) {
@@ -217,31 +236,24 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
                 linkText.setText(R.string.cellNetwork)
             } else {
                 if (gHz == 2) {
-                    linkText.text = "Link speed: " + linkSpeed + "Mbps @ 2.4 GHz"
+                    linkText.text = getString(R.string.link_speed_24, linkSpeed)
 
                 } else if (gHz == 5) {
-                    linkText.text = "Link speed: " + linkSpeed + "Mbps @ 5 GHz"
+                    linkText.text = getString(R.string.link_speed_5, linkSpeed)
 
                 }
-
             }
         }
-
         launch(UI) {
             val list: ArrayList<String> = ArrayList()
             list.add(ITEM_ONE_DOLLAR)
             list.add(ITEM_THREE_DOLLAR)
             list.add(ITEM_FIVE_DOLLAR)
             list.add(ITEM_TEN_DOLLAR)
-            val products = billingManager.fetchProducts(list, KinAppProductType.INAPP).await()
+            billingManager.fetchProducts(list, KinAppProductType.INAPP).await()
         }
 
-        //Connection Test button (Dev Feature)
-        val conn = findViewById<Button>(R.id.pingTestButton)
-        val serviceTest = findViewById<Button>(R.id.airplane_service_test)
-        val nightCancel = findViewById<Button>(R.id.night_mode_cancel)
-        val radioOffButton = findViewById<Button>(R.id.cellRadioOff)
-        val forceCrashButton = findViewById<Button>(R.id.forceCrashButton)
+        //Dev mode handling
         //Check if the easter egg is NOT activated
         if (!sharedPref.getBoolean(getString(R.string.preference_is_developer), false)) {
             conn.visibility = View.GONE
@@ -268,7 +280,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
         serviceTest.setOnClickListener {
             val i = Intent(applicationContext, BackgroundAirplaneService::class.java)
             baseContext.startService(i)
-            util.scheduleAlarm(applicationContext)
+            alarmUtil.scheduleAlarm(applicationContext)
             Log.d("RadioControl", "Service started")
         }
         nightCancel.setOnClickListener {
@@ -283,22 +295,8 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
             //RootAccess.runCommands(cellOffCmd);
             val cellIntent = Intent(applicationContext, CellRadioService::class.java)
             startService(cellIntent)
-            util.scheduleRootAlarm(applicationContext)
+            alarmUtil.scheduleRootAlarm(applicationContext)
         }
-
-        val fab = findViewById<FloatingActionButton>(R.id.fab)
-        //CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams)fab.getLayoutParams();
-        //params.setMargins(0, 85, 16, 85); //substitute parameters for left, top, right, bottom
-        //fab.setLayoutParams(params);
-
-        fab.setImageDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.ic_network_check_white_48dp))
-        fab.setOnClickListener {
-            dialog.visibility = View.VISIBLE
-            pingCheck()
-        }
-
-        drawerCreate() //Initalizes Drawer
-
         toggle.setOnCheckedChangeListener { _, isChecked ->
             if (!isChecked) {
                 editor.putInt(getString(R.string.preference_app_active), 0)
@@ -315,7 +313,6 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
                 applicationContext.startService(i)
             }
         }
-
     }
 
     //Initialize method for the Whats new dialog
@@ -346,18 +343,23 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
 
     //Start a new activity for sending a feedback email
     private fun sendFeedback() {
-        val emailIntent = Intent(android.content.Intent.ACTION_SEND)
-        emailIntent.type = "text/html"
-        emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, arrayOf(getString(R.string.mail_feedback_email)))
-        emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, getString(R.string.mail_feedback_subject))
-        emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, getString(R.string.mail_feedback_message))
-        startActivity(Intent.createChooser(emailIntent, getString(R.string.title_send_feedback)))
-        writeLog("Feedback sent", applicationContext)
-        Answers.getInstance().logRating(RatingEvent()
-                .putRating(4)
-                .putContentName("RadioControl Feedback")
-                .putContentType("Feedback")
-                .putContentId("feedback-001"))
+        doAsync {
+            val emailIntent = Intent(android.content.Intent.ACTION_SEND)
+            emailIntent.type = "text/html"
+            emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, arrayOf(getString(R.string.mail_feedback_email)))
+            emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, getString(R.string.mail_feedback_subject))
+            emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, getString(R.string.mail_feedback_message))
+
+            uiThread {
+                startActivity(Intent.createChooser(emailIntent, getString(R.string.title_send_feedback)))
+                writeLog("Feedback sent", applicationContext)
+                Answers.getInstance().logRating(RatingEvent()
+                        .putRating(4)
+                        .putContentName("RadioControl Feedback")
+                        .putContentType("Feedback")
+                        .putContentId("feedback-001"))
+            }
+        }
     }
 
     private fun registerForBroadcasts(context: Context) {
@@ -412,7 +414,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
                         ProfileDrawerItem().withName(deviceName).withEmail("v$versionName").withIcon(icon),
                         ProfileDrawerItem().withName(getString(R.string.profile_root_status)).withEmail(carrierName).withIcon(carrierIcon)
                 )
-                .withOnAccountHeaderListener { _, profile, _ -> false }
+                .withOnAccountHeaderListener { _, _, _ -> false }
                 .build()
         //Creates navigation drawer items
         val item1 = PrimaryDrawerItem().withIdentifier(1).withName(R.string.home).withIcon(GoogleMaterial.Icon.gmd_wifi)
@@ -504,19 +506,6 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
             }
         }
         return super.onOptionsItemSelected(item)
-    }
-
-    private fun showToast(message: String) {
-        val sharedPref = getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE)
-        val editor = sharedPref.edit()
-        if (message.equals("true", ignoreCase = true)) {
-            editor.putBoolean(getString(R.string.preference_standby_dialog), true)
-            editor.apply()
-        } else {
-            editor.putBoolean(getString(R.string.preference_standby_dialog), false)
-            editor.apply()
-        }
-
     }
 
     private fun startStandbyMode() {
@@ -646,7 +635,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
                 editor.putBoolean(getString(R.string.preference_is_donated), true)
                 editor.apply()
                 launch(UI) {
-                    val success = billingManager.consumePurchase(purchase!!).await()
+                    billingManager.consumePurchase(purchase!!).await()
                 }
 
             }
@@ -912,7 +901,6 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
     companion object {
         private const val PRIVATE_PREF = "prefs"
         private const val VERSION_KEY = "version_number"
-        internal val ITEM_SKU = "com.nikhilparanjape.radiocontrol.test_donate1"
         internal const val ITEM_ONE_DOLLAR = "com.nikihlparanjape.radiocontrol.donate.one"
         internal const val ITEM_THREE_DOLLAR = "com.nikihlparanjape.radiocontrol.donate.three"
         internal const val ITEM_FIVE_DOLLAR = "com.nikihlparanjape.radiocontrol.donate.five"
@@ -932,7 +920,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
 
         //Capitalizes names for devices. Used by getDeviceName()
         private fun capitalize(s: String?): String {
-            if (s == null || s.length == 0) {
+            if (s == null || s.isEmpty()) {
                 return ""
             }
             val first = s[0]
