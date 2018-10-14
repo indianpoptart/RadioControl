@@ -190,6 +190,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
                 }
                 Log.d("RadioControl", "persist Service launched")
             }
+            //Attempting instabug integration.
             if(getPrefs.getBoolean(getString(R.string.pref_instabug_check),true)){
                 //Instabug.Builder(applicationContext, "5ef04d81ac921706082e840ceb7b82ec")
                         //.setInvocationEvents(InstabugInvocationEvent.SHAKE, InstabugInvocationEvent.SCREENSHOT)
@@ -698,9 +699,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
         val sharedPref = getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE)
         val pref = PreferenceManager.getDefaultSharedPreferences(applicationContext)
         doAsync {
-            if (pref.getBoolean(getString(R.string.preference_work_mode), true)) {
-
-            } else {
+            if (!pref.getBoolean(getString(R.string.preference_work_mode), true)) {
                 registerForBroadcasts(applicationContext)
             }
         }
