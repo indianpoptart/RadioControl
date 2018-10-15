@@ -36,6 +36,8 @@ import com.github.stephenvinouze.core.models.KinAppPurchase
 import com.github.stephenvinouze.core.models.KinAppPurchaseResult
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
+import com.instabug.library.Instabug
+import com.instabug.library.invocation.InstabugInvocationEvent
 import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.mikepenz.iconics.IconicsDrawable
 import com.mikepenz.materialdrawer.AccountHeaderBuilder
@@ -192,9 +194,9 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
             }
             //Attempting instabug integration.
             if(getPrefs.getBoolean(getString(R.string.pref_instabug_check),true)){
-                //Instabug.Builder(applicationContext, "5ef04d81ac921706082e840ceb7b82ec")
-                        //.setInvocationEvents(InstabugInvocationEvent.SHAKE, InstabugInvocationEvent.SCREENSHOT)
-                        //.build()
+                Instabug.Builder(applicationContext, "5ef04d81ac921706082e840ceb7b82ec")
+                        .setInvocationEvents(InstabugInvocationEvent.SHAKE, InstabugInvocationEvent.SCREENSHOT)
+                        .build()
             }
 
             if (!getPrefs.getBoolean(getString(R.string.preference_work_mode), true)) {
