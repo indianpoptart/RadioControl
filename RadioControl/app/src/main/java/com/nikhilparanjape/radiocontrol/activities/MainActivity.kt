@@ -194,9 +194,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
             }
             //Attempting instabug integration.
             if(getPrefs.getBoolean(getString(R.string.pref_instabug_check),true)){
-                Instabug.Builder(applicationContext, "5ef04d81ac921706082e840ceb7b82ec")
-                        .setInvocationEvents(InstabugInvocationEvent.SHAKE, InstabugInvocationEvent.SCREENSHOT)
-                        .build()
+
             }
 
             if (!getPrefs.getBoolean(getString(R.string.preference_work_mode), true)) {
@@ -220,7 +218,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
                             .disabled(true).build()).build())
         }
 
-        //Check if the easter egg is NOT activated
+        //Check if the easter egg(Dev mode) is NOT activated
         if (!sharedPref.getBoolean(getString(R.string.preference_is_developer), false)) {
             linkSpeedButton.visibility = View.GONE
             linkText.visibility = View.GONE
@@ -287,11 +285,13 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
             Log.d("RadioControl", "Service started")
         }
         nightCancel.setOnClickListener {
-            val intent = Intent(applicationContext, NightModeReceiver::class.java)
+            /*val intent = Intent(applicationContext, NightModeReceiver::class.java)
             val pIntent = PendingIntent.getBroadcast(applicationContext, NightModeReceiver.REQUEST_CODE,
                     intent, PendingIntent.FLAG_UPDATE_CURRENT)
             val alarm = applicationContext.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-            alarm.cancel(pIntent)
+            alarm.cancel(pIntent)*/
+            val app = "NightMode"
+            alarmUtil.cancelAlarm(applicationContext,app,app)
         }
         radioOffButton.setOnClickListener { _ ->
             //String[] cellOffCmd = {"service call phone 27","service call phone 14 s16"};
@@ -379,8 +379,6 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
         var carrierName = "Not Rooted"
         val sharedPref = getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE)
 
-
-        //Drawable lg = getResources().getDrawable(R.mipmap.lg);
         icon = when {
             deviceName.contains("Nexus 6P") -> AppCompatResources.getDrawable(applicationContext, R.mipmap.huawei)!!
             deviceName.contains("Motorola") -> AppCompatResources.getDrawable(applicationContext, R.mipmap.moto2)!!

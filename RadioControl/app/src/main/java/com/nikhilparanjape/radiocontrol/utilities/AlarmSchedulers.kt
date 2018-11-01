@@ -16,6 +16,56 @@ import java.util.*
  */
 
 class AlarmSchedulers{
+    fun scheduleGeneralAlarm (c: Context, schedule: Boolean, hour: Int, minute: Int, intentApp: String, pIntentApp: String){
+        val cal = Calendar.getInstance()
+        // start 30 seconds after boot completed
+        cal.add(Calendar.HOUR, hour)
+        // Construct an intent that will execute the AlarmReceiver based on which class you want
+        val intent = when {
+            intentApp.contains("Wakeup") -> Intent(c, WakeupReceiver::class.java)
+            intentApp.contains("TimedAlarm") -> Intent(c, TimedAlarmReceiver::class.java)
+            intentApp.contains("RootService") -> Intent(c, RootServiceReceiver::class.java)
+            intentApp.contains("NightMode") -> Intent(c, NightModeReceiver::class.java)
+            else -> Intent(c,TimedAlarmReceiver::class.java)
+        }
+        val pIntent = when {
+            pIntentApp.contains("Wakeup") -> PendingIntent.getBroadcast(c, WakeupReceiver.REQUEST_CODE,
+                    intent, PendingIntent.FLAG_UPDATE_CURRENT)
+            pIntentApp.contains("TimedAlarm") -> PendingIntent.getBroadcast(c, TimedAlarmReceiver.REQUEST_CODE,
+                    intent, PendingIntent.FLAG_UPDATE_CURRENT)
+            pIntentApp.contains("RootService") -> PendingIntent.getBroadcast(c, RootServiceReceiver.REQUEST_CODE,
+                    intent, PendingIntent.FLAG_UPDATE_CURRENT)
+            pIntentApp.contains("NightMode") -> PendingIntent.getBroadcast(c, NightModeReceiver.REQUEST_CODE,
+                    intent, PendingIntent.FLAG_UPDATE_CURRENT)
+            else -> PendingIntent.getBroadcast(c, TimedAlarmReceiver.REQUEST_CODE,
+                    intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        }
+    }
+    fun cancelAlarm(c: Context, intentApp: String, pIntentApp: String){
+        val intent = when {
+            intentApp.contains("Wakeup") -> Intent(c, WakeupReceiver::class.java)
+            intentApp.contains("TimedAlarm") -> Intent(c, TimedAlarmReceiver::class.java)
+            intentApp.contains("RootService") -> Intent(c, RootServiceReceiver::class.java)
+            intentApp.contains("NightMode") -> Intent(c, NightModeReceiver::class.java)
+            else -> Intent(c,TimedAlarmReceiver::class.java)
+        }
+        val pIntent = when {
+            pIntentApp.contains("Wakeup") -> PendingIntent.getBroadcast(c, WakeupReceiver.REQUEST_CODE,
+                    intent, PendingIntent.FLAG_UPDATE_CURRENT)
+            pIntentApp.contains("TimedAlarm") -> PendingIntent.getBroadcast(c, TimedAlarmReceiver.REQUEST_CODE,
+                    intent, PendingIntent.FLAG_UPDATE_CURRENT)
+            pIntentApp.contains("RootService") -> PendingIntent.getBroadcast(c, RootServiceReceiver.REQUEST_CODE,
+                    intent, PendingIntent.FLAG_UPDATE_CURRENT)
+            pIntentApp.contains("NightMode") -> PendingIntent.getBroadcast(c, NightModeReceiver.REQUEST_CODE,
+                    intent, PendingIntent.FLAG_UPDATE_CURRENT)
+            else -> PendingIntent.getBroadcast(c, TimedAlarmReceiver.REQUEST_CODE,
+                    intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        }
+
+        val alarm = c.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        alarm.cancel(pIntent)
+        Log.d("RadioControl", "$intentApp cancelled")
+    }
     fun scheduleWakeupAlarm(c: Context, hour: Int) {
         val cal = Calendar.getInstance()
         // start 30 seconds after boot completed

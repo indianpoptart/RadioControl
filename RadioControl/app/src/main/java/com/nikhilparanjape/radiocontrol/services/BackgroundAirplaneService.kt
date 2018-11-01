@@ -86,7 +86,7 @@ class BackgroundAirplaneService : IntentService("BackgroundAirplaneService") {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val name = "Airplane Service"
             val description = getString(R.string.summary_airplane_service_notification)
-            val importance = NotificationManager.IMPORTANCE_NONE
+            val importance = NotificationManager.IMPORTANCE_LOW
             val channel = NotificationChannel("airplane", name, importance)
             channel.description = description
             // Register the channel with the system; you can't change the importance
