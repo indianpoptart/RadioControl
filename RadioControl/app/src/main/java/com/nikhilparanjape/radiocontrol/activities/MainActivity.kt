@@ -66,6 +66,7 @@ import org.jetbrains.anko.uiThread
 import java.io.File
 import java.io.IOException
 import java.net.InetAddress
+import kotlin.system.measureTimeMillis
 
 
 /**
@@ -807,12 +808,11 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
         val ip = preferences.getString("prefPingIp","8.8.8.8")
         doAsync {
             val address = InetAddress.getByName(ip)
-            val beforeTime = System.currentTimeMillis()
-            val reachable = address.isReachable(4000)
-            val afterTime = System.currentTimeMillis()
-            val timeDifference = afterTime - beforeTime
+            var reachable = false
+            val timeDifference = measureTimeMillis {
+                reachable = address.isReachable(4000)
+            }
             Log.d("RadioControl", "Reachable?: $reachable, Time: $timeDifference")
-            //var pingCmd = arrayOf("su", "ping -c 4 8.8.8.8")
 
             uiThread {
                 dialog = findViewById(R.id.pingProgressBar)
@@ -826,6 +826,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
                         timeDifference >= 201 -> Snackbar.make(clayout, "Poor Latency. VOIP and online gaming may suffer: $timeDifference ms", Snackbar.LENGTH_LONG).show()
                     }
                 }
+                //Sadly packet loss testing is gone :(
                 /*//Check for packet loss stuff
                 when {
                     pStatus!!.contains("100% packet loss") -> Snackbar.make(clayout, "100% packet loss detected", Snackbar.LENGTH_LONG).show()
@@ -862,11 +863,8 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
                         connectionStatusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_deactivated))
                         writeLog(getString(R.string.connectionUnable), applicationContext)
                     }
-
                 }
             }
-
-
         }
     }
 
