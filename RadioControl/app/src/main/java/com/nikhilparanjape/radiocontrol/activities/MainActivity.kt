@@ -36,8 +36,6 @@ import com.github.stephenvinouze.core.models.KinAppPurchase
 import com.github.stephenvinouze.core.models.KinAppPurchaseResult
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
-import com.instabug.library.Instabug
-import com.instabug.library.invocation.InstabugInvocationEvent
 import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.mikepenz.iconics.IconicsDrawable
 import com.mikepenz.materialdrawer.AccountHeaderBuilder
@@ -59,15 +57,12 @@ import com.nikhilparanjape.radiocontrol.services.PersistenceService
 import com.nikhilparanjape.radiocontrol.services.TestJobService
 import com.nikhilparanjape.radiocontrol.utilities.AlarmSchedulers
 import io.fabric.sdk.android.Fabric
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.launch
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import java.io.File
 import java.io.IOException
 import java.net.InetAddress
 import kotlin.system.measureTimeMillis
-
 
 /**
  * Created by Nikhil Paranjape on 11/3/2015.
@@ -246,14 +241,15 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
                 }
             }
         }
-        launch(UI) {
+        //Kotlin - KinApp needs to update
+        /*launch() {
             val list: ArrayList<String> = ArrayList()
             list.add(ITEM_ONE_DOLLAR)
             list.add(ITEM_THREE_DOLLAR)
             list.add(ITEM_FIVE_DOLLAR)
             list.add(ITEM_TEN_DOLLAR)
             billingManager.fetchProducts(list, KinAppProductType.INAPP).await()
-        }
+        }*/
 
         //Dev mode handling
         //Check if the easter egg is NOT activated
@@ -636,9 +632,8 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
                 val editor = pref.edit()
                 editor.putBoolean(getString(R.string.preference_is_donated), true)
                 editor.apply()
-                launch(UI) {
-                    billingManager.consumePurchase(purchase!!).await()
-                }
+
+                //billingManager.consumePurchase(purchase!!).await()
 
             }
             KinAppPurchaseResult.ALREADY_OWNED -> {
@@ -664,6 +659,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
             }
         }
     }
+
 
     //Internet Error dialog
     private fun showErrorDialog() {

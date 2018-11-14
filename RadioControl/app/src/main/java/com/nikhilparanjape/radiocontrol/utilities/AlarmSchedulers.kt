@@ -102,7 +102,6 @@ class AlarmSchedulers{
         // Interval can be INTERVAL_FIFTEEN_MINUTES, INTERVAL_HALF_HOUR, INTERVAL_HOUR, INTERVAL_DAY
         alarm.setRepeating(AlarmManager.RTC_WAKEUP, firstMillis,
                 cal.timeInMillis, pIntent)
-
     }
 
     // Setup a recurring alarm every 15,30,60 minutes

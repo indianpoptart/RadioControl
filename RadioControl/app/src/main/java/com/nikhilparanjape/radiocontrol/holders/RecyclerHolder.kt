@@ -5,7 +5,6 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.nikhilparanjape.radiocontrol.R
 
-
 /**
  * Created by Nikhil on 10/12/2018.
  *

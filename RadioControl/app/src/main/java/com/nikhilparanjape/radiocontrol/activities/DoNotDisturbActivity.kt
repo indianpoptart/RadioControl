@@ -92,7 +92,6 @@ class DoNotDisturbActivity : AppCompatActivity() {
             Toast.makeText(this, "Do not disturb cancelled", Toast.LENGTH_LONG).show()
 
         }
-
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -141,5 +140,4 @@ class DoNotDisturbActivity : AppCompatActivity() {
     companion object {
         private const val PRIVATE_PREF = "prefs"
     }
-
 }

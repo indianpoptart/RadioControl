@@ -7,7 +7,6 @@ import android.util.Log
 import com.nikhilparanjape.radiocontrol.utilities.RootAccess
 import com.nikhilparanjape.radiocontrol.utilities.Utilities
 
-
 /**
  * Created by admin on 09/23/2016.
  *
@@ -20,11 +19,9 @@ class CellRadioService : IntentService("CellRadioService") {
         super.onCreate()
         mRunning = false
     }
-
     override fun onBind(intent: Intent): IBinder? {
         return null
     }
-
     override fun onHandleIntent(intent: Intent) {
         if (!mRunning) {
             mRunning = true
@@ -36,6 +33,4 @@ class CellRadioService : IntentService("CellRadioService") {
             this.stopSelf()
         }
     }
-
-
 }

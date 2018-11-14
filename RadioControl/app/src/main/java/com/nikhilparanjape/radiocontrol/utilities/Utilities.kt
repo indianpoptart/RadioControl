@@ -22,7 +22,6 @@ import com.nikhilparanjape.radiocontrol.services.TestJobService
 import java.io.File
 import java.io.IOException
 
-
 /**
  * Created by Nikhil on 2/3/2016.
  *
@@ -116,7 +115,6 @@ class Utilities {
                 } catch (e: IOException) {
                     Log.e("RadioControl", "Error writing log")
                 }
-
             }
         }
 
@@ -190,8 +188,6 @@ class Utilities {
                         .setAutoCancel(true)
                         .build()
             }
-
-
         }
 
         private fun createNotificationChannel(context: Context) {

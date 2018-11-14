@@ -21,7 +21,6 @@ class ChangeLogActivity : AppCompatActivity() {
             actionBar.setDisplayHomeAsUpEnabled(true)
             actionBar.title = "Changelog"
         }
-
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

@@ -612,7 +612,6 @@ class StatsActivity : AestheticActivity() {
                     }
                     //Log.d("RadioControl", "LINE: " + line + " contains " + wifiSigLost);
                 }
-
             } else {
                 Snackbar.make(findViewById(android.R.id.content), "No log file found", Snackbar.LENGTH_LONG)
                         .show()
@@ -621,7 +620,6 @@ class StatsActivity : AestheticActivity() {
             Snackbar.make(findViewById(android.R.id.content), "Error: $e", Snackbar.LENGTH_LONG)
                     .show()
         }
-
     }
 
     //Required for functionality
@@ -660,7 +658,6 @@ class StatsActivity : AestheticActivity() {
                     }
                     //Log.d("RadioControl", "LINE: " + line + " contains " + airplaneOn);
                 }
-
             } else {
                 Snackbar.make(findViewById(android.R.id.content), "No log file found", Snackbar.LENGTH_LONG)
                         .show()
@@ -670,7 +667,6 @@ class StatsActivity : AestheticActivity() {
             Snackbar.make(findViewById(android.R.id.content), "Error: $e", Snackbar.LENGTH_LONG)
                     .show()
         }
-
     }
     //Required for functionality
     @SuppressLint("SimpleDateFormat")
@@ -708,7 +704,6 @@ class StatsActivity : AestheticActivity() {
                     }
                     //Log.d("RadioControl", "LINE: " + line + " contains " + wifiSigLost);
                 }
-
             } else {
                 Snackbar.make(findViewById(android.R.id.content), "No log file found", Snackbar.LENGTH_LONG)
                         .show()
@@ -717,7 +712,6 @@ class StatsActivity : AestheticActivity() {
             Snackbar.make(findViewById(android.R.id.content), "Error: $e", Snackbar.LENGTH_LONG)
                     .show()
         }
-
     }
 
     // Backwards compatible recreate().

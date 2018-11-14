@@ -210,12 +210,13 @@ class SettingsFragment : PreferenceFragment(), TimePickerDialog.OnTimeSetListene
             } else {
                 //altRootCommand.setChecked(false);
             }
-
             true
         }
         altRootCommand.setOnPreferenceClickListener {
-            Snackbar.make(view, "Test", Snackbar.LENGTH_LONG)
-                    .show()
+            if (!altRootCommand.isEnabled){
+                Snackbar.make(view, "Disable Intelligent mode first", Snackbar.LENGTH_LONG)
+                        .show()
+            }
             true
         }
 
@@ -251,7 +252,6 @@ class SettingsFragment : PreferenceFragment(), TimePickerDialog.OnTimeSetListene
                     c.startActivity(intent);*/
                 }
             }
-
             true
         }
 
@@ -286,13 +286,10 @@ class SettingsFragment : PreferenceFragment(), TimePickerDialog.OnTimeSetListene
                             editor12.apply()
                         }
                         .show()
-
             } else {
                 editor12.putBoolean("allowFabric", false)
                 editor12.apply()
             }
-
-
             true
         }
 
@@ -331,8 +328,6 @@ class SettingsFragment : PreferenceFragment(), TimePickerDialog.OnTimeSetListene
                 Log.d("RadioControl", "Alarm Cancelled")
                 alarmUtil.cancelAlarm(c)
             }
-
-
             true
         }
 
@@ -355,9 +350,6 @@ class SettingsFragment : PreferenceFragment(), TimePickerDialog.OnTimeSetListene
             tpd.show(fragmentManager, "Timepickerdialog")
             false
         }
-
-
-
     }
 
     private fun registerForBroadcasts(context: Context) {

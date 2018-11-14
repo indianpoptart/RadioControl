@@ -31,8 +31,6 @@ object RootAccess {
                 e.printStackTrace()
             }
         }
-
-
     }
 
 }
