@@ -29,9 +29,7 @@ class OnBootIntentService : JobIntentService() {
         }
     }
 
-    override fun onHandleWork(intent: Intent) {
-
-    }
+    override fun onHandleWork(intent: Intent) { }
 
     private fun createNotificationChannel(context: Context) {
         // Create the NotificationChannel, but only on API 26+ because

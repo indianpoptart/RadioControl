@@ -1,10 +1,12 @@
 package com.nikhilparanjape.radiocontrol.activities
 
-import android.app.AlarmManager
 import android.app.AlertDialog
 import android.app.NotificationManager
 import android.app.PendingIntent
-import android.content.*
+import android.content.ComponentName
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.drawable.Drawable
@@ -48,14 +50,13 @@ import com.mikepenz.materialdrawer.model.SecondaryDrawerItem
 import com.nikhilparanjape.radiocontrol.BuildConfig
 import com.nikhilparanjape.radiocontrol.R
 import com.nikhilparanjape.radiocontrol.receivers.ActionReceiver
-import com.nikhilparanjape.radiocontrol.receivers.NightModeReceiver
 import com.nikhilparanjape.radiocontrol.receivers.WifiReceiver
-import com.nikhilparanjape.radiocontrol.utilities.Utilities
 import com.nikhilparanjape.radiocontrol.services.BackgroundAirplaneService
 import com.nikhilparanjape.radiocontrol.services.CellRadioService
 import com.nikhilparanjape.radiocontrol.services.PersistenceService
 import com.nikhilparanjape.radiocontrol.services.TestJobService
 import com.nikhilparanjape.radiocontrol.utilities.AlarmSchedulers
+import com.nikhilparanjape.radiocontrol.utilities.Utilities
 import io.fabric.sdk.android.Fabric
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread

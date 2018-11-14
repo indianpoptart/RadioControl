@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:autofit="http://schemas.android.com/apk/res-auto"
     xmlns:app="http://schemas.android.com/tools"
     android:id="@+id/clayout"
     android:layout_alignParentBottom="true"
@@ -51,7 +50,7 @@
                     android:textColor="@android:color/black"
                     android:textSize="14sp" />
 
-                <com.db.chart.view.LineChartView xmlns:chart="http://schemas.android.com/apk/res-auto"
+                <com.db.chart.view.LineChartView
                     android:id="@+id/linechart"
                     android:layout_width="match_parent"
                     android:layout_height="200dp"
@@ -94,7 +93,7 @@
                     android:textColor="@android:color/black"
                     android:textSize="14sp" />
 
-                <com.db.chart.view.LineChartView xmlns:chart="http://schemas.android.com/apk/res-auto"
+                <com.db.chart.view.LineChartView
                     android:id="@+id/linechart_airplane_on"
                     android:layout_width="match_parent"
                     android:layout_height="200dp"
@@ -138,7 +137,7 @@
                 android:textColor="@android:color/black"
                 android:textSize="14sp" />
 
-            <com.db.chart.view.LineChartView xmlns:chart="http://schemas.android.com/apk/res-auto"
+            <com.db.chart.view.LineChartView
                 android:id="@+id/linechart_root_access"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"

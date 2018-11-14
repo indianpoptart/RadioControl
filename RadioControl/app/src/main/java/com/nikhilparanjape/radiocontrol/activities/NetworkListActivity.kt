@@ -19,6 +19,13 @@ import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.mikepenz.iconics.IconicsDrawable
 import com.nikhilparanjape.radiocontrol.R
 
+/**
+ * Created by Nikhil on Fill
+ *
+ * @author
+ * An activity that lists all saved WiFi Networks
+ */
+
 class NetworkListActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,8 +38,6 @@ class NetworkListActivity : AppCompatActivity() {
             actionBar.setDisplayHomeAsUpEnabled(true)
             actionBar.setTitle(R.string.title_activity_network)
         }
-
-
         val netList = findViewById<ListView>(R.id.network_list)
 
         listWifiNetworks(netList)
@@ -42,7 +47,6 @@ class NetworkListActivity : AppCompatActivity() {
         val wm = this.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
         val networks = wm.configuredNetworks
         val prefs = getSharedPreferences("disabled-networks", Context.MODE_PRIVATE)
-
 
         val la = object : ListAdapter {
             override fun areAllItemsEnabled(): Boolean {

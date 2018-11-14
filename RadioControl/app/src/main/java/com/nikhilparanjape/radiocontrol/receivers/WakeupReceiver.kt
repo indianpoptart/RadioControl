@@ -18,7 +18,6 @@ class WakeupReceiver : BroadcastReceiver() {
         editor.putBoolean("isNoDisturbEnabled", false)
         editor.apply()
     }
-
     companion object {
 
         const val REQUEST_CODE = 12345

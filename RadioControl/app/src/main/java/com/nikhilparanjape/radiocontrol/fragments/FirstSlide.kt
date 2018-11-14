@@ -1,23 +1,18 @@
 package com.nikhilparanjape.radiocontrol.fragments
 
-/**
- * Created by Nikhil on 4/24/2016.
- */
-
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
+import androidx.fragment.app.Fragment
 import com.nikhilparanjape.radiocontrol.R
 
-
 /**
- * Created by Nikhil on 10/12/2018.
+ * Created by Nikhil on 4/24/2016.
  *
  * The first slide in the Tutorial
  */
+
 class FirstSlide : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.intro1, container, false)

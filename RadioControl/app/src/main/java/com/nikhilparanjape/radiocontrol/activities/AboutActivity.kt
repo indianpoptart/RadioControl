@@ -27,8 +27,6 @@ class AboutActivity : AppCompatActivity() {
             actionBar.setDisplayHomeAsUpEnabled(true)
             actionBar.title = "About"
         }
-
-
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -41,5 +39,4 @@ class AboutActivity : AppCompatActivity() {
         }
         return super.onOptionsItemSelected(item)
     }
-
 }

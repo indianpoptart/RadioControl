@@ -3,12 +3,11 @@ package com.nikhilparanjape.radiocontrol.receivers
 /**
  * Created by admin on 4/23/2017.
  */
-import android.app.Notification
+
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-
 import com.nikhilparanjape.radiocontrol.services.BackgroundAirplaneService
 
 class ServiceStarter : BroadcastReceiver() {

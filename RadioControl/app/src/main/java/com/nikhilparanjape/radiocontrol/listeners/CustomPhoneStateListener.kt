@@ -10,10 +10,9 @@ import android.preference.PreferenceManager
 import android.telephony.PhoneStateListener
 import android.telephony.TelephonyManager
 import android.util.Log
-import com.nikhilparanjape.radiocontrol.utilities.RootAccess
-
-import com.nikhilparanjape.radiocontrol.utilities.Utilities
 import com.nikhilparanjape.radiocontrol.services.CellRadioService
+import com.nikhilparanjape.radiocontrol.utilities.RootAccess
+import com.nikhilparanjape.radiocontrol.utilities.Utilities
 
 class CustomPhoneStateListener(//private static final String TAG = "PhoneStateChanged";
         private val context: Context //Context to make Toast if required
