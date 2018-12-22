@@ -6,6 +6,7 @@ import android.os.IBinder
 import android.util.Log
 import com.nikhilparanjape.radiocontrol.utilities.RootAccess
 import com.nikhilparanjape.radiocontrol.utilities.Utilities
+import com.topjohnwu.superuser.Shell
 
 /**
  * Created by admin on 09/23/2016.
@@ -27,8 +28,9 @@ class CellRadioService : IntentService("CellRadioService") {
             mRunning = true
             Log.d("RadioControl", "CellService Toggled")
             val cellOffCmd = arrayOf("service call phone 27")
-            RootAccess.runCommands(cellOffCmd)
-            Utilities.writeLog("root accessed", applicationContext)
+            // Run commands and get output immediately
+            val output = Shell.su("service call phone 27").exec().out
+            Utilities.writeLog("root accessed: $output", applicationContext)
             Log.d("RadioControl", "CellService Killed")
             this.stopSelf()
         }

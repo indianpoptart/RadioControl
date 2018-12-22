@@ -55,9 +55,6 @@ android {
         abortOnError false
     }
 }
-configurations.all {
-    exclude group: 'com.android.support', module: 'support-v13'
-}
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 
@@ -65,18 +62,18 @@ dependencies {
     // noinspection GradleCompatible
 
     //AndroidX
-    implementation 'androidx.annotation:annotation:1.0.0'
-    implementation 'androidx.appcompat:appcompat:1.0.2'
+    implementation 'androidx.annotation:annotation:1.0.1'
+    implementation 'androidx.appcompat:appcompat:1.1.0-alpha01'
     implementation 'androidx.browser:browser:1.0.0'
     implementation 'androidx.cardview:cardview:1.0.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha2'
-    implementation 'androidx.core:core:1.0.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha3'
+    implementation group: 'androidx.core', name: 'core', version: '1.1.0-alpha03'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.recyclerview:recyclerview:1.0.0'
+    implementation 'androidx.recyclerview:recyclerview:1.1.0-alpha01'
 
     //Google
-    implementation 'com.google.android.material:material:1.0.0'
-    implementation('com.crashlytics.sdk.android:crashlytics:2.9.5@aar') {
+    implementation 'com.google.android.material:material:1.1.0-alpha02'
+    implementation('com.crashlytics.sdk.android:crashlytics:2.9.7@aar') {
         transitive = true
         ""
     }
@@ -84,15 +81,16 @@ dependencies {
     // Third party - Helper
     implementation 'com.github.bumptech.glide:glide:4.8.0'
     implementation "com.github.StephenVinouze:KinApp:1.0.2"
+    implementation 'com.github.topjohnwu:libsu:2.1.2'
     implementation 'org.jetbrains.anko:anko-commons:0.10.8'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.0.1'
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.0"
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.1.0'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.11"
     implementation 'com.novoda:simple-chrome-custom-tabs:0.1.6'
     implementation 'me.zhanghai.android.customtabshelper:library:1.0.6'
 
     // Third party - UI/UX
-    implementation 'com.afollestad:aesthetic:0.7.2'
-    implementation 'com.afollestad.material-dialogs:core:2.0.0-beta2'
+    implementation 'com.afollestad:aesthetic:1.0.0-beta05'
+    implementation 'com.afollestad.material-dialogs:core:2.0.0-rc3'
     implementation 'com.appeaser.sublimepickerlibrary:sublimepickerlibrary:2.1.2'
     implementation 'com.appyvet:materialrangebar:1.3'
     implementation 'com.borax12.materialdaterangepicker:library:1.9'
@@ -105,8 +103,8 @@ dependencies {
     implementation 'com.gordonwong:material-sheet-fab:1.2.1'
     implementation 'com.mikepenz:aboutlibraries:6.2.0'
     implementation 'com.mikepenz:google-material-typeface:3.0.1.3.original@aar'
-    implementation 'com.mikepenz:iconics-core:3.1.0@aar'
-    implementation('com.mikepenz:materialdrawer:6.1.1@aar') {
+    implementation 'com.mikepenz:iconics-core:3.2.0-rc1@aar'
+    implementation('com.mikepenz:materialdrawer:7.0.0-alpha1@aar') {
         transitive = true
     }
     implementation 'me.grantland:autofittextview:0.2.1'
@@ -119,7 +117,5 @@ dependencies {
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'kotlin-android-extensions'
 kotlin {
-    experimental {
-        coroutines "enable"
-    }
+
 }

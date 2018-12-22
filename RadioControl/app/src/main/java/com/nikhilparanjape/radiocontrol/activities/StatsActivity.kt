@@ -54,7 +54,7 @@ class StatsActivity : AestheticActivity() {
     private var novWifiLost = 0f
     private var decWifiLost = 0f
 
-    internal var airplaneOn = 0
+    private var airplaneOn = 0
     //Sets float for airplane on
     private var janAirOn = 0f
     private var febAirOn = 0f
@@ -104,7 +104,7 @@ class StatsActivity : AestheticActivity() {
 
         Aesthetic.config {
             isDark(true)
-            colorPrimaryRes(R.color.primary_dark)
+            colorPrimary(res = R.color.primary_dark)
 
             // Causes an Activity recreate, calls setTheme(Int) on it.
             activityTheme(R.style.MaterialDarkThemenoab)

@@ -137,7 +137,7 @@ class AlarmSchedulers{
     fun scheduleRootAlarm(c: Context) {
         val cal = Calendar.getInstance()
         // start 10 seconds
-        cal.add(Calendar.SECOND, 30)
+        cal.add(Calendar.SECOND, 5)
 
         // Construct an intent that will execute the AlarmReceiver
         val intent = Intent(c, RootServiceReceiver::class.java)

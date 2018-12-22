@@ -25,11 +25,11 @@ class Fab : FloatingActionButton, AnimatedFab {
     private val interpolator: Interpolator
         get() = AnimationUtils.loadInterpolator(context, R.interpolator.msf_interpolator)
 
-    constructor(context: Context) : super(context) {}
+    constructor(context: Context) : super(context)
 
-    constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {}
+    constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
 
-    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {}
+    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
     /**
      * Shows the FAB.
@@ -57,11 +57,11 @@ class Fab : FloatingActionButton, AnimatedFab {
             val anim: ScaleAnimation
             // If pivots are 0, that means the FAB hasn't been drawn yet so just use the
             // center of the FAB
-            if (pivotX == 0f || pivotY == 0f) {
-                anim = ScaleAnimation(0f, 1f, 0f, 1f, Animation.RELATIVE_TO_SELF, 0.5f,
+            anim = if (pivotX == 0f || pivotY == 0f) {
+                ScaleAnimation(0f, 1f, 0f, 1f, Animation.RELATIVE_TO_SELF, 0.5f,
                         Animation.RELATIVE_TO_SELF, 0.5f)
             } else {
-                anim = ScaleAnimation(0f, 1f, 0f, 1f, pivotX, pivotY)
+                ScaleAnimation(0f, 1f, 0f, 1f, pivotX, pivotY)
             }
 
             // Animate FAB expanding

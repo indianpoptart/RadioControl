@@ -145,14 +145,17 @@ class Utilities {
             val wifiManager = c.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
             val freq = wifiManager.connectionInfo.frequency
             val gHz = freq / 1000
-            if (gHz == 2) {
-                Log.d("RadioControl", "Frequency = " + freq + "MHz")
-                return 2
-            } else if (gHz == 5) {
-                Log.d("RadioControl", "Frequency = " + freq + "MHz")
-                return 5
-            } else
-                return 0
+            return when (gHz) {
+                2 -> {
+                    Log.d("RadioControl", "Frequency = " + freq + "MHz")
+                    2
+                }
+                5 -> {
+                    Log.d("RadioControl", "Frequency = " + freq + "MHz")
+                    5
+                }
+                else -> 0
+            }
 
         }
 
@@ -178,7 +181,7 @@ class Utilities {
                         .setAutoCancel(true)
                         .build()
 
-                notificationManager?.notify(notificationID, notification)
+                notificationManager.notify(notificationID, notification)
 
 
             } else {

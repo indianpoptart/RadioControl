@@ -174,7 +174,7 @@ class AboutFragment : PreferenceFragment() {
         startActivity(i)
     }
 
-    internal var libTaskCallback: LibTaskCallback = object : LibTaskCallback {
+    private var libTaskCallback: LibTaskCallback = object : LibTaskCallback {
         override fun onLibTaskStarted() {
             Log.e("AboutLibraries", "started")
         }
@@ -184,7 +184,7 @@ class AboutFragment : PreferenceFragment() {
         }
     }
 
-    internal var libsUIListener: LibsConfiguration.LibsUIListener = object : LibsConfiguration.LibsUIListener {
+    private var libsUIListener: LibsConfiguration.LibsUIListener = object : LibsConfiguration.LibsUIListener {
         override fun preOnCreateView(view: View): View {
             return view
         }
@@ -194,7 +194,7 @@ class AboutFragment : PreferenceFragment() {
         }
     }
 
-    internal var libsListener: LibsConfiguration.LibsListener = object : LibsConfiguration.LibsListener {
+    private var libsListener: LibsConfiguration.LibsListener = object : LibsConfiguration.LibsListener {
         override fun onIconClicked(v: View) {
             Toast.makeText(v.context, "We are able to track this now ;)", Toast.LENGTH_LONG).show()
         }
@@ -233,7 +233,7 @@ class AboutFragment : PreferenceFragment() {
     }
 
     companion object {
-        private val PRIVATE_PREF = "prefs"
+        private const val PRIVATE_PREF = "prefs"
         fun getUpdate() {
             val doc: Document
             try {

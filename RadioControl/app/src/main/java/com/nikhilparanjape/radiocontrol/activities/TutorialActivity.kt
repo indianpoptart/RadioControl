@@ -14,7 +14,7 @@ import com.nikhilparanjape.radiocontrol.fragments.SlideFragment
 class TutorialActivity : AppIntro2() {
     // Please DO NOT override onCreate. Use init.
     override fun onCreate(savedInstanceState: Bundle?){
-        super.onCreate(savedInstanceState);
+        super.onCreate(savedInstanceState)
         supportActionBar?.hide()
         hideSystemUI()
 
@@ -68,7 +68,4 @@ class TutorialActivity : AppIntro2() {
         // Do something when users tap on Next button.
     }
 
-    override fun onBackPressed() {
-        super.onBackPressed()
-    }
 }

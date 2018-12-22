@@ -96,15 +96,13 @@ class NetworkListActivity : AppCompatActivity() {
                     val on = convertView.findViewById<SwitchCompat>(R.id.network_on)
                     val isEnabled = prefs.getBoolean(net.SSID.substring(1, net.SSID.length - 1), false)
                     on.isChecked = isEnabled
-                    on.setOnCheckedChangeListener { buttonView, isChecked ->
+                    on.setOnCheckedChangeListener { _, isChecked ->
                         if (isChecked) {
                             prefs.edit().putBoolean(ssid, true).apply()
                         } else {
                             prefs.edit().remove(ssid).apply()
                         }
                     }
-
-
                 }
 
                 return convertView

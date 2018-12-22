@@ -23,13 +23,10 @@
         android:fullBackupContent="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:name="com.nikhilparanjape.radiocontrol.RadioControl"
         android:theme="@style/MaterialDarkThemenoab"
         tools:ignore="GoogleAppIndexingWarning">
 
-        <!-- This meta-data tag is required to use Google Play Services. -->
-        <meta-data
-            android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
 
         <activity
             android:name=".activities.SplashActivity"
@@ -47,12 +44,6 @@
                 android:name="android.app.shortcuts"
                 android:resource="@xml/shortcuts" />
         </activity>
-
-        <activity
-            android:name=".activities.MainActivityK"
-            android:label="@string/app_name" />
-
-
         <!-- Tutorial Activity -->
         <activity
             android:name=".activities.TutorialActivity"
@@ -85,10 +76,7 @@
         <activity
             android:name=".activities.NetworkListActivity"
             android:label="@string/title_activity_network" />
-        <activity
-            android:name=".activities.CustomSortActivity"
-            android:label="Libraries"
-            android:theme="@style/AboutLibrariesTheme" />
+
         <activity android:name=".activities.ChangeLogActivity" />
         <activity android:name=".activities.StatsActivity" />
         <activity android:name=".activities.DoNotDisturbActivity" />
@@ -117,7 +105,7 @@
             android:icon="@drawable/ic_baseline_query_builder_24px"
             android:label="Test"
             android:permission="android.permission.BIND_JOB_SERVICE"
-            android:process=":jobservice"></service>
+            android:process=":jobservice"/>
 
         <service android:name=".services.OnBootIntentService" />
 
@@ -158,7 +146,7 @@
 
         <activity
             android:name=".activities.TroubleshootingActivity"
-            android:label="@string/title_activity_troubleshooting"></activity>
+            android:label="@string/title_activity_troubleshooting"/>
     </application>
 
 </manifest>

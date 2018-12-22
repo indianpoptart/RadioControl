@@ -37,7 +37,7 @@ class BackgroundAirplaneService : IntentService("BackgroundAirplaneService") {
     private var airOffCmd3 = arrayOf("su", "settings put global airplane_mode_on 0", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state false")
 
     internal var util = Utilities() //Network and other related utilities
-    internal var alarmUtil = AlarmSchedulers()
+    private var alarmUtil = AlarmSchedulers()
 
     override fun onBind(intent: Intent): IBinder? {
         return null
@@ -46,7 +46,7 @@ class BackgroundAirplaneService : IntentService("BackgroundAirplaneService") {
     override fun onCreate() {
         super.onCreate()
         createNotificationChannel()
-        createBackgroundNotification("Airplane Service", "Background Process Running...")
+        createBackgroundNotification("Background Radio Service", "Background Process Running...")
         Log.d("RadioControl-background", "Notified")
 
     }
@@ -56,7 +56,7 @@ class BackgroundAirplaneService : IntentService("BackgroundAirplaneService") {
 
             val builder = Notification.Builder(this, "airplane")
                     .setContentTitle(title)
-                    .setSmallIcon(R.drawable.ic_info_white_24dp)
+                    .setSmallIcon(R.drawable.ic_perm_scan_wifi_white_24dp)
                     .setContentText(message)
                     .setAutoCancel(true)
 
@@ -68,7 +68,7 @@ class BackgroundAirplaneService : IntentService("BackgroundAirplaneService") {
             @Suppress("DEPRECATION") //For backwards compatibility
             val builder = NotificationCompat.Builder(this)
                     .setContentTitle(title)
-                    .setSmallIcon(R.drawable.ic_info_white_24dp)
+                    .setSmallIcon(R.drawable.ic_perm_scan_wifi_white_24dp)
                     .setContentText(message)
                     .setPriority(NotificationCompat.PRIORITY_LOW)
                     .setAutoCancel(true)
@@ -77,14 +77,12 @@ class BackgroundAirplaneService : IntentService("BackgroundAirplaneService") {
 
             startForeground(1, notification)
         }
-
-
     }
     private fun createNotificationChannel() {
         // Create the NotificationChannel, but only on API 26+ because
         // the NotificationChannel class is new and not in the support library
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val name = "Airplane Service"
+            val name = "Background Radio Service"
             val description = getString(R.string.summary_airplane_service_notification)
             val importance = NotificationManager.IMPORTANCE_LOW
             val channel = NotificationChannel("airplane", name, importance)

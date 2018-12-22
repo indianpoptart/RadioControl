@@ -17,8 +17,8 @@ import com.nikhilparanjape.radiocontrol.utilities.Utilities
 class TestJobService : JobService() {
 
     override fun onCreate(){
-        super.onCreate();
-        Log.i(TAG, "JobScheduler created");
+        super.onCreate()
+        Log.i(TAG, "JobScheduler created")
     }
 
 

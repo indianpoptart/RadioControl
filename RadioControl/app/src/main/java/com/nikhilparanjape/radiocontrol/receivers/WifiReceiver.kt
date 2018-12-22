@@ -41,7 +41,7 @@ class WifiReceiver : WakefulBroadcastReceiver() {
 
 
     internal var util = Utilities() //Network and other related utilities
-    internal var alarmUtil = AlarmSchedulers()
+    private var alarmUtil = AlarmSchedulers()
 
 
     override fun onReceive(context: Context, intent: Intent) {

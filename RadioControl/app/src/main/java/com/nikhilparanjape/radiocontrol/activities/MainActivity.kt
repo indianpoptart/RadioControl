@@ -1,6 +1,6 @@
 package com.nikhilparanjape.radiocontrol.activities
 
-import android.app.AlertDialog
+import androidx.appcompat.app.AlertDialog
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.ComponentName
@@ -75,11 +75,11 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
 
     internal lateinit var icon: Drawable
     private lateinit var carrierIcon: Drawable
-    internal lateinit var result: Drawer
-    var versionName = BuildConfig.VERSION_NAME
+    private lateinit var result: Drawer
+    private var versionName = BuildConfig.VERSION_NAME
     internal var util = Utilities()
-    internal var alarmUtil = AlarmSchedulers()
-    internal lateinit var clayout: CoordinatorLayout
+    private var alarmUtil = AlarmSchedulers()
+    private lateinit var clayout: CoordinatorLayout
     private var mServiceComponent: ComponentName? = null
     //test code
     private val base64EncodedPublicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxnZmUx4gqEFCsMW+/uPXIzJSaaoP4J/2RVaxYT9Be0jfga0qdGF+Vq56mzQ/LYEZgLvFelGdWwXJ5Izq5Wl/cEW8cExhQ/WDuJvYVaemuU+JnHP1zIZ2H28NtzrDH0hb59k9R8owSx7NPNITshuC4MPwwOQDgDaYk02Hgi4woSzbDtyrvwW1A1FWpftb78i8Pphr7bT14MjpNyNznk4BohLMncEVK22O1N08xrVrR66kcTgYs+EZnkRKk2uPZclsPq4KVKG8LbLcxmDdslDBnhQkSPe3ntAC8DxGhVdgJJDwulcepxWoCby1GcMZTUAC1OKCZlvGRGSwyfIqbqF2JQIDAQAB"

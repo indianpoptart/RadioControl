@@ -30,7 +30,7 @@ class SlideFragment : Fragment(){
 
     companion object {
 
-        private val ARG_LAYOUT_RES_ID = "layoutResId"
+        private const val ARG_LAYOUT_RES_ID = "layoutResId"
 
         fun newInstance(layoutResId: Int): SlideFragment {
 

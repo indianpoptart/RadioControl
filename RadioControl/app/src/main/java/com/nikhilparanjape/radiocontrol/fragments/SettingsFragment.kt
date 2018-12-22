@@ -37,7 +37,7 @@ import java.util.*
  */
 class SettingsFragment : PreferenceFragment(), TimePickerDialog.OnTimeSetListener {
 
-    internal lateinit var c: Context
+    private lateinit var c: Context
     @SuppressLint("BatteryLife")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,7 +52,6 @@ class SettingsFragment : PreferenceFragment(), TimePickerDialog.OnTimeSetListene
         }
 
         c = activity
-        val util = Utilities()
         val alarmUtil = AlarmSchedulers()
 
         preferenceScreen.findPreference("ssid").isEnabled = Utilities.isWifiOn(c)
@@ -86,7 +85,7 @@ class SettingsFragment : PreferenceFragment(), TimePickerDialog.OnTimeSetListene
             false
         }
         val airplaneResetPref = findPreference("reset-airplane")
-        airplaneResetPref.setOnPreferenceClickListener { _ ->
+        airplaneResetPref.setOnPreferenceClickListener {
             MaterialDialog(activity)
                     .icon(R.mipmap.wifi_off)
                     .message(R.string.title_airplane_reset)
@@ -98,8 +97,6 @@ class SettingsFragment : PreferenceFragment(), TimePickerDialog.OnTimeSetListene
                     }
                     .negativeButton(R.string.text_cancel)
                     .show()
-
-
             false
         }
 
@@ -345,8 +342,8 @@ class SettingsFragment : PreferenceFragment(), TimePickerDialog.OnTimeSetListene
         tpd.isThemeDark = true
         tpd.setAccentColor(R.color.mdtp_accent_color)
 
-        val night_mode = findPreference("night-mode-service")
-        night_mode.setOnPreferenceClickListener { preference ->
+        val nightMode = findPreference("night-mode-service")
+        nightMode.setOnPreferenceClickListener {
             tpd.show(fragmentManager, "Timepickerdialog")
             false
         }

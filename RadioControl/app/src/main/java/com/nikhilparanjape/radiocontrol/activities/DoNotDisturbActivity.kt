@@ -27,7 +27,7 @@ import com.nikhilparanjape.radiocontrol.utilities.AlarmSchedulers
 
 class DoNotDisturbActivity : AppCompatActivity() {
 
-    internal var hours: Int = 0
+    private var hours: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
