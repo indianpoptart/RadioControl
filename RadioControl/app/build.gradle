@@ -73,10 +73,6 @@ dependencies {
 
     //Google
     implementation 'com.google.android.material:material:1.1.0-alpha02'
-    implementation('com.crashlytics.sdk.android:crashlytics:2.9.7@aar') {
-        transitive = true
-        ""
-    }
 
     // Third party - Helper
     implementation 'com.github.bumptech.glide:glide:4.8.0'
