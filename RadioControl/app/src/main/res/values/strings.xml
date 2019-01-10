@@ -1,35 +1,21 @@
 <resources>
     <string name="app_name">RadioControl</string>
 
-    <string name="action_settings">Settings</string>
-
-    <string name="title_activity_ssid">SSIDActivity</string>
-    <string name="enable_wifi">To see configured networks, turn Wi-Fi on.</string>
-    <string name="none_configured">No Wi-Fi networks have been configured.</string>
-
     <string name="title_activity_settings">Settings</string>
     <string name="title_activity_about">About</string>
     <string name="title_activity_network">Network Blacklist Settings</string>
-    <string name="supportlink"><a href="https://nikhilp.org/support/" rel="nofollow"> Report a problem</a></string>
 
     <string name="title_send_feedback">Send feedback</string>
 
     <string name="mail_feedback_email">nikhil1.paranjape@gmail.com</string>
     <string name="mail_feedback_subject">RadioControl Feedback</string>
     <string name="mail_feedback_message"></string>
-    <string name="banner_ad_unit_id">ca-app-pub-3619025631742887/9691733456</string>
-    <string name="linkspeed">Link speed:</string>
     <string name="cellNetwork">Cell network detected</string>
-    <string name="twoGhz">Mbps @ 2.4 GHz</string>
-    <string name="fiveGhz">Mbps @ 5 GHz</string>
-    <string name="netOperator">Network Operator</string>
-    <string name="wifiNetwork">WiFi Network</string>
     <string name="home">Home</string>
     <string name="settings">Settings</string>
     <string name="about">About</string>
     <string name="donate">Donate</string>
     <string name="sendFeedback">Send Feedback</string>
-    <string name="whatsNew">What\'s New</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="noInternet">No Internet Connection</string>
@@ -39,7 +25,6 @@
     <string name="donationThanks">Thanks for the donation :)</string>
     <string name="donationCancel">Donation cancelled</string>
     <string name="donationExists">You already donated</string>
-    <string name="donationFailed">Thanks for the thought, but the purchase failed :(</string>
     <string name="connectedWifi">Connected to the internet through WIFI</string>
     <string name="connectedFCell">Connected to the internet through FAST CELL</string>
     <string name="connectedSCell">Connected to the internet through SLOW CELL</string>
@@ -53,44 +38,26 @@
     <string name="enableAlert">Network connectivity pre-checker (Experimental)</string>
     <string name="alertSum">Shows a notification when the connected WiFi network is not connected to the internet</string>
     <string name="notificationSettings">Notification Settings</string>
-    <string name="eVibrate">Enable vibrate</string>
-    <string name="vibeSum">Enables vibrate on alerts</string>
-    <string name="eSound">Enable sounds</string>
-    <string name="soundSum">Enables sounds on alert</string>
-    <string name="enable_heads_up">Enable Heads-up</string>
-    <string name="heads_up_summary">Enables heads-up notifications</string>
     <string name="logging_settings">Logging Settings</string>
     <string name="enable_logging">Enable Logging</string>
     <string name="log_summary">This will log all wifi switching actions and place it into a text file</string>
-    <string name="ad_settings">Ad Settings</string>
-    <string name="disable_ads">Disable Ads</string>
-    <string name="ad_summary">Even I hate ads sometimes :)</string>
     <string name="changelog">Changelog</string>
     <string name="changelog_summary">View the current changelog</string>
     <string name="radiocontrol_version">RadioControl version</string>
     <string name="support_website">Support Website</string>
     <string name="help_wiki">Help Wiki</string>
-    <string name="done">DONE</string>
     <string name="dev_deactivated">Developer features deactivated</string>
     <string name="dev_activated">Enabled developer features</string>
     <string name="reset_ssid">SSID list reset</string>
-    <string name="version_3_0_1">Version 3.0.1</string>
-    <string name="version_3_0">Version 3.0</string>
-    <string name="version_3_1">Version 3.1</string>
     <string name="open_source_title">Open source software licenses</string>
     <string name="open_source_summary">Details about open source licenses</string>
     <string name="not_connected_alert">You are not connected to the internet</string>
-    <string name="ping_excellent">Excellent Latency: </string>
-    <string name="ping_average">Average Latency: </string>
-    <string name="ping_poor">Poor Latency: </string>
-    <string name="ping_horrible">Poor Latency. VOIP and online gaming may suffer: </string>
     <string name="stats">Stats (Experimental)</string>
     <string name="tutorial_summary">View the app\'s tutorial screen</string>
     <string name="tutorial_title">Tutorial</string>
     <string name="network_alert">Network Connectivity Checker (Experimental)</string>
     <string name="welcome_to_radiocontrol">Welcome to RadioControl</string>
     <string name="intro_summary_1">This app saves your battery by switching off the cell radio when connected to a WiFi network</string>
-    <string name="airplane_mode_turned_off">Airplane mode turned off</string>
     <string name="wifi_signal_lost">WiFi Signal Lost</string>
     <string name="animation_text_box">Animation</string>
     <string name="gridline_text_box">Gridlines</string>
@@ -104,7 +71,6 @@
     <string name="summary_service_settings">Run the service every interval specified</string>
     <string name="title_root_command_alt">Alternate root command(Experimental)</string>
     <string name="summary_root_command_alt">This disables just the cell radio. Use this if you are having problems with bluetooth disconnects.</string>
-    <string name="title_root_mode">Root Mode</string>
     <string name="summaryAirplaneReset">Use this if you are having issues with manual airplane mode operation</string>
     <string name="resetAirplaneSettings">Reset Airplane Mode</string>
     <string name="LogTitle">Log Directory</string>
@@ -116,19 +82,14 @@
     <string name="title_battery_optimization">Background Optimization</string>
     <string name="summary_battery_optimization">This will run the current service on the background, as opposed to the UI thread.</string>
     <string name="title_analytics_service">Third Party Services</string>
-    <string name="title_firebase_analytics">Usage reporting</string>
-    <string name="summary_firebase_analytics">General usage reporting. Nothing personally identifiable</string>
     <string name="standby_drawer_name">Standby Mode</string>
-    <string name="dont_ask_again">Don\'t show again</string>
     <string name="permissionSample">Standby mode disables all <b>RadioControl</b> services (Useful for airplanes) This can be disabled from notifications</string>
-    <string name="permissionSampleFirebase">Allow <b>RadioControl</b> to collect general usage data through Firebase</string>
     <string name="permissionSampleFabric">Allow <b>RadioControl</b> to send crash and error reports to Fabric Crashlytics</string>
     <string name="showDisabled">is Disabled</string>
     <string name="showEnabled">is Enabled</string>
     <string name="not_set">not set</string>
     <string name="title_fabric_analytics">Fabric Crash reporting</string>
     <string name="summary_fabric_analytics">Crashes and error reporting. Nothing personally identifiable or unrelated to RadioControl</string>
-    <string name="text_root_status">Root Status</string>
     <string name="title_doze_optimization">Battery Optimization</string>
     <string name="drawer_string_troubleshooting">Troubleshooting (WIP)</string>
     <string name="permissionIntelligent">This works better with Background Optimization. Should I turn it on for you?</string>
@@ -136,20 +97,15 @@
     <string name="summary_intelligent_mode">This is a higher priority detection method that might fix issues on Nougat+</string>
     <string name="persistence_description">This is a low-level notification to keep the persistence service awake</string>
     <string name="summary_airplane_service_notification">Notifies when the airplane service is running</string>
-    <string name="refresh_text_box">Refresh</string>
     <string name="radios_toggled_graph_title">Radios toggled</string>
     <string name="statistics_title_slide">Statistics (Experimental)</string>
     <string name="statistics_description_slide">Shows you statistics about the app service. Requires logging to be enabled</string>
     <string name="animation_duration_sheet_text">Animation Duration</string>
     <string name="title_activity_troubleshooting">TroubleshootingActivity</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
     <string name="profile_root_status">Root Status</string>
     <string name="title_service_paused">RadioControl services have been paused</string>
     <string name="title_standby_dialog">Standby Mode</string>
     <string name="button_disable_standby">Turn OFF standby mode</string>
-    <string name="instabug_d">e3a38217dc9df5bef039e4df338f81f8</string>
     <string name="text_not_set">not set</string>
     <string name="title_whats_new">RadioControl has been updated</string>
     <string name="text_got_it">GOT IT</string>

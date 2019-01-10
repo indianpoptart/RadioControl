@@ -52,8 +52,4 @@
         <item>120</item>
     </string-array>
 
-    <string-array name="working_mode">
-        <item>Standard</item>
-        <item>Intelligent</item>
-    </string-array>
 </resources>

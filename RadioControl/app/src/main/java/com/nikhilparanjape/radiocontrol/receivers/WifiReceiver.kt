@@ -59,7 +59,7 @@ class WifiReceiver : WakefulBroadcastReceiver() {
 
         Log.i("RadioControl", "WifiReceiver Triggered")
         //Check if user wants the app on
-        if (sp.getInt("isActive", 0) == 1) {
+        if (sp.getInt("isActive", 1) == 1) {
             if (batteryOptimize) {
                 //Log.d("RadioControl","Battery Optimization ON");
                 val i = Intent(context, BackgroundAirplaneService::class.java)
