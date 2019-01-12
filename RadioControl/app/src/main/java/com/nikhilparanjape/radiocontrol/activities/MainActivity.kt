@@ -102,6 +102,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
         val fab = findViewById<FloatingActionButton>(R.id.fab)
 
         val filter = IntentFilter()
+        @Suppress("DEPRECATION")
         filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION)
 
         //Sets the actionbar with hamburger
@@ -304,12 +305,14 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
                 statusText.setText(R.string.showDisabled)
                 statusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_deactivated))
                 editor.apply()
+                Log.d("RadioControl", "Test1")
 
             } else {
                 editor.putInt(getString(R.string.preference_app_active), 1)
                 statusText.setText(R.string.showEnabled)
                 statusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_activated))
                 editor.apply()
+                Log.d("RadioControl", "Test2")
                 val i = Intent(applicationContext, BackgroundAirplaneService::class.java)
                 applicationContext.startService(i)
             }
@@ -703,7 +706,6 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
         }
         drawerCreate()
 
-
         if (pref.getBoolean(getString(R.string.preference_allow_fabric), true)) {
             Fabric.with(this, Crashlytics())
         } else {
@@ -820,7 +822,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
                         timeDifference <= 50 -> Snackbar.make(clayout, "Excellent Latency: $timeDifference ms", Snackbar.LENGTH_LONG).show()
                         timeDifference in 51.0..100.0 -> Snackbar.make(clayout, "Average Latency: $timeDifference ms", Snackbar.LENGTH_LONG).show()
                         timeDifference in 101.0..200.0 -> Snackbar.make(clayout, "Poor Latency: $timeDifference ms", Snackbar.LENGTH_LONG).show()
-                        timeDifference >= 201 -> Snackbar.make(clayout, "Poor Latency. VOIP and online gaming may suffer: $timeDifference ms", Snackbar.LENGTH_LONG).show()
+                        timeDifference >= 201 -> Snackbar.make(clayout, "Very Poor Latency. VOIP and online gaming may suffer: $timeDifference ms", Snackbar.LENGTH_LONG).show()
                     }
                 }
                 //Sadly packet loss testing is gone :(
@@ -848,7 +850,6 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
                             connectionStatusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_activated))
                             writeLog(getString(R.string.connectedSCell), applicationContext)
                         }
-
                     }
 
                 } else {
@@ -910,7 +911,6 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
                     capitalize(manufacturer) + " " + model
                 }
             }
-
 
         //Capitalizes names for devices. Used by getDeviceName()
         private fun capitalize(s: String?): String {

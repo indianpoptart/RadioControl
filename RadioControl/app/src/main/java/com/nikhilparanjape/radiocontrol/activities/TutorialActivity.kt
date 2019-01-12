@@ -3,15 +3,17 @@ package com.nikhilparanjape.radiocontrol.activities
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import com.github.paolorotolo.appintro.AppIntro
 
 import com.github.paolorotolo.appintro.AppIntro2
+import com.github.paolorotolo.appintro.AppIntroFragment
 import com.nikhilparanjape.radiocontrol.R
 import com.nikhilparanjape.radiocontrol.fragments.SlideFragment
 
 /**
  * Created by Nikhil on 4/24/2016.
  */
-class TutorialActivity : AppIntro2() {
+class TutorialActivity : AppIntro() {
     // Please DO NOT override onCreate. Use init.
     override fun onCreate(savedInstanceState: Bundle?){
         super.onCreate(savedInstanceState)
@@ -27,6 +29,7 @@ class TutorialActivity : AppIntro2() {
         addSlide(SlideFragment.newInstance(R.layout.intro3))
         addSlide(SlideFragment.newInstance(R.layout.intro6))
         addSlide(SlideFragment.newInstance(R.layout.intro7))
+
         // Instead of fragments, you can also use our default slide
         // Just set a title, description, background and image. AppIntro will do the rest.
         //addSlide(AppIntroFragment.newInstance("Welcome to RadioControl", "Use this app to auto toggle the cell radio when you join a WiFi network", R.mipmap.ic_launcher, R.color.colorPrimary));

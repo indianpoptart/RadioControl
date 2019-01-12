@@ -128,8 +128,6 @@ class AboutFragment : PreferenceFragment() {
 
             false
         }
-
-
     }
 
     private fun displayLicensesAlertDialog(c: Context) {

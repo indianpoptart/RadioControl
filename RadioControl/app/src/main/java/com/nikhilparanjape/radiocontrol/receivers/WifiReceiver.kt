@@ -12,6 +12,7 @@ import com.nikhilparanjape.radiocontrol.services.CellRadioService
 import com.nikhilparanjape.radiocontrol.utilities.AlarmSchedulers
 import com.nikhilparanjape.radiocontrol.utilities.RootAccess
 import com.nikhilparanjape.radiocontrol.utilities.Utilities
+import com.topjohnwu.superuser.Shell
 import org.jetbrains.anko.doAsync
 import java.io.File
 import java.io.IOException
@@ -59,7 +60,18 @@ class WifiReceiver : WakefulBroadcastReceiver() {
 
         Log.i("RadioControl", "WifiReceiver Triggered")
         //Check if user wants the app on
-        if (sp.getInt("isActive", 1) == 1) {
+        if (sp.getInt("isActive", 0) == 0) {
+            Log.d("RadioControl", "RadioControl has been disabled-wr")
+            if (networkAlert) {
+                pingTask(context)
+            }
+            //Adds wifi signal lost log for nonrooters
+            if (!Utilities.isConnectedWifi(context)) {
+                Log.d("RadioControl", "WiFi signal LOST")
+                writeLog("WiFi Signal lost", context)
+            }
+        }
+        if (sp.getInt("isActive", 0) == 1) {
             if (batteryOptimize) {
                 //Log.d("RadioControl","Battery Optimization ON");
                 val i = Intent(context, BackgroundAirplaneService::class.java)
@@ -83,11 +95,17 @@ class WifiReceiver : WakefulBroadcastReceiver() {
                                 }
                             } else {
                                 if (prefs.getBoolean("altBTCommand", false)) {
-                                    RootAccess.runCommands(airOffCmd3)
+                                    val output = Shell.su("settings put global airplane_mode_on 0", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state false").exec().out
+                                    Utilities.writeLog("root accessed: $output", context)
+                                    //RootAccess.runCommands(airOffCmd3)
                                     Log.d("RadioControl", "Airplane mode has been turned off(with bt cmd)")
                                     writeLog("Airplane mode has been turned off", context)
+
+
                                 } else {
-                                    RootAccess.runCommands(airOffCmd2)
+                                    val output = Shell.su("settings put global airplane_mode_on 0", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state false", "settings put global airplane_mode_radios  \"cell,bluetooth,nfc,wimax\"", "content update --uri content://settings/global --bind value:s:'cell,bluetooth,nfc,wimax' --where \"name='airplane_mode_radios'\"").exec().out
+                                    Utilities.writeLog("root accessed: $output", context)
+                                    //RootAccess.runCommands(airOffCmd2)
                                     Log.d("RadioControl", "Airplane mode has been turned off")
                                     writeLog("Airplane mode has been turned off", context)
                                 }
@@ -124,7 +142,9 @@ class WifiReceiver : WakefulBroadcastReceiver() {
                                 }
 
                             } else {
-                                RootAccess.runCommands(airCmd)
+                                val output = Shell.su("settings put global airplane_mode_radios  \"cell\"", "content update --uri content://settings/global --bind value:s:'cell' --where \"name='airplane_mode_radios'\"", "settings put global airplane_mode_on 1", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state true").exec().out
+                                Utilities.writeLog("root accessed: $output", context)
+                                //RootAccess.runCommands(airCmd)
                                 Log.d("RadioControl", "Airplane mode has been turned on")
                                 writeLog("Airplane mode has been turned on, SSID: " + Utilities.getCurrentSsid(context)!!, context)
                             }
@@ -145,17 +165,7 @@ class WifiReceiver : WakefulBroadcastReceiver() {
             }
 
         }
-        if (sp.getInt("isActive", 0) == 0) {
-            Log.d("RadioControl", "RadioControl has been disabled")
-            if (networkAlert) {
-                pingTask(context)
-            }
-            //Adds wifi signal lost log for nonrooters
-            if (!Utilities.isConnectedWifi(context)) {
-                Log.d("RadioControl", "WiFi signal LOST")
-                writeLog("WiFi Signal lost", context)
-            }
-        }
+
     }
 
     private fun writeLog(data: String, c: Context) {
@@ -219,7 +229,9 @@ class WifiReceiver : WakefulBroadcastReceiver() {
                             Log.d("RadioControl", "Cell Radio has been turned off")
                             writeLog("Cell radio has been turned off, SSID: " + Utilities.getCurrentSsid(context)!!, context)
                         } else if (!prefs.getBoolean("altRootCommand", false)) {
-                            RootAccess.runCommands(airCmd)
+                            val output = Shell.su("settings put global airplane_mode_radios  \"cell\"", "content update --uri content://settings/global --bind value:s:'cell' --where \"name='airplane_mode_radios'\"", "settings put global airplane_mode_on 1", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state true").exec().out
+                            Utilities.writeLog("root accessed: $output", context)
+                            //RootAccess.runCommands(airCmd)
                             Log.d("RadioControl", "Airplane mode has been turned on")
                             writeLog("Airplane mode has been turned on, SSID: " + Utilities.getCurrentSsid(context)!!, context)
                         }
