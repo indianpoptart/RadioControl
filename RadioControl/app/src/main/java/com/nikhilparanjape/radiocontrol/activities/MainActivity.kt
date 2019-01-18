@@ -94,7 +94,6 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
         val dialog = findViewById<ProgressBar>(R.id.pingProgressBar)
         mServiceComponent = ComponentName(this, TestJobService::class.java)
 
-
         // Handle Toolbar
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
@@ -109,7 +108,6 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
         if (actionBar != null) {
             actionBar.setHomeAsUpIndicator(IconicsDrawable(this, GoogleMaterial.Icon.gmd_menu).color(Color.WHITE).sizeDp(IconicsDrawable.TOOLBAR_ICON_SIZE).paddingDp(IconicsDrawable.TOOLBAR_ICON_PADDING))
             actionBar.setDisplayHomeAsUpEnabled(true)
-
         }
 
         fab.setImageDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.ic_network_check_white_48dp))
@@ -179,7 +177,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
             if (intervalTime != "0" && airplaneService) {
                 val i = Intent(applicationContext, BackgroundAirplaneService::class.java)
                 baseContext.startService(i)
-                Log.d("RadioControl", "back Service launched")
+                Log.d("RadioControl", "backg Service launched")
             }
             if (getPrefs.getBoolean(getString(R.string.preference_work_mode), true)) {
                 val i = Intent(applicationContext, PersistenceService::class.java)
@@ -884,15 +882,14 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
         billingManager.unbind()
     }
 
-    override fun onStop() {
+    /*fun onStop() {
         // A service can be "started" and/or "bound". In this case, it's "started" by this Activity
         // and "bound" to the JobScheduler (also called "Scheduled" by the JobScheduler). This call
         // to stopService() won't prevent scheduled jobs to be processed. However, failing
         // to call stopService() would keep it alive indefinitely.
-        stopService(Intent(this, TestJobService::class.java))
+        //stopService(Intent(this, TestJobService::class.java))
         super.onStop()
-    }
-
+    }*/
     companion object {
         private const val PRIVATE_PREF = "prefs"
         private const val VERSION_KEY = "version_number"

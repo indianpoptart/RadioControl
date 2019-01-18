@@ -84,8 +84,6 @@ class NetworkListActivity : AppCompatActivity() {
             override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
                 var convertView = convertView
                 if (convertView == null) {
-
-
                     val vi = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
                     val net = getItem(position) as WifiConfiguration
