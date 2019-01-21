@@ -12,7 +12,7 @@
         <changelogtext>Overhauling dialogs with MaterialDialog 2.0 beta</changelogtext>
         <changelogtext>Fixing issues with old dialogs</changelogtext>
         <changelogtext>Fixed issue with boot receiving</changelogtext>
-        <changelogtext>- Changed pingtasks, much faster, less resources</changelogtext>
+        <changelogtext>Changed pingtasks, much faster, less resources</changelogtext>
         <changelogtext>Translations for Spanish and Turkish</changelogtext>
     </changelogversion>
     <changelogversion versionName="5.0.3-Beta7" changeDate="August 29, 2018">
