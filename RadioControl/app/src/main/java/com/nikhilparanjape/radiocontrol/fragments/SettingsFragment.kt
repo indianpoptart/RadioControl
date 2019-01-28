@@ -159,7 +159,6 @@ class SettingsFragment : PreferenceFragment(), TimePickerDialog.OnTimeSetListene
                 }
 
             } else {
-                preferenceScreen.findPreference("altRootCommand").isEnabled = true
                 activity.stopService(Intent(activity, PersistenceService::class.java))
             }
             Log.i("RadioControl", "workMode")
@@ -169,8 +168,8 @@ class SettingsFragment : PreferenceFragment(), TimePickerDialog.OnTimeSetListene
 
         val checkboxPref = preferenceManager.findPreference("enableLogs") as CheckBoxPreference
         checkboxPref.setOnPreferenceChangeListener { _, newValue ->
-            val preferences = PreferenceManager.getDefaultSharedPreferences(c)
-            val editor1 = preferences.edit()
+            val preference = PreferenceManager.getDefaultSharedPreferences(c)
+            val editor1 = preference.edit()
             if (newValue.toString() == "true") {
                 //Request storage permissions if on MM or greater
                 if (Build.VERSION.SDK_INT >= 23) {
@@ -221,7 +220,7 @@ class SettingsFragment : PreferenceFragment(), TimePickerDialog.OnTimeSetListene
         val dozeSetting = preferenceManager.findPreference("isDozeOff") as CheckBoxPreference
         dozeSetting.setOnPreferenceChangeListener { _, newValue ->
             if (newValue.toString() == "true") {
-                Log.i("RadioControl", "true-new")
+                Log.i("RadioControl", "doze-bypassed")
                 if (Build.VERSION.SDK_INT >= 23) {
                     val intent = Intent()
                     val packageName = c.packageName
@@ -252,21 +251,20 @@ class SettingsFragment : PreferenceFragment(), TimePickerDialog.OnTimeSetListene
             true
         }
 
-        if (altRootCommand.isChecked || batteryOptimizePref.isChecked) {
+        /*if (altRootCommand.isChecked || batteryOptimizePref.isChecked) {
             val pref = c.getSharedPreferences("batteryOptimizePref", Context.MODE_PRIVATE)
             val editor2 = pref.edit()
             editor2.clear()
             editor2.apply()
-            preferenceScreen.findPreference("altRootCommand").isEnabled = false
-        } else if (!batteryOptimizePref.isChecked) {
-            preferenceScreen.findPreference("altRootCommand").isEnabled = true
+        } else */
+        if (!batteryOptimizePref.isChecked) {
             activity.stopService(Intent(activity, PersistenceService::class.java))
         }
 
         val fabricCrashlyticsPref = preferenceManager.findPreference("fabricCrashlytics") as CheckBoxPreference
         fabricCrashlyticsPref.setOnPreferenceChangeListener { _, newValue ->
-            val preferences = PreferenceManager.getDefaultSharedPreferences(c)
-            val editor12 = preferences.edit()
+            val preference = PreferenceManager.getDefaultSharedPreferences(c)
+            val editor12 = preference.edit()
 
             if (newValue.toString() == "true") {
                 MaterialDialog(activity)
@@ -287,6 +285,7 @@ class SettingsFragment : PreferenceFragment(), TimePickerDialog.OnTimeSetListene
                 editor12.putBoolean("allowFabric", false)
                 editor12.apply()
             }
+            editor12.apply()
             true
         }
 
@@ -306,8 +305,8 @@ class SettingsFragment : PreferenceFragment(), TimePickerDialog.OnTimeSetListene
 
         val serviceCheckbox = preferenceManager.findPreference("isAirplaneService") as CheckBoxPreference
         serviceCheckbox.setOnPreferenceChangeListener { _, newValue ->
-            val preferences = PreferenceManager.getDefaultSharedPreferences(c)
-            val editor13 = preferences.edit()
+            val preference = PreferenceManager.getDefaultSharedPreferences(c)
+            val editor13 = preference.edit()
 
             if (newValue.toString() == "true") {
                 editor13.putBoolean("isAirplaneService", true)
