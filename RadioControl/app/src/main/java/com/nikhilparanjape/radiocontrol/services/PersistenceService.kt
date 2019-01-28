@@ -19,6 +19,8 @@ import com.nikhilparanjape.radiocontrol.receivers.WifiReceiver
  * Created by admin on 7/9/2017.
  *
  * @author Nikhil Paranjape
+ *
+ * @description This class allows RadioControl to keep itself awake in the background.
  */
 class PersistenceService : Service() {
     private val myBroadcast = WifiReceiver()

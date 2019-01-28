@@ -5,6 +5,8 @@ import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import android.preference.PreferenceManager
+import android.util.Log
 import androidx.core.app.JobIntentService
 import androidx.core.app.NotificationCompat
 
@@ -14,6 +16,9 @@ import com.nikhilparanjape.radiocontrol.R
  * Created by admin on 10/12/2018.
  *
  * @author Nikhil Paranjape
+ *
+ * @description This class is supposed to wake up RadioControl when the device first boots up. But its pretty much a hit or miss
+ * It should probably have some things for actually calling the background airplane service so it starts in the background. Maybe work mode? we'll see...
  */
 class OnBootIntentService : JobIntentService() {
 
@@ -26,6 +31,24 @@ class OnBootIntentService : JobIntentService() {
                     .setContentTitle("Startup Operations")
                     .setContentText("Running startup operations...")
                     .build()
+        }
+        val getPrefs = PreferenceManager.getDefaultSharedPreferences(baseContext)
+        val airplaneService = getPrefs.getBoolean(getString(R.string.preference_airplane_service), false)
+
+        //Begin background service
+        if (airplaneService) {
+            val i = Intent(applicationContext, BackgroundAirplaneService::class.java)
+            baseContext.startService(i)
+            Log.d("RadioControl", "background Service launched")
+        }
+        if (getPrefs.getBoolean(getString(R.string.preference_work_mode), true)) {
+            val i = Intent(applicationContext, PersistenceService::class.java)
+            if (Build.VERSION.SDK_INT >= 26) {
+                baseContext.startForegroundService(i)
+            } else {
+                baseContext.startService(i)
+            }
+            Log.d("RadioControl", "persist Service launched")
         }
     }
 

@@ -28,6 +28,9 @@ import java.util.*
  * Created by admin on 8/20/2016.
  *
  * @author Nikhil Paranjape
+ *
+ * @description This class is a core aspect of RadioControl, it allows the radio switch to be processed on a Service, as opposed to a Broadcast Receiver.
+ * This can allow faster performance in the background, actual action in the background, as well as compliance with Android 8.0 restrictions
  */
 class BackgroundAirplaneService : IntentService("BackgroundAirplaneService") {
 
@@ -36,6 +39,7 @@ class BackgroundAirplaneService : IntentService("BackgroundAirplaneService") {
     //runs command to disable airplane mode on wifi loss, while restoring previous airplane settings
     private var airOffCmd2 = arrayOf("su", "settings put global airplane_mode_on 0", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state false", "settings put global airplane_mode_radios  \"cell,bluetooth,nfc,wimax\"", "content update --uri content://settings/global --bind value:s:'cell,bluetooth,nfc,wimax' --where \"name='airplane_mode_radios'\"")
     private var airOffCmd3 = arrayOf("su", "settings put global airplane_mode_on 0", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state false")
+    //All three commands above have been replaced by libsu commands
 
     internal var util = Utilities() //Network and other related utilities
     private var alarmUtil = AlarmSchedulers()

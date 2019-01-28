@@ -12,6 +12,8 @@ import com.topjohnwu.superuser.Shell
  * Created by admin on 09/23/2016.
  *
  * @author Nikhil Paranjape
+ *
+ * @description This class handles toggling the cell radio using a shell command.
  */
 class CellRadioService : IntentService("CellRadioService") {
     private var mRunning: Boolean = false
@@ -27,7 +29,7 @@ class CellRadioService : IntentService("CellRadioService") {
         if (!mRunning) {
             mRunning = true
             Log.d("RadioControl", "CellService Toggled")
-            val cellOffCmd = arrayOf("service call phone 27")
+            //val cellOffCmd = arrayOf("service call phone 27") *not needed as it can run on libsu shell
             // Run commands and get output immediately
             val output = Shell.su("service call phone 27").exec().out
             Utilities.writeLog("root accessed: $output", applicationContext)

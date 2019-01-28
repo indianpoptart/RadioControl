@@ -13,6 +13,8 @@ import java.util.*
  * Created by Nikhil on 10/12/2018.
  *
  * A class with a bunch of AlarmScheduler Utilities for RadioControl
+ *
+ * Still contains legacy alarms for older devices that can still utilize timers efficiently
  */
 
 class AlarmSchedulers{
