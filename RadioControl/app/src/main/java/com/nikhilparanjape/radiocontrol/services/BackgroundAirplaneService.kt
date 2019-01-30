@@ -170,7 +170,7 @@ class BackgroundAirplaneService : IntentService("BackgroundAirplaneService") {
                 }
             }
 
-            //If network is connected and airplane mode is off
+            //If network is connected and airplane mode is off or Cell is on
             if (Utilities.isConnectedWifi(context) && !Utilities.isAirplaneMode(context)) {
                 //boolean isWiFi = activeNetwork.getType() == ConnectivityManager.TYPE_WIFI; //Boolean to check for an active WiFi connection
                 //Check the list of disabled networks

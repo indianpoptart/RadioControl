@@ -32,24 +32,25 @@ class OnBootIntentService : JobIntentService() {
                     .setContentText("Running startup operations...")
                     .build()
         }
-        val getPrefs = PreferenceManager.getDefaultSharedPreferences(baseContext)
+        val getPrefs = PreferenceManager.getDefaultSharedPreferences(applicationContext)
         val airplaneService = getPrefs.getBoolean(getString(R.string.preference_airplane_service), false)
 
         //Begin background service
         if (airplaneService) {
             val i = Intent(applicationContext, BackgroundAirplaneService::class.java)
-            baseContext.startService(i)
+            applicationContext.startService(i)
             Log.d("RadioControl", "background Service launched")
         }
         if (getPrefs.getBoolean(getString(R.string.preference_work_mode), true)) {
             val i = Intent(applicationContext, PersistenceService::class.java)
             if (Build.VERSION.SDK_INT >= 26) {
-                baseContext.startForegroundService(i)
+                applicationContext.startForegroundService(i)
             } else {
-                baseContext.startService(i)
+                applicationContext.startService(i)
             }
             Log.d("RadioControl", "persist Service launched")
         }
+
     }
 
     override fun onHandleWork(intent: Intent) { }

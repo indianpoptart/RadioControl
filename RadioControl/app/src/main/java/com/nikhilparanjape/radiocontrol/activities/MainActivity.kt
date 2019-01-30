@@ -1,6 +1,5 @@
 package com.nikhilparanjape.radiocontrol.activities
 
-import androidx.appcompat.app.AlertDialog
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.ComponentName
@@ -21,6 +20,7 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.*
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.Toolbar
@@ -118,7 +118,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
 
         //Pref values
         //  Initialize SharedPreferences
-        val getPrefs = PreferenceManager.getDefaultSharedPreferences(baseContext)
+        val getPrefs = PreferenceManager.getDefaultSharedPreferences(applicationContext)
         val sharedPref = getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE)
         val editor = sharedPref.edit()
 
@@ -149,7 +149,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
         init()//initializes the whats new dialog
 
         //Async thread to do a preference checks
-        doAsync{
+        doAsync {
             //Checks for root
             rootInit()
 
@@ -176,20 +176,20 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
             //Begin background service
             if (intervalTime != "0" && airplaneService) {
                 val i = Intent(applicationContext, BackgroundAirplaneService::class.java)
-                baseContext.startService(i)
+                applicationContext.startService(i)
                 Log.d("RadioControl", "backg Service launched")
             }
             if (getPrefs.getBoolean(getString(R.string.preference_work_mode), true)) {
                 val i = Intent(applicationContext, PersistenceService::class.java)
                 if (Build.VERSION.SDK_INT >= 26) {
-                    baseContext.startForegroundService(i)
+                    applicationContext.startForegroundService(i)
                 } else {
-                    baseContext.startService(i)
+                    applicationContext.startService(i)
                 }
                 Log.d("RadioControl", "persist Service launched")
             }
             //Attempting instabug integration.
-            if(getPrefs.getBoolean(getString(R.string.pref_instabug_check),true)){
+            if (getPrefs.getBoolean(getString(R.string.pref_instabug_check), true)) {
 
             }
 
@@ -269,7 +269,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
             forceCrashButton.visibility = View.VISIBLE
         }
 
-        conn.setOnClickListener { _ ->
+        conn.setOnClickListener {
             connectionStatusText.setText(R.string.ping)
             connectionStatusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.material_grey_50))
             dialog.visibility = View.VISIBLE
@@ -277,7 +277,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
         }
         serviceTest.setOnClickListener {
             val i = Intent(applicationContext, BackgroundAirplaneService::class.java)
-            baseContext.startService(i)
+            applicationContext.startService(i)
             alarmUtil.scheduleAlarm(applicationContext)
             Log.d("RadioControl", "Service started")
         }
@@ -288,9 +288,9 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
             val alarm = applicationContext.getSystemService(Context.ALARM_SERVICE) as AlarmManager
             alarm.cancel(pIntent)*/
             val app = "NightMode"
-            alarmUtil.cancelAlarm(applicationContext,app,app)
+            alarmUtil.cancelAlarm(applicationContext, app, app)
         }
-        radioOffButton.setOnClickListener { _ ->
+        radioOffButton.setOnClickListener {
             //String[] cellOffCmd = {"service call phone 27","service call phone 14 s16"};
             //RootAccess.runCommands(cellOffCmd);
             val cellIntent = Intent(applicationContext, CellRadioService::class.java)
@@ -298,21 +298,31 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
             alarmUtil.scheduleRootAlarm(applicationContext)
         }
         toggle.setOnCheckedChangeListener { _, isChecked ->
+            val bg = Intent(applicationContext, BackgroundAirplaneService::class.java)
+            val pst = Intent(applicationContext, PersistenceService::class.java)
+            val crs = Intent(applicationContext, CellRadioService::class.java)
+
             if (!isChecked) {
+                //Preference handling
                 editor.putInt(getString(R.string.preference_app_active), 0)
+                editor.apply()
+                //UI Handling
                 statusText.setText(R.string.showDisabled)
                 statusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_deactivated))
-                editor.apply()
+
                 Log.d("RadioControl", "Test1")
 
             } else {
+                //Preference handling
                 editor.putInt(getString(R.string.preference_app_active), 1)
+                editor.apply()
+                //UI Handling
                 statusText.setText(R.string.showEnabled)
                 statusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_activated))
-                editor.apply()
+                applicationContext.startService(bg)
+                alarmUtil.scheduleAlarm(applicationContext)
                 Log.d("RadioControl", "Test2")
-                val i = Intent(applicationContext, BackgroundAirplaneService::class.java)
-                applicationContext.startService(i)
+
             }
         }
     }
@@ -799,10 +809,10 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
         }
     }
 
-    private fun pingCheck(){
+    private fun pingCheck() {
         var dialog: ProgressBar
-        val preferences = PreferenceManager.getDefaultSharedPreferences(baseContext)
-        val ip = preferences.getString("prefPingIp","8.8.8.8")
+        val preferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)
+        val ip = preferences.getString("prefPingIp", "8.8.8.8")
         doAsync {
             val address = InetAddress.getByName(ip)
             var reachable = false
@@ -815,7 +825,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
                 dialog = findViewById(R.id.pingProgressBar)
                 dialog.visibility = View.GONE
                 val connectionStatusText = findViewById<TextView>(R.id.pingStatus)
-                if(reachable){
+                if (reachable) {
                     when {
                         timeDifference <= 50 -> Snackbar.make(clayout, "Excellent Latency: $timeDifference ms", Snackbar.LENGTH_LONG).show()
                         timeDifference in 51.0..100.0 -> Snackbar.make(clayout, "Average Latency: $timeDifference ms", Snackbar.LENGTH_LONG).show()

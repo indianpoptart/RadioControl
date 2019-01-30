@@ -14,6 +14,11 @@ import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.nikhilparanjape.radiocontrol.R
 import com.nikhilparanjape.radiocontrol.receivers.WifiReceiver
+import androidx.coordinatorlayout.widget.CoordinatorLayout.Behavior.setTag
+
+
+
+
 
 /**
  * Created by admin on 7/9/2017.
@@ -35,6 +40,13 @@ class PersistenceService : Service() {
         val filter = IntentFilter()
         filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION)
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            //val dispatcher = FirebaseJobDispatcher(GooglePlayDriver(context))
+           /* val job = dispatcher.newJobBuilder().setService(Updater::class.java)
+                    .setTag("connectivity-job").setLifetime(Lifetime.FOREVER).setRetryStrategy(RetryStrategy.DEFAULT_LINEAR)
+                    .setRecurring(true).setReplaceCurrent(true).setTrigger(Trigger.executionWindow(0, 0)).build()
+            dispatcher.mustSchedule(job)*/
+        }
 
         try {
             this.registerReceiver(myBroadcast, filter)

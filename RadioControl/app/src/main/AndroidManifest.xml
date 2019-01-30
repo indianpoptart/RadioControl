@@ -52,7 +52,7 @@
         <!-- Receive Wi-Fi connection state changes -->
         <receiver
             android:name=".receivers.WifiReceiver"
-            android:enabled="false">
+            android:enabled="true">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
                 <action android:name="com.nikhilparanjape.radiocontrol.android.action.broadcast" />
@@ -65,7 +65,7 @@
             android:enabled="true"
             android:icon="@drawable/ic_baseline_airplanemode_active_24px"
             android:label="AirplaneService"
-            android:process=":airplane" />
+            android:process=":background"/>
 
         <activity
             android:name=".activities.SettingsActivity"
