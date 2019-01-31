@@ -105,7 +105,7 @@ class BackgroundAirplaneService : IntentService("BackgroundAirplaneService") {
         }
         // Start Alarm Task
         Log.d("RadioControl", "Background Service running")
-        val context = applicationContext
+        /*val context = applicationContext
         val sp = context.getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE)
         val prefs = PreferenceManager.getDefaultSharedPreferences(context)
         val disabledPref = context.getSharedPreferences("disabled-networks", Context.MODE_PRIVATE)
@@ -216,7 +216,7 @@ class BackgroundAirplaneService : IntentService("BackgroundAirplaneService") {
                 }//Pauses because WiFi network is in the list of disabled SSIDs
             }
 
-        }
+        }*/
 
     }
 

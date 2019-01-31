@@ -23,7 +23,7 @@ import com.borax12.materialdaterangepicker.time.RadialPickerLayout
 import com.borax12.materialdaterangepicker.time.TimePickerDialog
 import com.google.android.material.snackbar.Snackbar
 import com.nikhilparanjape.radiocontrol.R
-import com.nikhilparanjape.radiocontrol.receivers.WifiReceiver
+import com.nikhilparanjape.radiocontrol.receivers.ConnectivityReceiver
 import com.nikhilparanjape.radiocontrol.services.PersistenceService
 import com.nikhilparanjape.radiocontrol.utilities.AlarmSchedulers
 import com.nikhilparanjape.radiocontrol.utilities.RootAccess
@@ -349,7 +349,7 @@ class SettingsFragment : PreferenceFragment(), TimePickerDialog.OnTimeSetListene
     }
 
     private fun registerForBroadcasts(context: Context) {
-        val component = ComponentName(context, WifiReceiver::class.java)
+        val component = ComponentName(context, ConnectivityReceiver::class.java)
         val pm = context.packageManager
         pm.setComponentEnabledSetting(
                 component,

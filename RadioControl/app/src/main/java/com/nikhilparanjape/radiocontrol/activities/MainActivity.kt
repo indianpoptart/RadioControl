@@ -2,6 +2,8 @@ package com.nikhilparanjape.radiocontrol.activities
 
 import android.app.NotificationManager
 import android.app.PendingIntent
+import android.app.job.JobInfo
+import android.app.job.JobScheduler
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
@@ -50,11 +52,11 @@ import com.mikepenz.materialdrawer.model.SecondaryDrawerItem
 import com.nikhilparanjape.radiocontrol.BuildConfig
 import com.nikhilparanjape.radiocontrol.R
 import com.nikhilparanjape.radiocontrol.receivers.ActionReceiver
-import com.nikhilparanjape.radiocontrol.receivers.WifiReceiver
+import com.nikhilparanjape.radiocontrol.receivers.ConnectivityReceiver
 import com.nikhilparanjape.radiocontrol.services.BackgroundAirplaneService
 import com.nikhilparanjape.radiocontrol.services.CellRadioService
 import com.nikhilparanjape.radiocontrol.services.PersistenceService
-import com.nikhilparanjape.radiocontrol.services.TestJobService
+import com.nikhilparanjape.radiocontrol.services.BackgroundJobService
 import com.nikhilparanjape.radiocontrol.utilities.AlarmSchedulers
 import com.nikhilparanjape.radiocontrol.utilities.Utilities
 import io.fabric.sdk.android.Fabric
@@ -92,7 +94,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
         billingManager.bind(this)
         clayout = findViewById(R.id.clayout)
         val dialog = findViewById<ProgressBar>(R.id.pingProgressBar)
-        mServiceComponent = ComponentName(this, TestJobService::class.java)
+        mServiceComponent = ComponentName(this, BackgroundJobService::class.java)
 
         // Handle Toolbar
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
@@ -115,6 +117,8 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
             dialog.visibility = View.VISIBLE
             pingCheck()
         }
+
+        scheduleJob()
 
         //Pref values
         //  Initialize SharedPreferences
@@ -353,6 +357,18 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
         }
     }
 
+    private fun scheduleJob() {
+        val myJob = JobInfo.Builder(123, ComponentName(packageName, BackgroundJobService::class.java!!.getName()))
+                .setMinimumLatency(1000)
+                .setOverrideDeadline(2000)
+                .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
+                .setPersisted(true)
+                .build()
+
+        val jobScheduler = getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
+        jobScheduler.schedule(myJob);
+    }
+
     //Start a new activity for sending a feedback email
     private fun sendFeedback() {
         doAsync {
@@ -375,7 +391,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
     }
 
     private fun registerForBroadcasts(context: Context) {
-        val component = ComponentName(context, WifiReceiver::class.java)
+        val component = ComponentName(context, ConnectivityReceiver::class.java)
         val pm = context.packageManager
         pm.setComponentEnabledSetting(
                 component,
@@ -877,7 +893,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
     override fun onStart() {
         super.onStart()
         // Start service and provide it a way to communicate with this class.
-        val startServiceIntent = Intent(this, TestJobService::class.java)
+        val startServiceIntent = Intent(this, BackgroundJobService::class.java)
         startService(startServiceIntent)
     }
 
@@ -897,7 +913,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
         // and "bound" to the JobScheduler (also called "Scheduled" by the JobScheduler). This call
         // to stopService() won't prevent scheduled jobs to be processed. However, failing
         // to call stopService() would keep it alive indefinitely.
-        //stopService(Intent(this, TestJobService::class.java))
+        //stopService(Intent(this, BackgroundJobService::class.java))
         super.onStop()
     }*/
     companion object {

@@ -13,11 +13,7 @@ import android.os.IBinder
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.nikhilparanjape.radiocontrol.R
-import com.nikhilparanjape.radiocontrol.receivers.WifiReceiver
-import androidx.coordinatorlayout.widget.CoordinatorLayout.Behavior.setTag
-
-
-
+import com.nikhilparanjape.radiocontrol.receivers.ConnectivityReceiver
 
 
 /**
@@ -28,7 +24,7 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout.Behavior.setTag
  * @description This class allows RadioControl to keep itself awake in the background.
  */
 class PersistenceService : Service() {
-    private val myBroadcast = WifiReceiver()
+    private val myBroadcast = ConnectivityReceiver()
     var context: Context = this
     override fun onCreate() {
         super.onCreate()

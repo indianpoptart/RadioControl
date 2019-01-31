@@ -2,23 +2,11 @@ package com.nikhilparanjape.radiocontrol.receivers
 
 import android.content.Context
 import android.content.Intent
-import android.preference.PreferenceManager
-import android.text.format.DateFormat
 import android.util.Log
 import androidx.legacy.content.WakefulBroadcastReceiver
 import com.nikhilparanjape.radiocontrol.R
 import com.nikhilparanjape.radiocontrol.services.BackgroundAirplaneService
-import com.nikhilparanjape.radiocontrol.services.CellRadioService
-import com.nikhilparanjape.radiocontrol.utilities.AlarmSchedulers
-import com.nikhilparanjape.radiocontrol.utilities.RootAccess
-import com.nikhilparanjape.radiocontrol.utilities.Utilities
-import com.topjohnwu.superuser.Shell
-import org.jetbrains.anko.doAsync
-import java.io.File
-import java.io.IOException
-import java.net.InetAddress
-import java.util.*
-
+import android.net.ConnectivityManager
 
 @Suppress("DEPRECATION")
 /**
@@ -32,15 +20,29 @@ import java.util.*
  */
 
 //This file is kept for backwards compatibility
-class WifiReceiver : WakefulBroadcastReceiver() {
+class ConnectivityReceiver : WakefulBroadcastReceiver() {
+
+    private val mConnRecListener = ConnectivityReceiver.Companion
 
     override fun onReceive(context: Context, intent: Intent) {
         intent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND)
-        Log.d("RadioControl", "Get action-wfr: " + intent.action!!)
+        Log.d("RadioControl", "Get action-ConRec: " + intent.action!!)
 
         val i = Intent(context, BackgroundAirplaneService::class.java)
         context.startService(i)
 
 
+    }
+    fun isConnected(context: Context): Boolean {
+        val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val activeNetwork = cm.activeNetworkInfo
+        return activeNetwork != null && activeNetwork.isConnectedOrConnecting
+    }
+    interface ConnectivityReceiverListener
+
+    companion object {
+        fun onNetworkConnectionChanged(isConnected: Boolean) {
+
+        }
     }
 }

@@ -51,7 +51,7 @@
 
         <!-- Receive Wi-Fi connection state changes -->
         <receiver
-            android:name=".receivers.WifiReceiver"
+            android:name=".receivers.ConnectivityReceiver"
             android:enabled="true">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
@@ -101,7 +101,7 @@
             android:label="CellRadioService"
             android:process=":cellservice" />
         <service
-            android:name=".services.TestJobService"
+            android:name=".services.BackgroundJobService"
             android:icon="@drawable/ic_baseline_query_builder_24px"
             android:label="JobService"
             android:permission="android.permission.BIND_JOB_SERVICE"

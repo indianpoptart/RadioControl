@@ -16,6 +16,7 @@ import android.net.NetworkInfo
 import android.preference.PreferenceManager
 import android.text.format.DateFormat
 import com.nikhilparanjape.radiocontrol.R
+import com.nikhilparanjape.radiocontrol.receivers.ConnectivityReceiver
 import com.nikhilparanjape.radiocontrol.utilities.AlarmSchedulers
 import com.topjohnwu.superuser.Shell
 import org.jetbrains.anko.doAsync
@@ -33,10 +34,12 @@ import java.util.HashSet
  *
  * @author Nikhil Paranjape
  */
-class TestJobService : JobService() {
+class BackgroundJobService : JobService(), ConnectivityReceiver.ConnectivityReceiverListener  {
 
     internal var util = Utilities() //Network and other related utilities
     private var alarmUtil = AlarmSchedulers()
+
+    private var connReceiver = ConnectivityReceiver
 
     override fun onCreate(){
         super.onCreate()
@@ -65,8 +68,8 @@ class TestJobService : JobService() {
         }
 
         val activeNetwork = connectivityManager.activeNetworkInfo
+        Log.d("RadioControl", "Active: $activeNetwork")
         if (activeNetwork == null) {
-        } else {
             val context = applicationContext
             val sp = context.getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE)
             val prefs = PreferenceManager.getDefaultSharedPreferences(context)
@@ -179,6 +182,8 @@ class TestJobService : JobService() {
                 }
 
             }
+        } else {
+
         }
         return true
     }

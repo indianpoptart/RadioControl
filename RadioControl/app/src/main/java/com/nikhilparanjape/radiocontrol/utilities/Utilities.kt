@@ -21,7 +21,7 @@ import android.telephony.TelephonyManager
 import android.text.format.DateFormat
 import android.util.Log
 import com.nikhilparanjape.radiocontrol.R
-import com.nikhilparanjape.radiocontrol.services.TestJobService
+import com.nikhilparanjape.radiocontrol.services.BackgroundJobService
 import java.io.File
 import java.io.IOException
 
@@ -123,7 +123,7 @@ class Utilities {
 
         // Schedule the start of the service every 10 - 30 seconds
         fun scheduleJob(context: Context) {
-            val serviceComponent = ComponentName(context, TestJobService::class.java)
+            val serviceComponent = ComponentName(context, BackgroundJobService::class.java)
             val builder = JobInfo.Builder(0, serviceComponent)
             val preferences = PreferenceManager.getDefaultSharedPreferences(context)
             val intervalTimeString = preferences.getString("interval_prefs", "10")
