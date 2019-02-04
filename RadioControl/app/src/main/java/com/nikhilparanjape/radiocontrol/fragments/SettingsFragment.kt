@@ -225,9 +225,12 @@ class SettingsFragment : PreferenceFragment(), TimePickerDialog.OnTimeSetListene
                     val intent = Intent()
                     val packageName = c.packageName
                     val pm = c.getSystemService(Context.POWER_SERVICE) as PowerManager
-                    if (pm.isIgnoringBatteryOptimizations(packageName))
-                        intent.action = Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS
-                    else {
+                    if (pm.isIgnoringBatteryOptimizations(packageName)) {
+                        Log.i("RadioControl", "ignoring")
+                        intent.action = Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
+                        intent.data = Uri.parse("package:$packageName")
+                        c.startActivity(intent)
+                    } else {
                         intent.action = Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
                         intent.data = Uri.parse("package:$packageName")
                         c.startActivity(intent)

@@ -126,13 +126,15 @@ class Utilities {
             val serviceComponent = ComponentName(context, BackgroundJobService::class.java)
             val builder = JobInfo.Builder(0, serviceComponent)
             val preferences = PreferenceManager.getDefaultSharedPreferences(context)
-            val intervalTimeString = preferences.getString("interval_prefs", "10")
-            val intervalTime = Integer.parseInt(intervalTimeString)
+            val intervalTime = preferences.getString("interval_prefs", "10").toInt()
+            //val intervalTime = Integer.parseInt(intervalTimeString)
 
             builder.setMinimumLatency((intervalTime * 1000).toLong()) // wait at least
             builder.setOverrideDeadline((intervalTime * 1000).toLong()) // maximum delay
+            builder.setPersisted(true) // Persist at boot
             //builder.setRequiredNetworkType(JobInfo.NETWORK_TYPE_UNMETERED); // require unmetered network
             //builder.setRequiresDeviceIdle(true); // device should be idle
+
             //builder.setRequiresCharging(false); // we don't care if the device is charging or not
             var jobScheduler: JobScheduler? = null
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {

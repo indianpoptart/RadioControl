@@ -50,13 +50,13 @@ class BackgroundJobService : JobService(), ConnectivityReceiver.ConnectivityRece
     override fun onStartJob(params: JobParameters): Boolean {
         val service = Intent(applicationContext, BackgroundAirplaneService::class.java)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            Log.d("RadioControl","Trying background service")
+            Log.d("RadioControl-Job","Trying background service")
             applicationContext.startForegroundService(service)
         } else {
             applicationContext.startService(service)
         }
 
-        Utilities.scheduleJob(applicationContext) // reschedule the job
+        //Utilities.scheduleJob(applicationContext) // reschedule the job
 
         val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -68,123 +68,123 @@ class BackgroundJobService : JobService(), ConnectivityReceiver.ConnectivityRece
         }
 
         val activeNetwork = connectivityManager.activeNetworkInfo
-        Log.d("RadioControl", "Active: $activeNetwork")
-        if (activeNetwork == null) {
-            val context = applicationContext
-            val sp = context.getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE)
-            val prefs = PreferenceManager.getDefaultSharedPreferences(context)
-            val disabledPref = context.getSharedPreferences("disabled-networks", Context.MODE_PRIVATE)
+        Log.d("RadioControl-Job", "Active: $activeNetwork")
 
-            val h = HashSet(listOf("")) //Set default set for SSID check
-            val selections = prefs.getStringSet("ssid", h) //Gets stringset, if empty sets default
-            val networkAlert = prefs.getBoolean("isNetworkAlive", false)
-            prefs.getBoolean("isBatteryOn", true)
+        val context = applicationContext
+        val sp = context.getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE)
+        val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+        val disabledPref = context.getSharedPreferences("disabled-networks", Context.MODE_PRIVATE)
 
-            //Log.i("RadioControl","Battery Optimized");
-            //Check if user wants the app on
-            if (sp.getInt("isActive", 0) == 0) {
-                Log.d("RadioControl", "RadioControl has been disabled-bas")
-                if (networkAlert) {
-                    pingTask(context)
-                }
-                //Adds wifi signal lost log for nonrooters
-                if (!Utilities.isConnectedWifi(context)) {
-                    Log.d("RadioControl", "WiFi signal LOST")
-                    writeLog("WiFi Signal lost", context)
-                }
+        val h = HashSet(listOf("")) //Set default set for SSID check
+        val selections = prefs.getStringSet("ssid", h) //Gets stringset, if empty sets default
+        val networkAlert = prefs.getBoolean("isNetworkAlive", false)
+        prefs.getBoolean("isBatteryOn", true)
+
+        //Log.i("RadioControl-Job,"Battery Optimized");
+        //Check if user wants the app on
+        if (sp.getInt("isActive", 0) == 0) {
+            Log.d("RadioControl-Job", "RadioControl has been disabled-job")
+            if (networkAlert) {
+                pingTask(context)
             }
-            if (sp.getInt("isActive", 0) == 1) {
-                //Check if we just lost WiFi signal
-                if (!Utilities.isConnectedWifi(context)) {
-                    Log.d("RadioControl", "WiFi signal LOST")
-                    writeLog("WiFi Signal lost", context)
-                    if (Utilities.isAirplaneMode(context) || !Utilities.isConnectedMobile(context)) {
-                        //Checks that user is not in call
-                        if (!util.isCallActive(context)) {
+            //Adds wifi signal lost log for nonrooters
+            if (!Utilities.isConnectedWifi(context)) {
+                Log.d("RadioControl-Job", "WiFi signal LOST")
+                writeLog("WiFi Signal lost", context)
+            }
+        }
+        if (sp.getInt("isActive", 0) == 1) {
+            //Check if we just lost WiFi signal
+            if (!Utilities.isConnectedWifi(context) && activeNetwork == null) {
+                Log.d("RadioControl-Job", "WiFi signal LOST")
+                writeLog("WiFi Signal lost", context)
+                if (Utilities.isAirplaneMode(context) || !Utilities.isConnectedMobile(context)) {
+                    Log.d("RadioControl-Job", "1")
+                    //Checks that user is not in call
+                    if (!util.isCallActive(context)) {
+                        //Runs the alternate root command
+                        if (prefs.getBoolean("altRootCommand", true)) {
+                            if (Utilities.getCellStatus(context) == 1) {
+                                val cellIntent = Intent(context, CellRadioService::class.java)
+                                context.startService(cellIntent)
+                                Log.d("RadioControl-Job", "Cell Radio has been turned on")
+                                writeLog("Cell radio has been turned off", context)
+                            }
+                        } else {
+                            if (prefs.getBoolean("altBTCommand", false)) {
+                                val output = Shell.su("settings put global airplane_mode_on 0", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state false").exec().out
+                                Utilities.writeLog("root accessed: $output", context)
+                                //RootAccess.runCommands(airOffCmd3)
+                                Log.d("RadioControl-Job", "Airplane mode has been turned off(with bt cmd)")
+                                writeLog("Airplane mode has been turned off", context)
+                            } else {
+                                val output = Shell.su("settings put global airplane_mode_on 0", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state false", "settings put global airplane_mode_radios  \"cell,bluetooth,nfc,wimax\"", "content update --uri content://settings/global --bind value:s:'cell,bluetooth,nfc,wimax' --where \"name='airplane_mode_radios'\"").exec().out
+                                Utilities.writeLog("root accessed: $output", context)
+                                //RootAccess.runCommands(airOffCmd2)
+                                Log.d("RadioControl-Job", "Airplane mode has been turned off")
+                                writeLog("Airplane mode has been turned off", context)
+                            }
+
+                        }
+                    } else if (util.isCallActive(context)) {
+                        while (util.isCallActive(context)) {
+                            waitFor(1000)//Wait for call to end
+                            Log.d("RadioControl-Job", "waiting for call to end")
+                        }
+                        //Utilities.scheduleJob(context)
+                    }//Checks that user is currently in call and pauses execution till the call ends
+                } else {
+                    Log.d("RadioControl-Job", "2")
+                }
+            } else if (Utilities.isConnectedWifi(context) && !Utilities.isAirplaneMode(context)) {
+                //boolean isWiFi = activeNetwork.getType() == ConnectivityManager.TYPE_WIFI; //Boolean to check for an active WiFi connection
+                //Check the list of disabled networks
+                if (!disabledPref.contains(Utilities.getCurrentSsid(context))) {
+                    Log.d("RadioControl-Job", "The current SSID was not found in the disabled list")
+                    //Checks that user is not in call
+                    if (!util.isCallActive(context)) {
+                        //Checks if the user doesn't want network alerts
+                        if (!networkAlert) {
                             //Runs the alternate root command
-                            if (prefs.getBoolean("altRootCommand", true)) {
-                                if (Utilities.getCellStatus(context) == 1) {
+                            if (prefs.getBoolean("altRootCommand", false)) {
+
+                                if (Utilities.getCellStatus(context) == 0) {
                                     val cellIntent = Intent(context, CellRadioService::class.java)
                                     context.startService(cellIntent)
-                                    Log.d("RadioControl", "Cell Radio has been turned on")
+                                    Log.d("RadioControl-Job", "Cell Radio has been turned off")
                                     writeLog("Cell radio has been turned off", context)
-                                }
-                            } else {
-                                if (prefs.getBoolean("altBTCommand", false)) {
-                                    val output = Shell.su("settings put global airplane_mode_on 0", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state false").exec().out
-                                    Utilities.writeLog("root accessed: $output", context)
-                                    //RootAccess.runCommands(airOffCmd3)
-                                    Log.d("RadioControl", "Airplane mode has been turned off(with bt cmd)")
-                                    writeLog("Airplane mode has been turned off", context)
-                                } else {
-                                    val output = Shell.su("settings put global airplane_mode_on 0", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state false", "settings put global airplane_mode_radios  \"cell,bluetooth,nfc,wimax\"", "content update --uri content://settings/global --bind value:s:'cell,bluetooth,nfc,wimax' --where \"name='airplane_mode_radios'\"").exec().out
-                                    Utilities.writeLog("root accessed: $output", context)
-                                    //RootAccess.runCommands(airOffCmd2)
-                                    Log.d("RadioControl", "Airplane mode has been turned off")
-                                    writeLog("Airplane mode has been turned off", context)
-                                }
-
-                            }
-                        } else if (util.isCallActive(context)) {
-                            while (util.isCallActive(context)) {
-                                waitFor(1000)//Wait for call to end
-                                Log.d("RadioControl", "waiting for call to end")
-                            }
-                            //Utilities.scheduleJob(context)
-                        }//Checks that user is currently in call and pauses execution till the call ends
-                    }
-                }
-
-                //If network is connected and airplane mode is off or Cell is on
-                if (Utilities.isConnectedWifi(context) && !Utilities.isAirplaneMode(context)) {
-                    //boolean isWiFi = activeNetwork.getType() == ConnectivityManager.TYPE_WIFI; //Boolean to check for an active WiFi connection
-                    //Check the list of disabled networks
-                    if (!disabledPref.contains(Utilities.getCurrentSsid(context))) {
-                        Log.d("RadioControl", "The current SSID was not found in the disabled list")
-                        //Checks that user is not in call
-                        if (!util.isCallActive(context)) {
-                            //Checks if the user doesn't want network alerts
-                            if (!networkAlert) {
-                                //Runs the alternate root command
-                                if (prefs.getBoolean("altRootCommand", false)) {
-
-                                    if (Utilities.getCellStatus(context) == 0) {
-                                        val cellIntent = Intent(context, CellRadioService::class.java)
-                                        context.startService(cellIntent)
-                                        Log.d("RadioControl", "Cell Radio has been turned off")
-                                        writeLog("Cell radio has been turned off", context)
-                                    } else if (Utilities.getCellStatus(context) == 1) {
-                                        Log.d("RadioControl", "Cell Radio is already off")
-                                    }
-
-                                } else {
-                                    val output = Shell.su("settings put global airplane_mode_radios  \"cell\"", "content update --uri content://settings/global --bind value:s:'cell' --where \"name='airplane_mode_radios'\"", "settings put global airplane_mode_on 1", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state true").exec().out
-                                    Utilities.writeLog("root accessed: $output", context)
-                                    //RootAccess.runCommands(airCmd)
-                                    Log.d("RadioControl", "Airplane mode has been turned on")
-                                    writeLog("Airplane mode has been turned on", context)
+                                } else if (Utilities.getCellStatus(context) == 1) {
+                                    Log.d("RadioControl-Job", "Cell Radio is already off")
                                 }
 
                             } else {
-                                pingTask(context)
-                            }//The user does want network alert notifications
-
-                        } else if (util.isCallActive(context)) {
-                            while (util.isCallActive(context)) {
-                                waitFor(1000)//Wait for call to end
-                                Log.d("RadioControl", "waiting for call to end")
+                                val output = Shell.su("settings put global airplane_mode_radios  \"cell\"", "content update --uri content://settings/global --bind value:s:'cell' --where \"name='airplane_mode_radios'\"", "settings put global airplane_mode_on 1", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state true").exec().out
+                                Utilities.writeLog("root accessed: $output", context)
+                                //RootAccess.runCommands(airCmd)
+                                Log.d("RadioControl-Job", "Airplane mode has been turned on")
+                                writeLog("Airplane mode has been turned on", context)
                             }
-                        }//Checks that user is currently in call and pauses execution till the call ends
-                    } else if (selections!!.contains(Utilities.getCurrentSsid(context))) {
-                        Log.d("RadioControl", "The current SSID was blocked from list $selections")
-                        writeLog("The current SSID was blocked from list $selections", context)
-                    }//Pauses because WiFi network is in the list of disabled SSIDs
-                }
 
+                        } else {
+                            pingTask(context)
+                        }//The user does want network alert notifications
+
+                    } else if (util.isCallActive(context)) {
+                        while (util.isCallActive(context)) {
+                            waitFor(1000)//Wait for call to end
+                            Log.d("RadioControl-Job", "waiting for call to end")
+                        }
+                    }//Checks that user is currently in call and pauses execution till the call ends
+                } else if (selections!!.contains(Utilities.getCurrentSsid(context))) {
+                    Log.d("RadioControl-Job", "The current SSID was blocked from list $selections")
+                    writeLog("The current SSID was blocked from list $selections", context)
+                }//Pauses because WiFi network is in the list of disabled SSIDs
+            } else if (activeNetwork.detailedState.equals("z")){
+                Log.d("Rad","Test: $activeNetwork.detailedState" )
             }
-        } else {
 
         }
+
         return true
     }
 
@@ -220,7 +220,7 @@ class BackgroundJobService : JobService(), ConnectivityReceiver.ConnectivityRece
                 fos.write(string.toByteArray())
                 fos.close()
             } catch (e: IOException) {
-                Log.d("RadioControl", "There was an error saving the log: $e")
+                Log.d("RadioControl-Job", "There was an error saving the log: $e")
             }
 
         }
@@ -235,7 +235,7 @@ class BackgroundJobService : JobService(), ConnectivityReceiver.ConnectivityRece
                 }
                 val address = InetAddress.getByName("1.1.1.1")
                 val reachable = address.isReachable(4000)
-                Log.d("RadioControl", "Reachable?: $reachable")
+                Log.d("RadioControl-Job", "Reachable?: $reachable")
 
                 val sp = context.getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE)
                 val prefs = PreferenceManager.getDefaultSharedPreferences(context)
@@ -262,13 +262,13 @@ class BackgroundJobService : JobService(), ConnectivityReceiver.ConnectivityRece
                             val cellIntent = Intent(context, CellRadioService::class.java)
                             context.startService(cellIntent)
                             alarmUtil.scheduleRootAlarm(context)
-                            Log.d("RadioControl", "Cell Radio has been turned off")
+                            Log.d("RadioControl-Job", "Cell Radio has been turned off")
                             writeLog("Cell radio has been turned off", context)
                         } else if (!prefs.getBoolean("altRootCommand", false)) {
                             val output = Shell.su("settings put global airplane_mode_radios  \"cell\"", "content update --uri content://settings/global --bind value:s:'cell' --where \"name='airplane_mode_radios'\"", "settings put global airplane_mode_on 1", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state true").exec().out
                             Utilities.writeLog("root accessed: $output", context)
                             //RootAccess.runCommands(airCmd)
-                            Log.d("RadioControl", "Airplane mode has been turned on")
+                            Log.d("RadioControl-Job", "Airplane mode has been turned on")
                             writeLog("Airplane mode has been turned on", context)
                         }
                     }

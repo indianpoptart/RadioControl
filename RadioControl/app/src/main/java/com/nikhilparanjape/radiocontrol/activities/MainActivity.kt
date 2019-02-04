@@ -366,7 +366,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
                 .build()
 
         val jobScheduler = getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
-        jobScheduler.schedule(myJob);
+        jobScheduler.schedule(myJob)
     }
 
     //Start a new activity for sending a feedback email

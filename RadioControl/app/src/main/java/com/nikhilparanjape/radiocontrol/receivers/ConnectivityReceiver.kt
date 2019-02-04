@@ -7,6 +7,8 @@ import androidx.legacy.content.WakefulBroadcastReceiver
 import com.nikhilparanjape.radiocontrol.R
 import com.nikhilparanjape.radiocontrol.services.BackgroundAirplaneService
 import android.net.ConnectivityManager
+import com.nikhilparanjape.radiocontrol.services.BackgroundJobService
+import com.nikhilparanjape.radiocontrol.utilities.Utilities
 
 @Suppress("DEPRECATION")
 /**
@@ -19,7 +21,7 @@ import android.net.ConnectivityManager
  * @author Nikhil Paranjape
  */
 
-//This file is kept for backwards compatibility
+//This file is kept as a fallback
 class ConnectivityReceiver : WakefulBroadcastReceiver() {
 
     private val mConnRecListener = ConnectivityReceiver.Companion
@@ -28,7 +30,8 @@ class ConnectivityReceiver : WakefulBroadcastReceiver() {
         intent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND)
         Log.d("RadioControl", "Get action-ConRec: " + intent.action!!)
 
-        val i = Intent(context, BackgroundAirplaneService::class.java)
+        val i = Intent(context, BackgroundJobService::class.java)
+        Utilities.scheduleJob(context)
         context.startService(i)
 
 

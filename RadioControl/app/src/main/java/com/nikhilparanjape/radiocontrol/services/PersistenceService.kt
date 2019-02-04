@@ -14,6 +14,7 @@ import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.nikhilparanjape.radiocontrol.R
 import com.nikhilparanjape.radiocontrol.receivers.ConnectivityReceiver
+import com.nikhilparanjape.radiocontrol.utilities.Utilities
 
 
 /**
@@ -37,11 +38,7 @@ class PersistenceService : Service() {
         filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            //val dispatcher = FirebaseJobDispatcher(GooglePlayDriver(context))
-           /* val job = dispatcher.newJobBuilder().setService(Updater::class.java)
-                    .setTag("connectivity-job").setLifetime(Lifetime.FOREVER).setRetryStrategy(RetryStrategy.DEFAULT_LINEAR)
-                    .setRecurring(true).setReplaceCurrent(true).setTrigger(Trigger.executionWindow(0, 0)).build()
-            dispatcher.mustSchedule(job)*/
+            Utilities.scheduleJob(context)
         }
 
         try {
@@ -90,18 +87,6 @@ class PersistenceService : Service() {
             // or other notification behaviors after this
             val notificationManager = getSystemService(NotificationManager::class.java)
             notificationManager.createNotificationChannel(channel)
-        }
-    }
-    fun createNotificationChannelInput(name: String,description: String,  importance: Int, channelName: String) {
-        // Create the NotificationChannel, but only on API 26+ because
-        // the NotificationChannel class is new and not in the support library
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(channelName, name, importance)
-            channel.description = description
-            // Register the channel with the system; you can't change the importance
-            // or other notification behaviors after this
-            val notificationManager = getSystemService(NotificationManager::class.java)
-            notificationManager!!.createNotificationChannel(channel)
         }
     }
 

@@ -6,13 +6,21 @@ package com.nikhilparanjape.radiocontrol.listeners
 
 import android.content.Context
 import android.content.Intent
+import android.net.ConnectivityManager
+import android.net.NetworkRequest
+import android.os.Build
 import android.preference.PreferenceManager
 import android.telephony.PhoneStateListener
 import android.telephony.TelephonyManager
 import android.util.Log
+import androidx.core.content.ContextCompat.getSystemService
+import com.nikhilparanjape.radiocontrol.services.BackgroundJobService
 import com.nikhilparanjape.radiocontrol.services.CellRadioService
 import com.nikhilparanjape.radiocontrol.utilities.RootAccess
 import com.nikhilparanjape.radiocontrol.utilities.Utilities
+import com.nikhilparanjape.radiocontrol.utilities.Utilities.Companion.writeLog
+import com.topjohnwu.superuser.Shell
+import java.util.HashSet
 
 class CustomPhoneStateListener(//private static final String TAG = "PhoneStateChanged";
         private val context: Context //Context to make Toast if required
@@ -49,7 +57,12 @@ class CustomPhoneStateListener(//private static final String TAG = "PhoneStateCh
                     isIncoming -> {}
                     else -> {
                         Log.d("RadioControl", "DoThing")
-                        cellChange()
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                            Utilities.scheduleJob(context)
+                        } else {
+                            cellChange()
+                        }
+
                     }
                 }
 
@@ -67,6 +80,14 @@ class CustomPhoneStateListener(//private static final String TAG = "PhoneStateCh
         val sp = context.getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE)
         val prefs = PreferenceManager.getDefaultSharedPreferences(context)
         //Utilities util = new Utilities();
+        //Log.d("RadioControl", "Active: $activeNetwork")
+
+        val disabledPref = context.getSharedPreferences("disabled-networks", Context.MODE_PRIVATE)
+
+        val h = HashSet(listOf("")) //Set default set for SSID check
+        val selections = prefs.getStringSet("ssid", h) //Gets stringset, if empty sets default
+        val networkAlert = prefs.getBoolean("isNetworkAlive", false)
+        prefs.getBoolean("isBatteryOn", true)
 
         //Check if user wants the app on
         if (sp.getInt("isActive", 0) == 1 && prefs.getBoolean("isPhoneStateCheck", true)) {
@@ -109,6 +130,75 @@ class CustomPhoneStateListener(//private static final String TAG = "PhoneStateCh
                 }
 
             }
+        }
+        if (sp.getInt("isActive", 0) == 1) {
+            //Check if we just lost WiFi signal
+            if (!Utilities.isConnectedWifi(context)) {
+                Log.d("RadioControl", "WiFi signal LOST")
+                writeLog("WiFi Signal lost", context)
+                if (Utilities.isAirplaneMode(context) || !Utilities.isConnectedMobile(context)) {
+                    //Runs the alternate root command
+                    if (prefs.getBoolean("altRootCommand", true)) {
+                        if (Utilities.getCellStatus(context) == 1) {
+                            val cellIntent = Intent(context, CellRadioService::class.java)
+                            context.startService(cellIntent)
+                            Log.d("RadioControl", "Cell Radio has been turned on")
+                            writeLog("Cell radio has been turned off", context)
+                        }
+                    } else {
+                        if (prefs.getBoolean("altBTCommand", false)) {
+                            val output = Shell.su("settings put global airplane_mode_on 0", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state false").exec().out
+                            Utilities.writeLog("root accessed: $output", context)
+                            //RootAccess.runCommands(airOffCmd3)
+                            Log.d("RadioControl", "Airplane mode has been turned off(with bt cmd)")
+                            writeLog("Airplane mode has been turned off", context)
+                        } else {
+                            val output = Shell.su("settings put global airplane_mode_on 0", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state false", "settings put global airplane_mode_radios  \"cell,bluetooth,nfc,wimax\"", "content update --uri content://settings/global --bind value:s:'cell,bluetooth,nfc,wimax' --where \"name='airplane_mode_radios'\"").exec().out
+                            Utilities.writeLog("root accessed: $output", context)
+                            //RootAccess.runCommands(airOffCmd2)
+                            Log.d("RadioControl", "Airplane mode has been turned off")
+                            writeLog("Airplane mode has been turned off", context)
+                        }
+
+                    }
+                }
+            }
+
+            //If network is connected and airplane mode is off or Cell is on
+            if (Utilities.isConnectedWifi(context) && !Utilities.isAirplaneMode(context)) {
+                //boolean isWiFi = activeNetwork.getType() == ConnectivityManager.TYPE_WIFI; //Boolean to check for an active WiFi connection
+                //Check the list of disabled networks
+                if (!disabledPref.contains(Utilities.getCurrentSsid(context))) {
+                    Log.d("RadioControl", "The current SSID was not found in the disabled list")
+
+                    //Checks if the user doesn't want network alerts
+                    if (!networkAlert) {
+                        //Runs the alternate root command
+                        if (prefs.getBoolean("altRootCommand", false)) {
+
+                            if (Utilities.getCellStatus(context) == 0) {
+                                val cellIntent = Intent(context, CellRadioService::class.java)
+                                context.startService(cellIntent)
+                                Log.d("RadioControl", "Cell Radio has been turned off")
+                            } else if (Utilities.getCellStatus(context) == 1) {
+                                Log.d("RadioControl", "Cell Radio is already off")
+                            }
+
+                        } else {
+                            val output = Shell.su("settings put global airplane_mode_radios  \"cell\"", "content update --uri content://settings/global --bind value:s:'cell' --where \"name='airplane_mode_radios'\"", "settings put global airplane_mode_on 1", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state true").exec().out
+                            Utilities.writeLog("root accessed: $output", context)
+                            //RootAccess.runCommands(airCmd)
+                            Log.d("RadioControl", "Airplane mode has been turned on")
+                            writeLog("Airplane mode has been turned on", context)
+                        }
+
+                    }
+                } else if (selections!!.contains(Utilities.getCurrentSsid(context))) {
+                    Log.d("RadioControl", "The current SSID was blocked from list $selections")
+                    writeLog("The current SSID was blocked from list $selections", context)
+                }//Pauses because WiFi network is in the list of disabled SSIDs
+            }
+
         }
     }
 

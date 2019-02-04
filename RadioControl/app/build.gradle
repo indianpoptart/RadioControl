@@ -62,17 +62,18 @@ dependencies {
     // noinspection GradleCompatible
 
     //AndroidX
-    implementation 'androidx.annotation:annotation:1.0.1'
+    implementation 'androidx.annotation:annotation:1.1.0-alpha01'
     implementation 'androidx.appcompat:appcompat:1.1.0-alpha01'
     implementation 'androidx.browser:browser:1.0.0'
     implementation 'androidx.cardview:cardview:1.0.0'
+    //noinspection GradleDependency
     implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha2' //DO NOT UPDATE
-    implementation group: 'androidx.core', name: 'core', version: '1.1.0-alpha03'
+    implementation group: 'androidx.core', name: 'core', version: '1.1.0-alpha04'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.recyclerview:recyclerview:1.1.0-alpha01'
+    implementation 'androidx.recyclerview:recyclerview:1.1.0-alpha02'
 
     //Google
-    implementation 'com.google.android.material:material:1.1.0-alpha02'
+    implementation 'com.google.android.material:material:1.1.0-alpha03'
     implementation('com.crashlytics.sdk.android:crashlytics:2.9.8@aar') {
         transitive = true
         ""
@@ -83,8 +84,8 @@ dependencies {
     implementation "com.github.StephenVinouze:KinApp:1.0.2"
     implementation 'com.github.topjohnwu:libsu:2.1.2'
     implementation 'org.jetbrains.anko:anko-commons:0.10.8'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.1.0'
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.11"
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.1.1'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.20'
     implementation 'com.novoda:simple-chrome-custom-tabs:0.1.6'
     implementation 'me.zhanghai.android.customtabshelper:library:1.0.6'
 
@@ -101,7 +102,7 @@ dependencies {
     implementation 'com.github.gabrielemariotti.changeloglib:changelog:2.1.0'
     implementation 'com.github.jorgecastilloprz:fabprogresscircle:1.01@aar'
     implementation 'com.gordonwong:material-sheet-fab:1.2.1'
-    implementation 'com.mikepenz:aboutlibraries:6.2.0'
+    implementation 'com.mikepenz:aboutlibraries:6.2.1'
     implementation 'com.mikepenz:google-material-typeface:3.0.1.3.original@aar'
     implementation 'com.mikepenz:iconics-core:3.2.0-rc1@aar'
     implementation('com.mikepenz:materialdrawer:7.0.0-alpha2@aar') {

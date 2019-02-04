@@ -98,8 +98,7 @@
             android:name=".services.CellRadioService"
             android:enabled="true"
             android:icon="@drawable/ic_network_cell"
-            android:label="CellRadioService"
-            android:process=":cellservice" />
+            android:label="CellRadioService"/>
         <service
             android:name=".services.BackgroundJobService"
             android:icon="@drawable/ic_baseline_query_builder_24px"
