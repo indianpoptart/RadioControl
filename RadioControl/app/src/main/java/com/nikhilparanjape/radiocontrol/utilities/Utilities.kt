@@ -20,6 +20,7 @@ import android.provider.Settings
 import android.telephony.TelephonyManager
 import android.text.format.DateFormat
 import android.util.Log
+import androidx.core.content.ContextCompat.getSystemService
 import com.nikhilparanjape.radiocontrol.R
 import com.nikhilparanjape.radiocontrol.services.BackgroundJobService
 import java.io.File
@@ -124,24 +125,22 @@ class Utilities {
         // Schedule the start of the service every 10 - 30 seconds
         fun scheduleJob(context: Context) {
             val serviceComponent = ComponentName(context, BackgroundJobService::class.java)
-            val builder = JobInfo.Builder(0, serviceComponent)
+            val builder = JobInfo.Builder(1, serviceComponent)
             val preferences = PreferenceManager.getDefaultSharedPreferences(context)
             val intervalTime = preferences.getString("interval_prefs", "10").toInt()
             //val intervalTime = Integer.parseInt(intervalTimeString)
+            //val mJobScheduler = context as JobScheduler
 
             builder.setMinimumLatency((intervalTime * 1000).toLong()) // wait at least
             builder.setOverrideDeadline((intervalTime * 1000).toLong()) // maximum delay
             builder.setPersisted(true) // Persist at boot
-            //builder.setRequiredNetworkType(JobInfo.NETWORK_TYPE_UNMETERED); // require unmetered network
-            //builder.setRequiresDeviceIdle(true); // device should be idle
+            builder.setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY); // require any network
 
-            //builder.setRequiresCharging(false); // we don't care if the device is charging or not
-            var jobScheduler: JobScheduler? = null
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-                jobScheduler = context.getSystemService(JobScheduler::class.java)
-            }
-            jobScheduler!!.schedule(builder.build())
+            //mJobScheduler.schedule(builder.build())
+
+            //(getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler).schedule(builder.build())
         }
+
 
         fun frequency(c: Context): Int {
             val wifiManager = c.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager

@@ -60,13 +60,6 @@
             </intent-filter>
         </receiver>
 
-        <service
-            android:name=".services.BackgroundAirplaneService"
-            android:enabled="true"
-            android:icon="@drawable/ic_baseline_airplanemode_active_24px"
-            android:label="AirplaneService"
-            android:process=":background"/>
-
         <activity
             android:name=".activities.SettingsActivity"
             android:label="@string/title_activity_settings" />

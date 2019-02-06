@@ -37,7 +37,7 @@ class OnBootIntentService : JobIntentService() {
 
         //Begin background service
         if (airplaneService) {
-            val i = Intent(applicationContext, BackgroundAirplaneService::class.java)
+            val i = Intent(applicationContext, BackgroundJobService::class.java)
             applicationContext.startService(i)
             Log.d("RadioControl", "background Service launched")
         }

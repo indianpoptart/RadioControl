@@ -14,7 +14,6 @@ import android.os.IBinder
 class DoNotDisturbService : Service() {
 
     override fun onBind(intent: Intent): IBinder? {
-        // TODO: Return the communication channel to the service.
-        throw UnsupportedOperationException("Not yet implemented")
+        return null
     }
 }

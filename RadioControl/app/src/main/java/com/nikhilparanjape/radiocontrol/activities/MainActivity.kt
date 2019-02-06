@@ -53,7 +53,6 @@ import com.nikhilparanjape.radiocontrol.BuildConfig
 import com.nikhilparanjape.radiocontrol.R
 import com.nikhilparanjape.radiocontrol.receivers.ActionReceiver
 import com.nikhilparanjape.radiocontrol.receivers.ConnectivityReceiver
-import com.nikhilparanjape.radiocontrol.services.BackgroundAirplaneService
 import com.nikhilparanjape.radiocontrol.services.CellRadioService
 import com.nikhilparanjape.radiocontrol.services.PersistenceService
 import com.nikhilparanjape.radiocontrol.services.BackgroundJobService
@@ -177,12 +176,6 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
                 e.apply()
             }
 
-            //Begin background service
-            if (intervalTime != "0" && airplaneService) {
-                val i = Intent(applicationContext, BackgroundAirplaneService::class.java)
-                applicationContext.startService(i)
-                Log.d("RadioControl", "backg Service launched")
-            }
             if (getPrefs.getBoolean(getString(R.string.preference_work_mode), true)) {
                 val i = Intent(applicationContext, PersistenceService::class.java)
                 if (Build.VERSION.SDK_INT >= 26) {
@@ -280,7 +273,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
             pingCheck()
         }
         serviceTest.setOnClickListener {
-            val i = Intent(applicationContext, BackgroundAirplaneService::class.java)
+            val i = Intent(applicationContext, BackgroundJobService::class.java)
             applicationContext.startService(i)
             alarmUtil.scheduleAlarm(applicationContext)
             Log.d("RadioControl", "Service started")
@@ -302,7 +295,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
             alarmUtil.scheduleRootAlarm(applicationContext)
         }
         toggle.setOnCheckedChangeListener { _, isChecked ->
-            val bg = Intent(applicationContext, BackgroundAirplaneService::class.java)
+            val bgj = Intent(applicationContext, BackgroundJobService::class.java)
             val pst = Intent(applicationContext, PersistenceService::class.java)
             val crs = Intent(applicationContext, CellRadioService::class.java)
 
@@ -323,7 +316,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
                 //UI Handling
                 statusText.setText(R.string.showEnabled)
                 statusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_activated))
-                applicationContext.startService(bg)
+                applicationContext.startService(bgj)
                 alarmUtil.scheduleAlarm(applicationContext)
                 Log.d("RadioControl", "Test2")
 
@@ -358,9 +351,9 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
     }
 
     private fun scheduleJob() {
-        val myJob = JobInfo.Builder(123, ComponentName(packageName, BackgroundJobService::class.java!!.getName()))
+        val myJob = JobInfo.Builder(123, ComponentName(packageName, BackgroundJobService::class.java.name))
                 .setMinimumLatency(1000)
-                .setOverrideDeadline(2000)
+                .setOverrideDeadline(1000)
                 .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
                 .setPersisted(true)
                 .build()

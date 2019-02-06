@@ -4,8 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import androidx.legacy.content.WakefulBroadcastReceiver
-import com.nikhilparanjape.radiocontrol.R
-import com.nikhilparanjape.radiocontrol.services.BackgroundAirplaneService
 import android.net.ConnectivityManager
 import com.nikhilparanjape.radiocontrol.services.BackgroundJobService
 import com.nikhilparanjape.radiocontrol.utilities.Utilities

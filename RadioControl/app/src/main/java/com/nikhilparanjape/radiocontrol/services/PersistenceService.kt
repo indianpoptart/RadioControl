@@ -64,7 +64,7 @@ class PersistenceService : Service() {
                     .setContentTitle("Persistence")
                     .setSmallIcon(R.drawable.ic_memory_24px)
                     .setContentText("This keeps RadioControl functioning in the background")
-                    .setPriority(NotificationCompat.PRIORITY_LOW)
+                    .setPriority(NotificationCompat.PRIORITY_MIN)
                     .setAutoCancel(true)
 
             val notification = builder.build()
@@ -80,7 +80,7 @@ class PersistenceService : Service() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val name = "Persistence"
             val description = getString(R.string.persistence_description)
-            val importance = NotificationManager.IMPORTANCE_LOW
+            val importance = NotificationManager.IMPORTANCE_NONE
             val channel = NotificationChannel("persistence", name, importance)
             channel.description = description
             // Register the channel with the system; you can't change the importance
@@ -99,7 +99,6 @@ class PersistenceService : Service() {
     override fun onDestroy() {
         unregisterReceiver(myBroadcast)
         super.onDestroy()
-
     }
 
 }

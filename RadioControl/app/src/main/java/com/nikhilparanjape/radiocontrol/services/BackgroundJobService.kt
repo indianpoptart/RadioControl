@@ -25,8 +25,6 @@ import java.io.IOException
 import java.net.InetAddress
 import java.util.HashSet
 
-
-
 /**
  * This service starts the BackgroundAirplaneService as a foreground service if on Android Oreo or higher.
  *
@@ -39,8 +37,6 @@ class BackgroundJobService : JobService(), ConnectivityReceiver.ConnectivityRece
     internal var util = Utilities() //Network and other related utilities
     private var alarmUtil = AlarmSchedulers()
 
-    private var connReceiver = ConnectivityReceiver
-
     override fun onCreate(){
         super.onCreate()
         Log.i(TAG, "JobScheduler created")
@@ -48,14 +44,6 @@ class BackgroundJobService : JobService(), ConnectivityReceiver.ConnectivityRece
 
 
     override fun onStartJob(params: JobParameters): Boolean {
-        val service = Intent(applicationContext, BackgroundAirplaneService::class.java)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            Log.d("RadioControl-Job","Trying background service")
-            applicationContext.startForegroundService(service)
-        } else {
-            applicationContext.startService(service)
-        }
-
         //Utilities.scheduleJob(applicationContext) // reschedule the job
 
         val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
@@ -105,10 +93,10 @@ class BackgroundJobService : JobService(), ConnectivityReceiver.ConnectivityRece
                         //Runs the alternate root command
                         if (prefs.getBoolean("altRootCommand", true)) {
                             if (Utilities.getCellStatus(context) == 1) {
-                                val cellIntent = Intent(context, CellRadioService::class.java)
-                                context.startService(cellIntent)
+                                val output = Shell.su("service call phone 27").exec().out
+                                Utilities.writeLog("root accessed: $output", applicationContext)
                                 Log.d("RadioControl-Job", "Cell Radio has been turned on")
-                                writeLog("Cell radio has been turned off", context)
+                                writeLog("Cell radio has been turned on", context)
                             }
                         } else {
                             if (prefs.getBoolean("altBTCommand", false)) {
@@ -149,8 +137,8 @@ class BackgroundJobService : JobService(), ConnectivityReceiver.ConnectivityRece
                             if (prefs.getBoolean("altRootCommand", false)) {
 
                                 if (Utilities.getCellStatus(context) == 0) {
-                                    val cellIntent = Intent(context, CellRadioService::class.java)
-                                    context.startService(cellIntent)
+                                    val output = Shell.su("service call phone 27").exec().out
+                                    Utilities.writeLog("root accessed: $output", applicationContext)
                                     Log.d("RadioControl-Job", "Cell Radio has been turned off")
                                     writeLog("Cell radio has been turned off", context)
                                 } else if (Utilities.getCellStatus(context) == 1) {
@@ -186,22 +174,6 @@ class BackgroundJobService : JobService(), ConnectivityReceiver.ConnectivityRece
         }
 
         return true
-    }
-
-    private fun handleConnectivityChange(networkInfo: NetworkInfo) {
-        // Calls handleConnectivityChange(boolean connected, int type)
-    }
-
-    private fun handleConnectivityChange(connected: Boolean, type: Int) {
-        // Calls handleConnectivityChange(boolean connected, ConnectionType connectionType)
-    }
-
-    private fun handleConnectivityChange(connected: Boolean, connectionType: ConnectionType) {
-        // Logic based on the new connection
-    }
-
-    private enum class ConnectionType {
-        MOBILE, WIFI, VPN, OTHER
     }
 
     private fun writeLog(data: String, c: Context) {
@@ -259,8 +231,8 @@ class BackgroundJobService : JobService(), ConnectivityReceiver.ConnectivityRece
                     } else {
                         //Runs the alternate root command
                         if (prefs.getBoolean("altRootCommand", false)) {
-                            val cellIntent = Intent(context, CellRadioService::class.java)
-                            context.startService(cellIntent)
+                            val output = Shell.su("service call phone 27").exec().out
+                            Utilities.writeLog("root accessed: $output", context)
                             alarmUtil.scheduleRootAlarm(context)
                             Log.d("RadioControl-Job", "Cell Radio has been turned off")
                             writeLog("Cell radio has been turned off", context)

@@ -98,9 +98,8 @@ class CustomPhoneStateListener(//private static final String TAG = "PhoneStateCh
                     //Runs the alternate root command
                     if (prefs.getBoolean("altRootCommand", false) && !Utilities.isAirplaneMode(context)) {
                         if (Utilities.getCellStatus(context) == 1) {
-                            val cellIntent = Intent(context, CellRadioService::class.java)
-                            //util.cancelAlarm(context);
-                            context.startService(cellIntent)
+                            val output = Shell.su("service call phone 27").exec().out
+                            Utilities.writeLog("root accessed: $output", context)
                             Log.d("RadioControl", "Cell Radio has been turned on")
                         }
                     } else {
@@ -117,9 +116,8 @@ class CustomPhoneStateListener(//private static final String TAG = "PhoneStateCh
                     //Disable cell radio
                     if (prefs.getBoolean("altRootCommand", false)) {
                         if (Utilities.getCellStatus(context) == 0) {
-                            val cellIntent = Intent(context, CellRadioService::class.java)
-                            //util.cancelAlarm(context);
-                            context.startService(cellIntent)
+                            val output = Shell.su("service call phone 27").exec().out
+                            Utilities.writeLog("root accessed: $output", context)
                             Log.d("RadioControl", "Cell Radio has been turned off")
                         }
                     } else {
@@ -140,8 +138,8 @@ class CustomPhoneStateListener(//private static final String TAG = "PhoneStateCh
                     //Runs the alternate root command
                     if (prefs.getBoolean("altRootCommand", true)) {
                         if (Utilities.getCellStatus(context) == 1) {
-                            val cellIntent = Intent(context, CellRadioService::class.java)
-                            context.startService(cellIntent)
+                            val output = Shell.su("service call phone 27").exec().out
+                            Utilities.writeLog("root accessed: $output", context)
                             Log.d("RadioControl", "Cell Radio has been turned on")
                             writeLog("Cell radio has been turned off", context)
                         }
@@ -177,8 +175,8 @@ class CustomPhoneStateListener(//private static final String TAG = "PhoneStateCh
                         if (prefs.getBoolean("altRootCommand", false)) {
 
                             if (Utilities.getCellStatus(context) == 0) {
-                                val cellIntent = Intent(context, CellRadioService::class.java)
-                                context.startService(cellIntent)
+                                val output = Shell.su("service call phone 27").exec().out
+                                Utilities.writeLog("root accessed: $output", context)
                                 Log.d("RadioControl", "Cell Radio has been turned off")
                             } else if (Utilities.getCellStatus(context) == 1) {
                                 Log.d("RadioControl", "Cell Radio is already off")
