@@ -38,7 +38,7 @@ class ConnectivityReceiver : WakefulBroadcastReceiver() {
         val componentName = ComponentName(context, BackgroundJobService::class.java)
         val jobInfo = JobInfo.Builder(12, componentName)
                 .setRequiresCharging(false)
-                .setOverrideDeadline(0)
+                .setOverrideDeadline(4000)
                 .build()
 
         val jobScheduler = context.getSystemService(JOB_SCHEDULER_SERVICE) as JobScheduler?

@@ -119,8 +119,9 @@ class BackgroundJobService : JobService(), ConnectivityReceiver.ConnectivityRece
                     Log.d("RadioControl-Job", "2")
                 }
                 //if (Utilities.isConnectedWifi(context) && !Utilities.isAirplaneMode(context) || Utilities.isConnectedMobile(context))
-            } else if (Utilities.isConnectedWifi(context) && !Utilities.isAirplaneMode(context) || Utilities.isConnectedMobile(context)){
+            } else if (Utilities.isConnectedWifi(context) && !Utilities.isAirplaneMode(context)){
                 //boolean isWiFi = activeNetwork.getType() == ConnectivityManager.TYPE_WIFI; //Boolean to check for an active WiFi connection
+                Log.d("RadioControl-Job", "WiFi signal got")
                 //Check the list of disabled networks
                 if (!disabledPref.contains(Utilities.getCurrentSsid(context))) {
                     Log.d("RadioControl-Job", "The current SSID was not found in the disabled list")
@@ -162,8 +163,13 @@ class BackgroundJobService : JobService(), ConnectivityReceiver.ConnectivityRece
                     Log.d("RadioControl-Job", "The current SSID was blocked from list $selections")
                     writeLog("The current SSID was blocked from list $selections", context)
                 }//Pauses because WiFi network is in the list of disabled SSIDs
+            } else{
+                if(activeNetwork.isConnected){
+                    Log.d("RadioControl-Job", "Yeah, we connected")
+                } else{
+                    Log.d("RadioControl-Job", "EGADS")
+                }
             }
-            //Log.d("Rad","Test: $activeNetwork.detailedState" )
 
         }
 
