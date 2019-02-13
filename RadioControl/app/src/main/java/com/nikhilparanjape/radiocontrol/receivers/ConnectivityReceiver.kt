@@ -31,8 +31,6 @@ import androidx.core.content.ContextCompat.getSystemService
 //This file is kept as a fallback
 class ConnectivityReceiver : WakefulBroadcastReceiver() {
 
-    private val mConnRecListener = ConnectivityReceiver.Companion
-
     override fun onReceive(context: Context, intent: Intent) {
         intent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND)
         Log.d("RadioControl", "Get action-ConRec: " + intent.action!!)
@@ -52,16 +50,5 @@ class ConnectivityReceiver : WakefulBroadcastReceiver() {
         }
 
     }
-    fun isConnected(context: Context): Boolean {
-        val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val activeNetwork = cm.activeNetworkInfo
-        return activeNetwork != null && activeNetwork.isConnectedOrConnecting
-    }
     interface ConnectivityReceiverListener
-
-    companion object {
-        fun onNetworkConnectionChanged(isConnected: Boolean) {
-
-        }
-    }
 }

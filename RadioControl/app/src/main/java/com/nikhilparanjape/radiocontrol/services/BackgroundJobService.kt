@@ -42,7 +42,6 @@ class BackgroundJobService : JobService(), ConnectivityReceiver.ConnectivityRece
         Log.i(TAG, "JobScheduler created")
     }
 
-
     override fun onStartJob(params: JobParameters): Boolean {
         Log.i(TAG, "Job started")
         //Utilities.scheduleJob(applicationContext) // reschedule the job
@@ -102,19 +101,11 @@ class BackgroundJobService : JobService(), ConnectivityReceiver.ConnectivityRece
                                 writeLog("Cell radio has been turned on", context)
                             }
                         } else {
-                            if (prefs.getBoolean("altBTCommand", false)) {
-                                val output = Shell.su("settings put global airplane_mode_on 0", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state false").exec().out
-                                Utilities.writeLog("root accessed: $output", context)
-                                //RootAccess.runCommands(airOffCmd3)
-                                Log.d("RadioControl-Job", "Airplane mode has been turned off(with bt cmd)")
-                                writeLog("Airplane mode has been turned off", context)
-                            } else {
-                                val output = Shell.su("settings put global airplane_mode_on 0", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state false", "settings put global airplane_mode_radios  \"cell,bluetooth,nfc,wimax\"", "content update --uri content://settings/global --bind value:s:'cell,bluetooth,nfc,wimax' --where \"name='airplane_mode_radios'\"").exec().out
-                                Utilities.writeLog("root accessed: $output", context)
-                                //RootAccess.runCommands(airOffCmd2)
-                                Log.d("RadioControl-Job", "Airplane mode has been turned off")
-                                writeLog("Airplane mode has been turned off", context)
-                            }
+                            val output = Shell.su("settings put global airplane_mode_on 0", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state false").exec().out
+                            Utilities.writeLog("root accessed: $output", context)
+                            //RootAccess.runCommands(airOffCmd3)
+                            Log.d("RadioControl-Job", "Airplane mode has been turned off")
+                            writeLog("Airplane mode has been turned off", context)
 
                         }
                     } else if (util.isCallActive(context)) {
@@ -128,7 +119,7 @@ class BackgroundJobService : JobService(), ConnectivityReceiver.ConnectivityRece
                     Log.d("RadioControl-Job", "2")
                 }
                 //if (Utilities.isConnectedWifi(context) && !Utilities.isAirplaneMode(context) || Utilities.isConnectedMobile(context))
-            } else {
+            } else if (Utilities.isConnectedWifi(context) && !Utilities.isAirplaneMode(context) || Utilities.isConnectedMobile(context)){
                 //boolean isWiFi = activeNetwork.getType() == ConnectivityManager.TYPE_WIFI; //Boolean to check for an active WiFi connection
                 //Check the list of disabled networks
                 if (!disabledPref.contains(Utilities.getCurrentSsid(context))) {
