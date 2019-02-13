@@ -64,10 +64,11 @@ class BackgroundJobService : JobService(), ConnectivityReceiver.ConnectivityRece
         val prefs = PreferenceManager.getDefaultSharedPreferences(context)
         val disabledPref = context.getSharedPreferences("disabled-networks", Context.MODE_PRIVATE)
 
-        val h = HashSet(listOf("")) //Set default set for SSID check
+        val h = HashSet(listOf("")) //Set default empty set for SSID check
         val selections = prefs.getStringSet("ssid", h) //Gets stringset, if empty sets default
         val networkAlert = prefs.getBoolean("isNetworkAlive", false)
         prefs.getBoolean("isBatteryOn", true)
+        val z = activeNetwork.toString()
 
         //Log.i("RadioControl-Job,"Battery Optimized");
         //Check if user wants the app on
@@ -88,8 +89,8 @@ class BackgroundJobService : JobService(), ConnectivityReceiver.ConnectivityRece
             if (!Utilities.isConnectedWifi(context) && activeNetwork == null) {
                 Log.d("RadioControl-Job", "WiFi signal LOST")
                 writeLog("WiFi Signal lost", context)
+                // Ensures that Airplane mode is on, or the cell radio is off
                 if (Utilities.isAirplaneMode(context) || !Utilities.isConnectedMobile(context)) {
-                    Log.d("RadioControl-Job", "1")
                     //Checks that user is not in call
                     if (!util.isCallActive(context)) {
                         //Runs the alternate root command
@@ -115,8 +116,6 @@ class BackgroundJobService : JobService(), ConnectivityReceiver.ConnectivityRece
                         }
                         //Utilities.scheduleJob(context)
                     }//Checks that user is currently in call and pauses execution till the call ends
-                } else {
-                    Log.d("RadioControl-Job", "2")
                 }
                 //if (Utilities.isConnectedWifi(context) && !Utilities.isAirplaneMode(context) || Utilities.isConnectedMobile(context))
             } else if (Utilities.isConnectedWifi(context) && !Utilities.isAirplaneMode(context)){

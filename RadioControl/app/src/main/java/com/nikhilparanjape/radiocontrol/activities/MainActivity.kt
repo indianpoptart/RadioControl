@@ -146,8 +146,6 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
         val isFirstStart = getPrefs.getBoolean(getString(R.string.preference_first_start), true)
         //Gets the current android build version on device
         val currentapiVersion = Build.VERSION.SDK_INT
-        val intervalTime = getPrefs.getString("interval_prefs", "10")
-        val airplaneService = getPrefs.getBoolean(getString(R.string.preference_airplane_service), false)
 
         init()//initializes the whats new dialog
 
@@ -220,7 +218,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
             linkText.visibility = View.VISIBLE
         }
 
-        linkSpeedButton.setOnClickListener { _ ->
+        linkSpeedButton.setOnClickListener {
             //showWifiInfoDialog();
 
             val linkSpeed = Utilities.linkSpeed(applicationContext)
@@ -296,8 +294,6 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
         }
         toggle.setOnCheckedChangeListener { _, isChecked ->
             val bgj = Intent(applicationContext, BackgroundJobService::class.java)
-            val pst = Intent(applicationContext, PersistenceService::class.java)
-            val crs = Intent(applicationContext, CellRadioService::class.java)
 
             if (!isChecked) {
                 //Preference handling
