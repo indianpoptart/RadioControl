@@ -7,6 +7,15 @@ import androidx.legacy.content.WakefulBroadcastReceiver
 import android.net.ConnectivityManager
 import com.nikhilparanjape.radiocontrol.services.BackgroundJobService
 import com.nikhilparanjape.radiocontrol.utilities.Utilities
+import android.app.job.JobInfo
+import android.content.ComponentName
+import android.app.job.JobScheduler
+import android.content.Context.JOB_SCHEDULER_SERVICE
+import androidx.core.content.ContextCompat.getSystemService
+
+
+
+
 
 @Suppress("DEPRECATION")
 /**
@@ -28,10 +37,19 @@ class ConnectivityReceiver : WakefulBroadcastReceiver() {
         intent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND)
         Log.d("RadioControl", "Get action-ConRec: " + intent.action!!)
 
-        val i = Intent(context, BackgroundJobService::class.java)
-        Utilities.scheduleJob(context)
-        context.startService(i)
+        val componentName = ComponentName(context, BackgroundJobService::class.java)
+        val jobInfo = JobInfo.Builder(12, componentName)
+                .setRequiresCharging(false)
+                .setOverrideDeadline(0)
+                .build()
 
+        val jobScheduler = context.getSystemService(JOB_SCHEDULER_SERVICE) as JobScheduler?
+        val resultCode = jobScheduler!!.schedule(jobInfo)
+        if (resultCode == JobScheduler.RESULT_SUCCESS) {
+            Log.d("RadioControl-CR", "Job scheduled!")
+        } else {
+            Log.d("RadioControl-CR", "Job not scheduled")
+        }
 
     }
     fun isConnected(context: Context): Boolean {

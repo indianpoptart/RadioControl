@@ -70,6 +70,7 @@ class PersistenceService : Service() {
             val notification = builder.build()
 
             startForeground(1, notification)
+
         }
         return START_NOT_STICKY
     }

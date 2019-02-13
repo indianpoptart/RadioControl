@@ -44,6 +44,7 @@ class BackgroundJobService : JobService(), ConnectivityReceiver.ConnectivityRece
 
 
     override fun onStartJob(params: JobParameters): Boolean {
+        Log.i(TAG, "Job started")
         //Utilities.scheduleJob(applicationContext) // reschedule the job
 
         val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
@@ -53,6 +54,7 @@ class BackgroundJobService : JobService(), ConnectivityReceiver.ConnectivityRece
                 // -Snip-
             })
         } else {
+            Log.d("RadioControl-Job","Test")
         }
 
         val activeNetwork = connectivityManager.activeNetworkInfo
@@ -81,7 +83,8 @@ class BackgroundJobService : JobService(), ConnectivityReceiver.ConnectivityRece
                 writeLog("WiFi Signal lost", context)
             }
         }
-        if (sp.getInt("isActive", 0) == 1) {
+        else {
+            Log.d("RadioControl-Job", "Begin the program has")
             //Check if we just lost WiFi signal
             if (!Utilities.isConnectedWifi(context) && activeNetwork == null) {
                 Log.d("RadioControl-Job", "WiFi signal LOST")
@@ -124,7 +127,8 @@ class BackgroundJobService : JobService(), ConnectivityReceiver.ConnectivityRece
                 } else {
                     Log.d("RadioControl-Job", "2")
                 }
-            } else if (Utilities.isConnectedWifi(context) && !Utilities.isAirplaneMode(context)) {
+                //if (Utilities.isConnectedWifi(context) && !Utilities.isAirplaneMode(context) || Utilities.isConnectedMobile(context))
+            } else {
                 //boolean isWiFi = activeNetwork.getType() == ConnectivityManager.TYPE_WIFI; //Boolean to check for an active WiFi connection
                 //Check the list of disabled networks
                 if (!disabledPref.contains(Utilities.getCurrentSsid(context))) {
@@ -167,9 +171,8 @@ class BackgroundJobService : JobService(), ConnectivityReceiver.ConnectivityRece
                     Log.d("RadioControl-Job", "The current SSID was blocked from list $selections")
                     writeLog("The current SSID was blocked from list $selections", context)
                 }//Pauses because WiFi network is in the list of disabled SSIDs
-            } else if (activeNetwork.detailedState.equals("z")){
-                Log.d("Rad","Test: $activeNetwork.detailedState" )
             }
+            //Log.d("Rad","Test: $activeNetwork.detailedState" )
 
         }
 
