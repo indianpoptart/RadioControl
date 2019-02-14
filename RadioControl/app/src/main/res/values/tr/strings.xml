@@ -12,7 +12,7 @@
   <string name="title_send_feedback">Geri bildirim gönder</string>
   <string name="mail_feedback_email">nikhil1.paranjape@gmail.com</string>
   <string name="mail_feedback_subject">RadioControl Geri Bildirimi</string>
-  <string name="mail_feedback_message"></string>
+  <string name="mail_feedback_message" />
   <string name="banner_ad_unit_id">ca-app-pub-3619025631742887/9691733456</string>
   <string name="linkspeed">Bağlantı hızı:</string>
   <string name="cellNetwork">Hücresel ağ tespit edildi</string>

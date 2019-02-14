@@ -4,7 +4,6 @@ import android.app.IntentService
 import android.content.Intent
 import android.os.IBinder
 import android.util.Log
-import com.nikhilparanjape.radiocontrol.utilities.RootAccess
 import com.nikhilparanjape.radiocontrol.utilities.Utilities
 import com.topjohnwu.superuser.Shell
 

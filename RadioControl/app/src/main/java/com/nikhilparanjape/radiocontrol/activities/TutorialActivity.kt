@@ -4,9 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import com.github.paolorotolo.appintro.AppIntro
-
-import com.github.paolorotolo.appintro.AppIntro2
-import com.github.paolorotolo.appintro.AppIntroFragment
 import com.nikhilparanjape.radiocontrol.R
 import com.nikhilparanjape.radiocontrol.fragments.SlideFragment
 

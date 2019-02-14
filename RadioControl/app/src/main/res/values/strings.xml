@@ -9,7 +9,7 @@
 
     <string name="mail_feedback_email">nikhil1.paranjape@gmail.com</string>
     <string name="mail_feedback_subject">RadioControl Feedback</string>
-    <string name="mail_feedback_message"></string>
+    <string name="mail_feedback_message" />
     <string name="cellNetwork">Cell network detected</string>
     <string name="home">Home</string>
     <string name="settings">Settings</string>
@@ -139,5 +139,34 @@
     <string name="log_persistence_bound">PERSISTENCE Bound</string>
     <string name="link_speed_24">Link speed: %1$d Mbps @ 2.4 GHz</string>
     <string name="link_speed_5">Link speed: %1$d Mbps @ 5 GHz</string>
+    <string name="intro_description_magisk">This app uses Root to run a few commands. They are only to change the state of Airplane mode, Bluetooth, Cell radios, and WiFi</string>
+    <string name="intro_description_intelligent_mode">Shows up as a notification and helps keep the app working in the background. This is on by default on Nougat+ but can be disabled in settings</string>
+    <string name="intro_description_call_handling">Checks for an ongoing call and enables the cell radio to reduce call drops if WiFi is lost</string>
+    <string name="intro_description_airplane_service">Runs a periodic service that ensures the cell radio is off when connected to WiFi. The default interval is 10 minutes</string>
+    <string name="text_activity_hours">Hours</string>
+    <string name="text_activity_set">Set</string>
+    <string name="text_activity_cancel">Cancel</string>
+    <string name="text_activity_do_not_disturb_is">Do Not Disturb is</string>
+    <string name="text_activity_set_for_x_hours">set for X hours</string>
+    <string name="main_text_radiocontrol_with_space">RadioControl</string>
+    <string name="text_null">null</string>
+    <string name="text_force_crash">Force Crash!</string>
+    <string name="text_link_speed_test">Link Speed Test</string>
+    <string name="button_latency_test">Latency Test</string>
+    <string name="button_airplane_service_test">Airplane Service Test</string>
+    <string name="button_night_mode_cancel">Night Mode Cancel</string>
+    <string name="button_cell_radio_toggle">Cell Radio Toggle</string>
+    <string name="text_wifi_network_blacklist">WiFi Network Blacklist</string>
+    <string name="text_root_access_attempts">Root access attempts</string>
+    <string name="text_troubleshooting">Troubleshooting</string>
+    <string name="text_billing_1">$0.99</string>
+    <string name="text_billing_3">$2.99</string>
+    <string name="text_billing_5">$4.99</string>
+    <string name="text_billing_10">$9.99</string>
+    <string name="text_donate_no_internet">Please connect to the internet before trying to donate</string>
+    <string name="text_intro_network_connectivity">The network connectivity checker alerts you if a WiFi network can\'t connect to the internet. This is not required in newer versions of Android as it is a built-in feature</string>
+    <string name="title_magisksu">MagiskSU</string>
+    <string name="title_call_detector">Call Detector (Experimental)</string>
+    <string name="text_name">Name</string>
 
 </resources>

@@ -2,28 +2,22 @@ package com.nikhilparanjape.radiocontrol.services
 
 import android.app.job.JobParameters
 import android.app.job.JobService
-import android.content.Intent
-import android.os.Build
-import android.util.Log
-import com.nikhilparanjape.radiocontrol.utilities.Utilities
-import android.net.ConnectivityManager
-import android.content.IntentFilter
-import android.content.BroadcastReceiver
 import android.content.Context
+import android.net.ConnectivityManager
 import android.net.NetworkRequest
-import android.content.Context.CONNECTIVITY_SERVICE
-import android.net.NetworkInfo
+import android.os.Build
 import android.preference.PreferenceManager
 import android.text.format.DateFormat
-import com.nikhilparanjape.radiocontrol.R
+import android.util.Log
 import com.nikhilparanjape.radiocontrol.receivers.ConnectivityReceiver
 import com.nikhilparanjape.radiocontrol.utilities.AlarmSchedulers
+import com.nikhilparanjape.radiocontrol.utilities.Utilities
 import com.topjohnwu.superuser.Shell
 import org.jetbrains.anko.doAsync
 import java.io.File
 import java.io.IOException
 import java.net.InetAddress
-import java.util.HashSet
+import java.util.*
 
 /**
  * This service starts the BackgroundAirplaneService as a foreground service if on Android Oreo or higher.
@@ -32,12 +26,12 @@ import java.util.HashSet
  *
  * @author Nikhil Paranjape
  */
-class BackgroundJobService : JobService(), ConnectivityReceiver.ConnectivityReceiverListener  {
+class BackgroundJobService : JobService(), ConnectivityReceiver.ConnectivityReceiverListener {
 
     internal var util = Utilities() //Network and other related utilities
     private var alarmUtil = AlarmSchedulers()
 
-    override fun onCreate(){
+    override fun onCreate() {
         super.onCreate()
         Log.i(TAG, "JobScheduler created")
     }
@@ -53,7 +47,7 @@ class BackgroundJobService : JobService(), ConnectivityReceiver.ConnectivityRece
                 // -Snip-
             })
         } else {
-            Log.d("RadioControl-Job","Test")
+            Log.d("RadioControl-Job", "Test")
         }
 
         val activeNetwork = connectivityManager.activeNetworkInfo
@@ -68,7 +62,6 @@ class BackgroundJobService : JobService(), ConnectivityReceiver.ConnectivityRece
         val selections = prefs.getStringSet("ssid", h) //Gets stringset, if empty sets default
         val networkAlert = prefs.getBoolean("isNetworkAlive", false)
         prefs.getBoolean("isBatteryOn", true)
-        val z = activeNetwork.toString()
 
         //Log.i("RadioControl-Job,"Battery Optimized");
         //Check if user wants the app on
@@ -82,8 +75,7 @@ class BackgroundJobService : JobService(), ConnectivityReceiver.ConnectivityRece
                 Log.d("RadioControl-Job", "WiFi signal LOST")
                 writeLog("WiFi Signal lost", context)
             }
-        }
-        else {
+        } else {
             Log.d("RadioControl-Job", "Begin the program has")
             //Check if we just lost WiFi signal
             if (!Utilities.isConnectedWifi(context) && activeNetwork == null) {
@@ -118,7 +110,7 @@ class BackgroundJobService : JobService(), ConnectivityReceiver.ConnectivityRece
                     }//Checks that user is currently in call and pauses execution till the call ends
                 }
                 //if (Utilities.isConnectedWifi(context) && !Utilities.isAirplaneMode(context) || Utilities.isConnectedMobile(context))
-            } else if (Utilities.isConnectedWifi(context) && !Utilities.isAirplaneMode(context)){
+            } else if (Utilities.isConnectedWifi(context) && !Utilities.isAirplaneMode(context)) {
                 //boolean isWiFi = activeNetwork.getType() == ConnectivityManager.TYPE_WIFI; //Boolean to check for an active WiFi connection
                 Log.d("RadioControl-Job", "WiFi signal got")
                 //Check the list of disabled networks
@@ -162,10 +154,10 @@ class BackgroundJobService : JobService(), ConnectivityReceiver.ConnectivityRece
                     Log.d("RadioControl-Job", "The current SSID was blocked from list $selections")
                     writeLog("The current SSID was blocked from list $selections", context)
                 }//Pauses because WiFi network is in the list of disabled SSIDs
-            } else{
-                if(activeNetwork.isConnected){
+            } else {
+                if (activeNetwork.isConnected) {
                     Log.d("RadioControl-Job", "Yeah, we connected")
-                } else{
+                } else {
                     Log.d("RadioControl-Job", "EGADS")
                 }
             }

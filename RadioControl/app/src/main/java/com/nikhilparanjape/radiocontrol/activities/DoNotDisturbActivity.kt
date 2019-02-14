@@ -64,7 +64,7 @@ class DoNotDisturbActivity : AppCompatActivity() {
         //Initialize set button
         val setButton = findViewById<Button>(R.id.set_button)
 
-        setButton.setOnClickListener { _ ->
+        setButton.setOnClickListener {
             if (hours > 0) {
                 editor.putBoolean("isNoDisturbEnabled", true)
                 editor.putInt("dndHours", hours)
@@ -82,7 +82,7 @@ class DoNotDisturbActivity : AppCompatActivity() {
                 hourStatus.setText(R.string.not_set)
             }
         }
-        cancelButton.setOnClickListener { _ ->
+        cancelButton.setOnClickListener {
             editor.putBoolean("isNoDisturbEnabled", false)
             editor.apply()
             hourStatus.setText(R.string.not_set)

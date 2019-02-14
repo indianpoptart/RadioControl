@@ -7,7 +7,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="$0.99"
+        android:text="@string/text_billing_1"
         android:id="@+id/oneDollar"
         android:layout_gravity="center_horizontal"
         android:layout_alignParentTop="true"
@@ -16,7 +16,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="$2.99"
+        android:text="@string/text_billing_3"
         android:id="@+id/threeDollar"
         android:layout_gravity="center_horizontal"
         android:layout_below="@+id/oneDollar"
@@ -25,7 +25,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="$4.99"
+        android:text="@string/text_billing_5"
         android:id="@+id/fiveDollar"
         android:layout_gravity="center_horizontal"
         android:layout_below="@+id/threeDollar"
@@ -34,7 +34,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="$9.99"
+        android:text="@string/text_billing_10"
         android:id="@+id/tenDollar"
         android:layout_gravity="center_horizontal"
         android:layout_below="@+id/fiveDollar"

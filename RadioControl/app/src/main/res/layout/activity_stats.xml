@@ -44,7 +44,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="20dp"
                     android:gravity="center_vertical"
-                    android:paddingLeft="20dp"
+                    android:paddingStart="20dp"
                     android:text="@string/wifi_signal_lost"
                     android:textColor="@android:color/black"
                     android:textSize="14sp" />
@@ -87,7 +87,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="20dp"
                     android:gravity="center_vertical"
-                    android:paddingLeft="20dp"
+                    android:paddingStart="20dp"
                     android:text="@string/radios_toggled_graph_title"
                     android:textColor="@android:color/black"
                     android:textSize="14sp" />
@@ -131,8 +131,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="20dp"
                 android:gravity="center_vertical"
-                android:paddingLeft="20dp"
-                android:text="Root access attempts"
+                android:paddingStart="20dp"
+                android:text="@string/text_root_access_attempts"
                 android:textColor="@android:color/black"
                 android:textSize="14sp" />
 
@@ -204,7 +204,6 @@
                     style="@style/TextAppearance.MaterialSheetFab.Sheet.Item"
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
-                    android:drawableLeft="@drawable/ic_timer_black_24dp"
                     android:drawableStart="@drawable/ic_timer_black_24dp"
                     android:text="@string/animation_duration_sheet_text" />
 
@@ -214,7 +213,6 @@
                     style="@style/TextAppearance.MaterialSheetFab.Sheet.Item"
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
-                    android:drawableLeft="@drawable/ic_grid_on_black_24dp"
                     android:drawableStart="@drawable/ic_grid_on_black_24dp"
                     android:text="@string/gridline_text_box" />
 
@@ -224,7 +222,6 @@
                     style="@style/TextAppearance.MaterialSheetFab.Sheet.Item"
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
-                    android:drawableLeft="@drawable/ic_timeline_black_24dp"
                     android:drawableStart="@drawable/ic_timeline_black_24dp"
                     android:text="@string/animation_text_box" />
 

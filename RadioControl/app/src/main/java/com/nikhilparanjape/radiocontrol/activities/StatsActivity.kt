@@ -157,20 +157,20 @@ class StatsActivity : AestheticActivity() {
         })
 
         val btn = findViewById<TextView>(R.id.fab_sheet_item_grid)!!
-        btn.setOnClickListener { _ ->
+        btn.setOnClickListener {
             materialSheetFab.hideSheet()
             showGridLineDialog()
         }
         val btn1 = findViewById<TextView>(R.id.fab_sheet_item_easing)
         AutofitHelper.create(btn1)
-        btn1.setOnClickListener { _ ->
+        btn1.setOnClickListener {
             materialSheetFab.hideSheet()
             showLongList()
         }
 
         val btn2 = findViewById<TextView>(R.id.fab_sheet_item_duration)
         AutofitHelper.create(btn2)
-        btn2.setOnClickListener { _ ->
+        btn2.setOnClickListener {
             materialSheetFab.hideSheet()
             showDurationDialog()
         }

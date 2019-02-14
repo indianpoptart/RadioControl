@@ -12,7 +12,7 @@
     <string name="title_send_feedback">Enviar comentarios</string>
     <string name="mail_feedback_email">nikhil1.paranjape@gmail.com</string>
     <string name="mail_feedback_subject">RadioControl comentarios</string>
-    <string name="mail_feedback_message"></string>
+    <string name="mail_feedback_message" />
     <string name="banner_ad_unit_id">ca-app-pub-3619025631742887/9691733456</string>
     <string name="linkspeed">Velocidad de enlace:</string>
     <string name="cellNetwork">Red celular detectado</string>

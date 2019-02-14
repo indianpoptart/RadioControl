@@ -6,7 +6,6 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.job.JobInfo
-import android.app.job.JobScheduler
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
@@ -20,7 +19,6 @@ import android.provider.Settings
 import android.telephony.TelephonyManager
 import android.text.format.DateFormat
 import android.util.Log
-import androidx.core.content.ContextCompat.getSystemService
 import com.nikhilparanjape.radiocontrol.R
 import com.nikhilparanjape.radiocontrol.services.BackgroundJobService
 import java.io.File
@@ -134,7 +132,7 @@ class Utilities {
             builder.setMinimumLatency((intervalTime * 1000).toLong()) // wait at least
             builder.setOverrideDeadline((intervalTime * 1000).toLong()) // maximum delay
             builder.setPersisted(true) // Persist at boot
-            builder.setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY); // require any network
+            builder.setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY) // require any network
 
             //mJobScheduler.schedule(builder.build())
 

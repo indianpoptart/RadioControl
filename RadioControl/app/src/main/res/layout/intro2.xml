@@ -46,7 +46,7 @@
         android:gravity="center"
         android:paddingLeft="32dp"
         android:paddingRight="32dp"
-        android:text="The network connectivity checker alerts you if a WiFi network can't connect to the internet. This is not required in newer versions of Android as it is a built-in feature"
+        android:text="@string/text_intro_network_connectivity"
         android:textColor="#ffffff"
         android:textSize="16sp" />
 

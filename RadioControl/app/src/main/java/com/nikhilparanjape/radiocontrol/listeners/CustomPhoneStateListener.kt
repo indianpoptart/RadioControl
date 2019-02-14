@@ -5,22 +5,16 @@ package com.nikhilparanjape.radiocontrol.listeners
  */
 
 import android.content.Context
-import android.content.Intent
-import android.net.ConnectivityManager
-import android.net.NetworkRequest
 import android.os.Build
 import android.preference.PreferenceManager
 import android.telephony.PhoneStateListener
 import android.telephony.TelephonyManager
 import android.util.Log
-import androidx.core.content.ContextCompat.getSystemService
-import com.nikhilparanjape.radiocontrol.services.BackgroundJobService
-import com.nikhilparanjape.radiocontrol.services.CellRadioService
 import com.nikhilparanjape.radiocontrol.utilities.RootAccess
 import com.nikhilparanjape.radiocontrol.utilities.Utilities
 import com.nikhilparanjape.radiocontrol.utilities.Utilities.Companion.writeLog
 import com.topjohnwu.superuser.Shell
-import java.util.HashSet
+import java.util.*
 
 class CustomPhoneStateListener(//private static final String TAG = "PhoneStateChanged";
         private val context: Context //Context to make Toast if required

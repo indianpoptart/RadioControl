@@ -1,20 +1,14 @@
 package com.nikhilparanjape.radiocontrol.receivers
 
+import android.app.job.JobInfo
+import android.app.job.JobScheduler
+import android.content.ComponentName
 import android.content.Context
+import android.content.Context.JOB_SCHEDULER_SERVICE
 import android.content.Intent
 import android.util.Log
 import androidx.legacy.content.WakefulBroadcastReceiver
-import android.net.ConnectivityManager
 import com.nikhilparanjape.radiocontrol.services.BackgroundJobService
-import com.nikhilparanjape.radiocontrol.utilities.Utilities
-import android.app.job.JobInfo
-import android.content.ComponentName
-import android.app.job.JobScheduler
-import android.content.Context.JOB_SCHEDULER_SERVICE
-import androidx.core.content.ContextCompat.getSystemService
-
-
-
 
 
 @Suppress("DEPRECATION")

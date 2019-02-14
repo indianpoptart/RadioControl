@@ -40,6 +40,9 @@ import com.github.stephenvinouze.core.models.KinAppPurchase
 import com.github.stephenvinouze.core.models.KinAppPurchaseResult
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
+import com.instabug.bug.BugReporting.setInvocationEvents
+import com.instabug.library.Instabug
+import com.instabug.library.invocation.InstabugInvocationEvent
 import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.mikepenz.iconics.IconicsDrawable
 import com.mikepenz.materialdrawer.AccountHeaderBuilder
@@ -53,9 +56,9 @@ import com.nikhilparanjape.radiocontrol.BuildConfig
 import com.nikhilparanjape.radiocontrol.R
 import com.nikhilparanjape.radiocontrol.receivers.ActionReceiver
 import com.nikhilparanjape.radiocontrol.receivers.ConnectivityReceiver
+import com.nikhilparanjape.radiocontrol.services.BackgroundJobService
 import com.nikhilparanjape.radiocontrol.services.CellRadioService
 import com.nikhilparanjape.radiocontrol.services.PersistenceService
-import com.nikhilparanjape.radiocontrol.services.BackgroundJobService
 import com.nikhilparanjape.radiocontrol.utilities.AlarmSchedulers
 import com.nikhilparanjape.radiocontrol.utilities.Utilities
 import io.fabric.sdk.android.Fabric
@@ -185,7 +188,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
             }
             //Attempting instabug integration.
             if (getPrefs.getBoolean(getString(R.string.pref_instabug_check), true)) {
-
+                
             }
 
             if (!getPrefs.getBoolean(getString(R.string.preference_work_mode), true)) {
@@ -589,7 +592,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
             .positiveButton(R.string.text_got_it) { dialog ->
                 dialog.dismiss()
             }
-            .negativeButton(R.string.text_whats_new) { _ ->
+            .negativeButton(R.string.text_whats_new) {
                 startChangelogActivity()
             }
             .show()

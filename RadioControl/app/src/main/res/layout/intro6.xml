@@ -17,7 +17,7 @@
         android:gravity="center"
         android:paddingLeft="32dp"
         android:paddingRight="32dp"
-        android:text="Call Detector (Experimental)"
+        android:text="@string/title_call_detector"
         android:textColor="#ffffff"
         android:textSize="28sp" />
 
@@ -34,7 +34,6 @@
             android:layout_width="256dp"
             android:layout_height="168dp"
             android:layout_gravity="center"
-            android:layout_weight="0.36"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
             app:srcCompat="@drawable/ic_phone_black_24dp" />
@@ -48,7 +47,7 @@
         android:gravity="center"
         android:paddingLeft="32dp"
         android:paddingRight="32dp"
-        android:text="Checks for an ongoing call and enables the cell radio to reduce call drops if WiFi is lost"
+        android:text="@string/intro_description_call_handling"
         android:textColor="#ffffff"
         android:textSize="16sp" />
 

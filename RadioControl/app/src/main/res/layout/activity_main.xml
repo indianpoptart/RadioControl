@@ -57,7 +57,7 @@
             android:layout_height="wrap_content"
             android:layout_alignStart="@+id/pingProgressBar"
             android:layout_below="@+id/pingProgressBar"
-            android:text="RadioControl "
+            android:text="@string/main_text_radiocontrol_with_space"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <TextView
@@ -66,7 +66,7 @@
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/textView3"
             android:layout_toEndOf="@+id/textView3"
-            android:text="null"
+            android:text="@string/text_null"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <Switch
@@ -93,7 +93,7 @@
             android:layout_below="@+id/enableSwitch"
             android:layout_marginTop="89dp"
             android:onClick="forceCrash"
-            android:text="Force Crash!" />
+            android:text="@string/text_force_crash" />
 
 
         <Button
@@ -104,7 +104,7 @@
             android:layout_alignStart="@+id/forceCrashButton"
             android:layout_below="@+id/forceCrashButton"
             android:layout_marginTop="20dp"
-            android:text="Link Speed Test" />
+            android:text="@string/text_link_speed_test" />
 
         <TextView
             android:id="@+id/linkSpeed"
@@ -121,7 +121,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_below="@+id/linkSpeed"
-            android:text="Latency Test" />
+            android:text="@string/button_latency_test" />
 
         <Button
             android:id="@+id/airplane_service_test"
@@ -129,7 +129,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_below="@+id/pingStatus"
-            android:text="Airplane Service Test" />
+            android:text="@string/button_airplane_service_test" />
 
         <Button
             android:id="@+id/night_mode_cancel"
@@ -137,7 +137,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_below="@+id/airplane_service_test"
-            android:text="Night Mode Cancel" />
+            android:text="@string/button_night_mode_cancel" />
 
         <Button
             android:id="@+id/cellRadioOff"
@@ -145,7 +145,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_below="@+id/night_mode_cancel"
-            android:text="Cell Radio Toggle" />
+            android:text="@string/button_cell_radio_toggle" />
 
 
     </RelativeLayout>

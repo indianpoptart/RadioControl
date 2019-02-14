@@ -16,12 +16,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Name"
+            android:text="@string/text_name"
             android:id="@+id/nameTxt"
             android:padding="10dp"
-
-            android:layout_alignParentLeft="true"
-            />
+            android:layout_alignParentStart="true" />
 
     </RelativeLayout>
 </androidx.cardview.widget.CardView>

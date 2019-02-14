@@ -198,14 +198,19 @@ class SettingsFragment : PreferenceFragment(), TimePickerDialog.OnTimeSetListene
             true
         }
         val altRootCommand = preferenceManager.findPreference("altRootCommand") as CheckBoxPreference
-        altRootCommand.setOnPreferenceChangeListener { _, _ ->
-            val permissionCheck = ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION)
+        altRootCommand.setOnPreferenceChangeListener { _, newValue ->
+            if (newValue.toString() == "true") {
+                val permissionCheck = ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION)
 
-            if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(activity, arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION), 200)
+                if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(activity, arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION), 200)
+                } else {
+                    //altRootCommand.setChecked(false);
+                }
             } else {
-                //altRootCommand.setChecked(false);
+
             }
+
             true
         }
         altRootCommand.setOnPreferenceClickListener {
@@ -236,7 +241,6 @@ class SettingsFragment : PreferenceFragment(), TimePickerDialog.OnTimeSetListene
                         c.startActivity(intent)
                     }
                     dozeSetting.isChecked = true
-                    c.startActivity(intent)
                 }
             } else {
                 dozeSetting.isChecked = false
@@ -293,15 +297,20 @@ class SettingsFragment : PreferenceFragment(), TimePickerDialog.OnTimeSetListene
         }
 
         val callingCheck = preferenceManager.findPreference("isPhoneStateCheck") as CheckBoxPreference
-        callingCheck.setOnPreferenceChangeListener { _, _ ->
-            val permissionCheck = ContextCompat.checkSelfPermission(activity, Manifest.permission.READ_PHONE_STATE)
+        callingCheck.setOnPreferenceChangeListener { _, newValue ->
+            if (newValue.toString() == "true") {
+                val permissionCheck = ContextCompat.checkSelfPermission(activity, Manifest.permission.READ_PHONE_STATE)
 
-            if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(activity, arrayOf(Manifest.permission.READ_PHONE_STATE), 200)
+                if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(activity, arrayOf(Manifest.permission.READ_PHONE_STATE), 200)
 
+                } else {
+                    callingCheck.isChecked = false
+                }
             } else {
-                callingCheck.isChecked = false
+
             }
+
 
             true
         }

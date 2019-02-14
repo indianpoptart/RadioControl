@@ -25,7 +25,7 @@ class WLANFragment : Fragment() {
         val rv = rootView.findViewById<RecyclerView>(R.id.wlanRV)
         rv.layoutManager = LinearLayoutManager(this.activity)
 
-        val adapter = RecyclerAdapter(this.activity!!, wlanTrouble)
+        val adapter = RecyclerAdapter(wlanTrouble)
         rv.adapter = adapter
 
         return rootView

@@ -24,7 +24,7 @@ class BatteryFragment : Fragment() {
         val rv = rootView.findViewById<RecyclerView>(R.id.batteryRV)
         rv.layoutManager = LinearLayoutManager(this.activity)
 
-        val adapter = RecyclerAdapter(this.activity!!, batteryTrouble)
+        val adapter = RecyclerAdapter(batteryTrouble)
         rv.adapter = adapter
 
         return rootView

@@ -25,7 +25,7 @@ class AppFragment : Fragment() {
         val rv = rootView.findViewById<RecyclerView>(R.id.appRV)
         rv.layoutManager = LinearLayoutManager(this.activity)
 
-        val adapter = RecyclerAdapter(this.activity!!, appTrouble)
+        val adapter = RecyclerAdapter(appTrouble)
         rv.adapter = adapter
 
         return rootView

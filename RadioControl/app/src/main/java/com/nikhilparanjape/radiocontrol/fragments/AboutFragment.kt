@@ -232,25 +232,6 @@ class AboutFragment : PreferenceFragment() {
 
     companion object {
         private const val PRIVATE_PREF = "prefs"
-        fun getUpdate() {
-            val doc: Document
-            try {
-                val xmlURL = URL("http://nikhilp.org/radiocontrol/backend/update_check.xml")
-                val xml = xmlURL.openStream()
-                val dbf = DocumentBuilderFactory.newInstance()
-                val db = dbf.newDocumentBuilder()
-                doc = db.parse(xml)
-                xml.close()
-            } catch (e: SAXException) {
-                e.printStackTrace()
-            } catch (e: IOException) {
-                e.printStackTrace()
-            } catch (e: ParserConfigurationException) {
-                e.printStackTrace()
-            }
-
-
-        }
     }
 
 
