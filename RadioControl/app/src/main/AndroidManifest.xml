@@ -23,7 +23,6 @@
         android:fullBackupContent="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:name="com.nikhilparanjape.radiocontrol.RadioControl"
         android:theme="@style/MaterialDarkThemenoab"
         tools:ignore="GoogleAppIndexingWarning">
 

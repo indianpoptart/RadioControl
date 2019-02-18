@@ -75,7 +75,7 @@ class BackgroundJobService : JobService(), ConnectivityReceiver.ConnectivityRece
                 Log.d("RadioControl-Job", "WiFi signal LOST")
                 writeLog("WiFi Signal lost", context)
             }
-        } else {
+        } else if(sp.getInt("isActive", 0) == 1) {
             Log.d("RadioControl-Job", "Begin the program has")
             //Check if we just lost WiFi signal
             if (!Utilities.isConnectedWifi(context) && activeNetwork == null) {
@@ -162,6 +162,8 @@ class BackgroundJobService : JobService(), ConnectivityReceiver.ConnectivityRece
                 }
             }
 
+        } else {
+            Log.d("RadioControl-Job", "Something's wrong, I can feel it")
         }
 
         return true

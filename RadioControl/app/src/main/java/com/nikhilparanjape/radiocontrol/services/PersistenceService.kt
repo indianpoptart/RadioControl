@@ -81,7 +81,7 @@ class PersistenceService : Service() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val name = "Persistence"
             val description = getString(R.string.persistence_description)
-            val importance = NotificationManager.IMPORTANCE_NONE
+            val importance = NotificationManager.IMPORTANCE_LOW
             val channel = NotificationChannel("persistence", name, importance)
             channel.description = description
             // Register the channel with the system; you can't change the importance

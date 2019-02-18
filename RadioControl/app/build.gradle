@@ -18,8 +18,8 @@ android {
         applicationId "com.nikhilparanjape.radiocontrol"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 73
-        versionName "5.0.3-Beta8"
+        versionCode 74
+        versionName "6.0-alpha1"
         // Enabling multidex support.
         multiDexEnabled true
 
@@ -82,7 +82,7 @@ dependencies {
     // Third party - Helper
     implementation 'com.github.bumptech.glide:glide:4.8.0'
     implementation "com.github.StephenVinouze:KinApp:1.0.2"
-    implementation 'com.github.topjohnwu:libsu:2.1.2'
+    implementation 'com.github.topjohnwu:libsu:2.3.1'
     implementation 'com.instabug.library:instabug:8.0.19'
     implementation 'org.jetbrains.anko:anko-commons:0.10.8'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.1.1'

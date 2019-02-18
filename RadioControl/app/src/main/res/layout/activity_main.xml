@@ -67,6 +67,7 @@
             android:layout_alignTop="@+id/textView3"
             android:layout_toEndOf="@+id/textView3"
             android:text="@string/text_null"
+            android:paddingLeft="4dp"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <Switch

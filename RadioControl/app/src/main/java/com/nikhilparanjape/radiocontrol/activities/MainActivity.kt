@@ -25,7 +25,6 @@ import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
-import androidx.appcompat.widget.Toolbar
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
@@ -40,9 +39,6 @@ import com.github.stephenvinouze.core.models.KinAppPurchase
 import com.github.stephenvinouze.core.models.KinAppPurchaseResult
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
-import com.instabug.bug.BugReporting.setInvocationEvents
-import com.instabug.library.Instabug
-import com.instabug.library.invocation.InstabugInvocationEvent
 import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.mikepenz.iconics.IconicsDrawable
 import com.mikepenz.materialdrawer.AccountHeaderBuilder
@@ -61,7 +57,9 @@ import com.nikhilparanjape.radiocontrol.services.CellRadioService
 import com.nikhilparanjape.radiocontrol.services.PersistenceService
 import com.nikhilparanjape.radiocontrol.utilities.AlarmSchedulers
 import com.nikhilparanjape.radiocontrol.utilities.Utilities
+import com.topjohnwu.superuser.Shell
 import io.fabric.sdk.android.Fabric
+import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import java.io.File
@@ -99,7 +97,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
         mServiceComponent = ComponentName(this, BackgroundJobService::class.java)
 
         // Handle Toolbar
-        val toolbar = findViewById<Toolbar>(R.id.toolbar)
+        //val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
         val actionBar = supportActionBar
         val fab = findViewById<FloatingActionButton>(R.id.fab)
@@ -188,7 +186,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
             }
             //Attempting instabug integration.
             if (getPrefs.getBoolean(getString(R.string.pref_instabug_check), true)) {
-                
+
             }
 
             if (!getPrefs.getBoolean(getString(R.string.preference_work_mode), true)) {
@@ -301,7 +299,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
             if (!isChecked) {
                 //Preference handling
                 editor.putInt(getString(R.string.preference_app_active), 0)
-                editor.apply()
+
                 //UI Handling
                 statusText.setText(R.string.showDisabled)
                 statusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_deactivated))
@@ -311,7 +309,6 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
             } else {
                 //Preference handling
                 editor.putInt(getString(R.string.preference_app_active), 1)
-                editor.apply()
                 //UI Handling
                 statusText.setText(R.string.showEnabled)
                 statusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_activated))
@@ -320,7 +317,9 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
                 Log.d("RadioControl", "Test2")
 
             }
+
         }
+        editor.apply()
     }
 
     //Initialize method for the Whats new dialog
@@ -341,12 +340,12 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
         if (currentVersionNumber > savedVersionNumber) {
             showUpdated(this)
             editor.putInt(VERSION_KEY, currentVersionNumber)
-            editor.apply()
+
         }
         if (android.os.Build.VERSION.SDK_INT >= 24 && !sharedPref.getBoolean(getString(R.string.preference_work_mode), false)) {
             editor.putBoolean(getString(R.string.preference_work_mode), true)
-            editor.apply()
         }
+        editor.apply()
     }
 
     private fun scheduleJob() {
@@ -539,7 +538,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
         }
 
         editor.putInt(getString(R.string.preference_app_active), 0)
-        editor.apply()
+
         val intentAction = Intent(applicationContext, ActionReceiver::class.java)
         Log.d("RadioControl", "Value Changed")
         Toast.makeText(applicationContext, "Standby Mode enabled",
@@ -556,6 +555,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
                 .setOngoing(true)
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.notify(10110, note.build())
+        editor.apply()
     }
 
     //starts troubleshooting activity
@@ -915,6 +915,9 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
         internal const val ITEM_THREE_DOLLAR = "com.nikihlparanjape.radiocontrol.donate.three"
         internal const val ITEM_FIVE_DOLLAR = "com.nikihlparanjape.radiocontrol.donate.five"
         internal const val ITEM_TEN_DOLLAR = "com.nikihlparanjape.radiocontrol.donate.ten"
+
+
+
         //Grab device make and model for drawer
         val deviceName: String
             get() {
@@ -939,5 +942,6 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
                 Character.toUpperCase(first) + s.substring(1)
             }
         }
+
     }
 }
