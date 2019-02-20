@@ -24,13 +24,6 @@ import com.nikhilparanjape.radiocontrol.activities.TutorialActivity
 import com.nikhilparanjape.radiocontrol.utilities.Utilities
 import com.novoda.simplechromecustomtabs.SimpleChromeCustomTabs
 import org.jetbrains.anko.doAsync
-import org.w3c.dom.Document
-import org.xml.sax.SAXException
-import java.io.IOException
-import java.net.URL
-import javax.xml.parsers.DocumentBuilderFactory
-import javax.xml.parsers.ParserConfigurationException
-
 /**
  * Created by Nikhil on 4/5/2016.
  */

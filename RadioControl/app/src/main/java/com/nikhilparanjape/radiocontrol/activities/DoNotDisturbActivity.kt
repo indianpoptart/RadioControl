@@ -130,7 +130,7 @@ class DoNotDisturbActivity : AppCompatActivity() {
                 .setContentTitle("Standby Mode")
                 .setContentText("RadioControl services have been paused")
                 //Using this action button I would like to call logTest
-                .addAction(R.drawable.ic_done, "Turn OFF standby mode", pIntentLogin)
+                .addAction(R.drawable.ib_bug_ic_done, "Turn OFF standby mode", pIntentLogin)
                 .setPriority(-2)
                 .setOngoing(true)
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager

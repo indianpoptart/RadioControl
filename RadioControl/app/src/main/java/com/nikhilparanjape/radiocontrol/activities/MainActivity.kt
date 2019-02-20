@@ -21,6 +21,7 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
+import android.view.View.inflate
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -59,7 +60,6 @@ import com.nikhilparanjape.radiocontrol.services.CellRadioService
 import com.nikhilparanjape.radiocontrol.services.PersistenceService
 import com.nikhilparanjape.radiocontrol.utilities.AlarmSchedulers
 import com.nikhilparanjape.radiocontrol.utilities.Utilities
-import com.topjohnwu.superuser.Shell
 import io.fabric.sdk.android.Fabric
 import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.doAsync
@@ -190,7 +190,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
             if (getPrefs.getBoolean(getString(R.string.pref_instabug_check), true)) {
                 // Do some instabug stuff
                 Instabug.Builder(application, "5ef04d81ac921706082e840ceb7b82ec")
-                        .setInvocationEvents(InstabugInvocationEvent.SHAKE, InstabugInvocationEvent.TWO_FINGER_SWIPE_LEFThyhbg)
+                        .setInvocationEvents(InstabugInvocationEvent.SHAKE, InstabugInvocationEvent.TWO_FINGER_SWIPE_LEFT)
                         .build()
             }
 
@@ -551,7 +551,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
                 .setContentTitle(getString(R.string.title_standby_dialog))
                 .setContentText(getString(R.string.title_service_paused))
                 //Using this action button I would like to call logTest
-                .addAction(R.drawable.ic_done, getString(R.string.button_disable_standby), pIntentLogin)
+                .addAction(R.drawable.ic_appintro_done_white, getString(R.string.button_disable_standby), pIntentLogin)
                 .setPriority(-2)
                 .setOngoing(true)
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -600,8 +600,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
 
     //donate dialog
     private fun showDonateDialog() {
-        val inflater = LayoutInflater.from(this)//Creates layout inflator for dialog
-        val view = inflater.inflate(R.layout.dialog_donate, null)//Initializes the view for donate dialog
+        val view = inflate(applicationContext, R.layout.dialog_donate, null)//Initializes the view for donate dialog
         val builder = AlertDialog.Builder(this)//creates alertdialog
 
 
@@ -684,8 +683,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
 
     //Internet Error dialog
     private fun showErrorDialog() {
-        val inflater = LayoutInflater.from(this)//Creates layout inflator for dialog
-        val view = inflater.inflate(R.layout.dialog_no_internet, null)//Initializes the view for error dialog
+        val view = inflate(applicationContext, R.layout.dialog_no_internet, null)//Initializes the view for error dialog
         val builder = AlertDialog.Builder(this)//creates alertdialog
         val title = TextView(this)
         // You Can Customise your Title here
