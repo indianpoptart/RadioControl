@@ -39,6 +39,8 @@ import com.github.stephenvinouze.core.models.KinAppPurchase
 import com.github.stephenvinouze.core.models.KinAppPurchaseResult
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
+import com.instabug.library.Instabug
+import com.instabug.library.invocation.InstabugInvocationEvent
 import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.mikepenz.iconics.IconicsDrawable
 import com.mikepenz.materialdrawer.AccountHeaderBuilder
@@ -186,7 +188,10 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
             }
             //Attempting instabug integration.
             if (getPrefs.getBoolean(getString(R.string.pref_instabug_check), true)) {
-
+                // Do some instabug stuff
+                Instabug.Builder(application, "5ef04d81ac921706082e840ceb7b82ec")
+                        .setInvocationEvents(InstabugInvocationEvent.SHAKE, InstabugInvocationEvent.TWO_FINGER_SWIPE_LEFThyhbg)
+                        .build()
             }
 
             if (!getPrefs.getBoolean(getString(R.string.preference_work_mode), true)) {
@@ -224,7 +229,6 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
 
             val linkSpeed = Utilities.linkSpeed(applicationContext)
             val gHz = Utilities.frequency(applicationContext)
-            Log.i("RadioControl", "Test1: " + Utilities.getCellStatus(applicationContext))
             if (linkSpeed == -1) {
                 linkText.setText(R.string.cellNetwork)
             } else {
@@ -304,8 +308,6 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
                 statusText.setText(R.string.showDisabled)
                 statusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_deactivated))
 
-                Log.d("RadioControl", "Test1")
-
             } else {
                 //Preference handling
                 editor.putInt(getString(R.string.preference_app_active), 1)
@@ -314,12 +316,11 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
                 statusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_activated))
                 applicationContext.startService(bgj)
                 alarmUtil.scheduleAlarm(applicationContext)
-                Log.d("RadioControl", "Test2")
 
             }
-
+            editor.apply()
         }
-        editor.apply()
+
     }
 
     //Initialize method for the Whats new dialog
@@ -770,7 +771,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
             statusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_deactivated))
         }
 
-        if (sharedPref.getInt(getString(R.string.preference_app_active), 1) == 1) {
+        if (sharedPref.getInt(getString(R.string.preference_app_active), 0) == 1) {
             if (!rootInit()) {
                 toggle.isClickable = false
                 statusText.setText(R.string.noRoot)
@@ -836,7 +837,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
                 if (reachable) {
                     when {
                         timeDifference <= 50 -> Snackbar.make(clayout, "Excellent Latency: $timeDifference ms", Snackbar.LENGTH_LONG).show()
-                        timeDifference in 51.0..100.0 -> Snackbar.make(clayout, "Average Latency: $timeDifference ms", Snackbar.LENGTH_LONG).show()
+                        timeDifference in (51.0..100.0) -> Snackbar.make(clayout, "Average Latency: $timeDifference ms", Snackbar.LENGTH_LONG).show()
                         timeDifference in 101.0..200.0 -> Snackbar.make(clayout, "Poor Latency: $timeDifference ms", Snackbar.LENGTH_LONG).show()
                         timeDifference >= 201 -> Snackbar.make(clayout, "Very Poor Latency. VOIP and online gaming may suffer: $timeDifference ms", Snackbar.LENGTH_LONG).show()
                     }

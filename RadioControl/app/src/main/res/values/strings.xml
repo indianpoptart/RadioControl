@@ -69,14 +69,14 @@
     <string name="summary_airplane_service">Periodically awakens app to ensure full functionality</string>
     <string name="title_service_settings">Service Settings</string>
     <string name="summary_service_settings">Run the service every interval specified</string>
-    <string name="title_root_command_alt">Alternate root command(Experimental)</string>
+    <string name="title_root_command_alt">Alternate root command (Experimental)</string>
     <string name="summary_root_command_alt">This disables just the cell radio. Use this if you are having problems with bluetooth disconnects.</string>
     <string name="summaryAirplaneReset">Use this if you are having issues with manual airplane mode operation</string>
     <string name="resetAirplaneSettings">Reset Airplane Mode</string>
     <string name="LogTitle">Log Directory</string>
     <string name="LogDirSummary">Change where logs are saved</string>
     <string name="prefs_summary_phone_call">Checks for an active phone call and will enable the cell radio to ensure the call stays connected if WiFi is lost</string>
-    <string name="prefs_phone_check">Call Handling(Experimental)</string>
+    <string name="prefs_phone_check">Call Handling (Experimental)</string>
     <string name="prefs_title_phone_settings">Phone Settings</string>
     <string name="prefs_title_batOptim">Optimizations</string>
     <string name="title_battery_optimization">Background Optimization</string>
@@ -90,7 +90,7 @@
     <string name="not_set">not set</string>
     <string name="title_fabric_analytics">Fabric Crash reporting</string>
     <string name="summary_fabric_analytics">Crashes and error reporting. Nothing personally identifiable or unrelated to RadioControl</string>
-    <string name="title_doze_optimization">Battery Optimization</string>
+    <string name="title_doze_optimization">Battery Optimization(Doze)</string>
     <string name="drawer_string_troubleshooting">Troubleshooting (WIP)</string>
     <string name="permissionIntelligent">This works better with Background Optimization. Should I turn it on for you?</string>
     <string name="title_intelligent_mode">Intelligent Mode (Beta)</string>
@@ -168,5 +168,6 @@
     <string name="title_magisksu">MagiskSU</string>
     <string name="title_call_detector">Call Detector (Experimental)</string>
     <string name="text_name">Name</string>
+    <string name="summary_doze_disabler">This allows RadioControl to be awake by ignoring Android\'s Doze</string>
 
 </resources>

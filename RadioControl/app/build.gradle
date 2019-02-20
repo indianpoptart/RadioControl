@@ -68,7 +68,7 @@ dependencies {
     implementation 'androidx.cardview:cardview:1.0.0'
     //noinspection GradleDependency
     implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha2' //DO NOT UPDATE
-    implementation group: 'androidx.core', name: 'core', version: '1.1.0-alpha04'
+    implementation group: 'androidx.core', name: 'core-ktx', version: '1.0.1'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.recyclerview:recyclerview:1.1.0-alpha02'
 
@@ -86,7 +86,7 @@ dependencies {
     implementation 'com.instabug.library:instabug:8.0.19'
     implementation 'org.jetbrains.anko:anko-commons:0.10.8'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.1.1'
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.20'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.21'
     implementation 'com.novoda:simple-chrome-custom-tabs:0.1.6'
     implementation 'me.zhanghai.android.customtabshelper:library:1.0.6'
 
