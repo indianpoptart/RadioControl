@@ -134,7 +134,7 @@ class StatsActivity : AestheticActivity() {
         val fab = findViewById<Fab>(R.id.fab)
         val sheetView = findViewById<View>(R.id.fab_sheet)
         val overlay = findViewById<View>(R.id.overlay)
-        val sheetColor = ContextCompat.getColor(applicationContext, Color.DKGRAY)
+        val sheetColor = ContextCompat.getColor(applicationContext, R.color.material_drawer_background)
         val fabColor = ContextCompat.getColor(applicationContext, R.color.accent)
 
         // Initialize material sheet FAB

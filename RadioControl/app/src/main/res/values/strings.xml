@@ -131,7 +131,7 @@
     <string name="preference_airplane_service">isAirplaneService</string>
     <string name="preference_standby_dialog">isStandbyDialog</string>
     <string name="title_allow_fabric">Allow Fabric Crashlytics</string>
-    <string name="title_preference_instabug">Instabug In-app Feedback</string>
+    <string name="title_preference_instabug">Instabug In-app Feedback (Disabled)</string>
     <string name="summary_preference_instabug">Instabug is providing in-app feedback and bug reporting to mobile apps. It provides a seamless way for two-way communication with users, while providing detailed environment report for developers. Shake to activate</string>
     <string name="pref_instabug_check">instabugCheck</string>
     <string name="log_persistence_created">PERSISTENCE Created</string>

@@ -5,7 +5,6 @@ import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import android.preference.PreferenceManager
 import android.util.Log
 import androidx.core.app.JobIntentService
 import androidx.core.app.NotificationCompat
@@ -32,16 +31,8 @@ class OnBootIntentService : JobIntentService() {
                     .setContentText("Running startup operations...")
                     .build()
         }
-        val getPrefs = PreferenceManager.getDefaultSharedPreferences(applicationContext)
-        val airplaneService = getPrefs.getBoolean(getString(R.string.preference_airplane_service), false)
 
-        //Begin background service
-        if (airplaneService) {
-            val i = Intent(applicationContext, BackgroundJobService::class.java)
-            applicationContext.startService(i)
-            Log.d("RadioControl", "background Service launched")
-        }
-        if (getPrefs.getBoolean(getString(R.string.preference_work_mode), true)) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             val i = Intent(applicationContext, PersistenceService::class.java)
             if (Build.VERSION.SDK_INT >= 26) {
                 applicationContext.startForegroundService(i)

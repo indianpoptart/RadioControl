@@ -18,7 +18,6 @@ import android.preference.PreferenceManager
 import android.text.format.DateFormat
 import android.util.Log
 import android.view.Gravity
-import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.View.inflate
@@ -40,8 +39,6 @@ import com.github.stephenvinouze.core.models.KinAppPurchase
 import com.github.stephenvinouze.core.models.KinAppPurchaseResult
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
-import com.instabug.library.Instabug
-import com.instabug.library.invocation.InstabugInvocationEvent
 import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.mikepenz.iconics.IconicsDrawable
 import com.mikepenz.materialdrawer.AccountHeaderBuilder
@@ -60,6 +57,7 @@ import com.nikhilparanjape.radiocontrol.services.CellRadioService
 import com.nikhilparanjape.radiocontrol.services.PersistenceService
 import com.nikhilparanjape.radiocontrol.utilities.AlarmSchedulers
 import com.nikhilparanjape.radiocontrol.utilities.Utilities
+import com.topjohnwu.superuser.Shell
 import io.fabric.sdk.android.Fabric
 import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.doAsync
@@ -151,11 +149,10 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
         val currentapiVersion = Build.VERSION.SDK_INT
 
         init()//initializes the whats new dialog
-
+        //Checks for root
+        rootInit()
         //Async thread to do a preference checks
         doAsync {
-            //Checks for root
-            rootInit()
 
             //  If the activity has never started before...
             if (isFirstStart) {
@@ -185,13 +182,6 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
                     applicationContext.startService(i)
                 }
                 Log.d("RadioControl", "persist Service launched")
-            }
-            //Attempting instabug integration.
-            if (getPrefs.getBoolean(getString(R.string.pref_instabug_check), true)) {
-                // Do some instabug stuff
-                Instabug.Builder(application, "5ef04d81ac921706082e840ceb7b82ec")
-                        .setInvocationEvents(InstabugInvocationEvent.SHAKE, InstabugInvocationEvent.TWO_FINGER_SWIPE_LEFT)
-                        .build()
             }
 
             if (!getPrefs.getBoolean(getString(R.string.preference_work_mode), true)) {
@@ -701,13 +691,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
     }
 
     private fun rootInit(): Boolean {
-        return try {
-            Runtime.getRuntime().exec("su")
-            true
-        } catch (e: IOException) {
-            false
-        }
-
+        return Shell.rootAccess()
     }
 
     override fun onResume() {

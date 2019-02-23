@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog bulletedList="true">
 
+    <changelogversion versionName="6.0-Alpha1" changeDate="February 23, 2018">
+        <changelogtext>Fixes for Alternate root command</changelogtext>
+        <changelogtext>Fixed Battery optimization setting (doze)</changelogtext>
+        <changelogtext>Implemented LibSU for all root actions</changelogtext>
+        <changelogtext>Rewrote core process to JobService</changelogtext>
+        <changelogtext>Rewrote main BroadcastReceiver</changelogtext>
+        <changelogtext>Rewrote core process to JobService</changelogtext>
+        <changelogtext>Known bugs:</changelogtext>
+        <changelogtext>May not work properly on Android P</changelogtext>
+    </changelogversion>
     <changelogversion versionName="5.0.3-Beta8" changeDate="October 11, 2018">
         <changelogtext>Updated all libraries</changelogtext>
         <changelogtext>Migrated Android Support libraries to AndroidX</changelogtext>
