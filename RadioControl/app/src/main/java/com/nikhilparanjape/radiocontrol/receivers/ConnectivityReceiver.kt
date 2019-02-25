@@ -15,9 +15,8 @@ import com.nikhilparanjape.radiocontrol.services.BackgroundJobService
 /**
  * Created by Nikhil Paranjape on 11/8/2015.
  *
- * This file will get deprecated soon :( Sad, as it's the backbone of this app
+ * This uses some deprecated functions and may stop working :(
  *
- * No longer the "backbone" testing if it still is
  *
  * @author Nikhil Paranjape
  */
@@ -27,7 +26,7 @@ class ConnectivityReceiver : WakefulBroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
         intent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND)
-        Log.d("RadioControl", "Get action-ConRec: " + intent.action!!)
+        Log.d("RadioControl-CR", "Get action-ConRec: " + intent.action!!)
 
         val componentName = ComponentName(context, BackgroundJobService::class.java)
         val jobInfo = JobInfo.Builder(12, componentName)

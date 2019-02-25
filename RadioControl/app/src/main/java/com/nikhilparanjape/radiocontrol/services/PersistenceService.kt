@@ -29,22 +29,24 @@ class PersistenceService : Service() {
     var context: Context = this
     override fun onCreate() {
         super.onCreate()
-        Log.i("RadioControl", getString(R.string.log_persistence_created))
+        Log.i("RadioControl-persist", getString(R.string.log_persistence_created))
         createNotificationChannel()
     }
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
-        Log.i("RadioControl", getString(R.string.log_persistence_started))
+        Log.i("RadioControl-persist", getString(R.string.log_persistence_started))
         val filter = IntentFilter()
         filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+        val sp = context.getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && sp.getInt("isActive", 0) == 1) {
             Utilities.scheduleJob(context)
         }
 
         try {
             this.registerReceiver(myBroadcast, filter)
         } catch (e: Exception) {
-            Log.e("RadioControl-register", "Registration Failed")
+            Log.e("RadioControl-persist", "Registration Failed")
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
@@ -72,7 +74,9 @@ class PersistenceService : Service() {
             startForeground(1, notification)
 
         }
+
         return START_NOT_STICKY
+
     }
 
     private fun createNotificationChannel() {
@@ -92,7 +96,7 @@ class PersistenceService : Service() {
     }
 
     override fun onBind(intent: Intent): IBinder? {
-        Log.i("RadioControl", getString(R.string.log_persistence_bound))
+        Log.i("RadioControl-persist", getString(R.string.log_persistence_bound))
 
         return null
     }
@@ -100,6 +104,10 @@ class PersistenceService : Service() {
     override fun onDestroy() {
         unregisterReceiver(myBroadcast)
         super.onDestroy()
+    }
+    companion object {
+
+        private const val PRIVATE_PREF = "prefs"
     }
 
 }

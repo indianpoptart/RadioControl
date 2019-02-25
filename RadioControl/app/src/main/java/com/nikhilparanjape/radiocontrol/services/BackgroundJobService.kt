@@ -61,9 +61,7 @@ class BackgroundJobService : JobService(), ConnectivityReceiver.ConnectivityRece
         val h = HashSet(listOf("")) //Set default empty set for SSID check
         val selections = prefs.getStringSet("ssid", h) //Gets stringset, if empty sets default
         val networkAlert = prefs.getBoolean("isNetworkAlive", false)
-        prefs.getBoolean("isBatteryOn", true)
 
-        //Log.i("RadioControl-Job,"Battery Optimized");
         //Check if user wants the app on
         if (sp.getInt("isActive", 0) == 0) {
             Log.d("RadioControl-Job", "RadioControl has been disabled-job")
