@@ -45,7 +45,7 @@ class SettingsFragment : PreferenceFragment(), TimePickerDialog.OnTimeSetListene
 
         val sp = preferenceScreen.sharedPreferences
         val editor = sp.edit()
-        if (android.os.Build.VERSION.SDK_INT >= 24) {
+        if (Build.VERSION.SDK_INT >= 24) {
             preferenceScreen.findPreference("workMode").isEnabled = true
             editor.putBoolean("workMode", true)
             editor.apply()
@@ -77,7 +77,7 @@ class SettingsFragment : PreferenceFragment(), TimePickerDialog.OnTimeSetListene
         }
         val notificationPref = findPreference("button_network_key")
         notificationPref.setOnPreferenceClickListener {
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 val intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
                         .putExtra(Settings.EXTRA_APP_PACKAGE, c.packageName)
                 startActivity(intent)
@@ -245,7 +245,7 @@ class SettingsFragment : PreferenceFragment(), TimePickerDialog.OnTimeSetListene
                 dozeSetting.isChecked = false
                 Log.i("RadioControl", "false")
                 if (Build.VERSION.SDK_INT >= 23) {
-                    startActivityForResult(Intent(android.provider.Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS), 0)
+                    startActivityForResult(Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS), 0)
                     /*Intent intent = new Intent();
                     String packageName = c.getPackageName();
                     PowerManager pm = (PowerManager) c.getSystemService(Context.POWER_SERVICE);

@@ -93,7 +93,7 @@ class CustomPhoneStateListener(//private static final String TAG = "PhoneStateCh
                     if (prefs.getBoolean("altRootCommand", false) && !Utilities.isAirplaneMode(context)) {
                         if (Utilities.getCellStatus(context) == 1) {
                             val output = Shell.su("service call phone 27").exec().out
-                            Utilities.writeLog("root accessed: $output", context)
+                            writeLog("root accessed: $output", context)
                             Log.d("RadioControl", "Cell Radio has been turned on")
                         }
                     } else {
@@ -111,7 +111,7 @@ class CustomPhoneStateListener(//private static final String TAG = "PhoneStateCh
                     if (prefs.getBoolean("altRootCommand", false)) {
                         if (Utilities.getCellStatus(context) == 0) {
                             val output = Shell.su("service call phone 27").exec().out
-                            Utilities.writeLog("root accessed: $output", context)
+                            writeLog("root accessed: $output", context)
                             Log.d("RadioControl", "Cell Radio has been turned off")
                         }
                     } else {
@@ -133,20 +133,20 @@ class CustomPhoneStateListener(//private static final String TAG = "PhoneStateCh
                     if (prefs.getBoolean("altRootCommand", true)) {
                         if (Utilities.getCellStatus(context) == 1) {
                             val output = Shell.su("service call phone 27").exec().out
-                            Utilities.writeLog("root accessed: $output", context)
+                            writeLog("root accessed: $output", context)
                             Log.d("RadioControl", "Cell Radio has been turned on")
                             writeLog("Cell radio has been turned off", context)
                         }
                     } else {
                         if (prefs.getBoolean("altBTCommand", false)) {
                             val output = Shell.su("settings put global airplane_mode_on 0", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state false").exec().out
-                            Utilities.writeLog("root accessed: $output", context)
+                            writeLog("root accessed: $output", context)
                             //RootAccess.runCommands(airOffCmd3)
                             Log.d("RadioControl", "Airplane mode has been turned off(with bt cmd)")
                             writeLog("Airplane mode has been turned off", context)
                         } else {
                             val output = Shell.su("settings put global airplane_mode_on 0", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state false", "settings put global airplane_mode_radios  \"cell,bluetooth,nfc,wimax\"", "content update --uri content://settings/global --bind value:s:'cell,bluetooth,nfc,wimax' --where \"name='airplane_mode_radios'\"").exec().out
-                            Utilities.writeLog("root accessed: $output", context)
+                            writeLog("root accessed: $output", context)
                             //RootAccess.runCommands(airOffCmd2)
                             Log.d("RadioControl", "Airplane mode has been turned off")
                             writeLog("Airplane mode has been turned off", context)
@@ -170,7 +170,7 @@ class CustomPhoneStateListener(//private static final String TAG = "PhoneStateCh
 
                             if (Utilities.getCellStatus(context) == 0) {
                                 val output = Shell.su("service call phone 27").exec().out
-                                Utilities.writeLog("root accessed: $output", context)
+                                writeLog("root accessed: $output", context)
                                 Log.d("RadioControl", "Cell Radio has been turned off")
                             } else if (Utilities.getCellStatus(context) == 1) {
                                 Log.d("RadioControl", "Cell Radio is already off")
@@ -178,7 +178,7 @@ class CustomPhoneStateListener(//private static final String TAG = "PhoneStateCh
 
                         } else {
                             val output = Shell.su("settings put global airplane_mode_radios  \"cell\"", "content update --uri content://settings/global --bind value:s:'cell' --where \"name='airplane_mode_radios'\"", "settings put global airplane_mode_on 1", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state true").exec().out
-                            Utilities.writeLog("root accessed: $output", context)
+                            writeLog("root accessed: $output", context)
                             //RootAccess.runCommands(airCmd)
                             Log.d("RadioControl", "Airplane mode has been turned on")
                             writeLog("Airplane mode has been turned on", context)

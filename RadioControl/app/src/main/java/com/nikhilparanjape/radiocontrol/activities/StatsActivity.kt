@@ -347,7 +347,7 @@ class StatsActivity : AestheticActivity() {
                     sepWifiLost == 0f && octWifiLost == 0f && novWifiLost == 0f && decWifiLost == 0f) {
                 Log.d("RadioControl", "No log data")
             } else {
-                val largest = Collections.max(Arrays.asList(janWifiLost, febWifiLost, marWifiLost, aprWifiLost, mayWifiLost, junWifiLost, julWifiLost, augWifiLost, sepWifiLost, octWifiLost, novWifiLost, decWifiLost))
+                val largest = Collections.max(listOf(janWifiLost, febWifiLost, marWifiLost, aprWifiLost, mayWifiLost, junWifiLost, julWifiLost, augWifiLost, sepWifiLost, octWifiLost, novWifiLost, decWifiLost))
                 val max = largest.toInt()
 
                 chart.setAxisBorderValues(0, 0, max)
@@ -448,7 +448,7 @@ class StatsActivity : AestheticActivity() {
                     sepAirOn == 0f && octAirOn == 0f && novAirOn == 0f && decAirOn == 0f) {
                 Log.d("RadioControl", "No log data")
             } else {
-                val largest = Collections.max(Arrays.asList(janAirOn, febAirOn, marAirOn, aprAirOn, mayAirOn, junAirOn, julAirOn, augAirOn, sepAirOn, octAirOn, novAirOn, decAirOn))
+                val largest = Collections.max(listOf(janAirOn, febAirOn, marAirOn, aprAirOn, mayAirOn, junAirOn, julAirOn, augAirOn, sepAirOn, octAirOn, novAirOn, decAirOn))
                 val max = largest.toInt()
                 chart1.setAxisBorderValues(0, 0, max)
             }
@@ -550,7 +550,7 @@ class StatsActivity : AestheticActivity() {
                     sepRootOn == 0f && octRootOn == 0f && novRootOn == 0f && decRootOn == 0f) {
                 Log.d("RadioControl", "No log data")
             } else {
-                val largest = Collections.max(Arrays.asList(janRootOn, febRootOn, marRootOn, aprRootOn, mayRootOn, junRootOn, julRootOn, augRootOn, sepRootOn, octRootOn, novRootOn, decRootOn))
+                val largest = Collections.max(listOf(janRootOn, febRootOn, marRootOn, aprRootOn, mayRootOn, junRootOn, julRootOn, augRootOn, sepRootOn, octRootOn, novRootOn, decRootOn))
                 val max = largest.toInt()
                 chart2.setAxisBorderValues(0, 0, max)
             }

@@ -333,7 +333,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
             editor.putInt(VERSION_KEY, currentVersionNumber)
 
         }
-        if (android.os.Build.VERSION.SDK_INT >= 24 && !sharedPref.getBoolean(getString(R.string.preference_work_mode), false)) {
+        if (Build.VERSION.SDK_INT >= 24 && !sharedPref.getBoolean(getString(R.string.preference_work_mode), false)) {
             editor.putBoolean(getString(R.string.preference_work_mode), true)
         }
         editor.apply()
@@ -354,11 +354,11 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
     //Start a new activity for sending a feedback email
     private fun sendFeedback() {
         doAsync {
-            val emailIntent = Intent(android.content.Intent.ACTION_SEND)
+            val emailIntent = Intent(Intent.ACTION_SEND)
             emailIntent.type = "text/html"
-            emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, arrayOf(getString(R.string.mail_feedback_email)))
-            emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, getString(R.string.mail_feedback_subject))
-            emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, getString(R.string.mail_feedback_message))
+            emailIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf(getString(R.string.mail_feedback_email)))
+            emailIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.mail_feedback_subject))
+            emailIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.mail_feedback_message))
 
             uiThread {
                 startActivity(Intent.createChooser(emailIntent, getString(R.string.title_send_feedback)))

@@ -170,7 +170,7 @@ class AboutFragment : PreferenceFragment() {
             Log.e("AboutLibraries", "started")
         }
 
-        override fun onLibTaskFinished(fastItemAdapter: ItemAdapter<*>) {
+        override fun onLibTaskFinished(itemAdapter: ItemAdapter<*>) {
             Log.e("AboutLibraries", "finished")
         }
     }
