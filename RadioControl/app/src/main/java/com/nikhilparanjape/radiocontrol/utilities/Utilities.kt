@@ -14,7 +14,6 @@ import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import android.net.wifi.WifiManager
 import android.os.Build
-import android.preference.PreferenceManager
 import android.provider.Settings
 import android.telephony.TelephonyManager
 import android.text.format.DateFormat
@@ -100,7 +99,7 @@ class Utilities {
          * @return
          */
         fun writeLog(data: String, c: Context) {
-            val preferences = PreferenceManager.getDefaultSharedPreferences(c)
+            val preferences = androidx.preference.PreferenceManager.getDefaultSharedPreferences(c)
             if (preferences.getBoolean("enableLogs", false)) {
                 try {
                     val h = DateFormat.format("yyyy-MM-dd HH:mm:ss", System.currentTimeMillis()).toString()
@@ -124,13 +123,13 @@ class Utilities {
         fun scheduleJob(context: Context) {
             val serviceComponent = ComponentName(context, BackgroundJobService::class.java)
             val builder = JobInfo.Builder(1, serviceComponent)
-            val preferences = PreferenceManager.getDefaultSharedPreferences(context)
-            val intervalTime = preferences.getString("interval_prefs", "10").toInt()
+            val preferences = androidx.preference.PreferenceManager.getDefaultSharedPreferences(context)
+            val intervalTime = preferences.getString("interval_prefs", "10")?.toInt()
             //val intervalTime = Integer.parseInt(intervalTimeString)
             //val mJobScheduler = context as JobScheduler
 
-            builder.setMinimumLatency((intervalTime * 1000).toLong()) // wait at least
-            builder.setOverrideDeadline((intervalTime * 1000).toLong()) // maximum delay
+            (intervalTime?.times(1000))?.toLong()?.let { builder.setMinimumLatency(it) } // wait at least
+            (intervalTime?.times(1000))?.toLong()?.let { builder.setOverrideDeadline(it) } // maximum delay
             builder.setPersisted(true) // Persist at boot
             builder.setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY) // require any network
 

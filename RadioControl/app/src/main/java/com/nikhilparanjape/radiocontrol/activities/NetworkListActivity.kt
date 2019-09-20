@@ -15,8 +15,10 @@ import android.widget.ListView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
-import com.mikepenz.google_material_typeface_library.GoogleMaterial
+import com.mikepenz.iconics.IconicsColor
 import com.mikepenz.iconics.IconicsDrawable
+import com.mikepenz.iconics.IconicsSize
+import com.mikepenz.iconics.typeface.library.googlematerial.GoogleMaterial
 import com.nikhilparanjape.radiocontrol.R
 
 /**
@@ -34,7 +36,11 @@ class NetworkListActivity : AppCompatActivity() {
         val actionBar = supportActionBar
 
         if (actionBar != null) {
-            actionBar.setHomeAsUpIndicator(IconicsDrawable(this, GoogleMaterial.Icon.gmd_arrow_back).color(Color.WHITE).sizeDp(IconicsDrawable.TOOLBAR_ICON_SIZE).paddingDp(IconicsDrawable.TOOLBAR_ICON_PADDING))
+            actionBar.setHomeAsUpIndicator(IconicsDrawable(this)
+                                                .icon(GoogleMaterial.Icon.gmd_arrow_back)
+                                                .color(IconicsColor.colorInt(Color.WHITE))
+                                                .size(IconicsSize.TOOLBAR_ICON_SIZE)
+                                                .padding(IconicsSize.TOOLBAR_ICON_PADDING))
             actionBar.setDisplayHomeAsUpEnabled(true)
             actionBar.setTitle(R.string.title_activity_network)
         }

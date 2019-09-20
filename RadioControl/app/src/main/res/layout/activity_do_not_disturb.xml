@@ -47,30 +47,38 @@
         android:theme="@style/FlatButton"
         style="@style/Widget.AppCompat.Button.Borderless"/>
 
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingStart="10dp"
+        android:layout_alignBottom="@+id/dnd_status"
+        android:layout_marginStart="0dp"
+        android:layout_marginBottom="0dp"
+        android:layout_toEndOf="@+id/dnd_status"
+        android:text="@string/text_activity_do_not_disturb_is"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/hour_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/textView5"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="0dp"
+        android:layout_toEndOf="@+id/textView5"
+        android:paddingStart="3dp"
+        android:text="@string/text_activity_set_for_x_hours"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
     <ImageView
+        android:id="@+id/dnd_status"
         android:layout_width="64dp"
         android:layout_height="64dp"
-        android:id="@+id/dnd_status"
-        app:srcCompat="@drawable/ic_do_not_disturb_off_white_48px"
+        android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="@string/text_activity_do_not_disturb_is"
-        android:id="@+id/textView5"
-        android:layout_alignBottom="@+id/dnd_status"
-        android:layout_toEndOf="@+id/dnd_status" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="@string/text_activity_set_for_x_hours"
-        android:id="@+id/hour_text"
-        android:layout_alignTop="@+id/textView5"
-        android:layout_toEndOf="@+id/textView5" />
+        android:layout_marginStart="12dp"
+        android:layout_marginBottom="510dp"
+        app:srcCompat="@drawable/ic_do_not_disturb_off_white_48px" />
 
 </RelativeLayout>

@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
-import android.preference.PreferenceManager
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
@@ -19,8 +18,10 @@ import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import com.afollestad.materialdialogs.MaterialDialog
 import com.appyvet.rangebar.RangeBar
-import com.mikepenz.google_material_typeface_library.GoogleMaterial
+import com.mikepenz.iconics.IconicsColor
 import com.mikepenz.iconics.IconicsDrawable
+import com.mikepenz.iconics.IconicsSize
+import com.mikepenz.iconics.typeface.library.googlematerial.GoogleMaterial
 import com.nikhilparanjape.radiocontrol.R
 import com.nikhilparanjape.radiocontrol.receivers.ActionReceiver
 import com.nikhilparanjape.radiocontrol.utilities.AlarmSchedulers
@@ -35,11 +36,15 @@ class DoNotDisturbActivity : AppCompatActivity() {
 
         val actionBar = supportActionBar
         val alarmUtil = AlarmSchedulers()
-        val pref = PreferenceManager.getDefaultSharedPreferences(applicationContext)
+        val pref = androidx.preference.PreferenceManager.getDefaultSharedPreferences(applicationContext)
         val editor = pref.edit()
 
         if (actionBar != null) {
-            actionBar.setHomeAsUpIndicator(IconicsDrawable(this, GoogleMaterial.Icon.gmd_arrow_back).color(Color.WHITE).sizeDp(IconicsDrawable.TOOLBAR_ICON_SIZE).paddingDp(IconicsDrawable.TOOLBAR_ICON_PADDING))
+            actionBar.setHomeAsUpIndicator(IconicsDrawable(this)
+                                                .icon(GoogleMaterial.Icon.gmd_arrow_back)
+                                                .color(IconicsColor.colorInt(Color.WHITE))
+                                                .size(IconicsSize.TOOLBAR_ICON_SIZE)
+                                                .padding(IconicsSize.TOOLBAR_ICON_PADDING))
             actionBar.setDisplayHomeAsUpEnabled(true)
             actionBar.setTitle(R.string.title_do_not_disturb)
         }
@@ -49,7 +54,7 @@ class DoNotDisturbActivity : AppCompatActivity() {
 
         if (pref.getBoolean("isNoDisturbEnabled", false)) {
             status.setImageDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.ic_do_not_disturb_on_white_48px))
-            hourStatus.text = "set for " + pref.getInt("dndHours", 0) + " hour(s)"
+            hourStatus.text = getString(R.string.text_status_set_for) + pref.getInt("dndHours", 0) + getString(R.string.text_hour_s)
             cancelButton.visibility = View.VISIBLE
         } else {
             hourStatus.text = getString(R.string.text_not_set)

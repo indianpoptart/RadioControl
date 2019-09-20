@@ -18,6 +18,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.preference.PreferenceFragmentCompat
 import com.afollestad.materialdialogs.MaterialDialog
 import com.borax12.materialdaterangepicker.time.RadialPickerLayout
 import com.borax12.materialdaterangepicker.time.TimePickerDialog
@@ -28,6 +29,7 @@ import com.nikhilparanjape.radiocontrol.services.PersistenceService
 import com.nikhilparanjape.radiocontrol.utilities.AlarmSchedulers
 import com.nikhilparanjape.radiocontrol.utilities.RootAccess
 import com.nikhilparanjape.radiocontrol.utilities.Utilities
+import org.jetbrains.anko.defaultSharedPreferences
 import java.io.File
 import java.util.*
 
@@ -51,7 +53,7 @@ class SettingsFragment : PreferenceFragment(), TimePickerDialog.OnTimeSetListene
             editor.apply()
         }
 
-        c = activity
+        c = this!!.activity
         val alarmUtil = AlarmSchedulers()
 
         preferenceScreen.findPreference("ssid").isEnabled = Utilities.isWifiOn(c)
@@ -215,8 +217,10 @@ class SettingsFragment : PreferenceFragment(), TimePickerDialog.OnTimeSetListene
         }
         altRootCommand.setOnPreferenceClickListener {
             if (!altRootCommand.isEnabled){
-                Snackbar.make(view, "Disable Intelligent mode first", Snackbar.LENGTH_LONG)
-                        .show()
+                view?.let { it1 ->
+                    Snackbar.make(it1, "Disable Intelligent mode first", Snackbar.LENGTH_LONG)
+                            .show()
+                }
             }
             true
         }
@@ -232,8 +236,10 @@ class SettingsFragment : PreferenceFragment(), TimePickerDialog.OnTimeSetListene
                     val pm = c.getSystemService(Context.POWER_SERVICE) as PowerManager
                     if (pm.isIgnoringBatteryOptimizations(packageName)) {
                         Log.i("RadioControl", "ignoring")
-                        intent.action = Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS
-                        c.startActivity(intent)
+                        view?.let { it1 ->
+                            Snackbar.make(it1, "RadioControl is already excluded from Doze", Snackbar.LENGTH_LONG)
+                                    .show()
+                        }
                     } else {
                         intent.action = Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
                         intent.data = Uri.parse("package:$packageName")
@@ -324,7 +330,7 @@ class SettingsFragment : PreferenceFragment(), TimePickerDialog.OnTimeSetListene
                 editor13.apply()
 
                 val intervalTimeString = preferences.getString("interval_prefs", "60")
-                val intervalTime = Integer.parseInt(intervalTimeString)
+                val intervalTime = Integer.parseInt(intervalTimeString.toString())
                 val airplaneService = preferences.getBoolean("isAirplaneService", false)
 
                 if (intervalTime != 0 && airplaneService) {
@@ -350,7 +356,7 @@ class SettingsFragment : PreferenceFragment(), TimePickerDialog.OnTimeSetListene
                 false
         )
         tpd.isThemeDark = true
-        tpd.setAccentColor(R.color.mdtp_accent_color)
+        tpd.setAccentColor(R.color.mdtp_accent_color_dark)
 
         val nightMode = findPreference("night-mode-service")
         nightMode.setOnPreferenceClickListener {

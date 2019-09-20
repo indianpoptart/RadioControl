@@ -8,8 +8,7 @@
         <changelogtext>Rewrote core process to JobService</changelogtext>
         <changelogtext>Rewrote main BroadcastReceiver</changelogtext>
         <changelogtext>Rewrote core process to JobService</changelogtext>
-        <changelogtext>Known bugs:</changelogtext>
-        <changelogtext>May not work properly on Android P</changelogtext>
+        <changelogbug>May not work properly on Android P</changelogbug>
     </changelogversion>
     <changelogversion versionName="5.0.3-Beta8" changeDate="October 11, 2018">
         <changelogtext>Updated all libraries</changelogtext>
@@ -18,7 +17,7 @@
         <changelogtext>General code cleanup</changelogtext>
         <changelogtext>Optimized Imports</changelogtext>
         <changelogtext>Fixed typos</changelogtext>
-        <changelogtext>Removed IAB classes that were old</changelogtext>
+        <changelogtext>Removed old billing classes</changelogtext>
         <changelogtext>Overhauling dialogs with MaterialDialog 2.0 beta</changelogtext>
         <changelogtext>Fixing issues with old dialogs</changelogtext>
         <changelogtext>Fixed issue with boot receiving</changelogtext>

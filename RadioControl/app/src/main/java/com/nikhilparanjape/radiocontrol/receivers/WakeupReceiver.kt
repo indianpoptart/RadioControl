@@ -13,7 +13,7 @@ class WakeupReceiver : BroadcastReceiver() {
         val alarmUtil = AlarmSchedulers()
         alarmUtil.scheduleAlarm(context)
 
-        val pref = PreferenceManager.getDefaultSharedPreferences(context)
+        val pref = androidx.preference.PreferenceManager.getDefaultSharedPreferences(context)
         val editor = pref.edit()
         editor.putBoolean("isNoDisturbEnabled", false)
         editor.apply()

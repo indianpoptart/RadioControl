@@ -24,7 +24,7 @@ class CellRadioService : IntentService("CellRadioService") {
     override fun onBind(intent: Intent): IBinder? {
         return null
     }
-    override fun onHandleIntent(intent: Intent) {
+    override fun onHandleIntent(intent: Intent?) {
         if (!mRunning) {
             mRunning = true
             Log.d("RadioControl", "CellService Toggled")

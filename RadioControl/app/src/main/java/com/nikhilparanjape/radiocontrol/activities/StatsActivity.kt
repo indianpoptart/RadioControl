@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.graphics.Color
 import android.graphics.Paint
 import android.os.Bundle
-import android.preference.PreferenceManager
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
@@ -26,8 +25,10 @@ import com.db.chart.view.animation.easing.*
 import com.google.android.material.snackbar.Snackbar
 import com.gordonwong.materialsheetfab.MaterialSheetFab
 import com.gordonwong.materialsheetfab.MaterialSheetFabEventListener
-import com.mikepenz.google_material_typeface_library.GoogleMaterial
+import com.mikepenz.iconics.IconicsColor
 import com.mikepenz.iconics.IconicsDrawable
+import com.mikepenz.iconics.IconicsSize
+import com.mikepenz.iconics.typeface.library.googlematerial.GoogleMaterial
 import com.nikhilparanjape.radiocontrol.R
 import com.nikhilparanjape.radiocontrol.utilities.Fab
 import me.grantland.widget.AutofitHelper
@@ -109,7 +110,7 @@ class StatsActivity : AestheticActivity() {
             // Causes an Activity recreate, calls setTheme(Int) on it.
             activityTheme(R.style.MaterialDarkThemenoab)
         }
-        val prefs = PreferenceManager.getDefaultSharedPreferences(applicationContext)
+        val prefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(applicationContext)
         val editor = prefs.edit()
         if (!prefs.contains("gridlines")) {
             editor.putInt("gridlines", 0)
@@ -125,7 +126,11 @@ class StatsActivity : AestheticActivity() {
         findViewById<CoordinatorLayout>(R.id.clayout)
 
         if (actionBar != null) {
-            supportActionBar?.setHomeAsUpIndicator(IconicsDrawable(this, GoogleMaterial.Icon.gmd_arrow_back).color(Color.WHITE).sizeDp(IconicsDrawable.TOOLBAR_ICON_SIZE).paddingDp(IconicsDrawable.TOOLBAR_ICON_PADDING))
+            supportActionBar?.setHomeAsUpIndicator(IconicsDrawable(this)
+                                                        .icon(GoogleMaterial.Icon.gmd_arrow_back)
+                                                        .color(IconicsColor.colorInt(Color.WHITE))
+                                                        .size(IconicsSize.TOOLBAR_ICON_SIZE)
+                                                        .padding(IconicsSize.TOOLBAR_ICON_PADDING))
             supportActionBar?.setDisplayHomeAsUpEnabled(true)
             actionBar.title = "Statistics"
 
@@ -195,7 +200,7 @@ class StatsActivity : AestheticActivity() {
     }
 
     private fun showLongList() {
-        val prefs = PreferenceManager.getDefaultSharedPreferences(applicationContext)
+        val prefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(applicationContext)
         val editor = prefs.edit()
 
         MaterialDialog(this)
@@ -222,7 +227,7 @@ class StatsActivity : AestheticActivity() {
     }
 
     private fun showDurationDialog() {
-        val prefs = PreferenceManager.getDefaultSharedPreferences(applicationContext)
+        val prefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(applicationContext)
         val editor = prefs.edit()
         var index = prefs.getInt("duration", 2)
         index -= 1
@@ -252,7 +257,7 @@ class StatsActivity : AestheticActivity() {
     }
 
     private fun showGridLineDialog() {
-        val prefs = PreferenceManager.getDefaultSharedPreferences(applicationContext)
+        val prefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(applicationContext)
         val editor = prefs.edit()
 
         MaterialDialog(this)
@@ -282,7 +287,7 @@ class StatsActivity : AestheticActivity() {
         progress1.visibility = View.VISIBLE
 
         doAsync {
-            val prefs = PreferenceManager.getDefaultSharedPreferences(applicationContext)
+            val prefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(applicationContext)
             //Initiate chart
             chart = findViewById(R.id.linechart)
             //Initiate dataset for chart
@@ -376,7 +381,7 @@ class StatsActivity : AestheticActivity() {
         val progress2 = findViewById<ProgressBar>(R.id.progressAirplaneOn)
         progress2.visibility = View.VISIBLE
         doAsync {
-            val prefs = PreferenceManager.getDefaultSharedPreferences(applicationContext)
+            val prefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(applicationContext)
             //Initiate chart
             chart1 = findViewById(R.id.linechart_airplane_on)
             //Initiate dataset for chart
@@ -477,7 +482,7 @@ class StatsActivity : AestheticActivity() {
         val progress3 = findViewById<ProgressBar>(R.id.progressRootAccess)
         progress3.visibility = View.VISIBLE
         doAsync {
-            val prefs = PreferenceManager.getDefaultSharedPreferences(applicationContext)
+            val prefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(applicationContext)
             //Initiate chart
             chart2 = findViewById(R.id.linechart_root_access)
             //Initiate dataset for chart

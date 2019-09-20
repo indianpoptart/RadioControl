@@ -6,7 +6,6 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkRequest
 import android.os.Build
-import android.preference.PreferenceManager
 import android.text.format.DateFormat
 import android.util.Log
 import com.nikhilparanjape.radiocontrol.receivers.ConnectivityReceiver
@@ -55,7 +54,7 @@ class BackgroundJobService : JobService(), ConnectivityReceiver.ConnectivityRece
 
         val context = applicationContext
         val sp = context.getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE)
-        val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+        val prefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(context)
         val disabledPref = context.getSharedPreferences("disabled-networks", Context.MODE_PRIVATE)
 
         val h = HashSet(listOf("")) //Set default empty set for SSID check
@@ -168,7 +167,7 @@ class BackgroundJobService : JobService(), ConnectivityReceiver.ConnectivityRece
     }
 
     private fun writeLog(data: String, c: Context) {
-        val preferences = PreferenceManager.getDefaultSharedPreferences(c)
+        val preferences = androidx.preference.PreferenceManager.getDefaultSharedPreferences(c)
         if (preferences.getBoolean("enableLogs", false)) {
             try {
                 val h = DateFormat.format("yyyy-MM-dd HH:mm:ss", System.currentTimeMillis()).toString()
@@ -201,7 +200,7 @@ class BackgroundJobService : JobService(), ConnectivityReceiver.ConnectivityRece
                 Log.d("RadioControl-Job", "Reachable?: $reachable")
 
                 val sp = context.getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE)
-                val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+                val prefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(context)
 
                 val alertPriority = prefs.getBoolean("networkPriority", false)//Setting for network notifier
                 val alertSounds = prefs.getBoolean("networkSound", false)

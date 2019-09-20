@@ -14,7 +14,6 @@ import android.graphics.drawable.Drawable
 import android.net.ConnectivityManager
 import android.os.Build
 import android.os.Bundle
-import android.preference.PreferenceManager
 import android.text.format.DateFormat
 import android.util.Log
 import android.view.Gravity
@@ -28,6 +27,7 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
+import androidx.core.content.pm.PackageInfoCompat.getLongVersionCode
 import com.afollestad.materialdialogs.MaterialDialog
 import com.crashlytics.android.Crashlytics
 import com.crashlytics.android.answers.Answers
@@ -39,8 +39,10 @@ import com.github.stephenvinouze.core.models.KinAppPurchase
 import com.github.stephenvinouze.core.models.KinAppPurchaseResult
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
-import com.mikepenz.google_material_typeface_library.GoogleMaterial
+import com.mikepenz.iconics.IconicsColor
 import com.mikepenz.iconics.IconicsDrawable
+import com.mikepenz.iconics.IconicsSize
+import com.mikepenz.iconics.typeface.library.googlematerial.GoogleMaterial
 import com.mikepenz.materialdrawer.AccountHeaderBuilder
 import com.mikepenz.materialdrawer.Drawer
 import com.mikepenz.materialdrawer.DrawerBuilder
@@ -48,6 +50,7 @@ import com.mikepenz.materialdrawer.model.DividerDrawerItem
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem
 import com.mikepenz.materialdrawer.model.ProfileDrawerItem
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem
+import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem
 import com.nikhilparanjape.radiocontrol.BuildConfig
 import com.nikhilparanjape.radiocontrol.R
 import com.nikhilparanjape.radiocontrol.receivers.ActionReceiver
@@ -108,7 +111,11 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
 
         //Sets the actionbar with hamburger
         if (actionBar != null) {
-            actionBar.setHomeAsUpIndicator(IconicsDrawable(this, GoogleMaterial.Icon.gmd_menu).color(Color.WHITE).sizeDp(IconicsDrawable.TOOLBAR_ICON_SIZE).paddingDp(IconicsDrawable.TOOLBAR_ICON_PADDING))
+            actionBar.setHomeAsUpIndicator(IconicsDrawable(this)
+                                                .icon(GoogleMaterial.Icon.gmd_menu)
+                                                .color(IconicsColor.colorInt(Color.WHITE))
+                                                .size(IconicsSize.TOOLBAR_ICON_SIZE)
+                                                .padding(IconicsSize.TOOLBAR_ICON_PADDING))
             actionBar.setDisplayHomeAsUpEnabled(true)
         }
 
@@ -122,7 +129,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
 
         //Pref values
         //  Initialize SharedPreferences
-        val getPrefs = PreferenceManager.getDefaultSharedPreferences(applicationContext)
+        val getPrefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(applicationContext)
         val sharedPref = getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE)
         val editor = sharedPref.edit()
 
@@ -149,8 +156,15 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
         val currentapiVersion = Build.VERSION.SDK_INT
 
         init()//initializes the whats new dialog
-        //Checks for root
-        rootInit()
+        //Checks for root, if none, disabled toggle switch
+        if (!rootInit()) {
+            //Preference handling
+            editor.putInt(getString(R.string.preference_app_active), 0)
+            toggle.isEnabled = false
+            statusText.setText(R.string.noRoot)
+            statusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_deactivated))
+            editor.apply()
+        }
         //Async thread to do a preference checks
         doAsync {
 
@@ -297,6 +311,10 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
                 //UI Handling
                 statusText.setText(R.string.showDisabled)
                 statusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_deactivated))
+                if (!rootInit()) {
+                    toggle.isEnabled = false
+                    statusText.setText(R.string.noRoot)
+                }
 
             } else {
                 //Preference handling
@@ -309,6 +327,21 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
 
             }
             editor.apply()
+        }
+        toggle.setOnLongClickListener{
+            val bgj = Intent(applicationContext, BackgroundJobService::class.java)
+
+            //Preference handling
+            editor.putInt(getString(R.string.preference_app_active), 1)
+            //UI Handling
+            statusText.setText(R.string.showEnabledDebug)
+            statusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_activated_debug))
+            applicationContext.startService(bgj)
+            alarmUtil.scheduleAlarm(applicationContext)
+            Toast.makeText(applicationContext, "Caution: Rogue Robots",
+                    Toast.LENGTH_LONG).show()
+            editor.apply()
+            false
         }
 
     }
@@ -323,7 +356,8 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
 
         try {
             val pi = packageManager.getPackageInfo(packageName, 0)
-            currentVersionNumber = pi.versionCode
+            val longVersionCode = getLongVersionCode(pi)
+            currentVersionNumber = longVersionCode.toInt()
         } catch (e: Exception) {
             Log.e("RadioControl", "Unable to get version number")
         }
@@ -385,6 +419,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
     private fun drawerCreate() {
         var carrierName = "Not Rooted"
         val sharedPref = getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE)
+        var headerIcon = ContextCompat.getDrawable(applicationContext, R.mipmap.header)
 
         icon = when {
             deviceName.contains("Nexus 6P") -> AppCompatResources.getDrawable(applicationContext, R.mipmap.huawei)!!
@@ -401,14 +436,13 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
         if (rootInit()) {
             carrierIcon = IconicsDrawable(this)
                     .icon(GoogleMaterial.Icon.gmd_check_circle)
-                    .color(Color.GREEN)
+                    .color(IconicsColor.colorInt(Color.GREEN))
             carrierName = "Rooted"
         } else {
             carrierIcon = IconicsDrawable(this)
                     .icon(GoogleMaterial.Icon.gmd_error_outline)
-                    .color(Color.RED)
+                    .color(IconicsColor.colorInt(Color.RED))
         }
-        var headerIcon = ContextCompat.getDrawable(applicationContext, R.mipmap.header)
 
         if (sharedPref.getBoolean(getString(R.string.preference_is_developer), false)) {
             headerIcon = ContextCompat.getDrawable(applicationContext, R.mipmap.header2)
@@ -417,12 +451,11 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
         //Creates navigation drawer header
         val headerResult = AccountHeaderBuilder()
                 .withActivity(this)
-                .withHeaderBackground(headerIcon)
+                .withHeaderBackground(headerIcon!!)
                 .addProfiles(
                         ProfileDrawerItem().withName(deviceName).withEmail("v$versionName").withIcon(icon),
                         ProfileDrawerItem().withName(getString(R.string.profile_root_status)).withEmail(carrierName).withIcon(carrierIcon)
                 )
-                .withOnAccountHeaderListener { _, _, _ -> false }
                 .build()
         //Creates navigation drawer items
         val item1 = PrimaryDrawerItem().withIdentifier(1).withName(R.string.home).withIcon(GoogleMaterial.Icon.gmd_wifi)
@@ -452,52 +485,53 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
                         item5,
                         item7
                 )
-                .withOnDrawerItemClickListener { _, position, _ ->
-                    Log.d("RadioControl", "The drawer is at position $position")
-                    //About button
-                    if (position == 3) {
-                        startSettingsActivity()
+                .withOnDrawerItemClickListener (object: Drawer.OnDrawerItemClickListener {
+                    override fun onItemClick(view: View?, position: Int, drawerItem: IDrawerItem<*>): Boolean {
+                        Log.d("RadioControl", "The drawer is at position $position")
+                        if (position == 3) {
+                            startSettingsActivity()
 
-                        Log.d("drawer", "Started settings activity")
-                    } else if (position == 4) {
-                        val log = File(applicationContext.filesDir, "radiocontrol.log")
-                        if (log.exists() && log.canRead()) {
-                            Log.d("RadioControl", "Log Exists")
-                            startStatsActivity()
-                        } else {
+                            Log.d("drawer", "Started settings activity")
+                        } else if (position == 4) {
+                            val log = File(applicationContext.filesDir, "radiocontrol.log")
+                            if (log.exists() && log.canRead()) {
+                                Log.d("RadioControl", "Log Exists")
+                                startStatsActivity()
+                            } else {
+                                result.setSelection(item1)
+                                Snackbar.make(clayout, "No log file found", Snackbar.LENGTH_LONG)
+                                        .show()
+                            }
+                        } else if (position == 5) {
+                            startAboutActivity()
+                            Log.d("drawer", "Started about activity")
+                        } else if (position == 7) {
                             result.setSelection(item1)
-                            Snackbar.make(clayout, "No log file found", Snackbar.LENGTH_LONG)
+                            Snackbar.make(clayout, "Coming in v5.1!", Snackbar.LENGTH_LONG)
                                     .show()
+                            startTroubleActivity()
+                        } else if (position == 8) {
+                            //Donation
+                            result.setSelection(item1)
+                            Log.d("RadioControl", "Donation button pressed")
+                            if (Utilities.isConnected(applicationContext)) {
+                                showDonateDialog()
+                            } else {
+                                showErrorDialog()
+                            }
+                        } else if (position == 9) {
+                            result.setSelection(item1)
+                            Log.d("RadioControl", "Feedback")
+                            sendFeedback()
+                        } else if (position == 10) {
+                            result.setSelection(item1)
+                            Log.d("RadioControl", "Standby Mode Engaged")
+                            startStandbyMode()
                         }
-                    } else if (position == 5) {
-                        startAboutActivity()
-                        Log.d("drawer", "Started about activity")
-                    } else if (position == 7) {
-                        result.setSelection(item1)
-                        Snackbar.make(clayout, "Coming in v5.1!", Snackbar.LENGTH_LONG)
-                                .show()
-                        startTroubleActivity()
-                    } else if (position == 8) {
-                        //Donation
-                        result.setSelection(item1)
-                        Log.d("RadioControl", "Donation button pressed")
-                        if (Utilities.isConnected(applicationContext)) {
-                            showDonateDialog()
-                        } else {
-                            showErrorDialog()
-                        }
-                    } else if (position == 9) {
-                        result.setSelection(item1)
-                        Log.d("RadioControl", "Feedback")
-                        sendFeedback()
-                    } else if (position == 10) {
-                        result.setSelection(item1)
-                        Log.d("RadioControl", "Standby Mode Engaged")
-                        startStandbyMode()
+                        return false
+
                     }
-                    false
-                }
-                .build()
+                }).build()
         result.setSelection(item1)
 
     }
@@ -536,7 +570,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
                 Toast.LENGTH_LONG).show()
 
         val pIntentLogin = PendingIntent.getBroadcast(applicationContext, 1, intentAction, PendingIntent.FLAG_UPDATE_CURRENT)
-        val note = NotificationCompat.Builder(applicationContext)
+        val note = NotificationCompat.Builder(applicationContext, "MainActivity")
                 .setSmallIcon(R.drawable.ic_warning_black_48dp)
                 .setContentTitle(getString(R.string.title_standby_dialog))
                 .setContentText(getString(R.string.title_service_paused))
@@ -638,7 +672,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
             KinAppPurchaseResult.SUCCESS -> {
                 Toast.makeText(applicationContext, R.string.donationThanks, Toast.LENGTH_LONG).show()
                 Log.d("RadioControl", "In-app purchase succeeded")
-                val pref = PreferenceManager.getDefaultSharedPreferences(applicationContext)
+                val pref = androidx.preference.PreferenceManager.getDefaultSharedPreferences(applicationContext)
                 val editor = pref.edit()
                 editor.putBoolean(getString(R.string.preference_is_donated), true)
                 editor.apply()
@@ -656,7 +690,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
             KinAppPurchaseResult.INVALID_SIGNATURE -> {
                 Toast.makeText(applicationContext, R.string.donationThanks, Toast.LENGTH_LONG).show()
                 Log.d("RadioControl", "In-app purchase succeeded, however verification failed")
-                val pref = PreferenceManager.getDefaultSharedPreferences(applicationContext)
+                val pref = androidx.preference.PreferenceManager.getDefaultSharedPreferences(applicationContext)
                 val editor = pref.edit()
                 editor.putBoolean(getString(R.string.preference_is_donated), true)
                 editor.apply()
@@ -697,7 +731,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
     override fun onResume() {
         super.onResume()
         val sharedPref = getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE)
-        val pref = PreferenceManager.getDefaultSharedPreferences(applicationContext)
+        val pref = androidx.preference.PreferenceManager.getDefaultSharedPreferences(applicationContext)
         doAsync {
             if (!pref.getBoolean(getString(R.string.preference_work_mode), true)) {
                 registerForBroadcasts(applicationContext)
@@ -748,14 +782,14 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
         }
 
         if (!rootInit()) {
-            toggle.isClickable = false
+            toggle.isEnabled = false
             statusText.setText(R.string.noRoot)
             statusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_deactivated))
         }
 
         if (sharedPref.getInt(getString(R.string.preference_app_active), 0) == 1) {
             if (!rootInit()) {
-                toggle.isClickable = false
+                toggle.isEnabled = false
                 statusText.setText(R.string.noRoot)
                 statusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_deactivated))
             } else {
@@ -766,7 +800,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
 
         } else if (sharedPref.getInt(getString(R.string.preference_app_active), 0) == 0) {
             if (!rootInit()) {
-                toggle.isClickable = false
+                toggle.isEnabled = false
                 statusText.setText(R.string.noRoot)
                 statusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_deactivated))
             } else {
@@ -779,7 +813,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
     }
 
     private fun writeLog(data: String, c: Context) {
-        val preferences = PreferenceManager.getDefaultSharedPreferences(c)
+        val preferences = androidx.preference.PreferenceManager.getDefaultSharedPreferences(c)
         if (preferences.getBoolean("enableLogs", false)) {
             try {
                 val h = DateFormat.format("yyyy-MM-dd HH:mm:ss", System.currentTimeMillis()).toString()
@@ -802,7 +836,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
 
     private fun pingCheck() {
         var dialog: ProgressBar
-        val preferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)
+        val preferences = androidx.preference.PreferenceManager.getDefaultSharedPreferences(applicationContext)
         val ip = preferences.getString("prefPingIp", "8.8.8.8")
         doAsync {
             val address = InetAddress.getByName(ip)

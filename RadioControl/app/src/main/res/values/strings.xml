@@ -87,6 +87,7 @@
     <string name="permissionSampleFabric">Allow <b>RadioControl</b> to send crash and error reports to Fabric Crashlytics</string>
     <string name="showDisabled">is Disabled</string>
     <string name="showEnabled">is Enabled</string>
+    <string name="showEnabledDebug">is Enabled(DEBUG)</string>
     <string name="not_set">not set</string>
     <string name="title_fabric_analytics">Fabric Crash reporting</string>
     <string name="summary_fabric_analytics">Crashes and error reporting. Nothing personally identifiable or unrelated to RadioControl</string>
@@ -169,5 +170,13 @@
     <string name="title_call_detector">Call Detector (Experimental)</string>
     <string name="text_name">Name</string>
     <string name="summary_doze_disabler">This allows RadioControl to be awake by ignoring Android\'s Doze</string>
+    <string name="text_status_set_for">set for</string>
+    <string name="text_hour_s">hour(s)</string>
+    <string name="key_pref_about_changelog">changelog</string>
+    <string name="key_preference_about_version">version</string>
+    <string name="key_preference_about_tutorial">tutorial</string>
+    <string name="key_preference_about_source">source</string>
+    <string name="key_preference_about_support">support</string>
+    <string name="key_preference_about_aboutlib">aboutLib</string>
 
 </resources>
