@@ -31,6 +31,7 @@
 
     </style>
     <style name="MaterialDarkThemenoab" parent="Theme.AppCompat.NoActionBar">
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
         <!-- Main theme colors -->
         <!--   your app branding color for the app bar -->
         <item name="colorPrimary">@color/blue</item>

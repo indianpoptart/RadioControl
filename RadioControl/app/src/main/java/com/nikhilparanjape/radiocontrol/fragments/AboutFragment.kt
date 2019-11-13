@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.browser.customtabs.CustomTabsIntent
+import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import com.google.android.material.snackbar.Snackbar
 import com.mikepenz.aboutlibraries.LibTaskCallback
@@ -29,102 +30,26 @@ import org.jetbrains.anko.doAsync
 
 class AboutFragment : PreferenceFragmentCompat() {
     private var z = 0
+    private var versionName = BuildConfig.VERSION_NAME
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
+        addPreferencesFromResource(R.xml.about)
+        val versionPref = findPreference<Preference>("version")
+
+
+        val cs = versionName
+        versionPref?.summary = "v$cs"
+
         if (!Utilities.isConnected(requireContext())) {
-            //preferenceScreen.findPreference("source").isEnabled = false
+            preferenceScreen.findPreference<Preference>("help")?.isEnabled = false
+            preferenceScreen.findPreference<Preference>("source")?.isEnabled = false
+            preferenceScreen.findPreference<Preference>("support")?.isEnabled = false
         }
         doAsync {
             SimpleChromeCustomTabs.initialize(requireContext())
         }
     }
-
-    private var versionName = BuildConfig.VERSION_NAME
-
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        addPreferencesFromResource(R.xml.about)
-        //val versionPref = findPreference("version")
-        /*
-
-        val cs = versionName
-        versionPref.summary = "v$cs"
-        versionPref.onPreferenceClickListener = object : Preference.OnPreferenceClickListener {
-            var z = 0
-
-            override fun onPreferenceClick(preference: Preference): Boolean {
-                val sp = requireContext().getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE) //Initializes prefs.xml
-                val editor = sp.edit()//Initializes xml editor
-                z++
-                Log.d("RadioControl", (7 - z).toString() + " steps away from easter egg")
-                //Toast.makeText(getActivity(), (7 - z) + " steps away from easter egg", Toast.LENGTH_SHORT).show();
-                if (z >= 7) {
-                    if (!sp.getBoolean("isDeveloper", false)) {
-                        Toast.makeText(activity, R.string.dev_activated, Toast.LENGTH_LONG).show()
-                        z = 0
-                        Log.d("RadioControl", "Developer features activated")
-
-
-                        editor.putBoolean("isDeveloper", true) //Puts the boolean into prefs.xml
-                        editor.apply() //Ends writing to prefs file
-                    } else if (sp.getBoolean("isDeveloper", false)) {
-                        Toast.makeText(activity, R.string.dev_deactivated, Toast.LENGTH_LONG).show()
-                        z = 0
-                        Log.d("RadioControl", requireContext().getString(R.string.dev_deactivated))
-
-
-                        editor.putBoolean("isDeveloper", false) //Puts the boolean into prefs.xml
-                        editor.apply() //Ends writing to prefs file
-                    }
-
-                }
-                return false
-            }
-
-        }*/
-
-
-        /*val myPref = findPreference("changelog")
-        myPref.onPreferenceClickListener = Preference.OnPreferenceClickListener {
-            changelog(requireContext())
-            false
-        }
-
-        val tutorialPref = findPreference("tutorial")
-        tutorialPref.onPreferenceClickListener = Preference.OnPreferenceClickListener {
-            tutorial(requireContext())
-            false
-        }
-
-        val openSource = findPreference("source")
-        openSource.onPreferenceClickListener = Preference.OnPreferenceClickListener {
-            displayLicensesAlertDialog(requireContext())
-            false
-        }
-        val supportSite = findPreference("support")
-        supportSite.onPreferenceClickListener = Preference.OnPreferenceClickListener {
-            displaySupportWebsite(requireContext())
-            false
-        }
-        val aboutLib = findPreference("aboutLib")
-        aboutLib.onPreferenceClickListener = Preference.OnPreferenceClickListener {
-            LibsBuilder()
-                    .withLibraries("crouton", "actionbarsherlock", "showcaseview", "android_job")
-                    .withAutoDetect(true)
-                    .withLicenseShown(true)
-                    .withVersionShown(true)
-                    .withActivityTitle("Open Source Libraries")
-                    .withActivityStyle(Libs.ActivityStyle.DARK)
-                    .withListener(libsListener)
-                    .withLibTaskCallback(libTaskCallback)
-                    .withUiListener(libsUIListener)
-                    .start(c)
-
-            false
-        }*/
-    }
-    override fun onPreferenceTreeClick(preference: androidx.preference.Preference): Boolean {
+    override fun onPreferenceTreeClick(preference: Preference): Boolean {
 
         return when (preference.key) {
             getString(R.string.key_preference_about_version) -> {

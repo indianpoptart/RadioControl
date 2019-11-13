@@ -29,6 +29,7 @@
         android:title="@string/support_website">
     </Preference>
     <Preference
+        android:key="help"
         android:title="@string/help_wiki">
         <intent
             android:action="android.intent.action.VIEW"
@@ -37,7 +38,7 @@
     </Preference>
     <Preference
         android:key="aboutLib"
-        android:title="Libraries">
+        android:title="@string/title_preference_about_libraries">
     </Preference>
 
 </PreferenceScreen>

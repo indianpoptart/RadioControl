@@ -72,7 +72,7 @@ class CustomPhoneStateListener(//private static final String TAG = "PhoneStateCh
     // Highly experimental
     private fun cellChange() {
         val sp = context.getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE)
-        val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+        val prefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(context)
         //Utilities util = new Utilities();
         //Log.d("RadioControl", "Active: $activeNetwork")
 

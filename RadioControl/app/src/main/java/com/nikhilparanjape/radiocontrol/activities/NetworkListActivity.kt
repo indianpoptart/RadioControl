@@ -88,16 +88,16 @@ class NetworkListActivity : AppCompatActivity() {
             }
 
             override fun getView(position: Int, convertView: View?, parent: ViewGroup): View? {
-                var convertView = convertView
-                if (convertView == null) {
+                var convertViewGet = convertView
+                if (convertViewGet == null) {
                     val vi = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
                     val net = getItem(position) as WifiConfiguration
-                    convertView = vi.inflate(R.layout.wifi_network, parent, false)
-                    val name = convertView.findViewById<TextView>(R.id.net_name)
+                    convertViewGet = vi.inflate(R.layout.wifi_network, parent, false)
+                    val name = convertViewGet.findViewById<TextView>(R.id.net_name)
                     val ssid = net.SSID.substring(1, net.SSID.length - 1)
                     name.text = ssid
-                    val on = convertView.findViewById<SwitchCompat>(R.id.network_on)
+                    val on = convertViewGet.findViewById<SwitchCompat>(R.id.network_on)
                     val isEnabled = prefs.getBoolean(net.SSID.substring(1, net.SSID.length - 1), false)
                     on.isChecked = isEnabled
                     on.setOnCheckedChangeListener { _, isChecked ->

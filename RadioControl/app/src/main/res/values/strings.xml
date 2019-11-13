@@ -85,6 +85,7 @@
     <string name="standby_drawer_name">Standby Mode</string>
     <string name="permissionSample">Standby mode disables all <b>RadioControl</b> services (Useful for airplanes) This can be disabled from notifications</string>
     <string name="permissionSampleFabric">Allow <b>RadioControl</b> to send crash and error reports to Fabric Crashlytics</string>
+    <string name="summary_delete_log">Also delete existing <b>RadioControl</b> logs?</string>
     <string name="showDisabled">is Disabled</string>
     <string name="showEnabled">is Enabled</string>
     <string name="showEnabledDebug">is Enabled(DEBUG)</string>
@@ -132,6 +133,7 @@
     <string name="preference_airplane_service">isAirplaneService</string>
     <string name="preference_standby_dialog">isStandbyDialog</string>
     <string name="title_allow_fabric">Allow Fabric Crashlytics</string>
+    <string name="title_delete_logs">Delete Logs</string>
     <string name="title_preference_instabug">Instabug In-app Feedback (Disabled)</string>
     <string name="summary_preference_instabug">Instabug is providing in-app feedback and bug reporting to mobile apps. It provides a seamless way for two-way communication with users, while providing detailed environment report for developers. Shake to activate</string>
     <string name="pref_instabug_check">instabugCheck</string>
@@ -178,5 +180,30 @@
     <string name="key_preference_about_source">source</string>
     <string name="key_preference_about_support">support</string>
     <string name="key_preference_about_aboutlib">aboutLib</string>
+    <string name="key_preference_settings_intelligent">workMode</string>
+    <string name="key_preference_settings_ssid">ssid</string>
+    <string name="key_preference_settings_clear_ssid">clear-ssid</string>
+    <string name="key_preference_settings_reset_airplane">reset-airplane</string>
+    <string name="key_preference_settings_doze">isDozeOff</string>
+    <string name="key_preference_settings_battery_opimization">isBatteryOn</string>
+    <string name="key_preference_settings_alternate_command">altRootCommand</string>
+    <string name="key_preference_settings_fabric">fabricCrashlytics</string>
+    <string name="key_preference_settings_instabug">instabugCheck</string>
+    <string name="key_preference_settings_phone_state">isPhoneStateCheck</string>
+    <string name="key_preference_settings_airplane_service">isAirplaneService</string>
+    <string name="key_preference_settings_interval">interval_prefs</string>
+    <string name="key_preference_settings_night_mode">night-mode-service</string>
+    <string name="key_preference_settings_do_not_disturb">do_not_disturb</string>
+    <string name="key_preference_settings_network_alert">isNetworkAlive</string>
+    <string name="key_preference_settings_notification">button_network_key</string>
+    <string name="key_preference_settings_logging">enableLogs</string>
+    <string name="key_preference_settings_log_directory">logDir</string>
+    <string name="key_preference_settings_log_delete">logDel</string>
+    <string name="key_preference_settings_ping_ip">prefPingIp</string>
+    <string name="preference_user_var_latency_address">Latency Test IP Address</string>
+    <string name="summary_preference_log_delete">This will delete the log file used in Stats</string>
+    <string name="title_preference_about_libraries">Libraries</string>
+    <string name="button_yes">Yes</string>
+    <string name="button_no">No</string>
 
 </resources>
