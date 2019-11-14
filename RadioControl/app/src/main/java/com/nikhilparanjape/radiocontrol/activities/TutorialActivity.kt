@@ -6,6 +6,7 @@ import android.view.View
 import com.github.paolorotolo.appintro.AppIntro
 import com.nikhilparanjape.radiocontrol.R
 import com.nikhilparanjape.radiocontrol.fragments.SlideFragment
+import com.topjohnwu.superuser.Shell
 
 /**
  * Created by Nikhil on 4/24/2016.
@@ -49,23 +50,18 @@ class TutorialActivity : AppIntro() {
     override fun onSkipPressed() {
         loadMainActivity()
     }
-
-    private fun loadMainActivity() {
-        val intent = Intent(this, MainActivity::class.java)
-        startActivity(intent)
-    }
-
-
     override fun onDonePressed() {
         loadMainActivity()
     }
-
     override fun onSlideChanged() {
         // Do something when the slide changes.
     }
-
     override fun onNextPressed() {
         // Do something when users tap on Next button.
+    }
+    private fun loadMainActivity() {
+        val intent = Intent(this, MainActivity::class.java)
+        startActivity(intent)
     }
 
 }

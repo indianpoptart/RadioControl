@@ -109,7 +109,7 @@ class NetworkListActivity : AppCompatActivity() {
                     }
                 }
 
-                return convertView
+                return convertViewGet
             }
 
             override fun getItemViewType(position: Int): Int {

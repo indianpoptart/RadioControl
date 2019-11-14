@@ -12,7 +12,6 @@ import android.os.IBinder
  * @description This class is a placeholder for the DnD service that disables RadioControl from doing its thing
  */
 class DoNotDisturbService : Service() {
-
     override fun onBind(intent: Intent): IBinder? {
         return null
     }

@@ -3,8 +3,6 @@ package com.nikhilparanjape.radiocontrol.receivers
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.preference.PreferenceManager
-
 import com.nikhilparanjape.radiocontrol.utilities.AlarmSchedulers
 
 class WakeupReceiver : BroadcastReceiver() {

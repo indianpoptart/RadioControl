@@ -130,7 +130,7 @@ class DoNotDisturbActivity : AppCompatActivity() {
                 Toast.LENGTH_LONG).show()
 
         val pIntentLogin = PendingIntent.getBroadcast(applicationContext, 1, intentAction, PendingIntent.FLAG_UPDATE_CURRENT)
-        val note = NotificationCompat.Builder(applicationContext)
+        val note = NotificationCompat.Builder(applicationContext,"DND")
                 .setSmallIcon(R.drawable.ic_warning_black_48dp)
                 .setContentTitle("Standby Mode")
                 .setContentText("RadioControl services have been paused")

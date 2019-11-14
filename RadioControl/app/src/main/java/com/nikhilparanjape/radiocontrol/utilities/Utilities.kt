@@ -51,7 +51,7 @@ class Utilities {
             var ssid: String? = null
             val connManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
             val networkInfo = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI)
-            if (networkInfo.isConnected) {
+            if (networkInfo!!.isConnected) {
                 val wifiManager = context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
                 val connectionInfo = wifiManager.connectionInfo
                 ssid = connectionInfo.ssid

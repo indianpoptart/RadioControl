@@ -53,7 +53,6 @@ class AboutFragment : PreferenceFragmentCompat() {
 
         return when (preference.key) {
             getString(R.string.key_preference_about_version) -> {
-                val cs = versionName
                 val sp = requireContext().getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE) //Initializes prefs.xml
                 val editor = sp.edit()//Initializes xml editor
                 z++

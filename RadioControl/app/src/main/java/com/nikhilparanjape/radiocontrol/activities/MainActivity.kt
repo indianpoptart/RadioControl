@@ -157,7 +157,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
 
         init()//initializes the whats new dialog
         //Checks for root, if none, disabled toggle switch
-        if (!rootInit()) {
+        if (!Shell.rootAccess()) {
             //Preference handling
             editor.putInt(getString(R.string.preference_app_active), 0)
             toggle.isEnabled = false
@@ -167,7 +167,6 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
         }
         //Async thread to do a preference checks
         doAsync {
-
             //  If the activity has never started before...
             if (isFirstStart) {
                 //  Make a new preferences editor
@@ -176,18 +175,15 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
                 if (currentapiVersion >= 24) {
                     e.putBoolean(getString(R.string.preference_work_mode), true)
                 }
+                //  Edit preference to make it false because we don't want this to run again
+                e.putBoolean(getString(R.string.preference_first_start), false)
+                //  Apply changes
+                e.apply()
 
                 //  Launch app intro
                 val i = Intent(applicationContext, TutorialActivity::class.java)
                 startActivity(i)
-
-                //  Edit preference to make it false because we don't want this to run again
-                e.putBoolean(getString(R.string.preference_first_start), false)
-
-                //  Apply changes
-                e.apply()
             }
-
             if (getPrefs.getBoolean(getString(R.string.preference_work_mode), true)) {
                 val i = Intent(applicationContext, PersistenceService::class.java)
                 if (Build.VERSION.SDK_INT >= 26) {
@@ -311,7 +307,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
                 //UI Handling
                 statusText.setText(R.string.showDisabled)
                 statusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_deactivated))
-                if (!rootInit()) {
+                if (!Shell.rootAccess()) {
                     toggle.isEnabled = false
                     statusText.setText(R.string.noRoot)
                 }
@@ -338,7 +334,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
             statusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_activated_debug))
             applicationContext.startService(bgj)
             alarmUtil.scheduleAlarm(applicationContext)
-            Toast.makeText(applicationContext, "Caution: Rogue Robots",
+            Toast.makeText(applicationContext, "The impossible was just attempted",
                     Toast.LENGTH_LONG).show()
             editor.apply()
             false
@@ -433,7 +429,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
         }
 
         // root icon
-        if (rootInit()) {
+        if (Shell.rootAccess()) {
             carrierIcon = IconicsDrawable(this)
                     .icon(GoogleMaterial.Icon.gmd_check_circle)
                     .color(IconicsColor.colorInt(Color.GREEN))
@@ -723,11 +719,6 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
                 .setPositiveButton(R.string.text_ok) { dialog, _ -> dialog.dismiss() }
         builder.create().show()
     }
-
-    private fun rootInit(): Boolean {
-        return Shell.rootAccess()
-    }
-
     override fun onResume() {
         super.onResume()
         val sharedPref = getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE)
@@ -781,14 +772,14 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
             linkText.visibility = View.VISIBLE
         }
 
-        if (!rootInit()) {
+        if (!Shell.rootAccess()) {
             toggle.isEnabled = false
             statusText.setText(R.string.noRoot)
             statusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_deactivated))
         }
 
         if (sharedPref.getInt(getString(R.string.preference_app_active), 0) == 1) {
-            if (!rootInit()) {
+            if (!Shell.rootAccess()) {
                 toggle.isEnabled = false
                 statusText.setText(R.string.noRoot)
                 statusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_deactivated))
@@ -799,7 +790,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
             }
 
         } else if (sharedPref.getInt(getString(R.string.preference_app_active), 0) == 0) {
-            if (!rootInit()) {
+            if (!Shell.rootAccess()) {
                 toggle.isEnabled = false
                 statusText.setText(R.string.noRoot)
                 statusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_deactivated))

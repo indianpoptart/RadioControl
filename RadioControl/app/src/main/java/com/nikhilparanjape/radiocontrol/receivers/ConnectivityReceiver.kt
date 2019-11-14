@@ -17,6 +17,7 @@ import com.nikhilparanjape.radiocontrol.services.BackgroundJobService
  *
  * This uses some deprecated functions and may stop working :(
  *
+ * This file is only here for backwards compatibility
  *
  * @author Nikhil Paranjape
  */

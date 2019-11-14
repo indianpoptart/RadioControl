@@ -6,7 +6,6 @@ package com.nikhilparanjape.radiocontrol.listeners
 
 import android.content.Context
 import android.os.Build
-import android.preference.PreferenceManager
 import android.telephony.PhoneStateListener
 import android.telephony.TelephonyManager
 import android.util.Log

@@ -67,7 +67,7 @@ dependencies {
     implementation 'androidx.browser:browser:1.0.0'
     implementation 'androidx.cardview:cardview:1.0.0'
     //noinspection GradleDependency
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha2' //DO NOT UPDATE
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta3' //DO NOT UPDATE
     implementation group: 'androidx.core', name: 'core-ktx', version: '1.2.0-beta02'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation "androidx.preference:preference-ktx:1.1.0"
@@ -77,7 +77,7 @@ dependencies {
     //debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.0-beta-3'
 
     //Google
-    implementation 'com.google.android.material:material:1.1.0-alpha10'
+    implementation 'com.google.android.material:material:1.2.0-alpha01'
     implementation('com.crashlytics.sdk.android:crashlytics:2.10.1@aar') {
         transitive = true
         ""
@@ -85,7 +85,7 @@ dependencies {
 
     // Third party - Helper
     implementation 'com.github.bumptech.glide:glide:4.10.0'
-    implementation "com.github.StephenVinouze:KinApp:1.0.2"
+    implementation "com.github.StephenVinouze:KinApp:1.0.3"
     implementation 'com.github.topjohnwu:libsu:2.3.1'
     implementation 'org.jetbrains.anko:anko-commons:0.10.8'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.2'
@@ -99,17 +99,17 @@ dependencies {
     implementation 'com.appyvet:materialrangebar:1.3'
     implementation 'com.borax12.materialdaterangepicker:library:2.0'
     implementation 'com.diogobernardino:williamchart:2.2'
-    implementation 'com.github.apl-devs:appintro:v5.0.0'
+    implementation 'com.github.AppIntro:AppIntro:5.1.0'
     implementation 'com.github.bmelnychuk:AndroidTreeView:d051ce75f5'
     implementation 'com.github.gabrielemariotti.changeloglib:changelog:2.1.0'
     implementation 'com.gordonwong:material-sheet-fab:1.2.1'
-    implementation 'com.mikepenz:aboutlibraries:7.0.3'
-    implementation "com.mikepenz:fastadapter:4.1.0-b02"
-    implementation "com.mikepenz:fastadapter-extensions-expandable:4.1.0-b02"
+    implementation 'com.mikepenz:aboutlibraries:7.0.4'
+    implementation "com.mikepenz:fastadapter:4.1.0"
+    implementation "com.mikepenz:fastadapter-extensions-expandable:4.1.0"
     implementation 'com.mikepenz:google-material-typeface:3.0.1.3.original@aar'
-    implementation 'com.mikepenz:iconics-core:4.0.1-b02'
+    implementation 'com.mikepenz:iconics-core:4.0.2'
     implementation 'com.mikepenz:google-material-typeface:3.0.1.4.original-kotlin@aar'
-    implementation('com.mikepenz:materialdrawer:7.0.0-rc07@aar') {
+    implementation('com.mikepenz:materialdrawer:7.0.0-rc08@aar') {
         transitive = true
     }
     implementation 'me.grantland:autofittextview:0.2.1'

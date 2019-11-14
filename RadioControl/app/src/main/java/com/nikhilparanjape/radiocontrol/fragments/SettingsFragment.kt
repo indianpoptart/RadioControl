@@ -1,8 +1,6 @@
 package com.nikhilparanjape.radiocontrol.fragments
 
 import android.Manifest
-import androidx.preference.EditTextPreference
-import android.annotation.SuppressLint
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
@@ -11,13 +9,13 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.PowerManager
-import android.preference.PreferenceManager
 import android.provider.Settings
 import android.util.Log
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
+import androidx.preference.EditTextPreference
 import androidx.preference.PreferenceFragmentCompat
 import com.afollestad.materialdialogs.MaterialDialog
 import com.borax12.materialdaterangepicker.time.RadialPickerLayout

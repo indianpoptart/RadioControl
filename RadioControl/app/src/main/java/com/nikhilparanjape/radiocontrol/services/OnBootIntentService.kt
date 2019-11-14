@@ -5,11 +5,16 @@ import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import android.text.format.DateFormat
 import android.util.Log
+import androidx.annotation.NonNull
 import androidx.core.app.JobIntentService
 import androidx.core.app.NotificationCompat
-
 import com.nikhilparanjape.radiocontrol.R
+import org.jetbrains.anko.toast
+import java.io.File
+import java.io.IOException
+
 
 /**
  * Created by admin on 10/12/2018.
@@ -20,9 +25,11 @@ import com.nikhilparanjape.radiocontrol.R
  * It should probably have some things for actually calling the background airplane service so it starts in the background. Maybe work mode? we'll see...
  */
 class OnBootIntentService : JobIntentService() {
+    private val jobID = 0x01
 
-    override fun onCreate() {
-        super.onCreate()
+
+
+    override fun onHandleWork(@NonNull intent: Intent) {
         createNotificationChannel(applicationContext)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationCompat.Builder(this, "Startup")
@@ -41,10 +48,8 @@ class OnBootIntentService : JobIntentService() {
             }
             Log.d("RadioControl", "persist Service launched")
         }
-
+        writeLog("boot procedure handled", applicationContext)
     }
-
-    override fun onHandleWork(intent: Intent) { }
 
     private fun createNotificationChannel(context: Context) {
         // Create the NotificationChannel, but only on API 26+ because
@@ -60,5 +65,30 @@ class OnBootIntentService : JobIntentService() {
             val notificationManager = context.getSystemService(NotificationManager::class.java)
             notificationManager!!.createNotificationChannel(channel)
         }
+    }
+    private fun writeLog(data: String, c: Context) {
+        val preferences = androidx.preference.PreferenceManager.getDefaultSharedPreferences(c)
+        if (preferences.getBoolean("enableLogs", false)) {
+            try {
+                val h = DateFormat.format("yyyy-MM-dd HH:mm:ss", System.currentTimeMillis()).toString()
+                val log = File(c.filesDir, "radiocontrol.log")
+                if (!log.exists()) {
+                    log.createNewFile()
+                }
+                val logPath = "radiocontrol.log"
+                val string = "\n$h: $data"
+
+                val fos = c.openFileOutput(logPath, Context.MODE_APPEND)
+                fos.write(string.toByteArray())
+                fos.close()
+            } catch (e: IOException) {
+                Log.d("RadioControl-Job", "There was an error saving the log: $e")
+            }
+
+        }
+    }
+    override fun onDestroy() {
+        super.onDestroy()
+        toast("All work complete")
     }
 }

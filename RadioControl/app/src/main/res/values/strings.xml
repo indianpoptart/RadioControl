@@ -205,5 +205,7 @@
     <string name="title_preference_about_libraries">Libraries</string>
     <string name="button_yes">Yes</string>
     <string name="button_no">No</string>
+    <string name="title_no_log_data">No Log Data</string>
+    <string name="title_boot_events">Boot events</string>
 
 </resources>
