@@ -90,6 +90,8 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
     private val base64EncodedPublicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxnZmUx4gqEFCsMW+/uPXIzJSaaoP4J/2RVaxYT9Be0jfga0qdGF+Vq56mzQ/LYEZgLvFelGdWwXJ5Izq5Wl/cEW8cExhQ/WDuJvYVaemuU+JnHP1zIZ2H28NtzrDH0hb59k9R8owSx7NPNITshuC4MPwwOQDgDaYk02Hgi4woSzbDtyrvwW1A1FWpftb78i8Pphr7bT14MjpNyNznk4BohLMncEVK22O1N08xrVrR66kcTgYs+EZnkRKk2uPZclsPq4KVKG8LbLcxmDdslDBnhQkSPe3ntAC8DxGhVdgJJDwulcepxWoCby1GcMZTUAC1OKCZlvGRGSwyfIqbqF2JQIDAQAB"
 
     private val billingManager = KinAppManager(this, base64EncodedPublicKey)
+    //JobID for jobscheduler(BackgroundJobService)
+    private val jobID = 0x01
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -105,11 +107,12 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
         val actionBar = supportActionBar
         val fab = findViewById<FloatingActionButton>(R.id.fab)
 
+        //Adds filter for app to get Connectivity_Action
         val filter = IntentFilter()
         @Suppress("DEPRECATION")
         filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION)
 
-        //Sets the actionbar with hamburger
+        //Sets the actionbar with hamburger icon, colors, and paddings
         if (actionBar != null) {
             actionBar.setHomeAsUpIndicator(IconicsDrawable(this)
                                                 .icon(GoogleMaterial.Icon.gmd_menu)
@@ -119,13 +122,12 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
             actionBar.setDisplayHomeAsUpEnabled(true)
         }
 
+        //Creates the latency checker FAB button
         fab.setImageDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.ic_network_check_white_48dp))
         fab.setOnClickListener {
             dialog.visibility = View.VISIBLE
             pingCheck()
         }
-
-        scheduleJob()
 
         //Pref values
         //  Initialize SharedPreferences
@@ -149,7 +151,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
         val radioOffButton = findViewById<Button>(R.id.cellRadioOff)
         val forceCrashButton = findViewById<Button>(R.id.forceCrashButton)
 
-        //Other Values
+        //Other info related values
         //  Create a new boolean and preference and set it to true if it's not already there
         val isFirstStart = getPrefs.getBoolean(getString(R.string.preference_first_start), true)
         //Gets the current android build version on device
@@ -165,7 +167,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
             statusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_deactivated))
             editor.apply()
         }
-        //Async thread to do a preference checks
+        //Async thread that does preference checks
         doAsync {
             //  If the activity has never started before...
             if (isFirstStart) {
@@ -175,15 +177,15 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
                 if (currentapiVersion >= 24) {
                     e.putBoolean(getString(R.string.preference_work_mode), true)
                 }
-                //  Edit preference to make it false because we don't want this to run again
+                // Edit preference to make it false because we don't want this to run again
                 e.putBoolean(getString(R.string.preference_first_start), false)
-                //  Apply changes
-                e.apply()
+                e.apply() //  Apply changes
 
                 //  Launch app intro
                 val i = Intent(applicationContext, TutorialActivity::class.java)
                 startActivity(i)
             }
+            //Checks if workmode is enabled and starts the Persistence Service, otherwise it registers the broadcast receivers
             if (getPrefs.getBoolean(getString(R.string.preference_work_mode), true)) {
                 val i = Intent(applicationContext, PersistenceService::class.java)
                 if (Build.VERSION.SDK_INT >= 26) {
@@ -192,12 +194,13 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
                     applicationContext.startService(i)
                 }
                 Log.d("RadioControl", "persist Service launched")
-            }
-
-            if (!getPrefs.getBoolean(getString(R.string.preference_work_mode), true)) {
+            } else {
                 registerForBroadcasts(applicationContext)
             }
-
+            //Checks if background optimization is enabled and schedules a job
+            if(getPrefs.getBoolean(getString(R.string.key_preference_settings_battery_opimization), false)){
+                scheduleJob()
+            }
             //Hides the progress dialog
             dialog.visibility = View.GONE
 
@@ -224,6 +227,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
             linkText.visibility = View.VISIBLE
         }
 
+        //DEV View | Listener for the link speed button
         linkSpeedButton.setOnClickListener {
             //showWifiInfoDialog();
 
@@ -349,7 +353,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
         var currentVersionNumber = 0
 
         val savedVersionNumber = sharedPref.getInt(VERSION_KEY, 0)
-
+        //Sets app version number
         try {
             val pi = packageManager.getPackageInfo(packageName, 0)
             val longVersionCode = getLongVersionCode(pi)
@@ -357,12 +361,13 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
         } catch (e: Exception) {
             Log.e("RadioControl", "Unable to get version number")
         }
-
+        //Checks if app version has changed since last opening
         if (currentVersionNumber > savedVersionNumber) {
             showUpdated(this)
             editor.putInt(VERSION_KEY, currentVersionNumber)
 
         }
+        //Enables work mode if Nougat+
         if (Build.VERSION.SDK_INT >= 24 && !sharedPref.getBoolean(getString(R.string.preference_work_mode), false)) {
             editor.putBoolean(getString(R.string.preference_work_mode), true)
         }
@@ -370,11 +375,12 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
     }
 
     private fun scheduleJob() {
-        val myJob = JobInfo.Builder(123, ComponentName(packageName, BackgroundJobService::class.java.name))
+        val myJob = JobInfo.Builder(jobID, ComponentName(packageName, BackgroundJobService::class.java.name))
                 .setMinimumLatency(1000)
                 .setOverrideDeadline(1000)
                 .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
                 .setPersisted(true)
+                .setRequiresCharging(false)
                 .build()
 
         val jobScheduler = getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
@@ -844,7 +850,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
                 if (reachable) {
                     when {
                         timeDifference <= 50 -> Snackbar.make(clayout, "Excellent Latency: $timeDifference ms", Snackbar.LENGTH_LONG).show()
-                        timeDifference in (51.0..100.0) -> Snackbar.make(clayout, "Average Latency: $timeDifference ms", Snackbar.LENGTH_LONG).show()
+                        timeDifference in 51.0..100.0 -> Snackbar.make(clayout, "Average Latency: $timeDifference ms", Snackbar.LENGTH_LONG).show()
                         timeDifference in 101.0..200.0 -> Snackbar.make(clayout, "Poor Latency: $timeDifference ms", Snackbar.LENGTH_LONG).show()
                         timeDifference >= 201 -> Snackbar.make(clayout, "Very Poor Latency. VOIP and online gaming may suffer: $timeDifference ms", Snackbar.LENGTH_LONG).show()
                     }
