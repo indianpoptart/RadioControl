@@ -50,20 +50,16 @@ class SettingsFragment : PreferenceFragmentCompat(), TimePickerDialog.OnTimeSetL
 
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onPreferenceTreeClick(preference: androidx.preference.Preference): Boolean {
         val sp = preferenceScreen.sharedPreferences
         //val editor = sp.edit()
-        val batteryOptimizePref = preferenceManager.findPreference<androidx.preference.CheckBoxPreference>("isBatteryOn")
+        preferenceManager.findPreference<androidx.preference.CheckBoxPreference>("isBatteryOn")
         val dozeSetting = preferenceManager.findPreference<androidx.preference.CheckBoxPreference>("isDozeOff")
         val workModePref = preferenceManager.findPreference<androidx.preference.CheckBoxPreference>("workMode")
-        val altRootCommandPref = preferenceManager.findPreference<androidx.preference.CheckBoxPreference>("altRootCommand")
+        preferenceManager.findPreference<androidx.preference.CheckBoxPreference>("altRootCommand")
         val fabricCrashlyticsPref = preferenceManager.findPreference<androidx.preference.CheckBoxPreference>("fabricCrashlytics")
         val callingCheck = preferenceManager.findPreference<androidx.preference.CheckBoxPreference>("isPhoneStateCheck")
-        val serviceCheckbox = preferenceManager.findPreference<androidx.preference.CheckBoxPreference>("isAirplaneService")
+        preferenceManager.findPreference<androidx.preference.CheckBoxPreference>("isAirplaneService")
         val checkboxPref = preferenceManager.findPreference<androidx.preference.CheckBoxPreference>("enableLogs")
         val pingIpPref = findPreference<EditTextPreference>("prefPingIp")
         val ip = sp.getString("prefPingIp",null)
