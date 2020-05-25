@@ -1,7 +1,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat">
+    <style name="AppTheme" parent="Theme.MaterialComponents">
         <item name="colorPrimary">@color/blue</item>
         <!--   darker variant for the status bar and contextual app bars -->
         <item name="colorPrimaryDark">@color/darkblue</item>
@@ -10,7 +10,7 @@
     </style>
 
     <!-- Material Base Theme -->
-    <style name="MaterialTheme" parent="Theme.AppCompat.Light">
+    <style name="MaterialTheme" parent="Theme.MaterialComponents.DayNight">
         <!-- Main theme colors -->
         <!--   your app branding color for the app bar -->
         <item name="colorPrimary">@color/blue</item>
@@ -18,19 +18,9 @@
         <item name="colorPrimaryDark">@color/darkblue</item>
         <!--   theme UI controls like checkboxes and text fields -->
         <item name="colorAccent">#448AFF</item>
-        <!-- MaterialDrawer specific values -->
-        <item name="material_drawer_background">@color/material_drawer_background</item>
-        <item name="material_drawer_primary_text">@color/material_drawer_primary_text</item>
-        <item name="material_drawer_primary_icon">@color/material_drawer_primary_icon</item>
-        <item name="material_drawer_secondary_text">@color/material_drawer_secondary_text</item>
-        <item name="material_drawer_hint_text">@color/material_drawer_hint_text</item>
-        <item name="material_drawer_divider">@color/material_drawer_divider</item>
-        <item name="material_drawer_selected">@color/material_drawer_selected</item>
-        <item name="material_drawer_selected_text">@color/material_drawer_selected_text</item>
-        <item name="material_drawer_header_selection_text">@color/material_drawer_header_selection_text</item>
 
     </style>
-    <style name="MaterialDarkThemenoab" parent="Theme.AppCompat.NoActionBar">
+    <style name="MaterialDarkThemenoab" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
         <!-- Main theme colors -->
         <!--   your app branding color for the app bar -->
@@ -39,17 +29,11 @@
         <item name="colorPrimaryDark">@color/darkblue</item>
         <!--   theme UI controls like checkboxes and text fields -->
         <item name="colorAccent">#448AFF</item>
-        <!-- MaterialDrawer specific values -->
-        <item name="material_drawer_background">@color/material_drawer_dark_background</item>
-        <item name="material_drawer_primary_text">@color/material_drawer_dark_primary_text</item>
-        <item name="material_drawer_primary_icon">@color/material_drawer_dark_primary_icon</item>
-        <item name="material_drawer_secondary_text">@color/material_drawer_dark_secondary_text</item>
-        <item name="material_drawer_hint_text">@color/material_drawer_dark_hint_text</item>
-        <item name="material_drawer_divider">@color/material_drawer_dark_divider</item>
-        <item name="material_drawer_selected">@color/material_drawer_dark_selected</item>
-        <item name="material_drawer_selected_text">@color/material_drawer_dark_selected_text</item>
-        <item name="material_drawer_header_selection_text">@color/material_drawer_dark_header_selection_text</item>
         <item name="android:navigationBarColor">@color/colorPrimaryDark</item>
+        <!-- MaterialDrawer specific values -->
+        <item name="materialDrawerStyle">@style/Widget.MaterialDrawerStyle</item>
+        <item name="materialDrawerHeaderStyle">@style/Widget.MaterialDrawerHeaderStyle</item>
+
 
     </style>
     <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">

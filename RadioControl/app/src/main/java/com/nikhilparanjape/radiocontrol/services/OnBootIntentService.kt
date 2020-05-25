@@ -25,9 +25,6 @@ import java.io.IOException
  * It should probably have some things for actually calling the background airplane service so it starts in the background. Maybe work mode? we'll see...
  */
 class OnBootIntentService : JobIntentService() {
-    private val jobID = 0x01
-
-
 
     override fun onHandleWork(@NonNull intent: Intent) {
         createNotificationChannel(applicationContext)
@@ -46,9 +43,9 @@ class OnBootIntentService : JobIntentService() {
             } else {
                 applicationContext.startService(i)
             }
-            Log.d("RadioControl", "persist Service launched")
+            Log.d("RadioControl-boot", "persist Service launched")
         }
-        writeLog("boot procedure handled", applicationContext)
+        "boot procedure handled".writeLog(applicationContext)
     }
 
     private fun createNotificationChannel(context: Context) {
@@ -66,7 +63,7 @@ class OnBootIntentService : JobIntentService() {
             notificationManager!!.createNotificationChannel(channel)
         }
     }
-    private fun writeLog(data: String, c: Context) {
+    private fun String.writeLog(c: Context) {
         val preferences = androidx.preference.PreferenceManager.getDefaultSharedPreferences(c)
         if (preferences.getBoolean("enableLogs", false)) {
             try {
@@ -76,7 +73,7 @@ class OnBootIntentService : JobIntentService() {
                     log.createNewFile()
                 }
                 val logPath = "radiocontrol.log"
-                val string = "\n$h: $data"
+                val string = "\n$h: $this"
 
                 val fos = c.openFileOutput(logPath, Context.MODE_APPEND)
                 fos.write(string.toByteArray())

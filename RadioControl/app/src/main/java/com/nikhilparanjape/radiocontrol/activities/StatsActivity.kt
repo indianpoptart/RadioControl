@@ -25,16 +25,16 @@ import com.db.chart.view.animation.easing.*
 import com.google.android.material.snackbar.Snackbar
 import com.gordonwong.materialsheetfab.MaterialSheetFab
 import com.gordonwong.materialsheetfab.MaterialSheetFabEventListener
-import com.mikepenz.iconics.IconicsColor
 import com.mikepenz.iconics.IconicsDrawable
-import com.mikepenz.iconics.IconicsSize
 import com.mikepenz.iconics.typeface.library.googlematerial.GoogleMaterial
+import com.mikepenz.iconics.utils.colorInt
+import com.mikepenz.iconics.utils.paddingDp
+import com.mikepenz.iconics.utils.sizeDp
 import com.nikhilparanjape.radiocontrol.R
 import com.nikhilparanjape.radiocontrol.utilities.Fab
 import me.grantland.widget.AutofitHelper
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
-import org.w3c.dom.Text
 import java.io.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -119,10 +119,9 @@ class StatsActivity : AestheticActivity() {
                 activityTheme(R.style.MaterialDarkThemenoab)
             }
         }
-
         Aesthetic.config {
             isDark(true)
-            colorPrimary(res = R.color.primary_dark)
+            colorPrimary(res = R.color.colorPrimaryDark)
 
             // Causes an Activity recreate, calls setTheme(Int) on it.
             activityTheme(R.style.MaterialDarkThemenoab)
@@ -137,17 +136,16 @@ class StatsActivity : AestheticActivity() {
             editor.putInt("easing", 4)
             editor.apply()
         }
-
         val actionBar = findViewById<Toolbar>(R.id.toolbar)
         //Sets coordlayout
         findViewById<CoordinatorLayout>(R.id.clayout)
 
         if (actionBar != null) {
-            supportActionBar?.setHomeAsUpIndicator(IconicsDrawable(this)
-                                                        .icon(GoogleMaterial.Icon.gmd_arrow_back)
-                                                        .color(IconicsColor.colorInt(Color.WHITE))
-                                                        .size(IconicsSize.TOOLBAR_ICON_SIZE)
-                                                        .padding(IconicsSize.TOOLBAR_ICON_PADDING))
+            supportActionBar?.setHomeAsUpIndicator(IconicsDrawable(this, GoogleMaterial.Icon.gmd_arrow_back).apply {
+                colorInt = Color.WHITE
+                sizeDp = 24
+                paddingDp = 1
+            })
             supportActionBar?.setDisplayHomeAsUpEnabled(true)
             actionBar.title = "Statistics"
 
@@ -157,7 +155,7 @@ class StatsActivity : AestheticActivity() {
         val sheetView = findViewById<View>(R.id.fab_sheet)
         val overlay = findViewById<View>(R.id.overlay)
         val sheetColor = ContextCompat.getColor(applicationContext, R.color.material_drawer_background)
-        val fabColor = ContextCompat.getColor(applicationContext, R.color.accent)
+        val fabColor = ContextCompat.getColor(applicationContext, R.color.colorAccent)
 
         // Initialize material sheet FAB
         materialSheetFab = MaterialSheetFab(fab, sheetView, overlay,
@@ -200,9 +198,6 @@ class StatsActivity : AestheticActivity() {
 
     override fun onResume() {
         super.onResume()
-        //chart.notifyDataUpdate()
-        //chart1.notifyDataUpdate()
-        //chart2.notifyDataUpdate()
         doAsync {
             try{
                 wifiLostGraph()

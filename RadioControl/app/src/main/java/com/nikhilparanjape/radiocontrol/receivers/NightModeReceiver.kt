@@ -19,7 +19,7 @@ class NightModeReceiver : BroadcastReceiver() {
         val alarmUtil = AlarmSchedulers()
         alarmUtil.cancelAlarm(context)
 
-        Log.d("RadioControl", "Night Mode started")
+        Log.d("RadioControl-Night", "Night Mode started")
     }
     companion object {
 

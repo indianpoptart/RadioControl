@@ -4,10 +4,11 @@ import android.graphics.Color
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import com.mikepenz.iconics.IconicsColor
 import com.mikepenz.iconics.IconicsDrawable
-import com.mikepenz.iconics.IconicsSize
 import com.mikepenz.iconics.typeface.library.googlematerial.GoogleMaterial
+import com.mikepenz.iconics.utils.colorInt
+import com.mikepenz.iconics.utils.paddingDp
+import com.mikepenz.iconics.utils.sizeDp
 import com.nikhilparanjape.radiocontrol.fragments.AboutFragment
 
 /**
@@ -25,11 +26,11 @@ class AboutActivity : AppCompatActivity() {
         val actionBar = supportActionBar
 
         if (actionBar != null) {
-            actionBar.setHomeAsUpIndicator(IconicsDrawable(this)
-                                                .icon(GoogleMaterial.Icon.gmd_arrow_back)
-                                                .color(IconicsColor.colorInt(Color.WHITE))
-                                                .size(IconicsSize.TOOLBAR_ICON_SIZE)
-                                                .padding(IconicsSize.TOOLBAR_ICON_PADDING))
+            actionBar.setHomeAsUpIndicator(IconicsDrawable(this, GoogleMaterial.Icon.gmd_arrow_back).apply {
+                colorInt = Color.WHITE
+                sizeDp = 24
+                paddingDp = 1
+            })
             actionBar.setDisplayHomeAsUpEnabled(true)
             actionBar.title = "About"
         }

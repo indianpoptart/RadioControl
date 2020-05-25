@@ -24,6 +24,7 @@ import com.nikhilparanjape.radiocontrol.activities.TutorialActivity
 import com.nikhilparanjape.radiocontrol.utilities.Utilities
 import com.novoda.simplechromecustomtabs.SimpleChromeCustomTabs
 import org.jetbrains.anko.doAsync
+
 /**
  * Created by Nikhil on 4/5/2016.
  */
@@ -56,13 +57,13 @@ class AboutFragment : PreferenceFragmentCompat() {
                 val sp = requireContext().getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE) //Initializes prefs.xml
                 val editor = sp.edit()//Initializes xml editor
                 z++
-                Log.d("RadioControl", (7 - z).toString() + " steps away from easter egg")
+                Log.d("RadioControl-About", (7 - z).toString() + " steps away from easter egg")
                 //Toast.makeText(getActivity(), (7 - z) + " steps away from easter egg", Toast.LENGTH_SHORT).show();
                 if (z >= 7) {
                     if (!sp.getBoolean("isDeveloper", false)) {
                         Toast.makeText(activity, R.string.dev_activated, Toast.LENGTH_LONG).show()
                         z = 0
-                        Log.d("RadioControl", "Developer features activated")
+                        Log.d("RadioControl-About", "Developer features activated")
 
 
                         editor.putBoolean("isDeveloper", true) //Puts the boolean into prefs.xml
@@ -70,7 +71,7 @@ class AboutFragment : PreferenceFragmentCompat() {
                     } else if (sp.getBoolean("isDeveloper", false)) {
                         Toast.makeText(activity, R.string.dev_deactivated, Toast.LENGTH_LONG).show()
                         z = 0
-                        Log.d("RadioControl", requireContext().getString(R.string.dev_deactivated))
+                        Log.d("RadioControl-About", requireContext().getString(R.string.dev_deactivated))
 
 
                         editor.putBoolean("isDeveloper", false) //Puts the boolean into prefs.xml
@@ -103,7 +104,6 @@ class AboutFragment : PreferenceFragmentCompat() {
                         .withLicenseShown(true)
                         .withVersionShown(true)
                         .withActivityTitle("Open Source Libraries")
-                        .withActivityStyle(Libs.ActivityStyle.DARK)
                         .withListener(libsListener)
                         .withLibTaskCallback(libTaskCallback)
                         .withUiListener(libsUIListener)
@@ -125,9 +125,9 @@ class AboutFragment : PreferenceFragmentCompat() {
             builder.setToolbarColor(4342338)
 
             val customTabsIntent = builder.build()
-            customTabsIntent.launchUrl(activity, Uri.parse(url))
+            customTabsIntent.launchUrl(requireContext(), Uri.parse(url))
         } else {
-            Snackbar.make(view!!, "No internet connection found", Snackbar.LENGTH_LONG)
+            Snackbar.make(requireView(), "No internet connection found", Snackbar.LENGTH_LONG)
                     .show()
         }
 
@@ -140,9 +140,9 @@ class AboutFragment : PreferenceFragmentCompat() {
             builder.setToolbarColor(4816556)
 
             val customTabsIntent = builder.build()
-            customTabsIntent.launchUrl(activity, Uri.parse(url))
+            customTabsIntent.launchUrl(requireContext(), Uri.parse(url))
         } else {
-            Snackbar.make(view!!, "No internet connection found", Snackbar.LENGTH_LONG)
+            Snackbar.make(requireView(), "No internet connection found", Snackbar.LENGTH_LONG)
                     .show()
         }
 

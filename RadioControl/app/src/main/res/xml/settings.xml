@@ -48,20 +48,6 @@
             android:summary="@string/summary_root_command_alt"
             android:defaultValue="false" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="@string/title_analytics_service">
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="fabricCrashlytics"
-            android:summary="@string/summary_fabric_analytics"
-            android:title="@string/title_fabric_analytics"/>
-        <CheckBoxPreference
-            android:key="instabugCheck"
-            android:enabled="false"
-            android:title="@string/title_preference_instabug"
-            android:summary="@string/summary_preference_instabug"
-            android:defaultValue="false" />
-
-    </PreferenceCategory>
     <PreferenceCategory android:title="@string/prefs_title_phone_settings">
         <CheckBoxPreference
             android:key="isPhoneStateCheck"
@@ -135,5 +121,4 @@
             android:defaultValue="8.8.8.8"
             android:summary="8.8.8.8" />
     </PreferenceCategory>
-
 </PreferenceScreen>

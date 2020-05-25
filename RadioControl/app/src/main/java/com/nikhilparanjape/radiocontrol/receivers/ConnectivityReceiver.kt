@@ -41,7 +41,7 @@ class ConnectivityReceiver : WakefulBroadcastReceiver() {
         if (resultCode == JobScheduler.RESULT_SUCCESS) {
             Log.d("RadioControl-CR", "Job scheduled!")
         } else {
-            Log.d("RadioControl-CR", "Job not scheduled")
+            Log.d("RadioControl-CR", "Job could not be scheduled")
         }
 
     }

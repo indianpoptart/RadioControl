@@ -6,7 +6,6 @@ import android.view.View
 import com.github.paolorotolo.appintro.AppIntro
 import com.nikhilparanjape.radiocontrol.R
 import com.nikhilparanjape.radiocontrol.fragments.SlideFragment
-import com.topjohnwu.superuser.Shell
 
 /**
  * Created by Nikhil on 4/24/2016.

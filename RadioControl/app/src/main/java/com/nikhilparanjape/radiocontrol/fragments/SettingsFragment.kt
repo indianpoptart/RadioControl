@@ -69,7 +69,7 @@ class SettingsFragment : PreferenceFragmentCompat(), TimePickerDialog.OnTimeSetL
             getString(R.string.key_preference_settings_intelligent) -> {
                 if ((preference as androidx.preference.CheckBoxPreference).isChecked) {
                     if (workModePref!!.isChecked) {
-                        Log.i("RadioControl", "true-ischecked")
+                        Log.i("RadioControl-Settings", "true-ischecked")
                         if (sp.getBoolean("workMode", true)) {
                             if (Build.VERSION.SDK_INT >= 26) {
                                 activity?.startForegroundService(Intent(activity, PersistenceService::class.java))
@@ -113,7 +113,7 @@ class SettingsFragment : PreferenceFragmentCompat(), TimePickerDialog.OnTimeSetL
                 } else {
                     activity?.stopService(Intent(activity, PersistenceService::class.java))
                 }
-                Log.i("RadioControl", "workMode")
+                Log.i("RadioControl-Settings", "workMode")
 
                 false
             }
@@ -137,13 +137,13 @@ class SettingsFragment : PreferenceFragmentCompat(), TimePickerDialog.OnTimeSetL
             }
             getString(R.string.key_preference_settings_doze) -> {
                 if ((preference as androidx.preference.CheckBoxPreference).isChecked) {
-                    Log.i("RadioControl", "doze-bypassed")
+                    Log.i("RadioControl-Settings", "doze-bypassed")
                     if (Build.VERSION.SDK_INT >= 23) {
                         val intent = Intent()
                         val packageName = requireContext().packageName
                         val pm = requireContext().getSystemService(Context.POWER_SERVICE) as PowerManager
                         if (pm.isIgnoringBatteryOptimizations(packageName)) {
-                            Log.i("RadioControl", "ignoring")
+                            Log.i("RadioControl-Settings", "ignoring")
                             view?.let { it1 ->
                                 Snackbar.make(it1, "RadioControl is already excluded from Doze", Snackbar.LENGTH_LONG)
                                         .show()
@@ -157,7 +157,7 @@ class SettingsFragment : PreferenceFragmentCompat(), TimePickerDialog.OnTimeSetL
                     }
                 } else {
                     dozeSetting?.isChecked = false
-                    Log.i("RadioControl", "false")
+                    Log.i("RadioControl-Settings", "false")
                     if (Build.VERSION.SDK_INT >= 23) {
                         startActivityForResult(Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS), 0)
                         /*Intent intent = new Intent();
@@ -185,22 +185,6 @@ class SettingsFragment : PreferenceFragmentCompat(), TimePickerDialog.OnTimeSetL
 
                 false
             }
-            getString(R.string.key_preference_settings_fabric) -> {
-
-                if ((preference as androidx.preference.CheckBoxPreference).isChecked) {
-                    MaterialDialog(requireContext())
-                            .icon(R.mipmap.ic_launcher)
-                            .title(R.string.title_allow_fabric)
-                            .message(R.string.permissionSampleFabric)
-                            .positiveButton(R.string.button_text_allow) {}
-                            .negativeButton(R.string.button_text_deny) {
-                                fabricCrashlyticsPref?.isChecked = false
-
-                            }
-                            .show()
-                }
-                false
-            }
             getString(R.string.key_preference_settings_phone_state) -> {
                 if ((preference as androidx.preference.CheckBoxPreference).isChecked) {
                     val permissionCheck = ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_PHONE_STATE)
@@ -224,11 +208,11 @@ class SettingsFragment : PreferenceFragmentCompat(), TimePickerDialog.OnTimeSetL
                     val airplaneService = sp.getBoolean("isAirplaneService", false)
 
                     if (intervalTime != 0 && airplaneService) {
-                        Log.d("RadioControl", "Alarm Scheduled")
+                        Log.d("RadioControl-Settings", "Alarm Scheduled")
                         alarmUtil.scheduleAlarm(requireContext())
                     }
                 } else {
-                    Log.d("RadioControl", "Alarm Cancelled")
+                    Log.d("RadioControl-Settings", "Alarm Cancelled")
                     alarmUtil.cancelAlarm(requireContext())
                 }
                 false
@@ -264,14 +248,14 @@ class SettingsFragment : PreferenceFragmentCompat(), TimePickerDialog.OnTimeSetL
                         val permsRequestCode = 200
 
                         requestPermissions(perms, permsRequestCode)
-                        Log.d("RadioControl", "Logging enabled")
+                        Log.d("RadioControl-Settings", "Logging enabled")
 
                     } else {
-                        Log.d("RadioControl", "Logging enabled")
+                        Log.d("RadioControl-Settings", "Logging enabled")
                     }
                 } else {
                     checkboxPref?.isChecked = false
-                    Log.d("RadioControl", "Logging disabled")
+                    Log.d("RadioControl-Settings", "Logging disabled")
 
                     MaterialDialog(requireContext())
                             .icon(R.mipmap.ic_launcher)
@@ -324,7 +308,7 @@ class SettingsFragment : PreferenceFragmentCompat(), TimePickerDialog.OnTimeSetL
         alarmUtil.cancelNightAlarm(requireContext(), hourOfDay, minute)
 
         alarmUtil.scheduleNightWakeupAlarm(requireContext(), hourOfDayEnd, minuteEnd)
-        Log.d("RadioControl", "Night Mode: $time")
+        Log.d("RadioControl-Settings", "Night Mode: $time")
         Toast.makeText(activity, "Night mode set from $hourOfDay:$minuteString to $hourOfDayEnd:$minuteStringEnd", Toast.LENGTH_LONG).show()
     }
 
