@@ -15,8 +15,11 @@ import android.widget.ListView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
-import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.mikepenz.iconics.IconicsDrawable
+import com.mikepenz.iconics.typeface.library.googlematerial.GoogleMaterial
+import com.mikepenz.iconics.utils.colorInt
+import com.mikepenz.iconics.utils.paddingDp
+import com.mikepenz.iconics.utils.sizeDp
 import com.nikhilparanjape.radiocontrol.R
 
 /**
@@ -34,7 +37,11 @@ class NetworkListActivity : AppCompatActivity() {
         val actionBar = supportActionBar
 
         if (actionBar != null) {
-            actionBar.setHomeAsUpIndicator(IconicsDrawable(this, GoogleMaterial.Icon.gmd_arrow_back).color(Color.WHITE).sizeDp(IconicsDrawable.TOOLBAR_ICON_SIZE).paddingDp(IconicsDrawable.TOOLBAR_ICON_PADDING))
+            actionBar.setHomeAsUpIndicator(IconicsDrawable(this, GoogleMaterial.Icon.gmd_arrow_back).apply {
+                colorInt = Color.WHITE
+                sizeDp = 24
+                paddingDp = 1
+            })
             actionBar.setDisplayHomeAsUpEnabled(true)
             actionBar.setTitle(R.string.title_activity_network)
         }
@@ -82,16 +89,16 @@ class NetworkListActivity : AppCompatActivity() {
             }
 
             override fun getView(position: Int, convertView: View?, parent: ViewGroup): View? {
-                var convertView = convertView
-                if (convertView == null) {
+                var convertViewGet = convertView
+                if (convertViewGet == null) {
                     val vi = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
                     val net = getItem(position) as WifiConfiguration
-                    convertView = vi.inflate(R.layout.wifi_network, parent, false)
-                    val name = convertView.findViewById<TextView>(R.id.net_name)
+                    convertViewGet = vi.inflate(R.layout.wifi_network, parent, false)
+                    val name = convertViewGet.findViewById<TextView>(R.id.net_name)
                     val ssid = net.SSID.substring(1, net.SSID.length - 1)
                     name.text = ssid
-                    val on = convertView.findViewById<SwitchCompat>(R.id.network_on)
+                    val on = convertViewGet.findViewById<SwitchCompat>(R.id.network_on)
                     val isEnabled = prefs.getBoolean(net.SSID.substring(1, net.SSID.length - 1), false)
                     on.isChecked = isEnabled
                     on.setOnCheckedChangeListener { _, isChecked ->
@@ -103,7 +110,7 @@ class NetworkListActivity : AppCompatActivity() {
                     }
                 }
 
-                return convertView
+                return convertViewGet
             }
 
             override fun getItemViewType(position: Int): Int {

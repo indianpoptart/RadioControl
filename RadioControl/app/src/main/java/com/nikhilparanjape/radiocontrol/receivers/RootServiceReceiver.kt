@@ -20,9 +20,9 @@ class RootServiceReceiver : WakefulBroadcastReceiver() {
         val alarmUtil = AlarmSchedulers()
 
         context.stopService(i)
-        Log.d("RadioControl", "CellService Stopped")
+        Log.d("RadioControl-root", "CellService Stopped")
         alarmUtil.cancelRootAlarm(context)
-        Log.d("RadioControl", "RootClock cancelled")
+        Log.d("RadioControl-root", "RootClock cancelled")
     }
 
     companion object {

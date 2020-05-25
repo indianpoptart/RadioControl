@@ -5,8 +5,11 @@ import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.mikepenz.iconics.IconicsDrawable
+import com.mikepenz.iconics.typeface.library.googlematerial.GoogleMaterial
+import com.mikepenz.iconics.utils.colorInt
+import com.mikepenz.iconics.utils.paddingDp
+import com.mikepenz.iconics.utils.sizeDp
 import com.nikhilparanjape.radiocontrol.R
 import com.nikhilparanjape.radiocontrol.fragments.SettingsFragment
 
@@ -22,14 +25,18 @@ class SettingsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         super.onPostCreate(savedInstanceState)
-        fragmentManager.beginTransaction().replace(android.R.id.content, SettingsFragment()).commit()
+        supportFragmentManager.beginTransaction().replace(android.R.id.content, SettingsFragment()).commit()
 
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
         val actionBar = supportActionBar
 
         if (actionBar != null) {
-            actionBar.setHomeAsUpIndicator(IconicsDrawable(this, GoogleMaterial.Icon.gmd_arrow_back).color(Color.WHITE).sizeDp(IconicsDrawable.TOOLBAR_ICON_SIZE).paddingDp(IconicsDrawable.TOOLBAR_ICON_PADDING))
+            actionBar.setHomeAsUpIndicator(IconicsDrawable(this, GoogleMaterial.Icon.gmd_arrow_back).apply {
+                colorInt = Color.WHITE
+                sizeDp = 24
+                paddingDp = 1
+            })
             actionBar.setDisplayHomeAsUpEnabled(true)
             actionBar.setTitle(R.string.title_activity_settings)
         }

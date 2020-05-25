@@ -16,6 +16,6 @@ class PersistenceAlarmReceiver : WakefulBroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
         val service = Intent(context, PersistenceService::class.java)
-        WakefulBroadcastReceiver.startWakefulService(context, service)
+        startWakefulService(context, service)
     }
 }

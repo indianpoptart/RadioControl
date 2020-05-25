@@ -1,155 +1,168 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:tools="http://schemas.android.com/tools"
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/clayout"
-    android:layout_alignParentBottom="true"
-    android:layout_alignParentStart="true"
-    xmlns:android="http://schemas.android.com/apk/res/android">
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@color/colorPrimary"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        android:elevation="4dp" />
+    android:fitsSystemWindows="true">
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_above="@+id/adView"
-        android:layout_marginBottom="16dp"
-        android:layout_marginEnd="16dp"
-        app:fabSize="normal"
-        android:src="@drawable/ic_network_check_white_48dp"/>
-
-    <RelativeLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/clayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingBottom="@dimen/activity_vertical_margin"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="?attr/actionBarSize"
-        tools:context=".activities.MainActivity">
-        <ProgressBar
-            android:id="@+id/pingProgressBar"
-            style="?android:attr/progressBarStyleHorizontal"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/colorPrimary"
+            android:elevation="4dp"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginStart="0dp"
+            android:layout_above="@+id/adView"
+            android:layout_gravity="bottom|end"
             android:layout_marginEnd="16dp"
-            android:indeterminate="true"
-            android:max="4"
-            android:progress="1"
-            android:visibility="gone" />
+            android:layout_marginBottom="16dp"
+            android:src="@drawable/ic_network_check_white_48dp"
+            app:fabSize="normal" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingTop="?attr/actionBarSize"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingBottom="@dimen/activity_vertical_margin"
+            tools:context=".activities.MainActivity">
+
+            <ProgressBar
+                android:id="@+id/pingProgressBar"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="0dp"
+                android:layout_marginEnd="16dp"
+                android:indeterminate="true"
+                android:max="4"
+                android:progress="1"
+                android:visibility="gone" />
 
 
-        <TextView
-            android:id="@+id/textView3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignStart="@+id/pingProgressBar"
-            android:layout_below="@+id/pingProgressBar"
-            android:text="@string/main_text_radiocontrol_with_space"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/pingProgressBar"
+                android:layout_alignStart="@+id/pingProgressBar"
+                android:text="@string/main_text_radiocontrol_with_space"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
-        <TextView
-            android:id="@+id/statusText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/textView3"
-            android:layout_toEndOf="@+id/textView3"
-            android:text="@string/text_null"
-            android:paddingLeft="4dp"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            <TextView
+                android:id="@+id/statusText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/textView3"
+                android:layout_toEndOf="@+id/textView3"
+                android:paddingLeft="4dp"
+                android:text="@string/text_null"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
-        <Switch
-            android:id="@+id/enableSwitch"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignTop="@+id/textView3"
-            android:checked="false" />
+            <Switch
+                android:id="@+id/enableSwitch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/textView3"
+                android:layout_alignParentEnd="true"
+                android:checked="false" />
 
-        <TextView
-            android:id="@+id/pingStatus"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignStart="@+id/linkSpeedButton"
-            android:layout_below="@+id/pingTestButton"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            <TextView
+                android:id="@+id/pingStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/pingTestButton"
+                android:layout_alignStart="@+id/linkSpeedButton"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
-        <Button
-            android:id="@+id/forceCrashButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignEnd="@+id/pingTestButton"
-            android:layout_below="@+id/enableSwitch"
-            android:layout_marginTop="89dp"
-            android:onClick="forceCrash"
-            android:text="@string/text_force_crash" />
-
-
-        <Button
-            android:id="@+id/linkSpeedButton"
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignStart="@+id/forceCrashButton"
-            android:layout_below="@+id/forceCrashButton"
-            android:layout_marginTop="20dp"
-            android:text="@string/text_link_speed_test" />
-
-        <TextView
-            android:id="@+id/linkSpeed"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/linkSpeedButton"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-
-        <Button
-            android:id="@+id/pingTestButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/linkSpeed"
-            android:text="@string/button_latency_test" />
-
-        <Button
-            android:id="@+id/airplane_service_test"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/pingStatus"
-            android:text="@string/button_airplane_service_test" />
-
-        <Button
-            android:id="@+id/night_mode_cancel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/airplane_service_test"
-            android:text="@string/button_night_mode_cancel" />
-
-        <Button
-            android:id="@+id/cellRadioOff"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/night_mode_cancel"
-            android:text="@string/button_cell_radio_toggle" />
+            <Button
+                android:id="@+id/forceCrashButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/enableSwitch"
+                android:layout_alignEnd="@+id/pingTestButton"
+                android:layout_marginTop="89dp"
+                android:onClick="forceCrash"
+                android:text="@string/text_force_crash" />
 
 
-    </RelativeLayout>
+            <Button
+                android:id="@+id/linkSpeedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/forceCrashButton"
+                android:layout_alignStart="@+id/forceCrashButton"
+                android:layout_marginTop="20dp"
+                android:text="@string/text_link_speed_test" />
+
+            <TextView
+                android:id="@+id/linkSpeed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/linkSpeedButton"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentEnd="true"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <Button
+                android:id="@+id/pingTestButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/linkSpeed"
+                android:layout_alignParentStart="true"
+                android:text="@string/button_latency_test" />
+
+            <Button
+                android:id="@+id/airplane_service_test"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/pingStatus"
+                android:layout_alignParentStart="true"
+                android:text="@string/button_airplane_service_test" />
+
+            <Button
+                android:id="@+id/night_mode_cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/airplane_service_test"
+                android:layout_alignParentStart="true"
+                android:text="@string/button_night_mode_cancel" />
+
+            <Button
+                android:id="@+id/cellRadioOff"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/night_mode_cancel"
+                android:layout_alignParentStart="true"
+                android:text="@string/button_cell_radio_toggle" />
 
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+        </RelativeLayout>
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+    <com.mikepenz.materialdrawer.widget.MaterialDrawerSliderView
+        android:id="@+id/slider"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:fitsSystemWindows="true" />
+</androidx.drawerlayout.widget.DrawerLayout>

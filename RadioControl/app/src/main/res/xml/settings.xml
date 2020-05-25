@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <CheckBoxPreference
         android:key="workMode"
@@ -47,19 +47,6 @@
             android:title="@string/title_root_command_alt"
             android:summary="@string/summary_root_command_alt"
             android:defaultValue="false" />
-    </PreferenceCategory>
-    <PreferenceCategory android:title="@string/title_analytics_service">
-        <CheckBoxPreference
-            android:key="fabricCrashlytics"
-            android:title="@string/title_fabric_analytics"
-            android:summary="@string/summary_fabric_analytics"
-            android:defaultValue="false" />
-        <CheckBoxPreference
-            android:key="instabugCheck"
-            android:title="@string/title_preference_instabug"
-            android:summary="@string/summary_preference_instabug"
-            android:defaultValue="false" />
-
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/prefs_title_phone_settings">
         <CheckBoxPreference
@@ -125,14 +112,13 @@
             android:key="logDel"
             android:title="Delete Logs"
             android:defaultValue="@array/empty_array"
-            android:summary="This will delete the log file used in Stats" />
+            android:summary="@string/summary_preference_log_delete" />
     </PreferenceCategory>
     <PreferenceCategory android:title="User Variables">
         <EditTextPreference
             android:key="prefPingIp"
-            android:title="Latency Test Ip Address"
+            android:title="@string/preference_user_var_latency_address"
             android:defaultValue="8.8.8.8"
             android:summary="8.8.8.8" />
     </PreferenceCategory>
-
 </PreferenceScreen>

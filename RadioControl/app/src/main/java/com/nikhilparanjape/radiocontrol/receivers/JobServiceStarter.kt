@@ -17,11 +17,14 @@ import com.nikhilparanjape.radiocontrol.utilities.Utilities
 class JobServiceStarter : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            context.startForegroundService(Intent(context, OnBootIntentService::class.java))
-        } else {
-            context.startService(Intent(context, OnBootIntentService::class.java))
+        if (Intent.ACTION_BOOT_COMPLETED == intent.action) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                context.startForegroundService(Intent(context, OnBootIntentService::class.java))
+            } else {
+                context.startService(Intent(context, OnBootIntentService::class.java))
+            }
         }
+
         Utilities.scheduleJob(context)
     }
 }

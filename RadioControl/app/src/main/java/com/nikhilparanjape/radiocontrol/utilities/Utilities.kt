@@ -14,7 +14,6 @@ import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import android.net.wifi.WifiManager
 import android.os.Build
-import android.preference.PreferenceManager
 import android.provider.Settings
 import android.telephony.TelephonyManager
 import android.text.format.DateFormat
@@ -23,6 +22,7 @@ import com.nikhilparanjape.radiocontrol.R
 import com.nikhilparanjape.radiocontrol.services.BackgroundJobService
 import java.io.File
 import java.io.IOException
+
 
 /**
  * Created by Nikhil on 2/3/2016.
@@ -52,7 +52,7 @@ class Utilities {
             var ssid: String? = null
             val connManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
             val networkInfo = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI)
-            if (networkInfo.isConnected) {
+            if (networkInfo!!.isConnected) {
                 val wifiManager = context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
                 val connectionInfo = wifiManager.connectionInfo
                 ssid = connectionInfo.ssid
@@ -68,17 +68,18 @@ class Utilities {
             try {
                 val tm = c.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
                 val cellInfoList = tm.allCellInfo
+
+                Log.d("Radiocontrol-Util","Cell list: $cellInfoList")
                 //This means cell is off
                 if (cellInfoList.isEmpty()) {
                     z = 1
                 }
                 return z
             } catch (e: SecurityException) {
-                Log.e("RadioControl", "Unable to get Location Permission", e)
+                Log.e("RadioControl-util", "Unable to get Location Permission", e)
             } catch (e: NullPointerException) {
-                Log.e("RadioControl", "NullPointer ", e)
+                Log.e("RadioControl-util", "NullPointer: ", e)
             }
-
             return z
         }
 
@@ -90,7 +91,7 @@ class Utilities {
         fun linkSpeed(c: Context): Int {
             val wifiManager = c.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
             val linkSpeed = wifiManager.connectionInfo.linkSpeed
-            Log.d("RadioControl", "Link speed = " + linkSpeed + "Mbps")
+            Log.d("RadioControl-util", "Link speed = " + linkSpeed + "Mbps")
             return linkSpeed
         }
 
@@ -100,7 +101,7 @@ class Utilities {
          * @return
          */
         fun writeLog(data: String, c: Context) {
-            val preferences = PreferenceManager.getDefaultSharedPreferences(c)
+            val preferences = androidx.preference.PreferenceManager.getDefaultSharedPreferences(c)
             if (preferences.getBoolean("enableLogs", false)) {
                 try {
                     val h = DateFormat.format("yyyy-MM-dd HH:mm:ss", System.currentTimeMillis()).toString()
@@ -115,7 +116,7 @@ class Utilities {
                     fos.write(string.toByteArray())
                     fos.close()
                 } catch (e: IOException) {
-                    Log.e("RadioControl", "Error writing log")
+                    Log.e("RadioControl-util", "Error writing log")
                 }
             }
         }
@@ -124,16 +125,17 @@ class Utilities {
         fun scheduleJob(context: Context) {
             val serviceComponent = ComponentName(context, BackgroundJobService::class.java)
             val builder = JobInfo.Builder(1, serviceComponent)
-            val preferences = PreferenceManager.getDefaultSharedPreferences(context)
-            val intervalTime = preferences.getString("interval_prefs", "10").toInt()
+            val preferences = androidx.preference.PreferenceManager.getDefaultSharedPreferences(context)
+            val intervalTime = preferences.getString("interval_prefs", "10")?.toInt()
             //val intervalTime = Integer.parseInt(intervalTimeString)
             //val mJobScheduler = context as JobScheduler
 
-            builder.setMinimumLatency((intervalTime * 1000).toLong()) // wait at least
-            builder.setOverrideDeadline((intervalTime * 1000).toLong()) // maximum delay
+            (intervalTime?.times(1000))?.toLong()?.let { builder.setMinimumLatency(it) } // wait at least
+            (intervalTime?.times(1000))?.toLong()?.let { builder.setOverrideDeadline(it) } // maximum delay
             builder.setPersisted(true) // Persist at boot
             builder.setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY) // require any network
 
+            builder.build()
             //mJobScheduler.schedule(builder.build())
 
             //(getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler).schedule(builder.build())
@@ -146,11 +148,11 @@ class Utilities {
             val gHz = freq / 1000
             return when (gHz) {
                 2 -> {
-                    Log.d("RadioControl", "Frequency = " + freq + "MHz")
+                    Log.d("RadioControl-util", "Frequency = " + freq + "MHz")
                     2
                 }
                 5 -> {
-                    Log.d("RadioControl", "Frequency = " + freq + "MHz")
+                    Log.d("RadioControl-util", "Frequency = " + freq + "MHz")
                     5
                 }
                 else -> 0

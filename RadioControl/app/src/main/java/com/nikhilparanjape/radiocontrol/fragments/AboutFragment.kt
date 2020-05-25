@@ -4,12 +4,12 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.preference.Preference
-import android.preference.PreferenceFragment
 import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.browser.customtabs.CustomTabsIntent
+import androidx.preference.Preference
+import androidx.preference.PreferenceFragmentCompat
 import com.google.android.material.snackbar.Snackbar
 import com.mikepenz.aboutlibraries.LibTaskCallback
 import com.mikepenz.aboutlibraries.Libs
@@ -24,45 +24,46 @@ import com.nikhilparanjape.radiocontrol.activities.TutorialActivity
 import com.nikhilparanjape.radiocontrol.utilities.Utilities
 import com.novoda.simplechromecustomtabs.SimpleChromeCustomTabs
 import org.jetbrains.anko.doAsync
+
 /**
  * Created by Nikhil on 4/5/2016.
  */
 
-class AboutFragment : PreferenceFragment() {
+class AboutFragment : PreferenceFragmentCompat() {
+    private var z = 0
     private var versionName = BuildConfig.VERSION_NAME
 
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         addPreferencesFromResource(R.xml.about)
+        val versionPref = findPreference<Preference>("version")
 
 
-        val c = activity
-        doAsync {
-            SimpleChromeCustomTabs.initialize(c)
-        }
-
-        if (!Utilities.isConnected(c)) {
-            preferenceScreen.findPreference("source").isEnabled = false
-        }
-
-        val versionPref = findPreference("version")
         val cs = versionName
-        versionPref.summary = "v$cs"
-        versionPref.onPreferenceClickListener = object : Preference.OnPreferenceClickListener {
-            var z = 0
+        versionPref?.summary = "v$cs"
 
-            override fun onPreferenceClick(preference: Preference): Boolean {
-                val sp = c.getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE) //Initializes prefs.xml
+        if (!Utilities.isConnected(requireContext())) {
+            preferenceScreen.findPreference<Preference>("help")?.isEnabled = false
+            preferenceScreen.findPreference<Preference>("source")?.isEnabled = false
+            preferenceScreen.findPreference<Preference>("support")?.isEnabled = false
+        }
+        doAsync {
+            SimpleChromeCustomTabs.initialize(requireContext())
+        }
+    }
+    override fun onPreferenceTreeClick(preference: Preference): Boolean {
+
+        return when (preference.key) {
+            getString(R.string.key_preference_about_version) -> {
+                val sp = requireContext().getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE) //Initializes prefs.xml
                 val editor = sp.edit()//Initializes xml editor
                 z++
-                Log.d("RadioControl", (7 - z).toString() + " steps away from easter egg")
+                Log.d("RadioControl-About", (7 - z).toString() + " steps away from easter egg")
                 //Toast.makeText(getActivity(), (7 - z) + " steps away from easter egg", Toast.LENGTH_SHORT).show();
                 if (z >= 7) {
                     if (!sp.getBoolean("isDeveloper", false)) {
                         Toast.makeText(activity, R.string.dev_activated, Toast.LENGTH_LONG).show()
                         z = 0
-                        Log.d("RadioControl", "Developer features activated")
+                        Log.d("RadioControl-About", "Developer features activated")
 
 
                         editor.putBoolean("isDeveloper", true) //Puts the boolean into prefs.xml
@@ -70,7 +71,7 @@ class AboutFragment : PreferenceFragment() {
                     } else if (sp.getBoolean("isDeveloper", false)) {
                         Toast.makeText(activity, R.string.dev_deactivated, Toast.LENGTH_LONG).show()
                         z = 0
-                        Log.d("RadioControl", c.getString(R.string.dev_deactivated))
+                        Log.d("RadioControl-About", requireContext().getString(R.string.dev_deactivated))
 
 
                         editor.putBoolean("isDeveloper", false) //Puts the boolean into prefs.xml
@@ -78,50 +79,44 @@ class AboutFragment : PreferenceFragment() {
                     }
 
                 }
-                return false
+                false
+            }
+            getString(R.string.key_pref_about_changelog) -> {
+                changelog(requireContext())
+                false
+            }
+            getString(R.string.key_preference_about_tutorial) -> {
+                tutorial(requireContext())
+                false
+            }
+            getString(R.string.key_preference_about_source) -> {
+                displayLicensesAlertDialog(requireContext())
+                false
+            }
+            getString(R.string.key_preference_about_support) -> {
+                displaySupportWebsite(requireContext())
+                false
+            }
+            getString(R.string.key_preference_about_aboutlib) -> {
+                LibsBuilder()
+                        .withLibraries("crouton", "actionbarsherlock", "showcaseview", "android_job")
+                        .withAutoDetect(true)
+                        .withLicenseShown(true)
+                        .withVersionShown(true)
+                        .withActivityTitle("Open Source Libraries")
+                        .withListener(libsListener)
+                        .withLibTaskCallback(libTaskCallback)
+                        .withUiListener(libsUIListener)
+                        .start(requireContext())
+                false
             }
 
-        }
-
-        val myPref = findPreference("changelog")
-        myPref.onPreferenceClickListener = Preference.OnPreferenceClickListener {
-            changelog(c)
-            false
-        }
-
-        val tutorialPref = findPreference("tutorial")
-        tutorialPref.onPreferenceClickListener = Preference.OnPreferenceClickListener {
-            tutorial(c)
-            false
-        }
-
-        val openSource = findPreference("source")
-        openSource.onPreferenceClickListener = Preference.OnPreferenceClickListener {
-            displayLicensesAlertDialog(c)
-            false
-        }
-        val supportSite = findPreference("support")
-        supportSite.onPreferenceClickListener = Preference.OnPreferenceClickListener {
-            displaySupportWebsite(c)
-            false
-        }
-        val aboutLib = findPreference("aboutLib")
-        aboutLib.onPreferenceClickListener = Preference.OnPreferenceClickListener {
-            LibsBuilder()
-                    .withLibraries("crouton", "actionbarsherlock", "showcaseview", "android_job")
-                    .withAutoDetect(true)
-                    .withLicenseShown(true)
-                    .withVersionShown(true)
-                    .withActivityTitle("Open Source Libraries")
-                    .withActivityStyle(Libs.ActivityStyle.DARK)
-                    .withListener(libsListener)
-                    .withLibTaskCallback(libTaskCallback)
-                    .withUiListener(libsUIListener)
-                    .start(c)
-
-            false
+            else -> {
+                super.onPreferenceTreeClick(preference)
+            }
         }
     }
+
 
     private fun displayLicensesAlertDialog(c: Context) {
         if (Utilities.isConnected(c)) {
@@ -130,9 +125,9 @@ class AboutFragment : PreferenceFragment() {
             builder.setToolbarColor(4342338)
 
             val customTabsIntent = builder.build()
-            customTabsIntent.launchUrl(activity, Uri.parse(url))
+            customTabsIntent.launchUrl(requireContext(), Uri.parse(url))
         } else {
-            Snackbar.make(view!!, "No internet connection found", Snackbar.LENGTH_LONG)
+            Snackbar.make(requireView(), "No internet connection found", Snackbar.LENGTH_LONG)
                     .show()
         }
 
@@ -145,9 +140,9 @@ class AboutFragment : PreferenceFragment() {
             builder.setToolbarColor(4816556)
 
             val customTabsIntent = builder.build()
-            customTabsIntent.launchUrl(activity, Uri.parse(url))
+            customTabsIntent.launchUrl(requireContext(), Uri.parse(url))
         } else {
-            Snackbar.make(view!!, "No internet connection found", Snackbar.LENGTH_LONG)
+            Snackbar.make(requireView(), "No internet connection found", Snackbar.LENGTH_LONG)
                     .show()
         }
 
@@ -170,7 +165,7 @@ class AboutFragment : PreferenceFragment() {
             Log.e("AboutLibraries", "started")
         }
 
-        override fun onLibTaskFinished(fastItemAdapter: ItemAdapter<*>) {
+        override fun onLibTaskFinished(itemAdapter: ItemAdapter<*>) {
             Log.e("AboutLibraries", "finished")
         }
     }

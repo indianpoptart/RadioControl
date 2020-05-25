@@ -1,10 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 
-apply plugin: 'io.fabric'
-
 repositories {
-    maven { url 'https://maven.fabric.io/public' }
     maven { url "http://dl.bintray.com/novoda/maven" }
 
     google()
@@ -12,14 +9,14 @@ repositories {
 }
 
 android {
-    compileSdkVersion 28
-    buildToolsVersion '28.0.3'
+    compileSdkVersion 29
+    buildToolsVersion '29.0.2'
     defaultConfig {
         applicationId "com.nikhilparanjape.radiocontrol"
         minSdkVersion 21
-        targetSdkVersion 28
-        versionCode 75
-        versionName "6.0-Alpha1"
+        targetSdkVersion 29
+        versionCode 78
+        versionName "6.0-Alpha3"
         // Enabling multidex support.
         multiDexEnabled true
 
@@ -27,13 +24,14 @@ android {
     dexOptions {
         javaMaxHeapSize "16g"
         maxProcessCount 8
-        threadCount 24
+        threadCount 24 // My desktop is running on a Threadripper 1920x
 
     }
     buildTypes {
         release {
             minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
         debug {
         }
@@ -62,30 +60,35 @@ dependencies {
     // noinspection GradleCompatible
 
     //AndroidX
-    implementation 'androidx.annotation:annotation:1.1.0-alpha01'
-    implementation 'androidx.appcompat:appcompat:1.1.0-alpha01'
-    implementation 'androidx.browser:browser:1.0.0'
+    implementation 'androidx.annotation:annotation:1.1.0'
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.browser:browser:1.2.0'
     implementation 'androidx.cardview:cardview:1.0.0'
     //noinspection GradleDependency
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha2' //DO NOT UPDATE
-    implementation group: 'androidx.core', name: 'core-ktx', version: '1.1.0-alpha04'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta6'
+    implementation group: 'androidx.core', name: 'core-ktx', version: '1.4.0-alpha01'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.recyclerview:recyclerview:1.1.0-alpha02'
+    implementation 'androidx.preference:preference-ktx:1.1.1'
+    implementation 'androidx.recyclerview:recyclerview:1.1.0'
+
+    //Debug
+    //debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.0-beta-3'
 
     //Google
-    implementation 'com.google.android.material:material:1.1.0-alpha03'
-    implementation('com.crashlytics.sdk.android:crashlytics:2.9.9@aar') {
+    implementation 'com.google.android.material:material:1.2.0-alpha06'
+    implementation('com.crashlytics.sdk.android:crashlytics:2.10.1@aar') {
         transitive = true
         ""
     }
 
+    def libsuVersion = '2.5.1'
     // Third party - Helper
-    implementation 'com.github.bumptech.glide:glide:4.9.0'
-    implementation "com.github.StephenVinouze:KinApp:1.0.2"
-    implementation 'com.github.topjohnwu:libsu:2.3.1'
+    implementation "com.github.StephenVinouze:KinApp:1.0.3"
+
+    implementation "com.github.topjohnwu.libsu:core:${libsuVersion}"
     implementation 'org.jetbrains.anko:anko-commons:0.10.8'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.1.1'
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.21'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.7'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.72'
     implementation 'com.novoda:simple-chrome-custom-tabs:0.1.6'
     implementation 'me.zhanghai.android.customtabshelper:library:1.0.6'
 
@@ -93,27 +96,24 @@ dependencies {
     implementation 'com.afollestad:aesthetic:1.0.0-beta05'
     implementation 'com.afollestad.material-dialogs:core:2.0.0-rc3'
     implementation 'com.appyvet:materialrangebar:1.3'
-    implementation 'com.borax12.materialdaterangepicker:library:1.9'
+    implementation 'com.borax12.materialdaterangepicker:library:2.0'
     implementation 'com.diogobernardino:williamchart:2.2'
-    implementation 'com.github.apl-devs:appintro:v5.0.0'
+    implementation 'com.github.AppIntro:AppIntro:5.1.0'
     implementation 'com.github.bmelnychuk:AndroidTreeView:d051ce75f5'
     implementation 'com.github.gabrielemariotti.changeloglib:changelog:2.1.0'
     implementation 'com.gordonwong:material-sheet-fab:1.2.1'
-    implementation 'com.mikepenz:aboutlibraries:7.0.0-rc1'
+    implementation 'com.mikepenz:aboutlibraries:8.1.3'
+    implementation 'com.mikepenz:fastadapter:5.0.2'
+    implementation 'com.mikepenz:fastadapter-extensions-expandable:5.0.2'
     implementation 'com.mikepenz:google-material-typeface:3.0.1.3.original@aar'
-    implementation 'com.mikepenz:iconics-core:3.2.0@aar'
-    implementation('com.mikepenz:materialdrawer:7.0.0-alpha2@aar') {
-        transitive = true
-    }
+    implementation 'com.mikepenz:iconics-core:5.0.3'
+    implementation 'com.mikepenz:google-material-typeface:3.0.1.4.original-kotlin@aar' //Disregard updater, not kotlin'd
+    implementation "com.mikepenz:materialdrawer:8.0.3"
+    implementation 'com.mikepenz:materialdrawer-nav:8.0.3'
+    implementation 'com.mikepenz:materialdrawer-iconics:8.0.3'
     implementation 'me.grantland:autofittextview:0.2.1'
-
-    //Processors
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
 
 }
 
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'kotlin-android-extensions'
-kotlin {
-
-}

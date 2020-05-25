@@ -97,7 +97,8 @@
             android:label="JobService"
             android:permission="android.permission.BIND_JOB_SERVICE"/>
 
-        <service android:name=".services.OnBootIntentService" />
+        <service android:name=".services.OnBootIntentService"
+                 android:permission="android.permission.BIND_JOB_SERVICE"/>
 
         <receiver android:name=".receivers.PhoneStateBroadcastReceiver">
             <intent-filter>
@@ -106,7 +107,7 @@
         </receiver>
         <receiver android:name=".receivers.JobServiceStarter">
             <intent-filter>
-                <action android:name="android.intent.action.LOCKED_BOOT_COMPLETED" />
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
         <receiver

@@ -95,8 +95,8 @@
                         <option name="values">
                           <map>
                             <entry key="assetSourceType" value="FILE" />
-                            <entry key="outputName" value="ic_nexus_logo" />
-                            <entry key="sourceFile" value="C:\Users\admin\Downloads\nexus_logo.svg" />
+                            <entry key="outputName" value="ic_bubbles" />
+                            <entry key="sourceFile" value="C:\Users\admin\Downloads\bubbles.svg" />
                           </map>
                         </option>
                       </PersistentState>

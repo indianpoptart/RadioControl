@@ -1,15 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog bulletedList="true">
 
+    <changelogversion versionName="6.0-Alpha3" changeDate="May 25, 2020">
+        <changelogtext>Removed Third Party analytics</changelogtext>
+        <changelogtext>Updated targets to Android Q</changelogtext>
+        <changelogtext>Overhauled Settings and About activity fragments with FragmentCompat</changelogtext>
+        <changelogtext>Converted deprecated code to AndroidX</changelogtext>
+        <changelogtext>Updated to new Iconics libraries</changelogtext>
+        <changelogtext>Improved MainActivity load times, and preference handling</changelogtext>
+        <changelogtext>Added BootReceiver so RadioControl can start working at bootup</changelogtext>
+        <changelogtext>Added boot time events to Statistics</changelogtext>
+        <changelogtext>Squashed some null producing errors</changelogtext>
+        <changelogtext>Rewrote many of the strings in the app for more concise reading</changelogtext>
+        <changelogtext>Redesigned some layouts so they look better</changelogtext>
+    </changelogversion>
     <changelogversion versionName="6.0-Alpha1" changeDate="February 23, 2018">
         <changelogtext>Fixes for Alternate root command</changelogtext>
         <changelogtext>Fixed Battery optimization setting (doze)</changelogtext>
         <changelogtext>Implemented LibSU for all root actions</changelogtext>
         <changelogtext>Rewrote core process to JobService</changelogtext>
         <changelogtext>Rewrote main BroadcastReceiver</changelogtext>
-        <changelogtext>Rewrote core process to JobService</changelogtext>
-        <changelogtext>Known bugs:</changelogtext>
-        <changelogtext>May not work properly on Android P</changelogtext>
+        <changelogbug>May not work properly on Android P</changelogbug>
     </changelogversion>
     <changelogversion versionName="5.0.3-Beta8" changeDate="October 11, 2018">
         <changelogtext>Updated all libraries</changelogtext>
@@ -18,7 +29,7 @@
         <changelogtext>General code cleanup</changelogtext>
         <changelogtext>Optimized Imports</changelogtext>
         <changelogtext>Fixed typos</changelogtext>
-        <changelogtext>Removed IAB classes that were old</changelogtext>
+        <changelogtext>Removed old billing classes</changelogtext>
         <changelogtext>Overhauling dialogs with MaterialDialog 2.0 beta</changelogtext>
         <changelogtext>Fixing issues with old dialogs</changelogtext>
         <changelogtext>Fixed issue with boot receiving</changelogtext>

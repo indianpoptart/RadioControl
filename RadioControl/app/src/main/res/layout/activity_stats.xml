@@ -30,14 +30,14 @@
 
 
             <!-- A CardView that contains a graph -->
-            <androidx.cardview.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            <androidx.cardview.widget.CardView
                 android:id="@+id/card_wifi_lost"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
                 android:layout_gravity="center"
-                card_view:cardBackgroundColor="#fff"
-                card_view:cardCornerRadius="2dp"
-                card_view:cardElevation="10dp">
+                app:cardBackgroundColor="#fff"
+                app:cardCornerRadius="2dp"
+                app:cardElevation="10dp">
 
                 <TextView
                     android:id="@+id/title_wifi_off"
@@ -45,9 +45,19 @@
                     android:layout_height="20dp"
                     android:gravity="center_vertical"
                     android:paddingStart="20dp"
+                    android:paddingEnd="20dp"
                     android:text="@string/wifi_signal_lost"
                     android:textColor="@android:color/black"
                     android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/title_no_log_data_wifi_off"
+                    android:gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="@string/title_no_log_data"
+                    android:textColor="@android:color/black"
+                    android:textSize="24sp"/>
 
                 <com.db.chart.view.LineChartView
                     android:id="@+id/linechart"
@@ -65,6 +75,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true" />
+
                 </com.db.chart.view.LineChartView>
 
             </androidx.cardview.widget.CardView>
@@ -88,9 +99,18 @@
                     android:layout_height="20dp"
                     android:gravity="center_vertical"
                     android:paddingStart="20dp"
+                    android:paddingEnd="20dp"
                     android:text="@string/radios_toggled_graph_title"
                     android:textColor="@android:color/black"
                     android:textSize="14sp" />
+                <TextView
+                    android:id="@+id/title_no_log_data_airplane_on"
+                    android:gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="@string/title_no_log_data"
+                    android:textColor="@android:color/black"
+                    android:textSize="24sp"/>
 
                 <com.db.chart.view.LineChartView
                     android:id="@+id/linechart_airplane_on"
@@ -132,9 +152,18 @@
                 android:layout_height="20dp"
                 android:gravity="center_vertical"
                 android:paddingStart="20dp"
+                android:paddingEnd="20dp"
                 android:text="@string/text_root_access_attempts"
                 android:textColor="@android:color/black"
                 android:textSize="14sp" />
+            <TextView
+                android:id="@+id/title_no_log_data_root_access"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="@string/title_no_log_data"
+                android:textColor="@android:color/black"
+                android:textSize="24sp"/>
 
             <com.db.chart.view.LineChartView
                 android:id="@+id/linechart_root_access"
@@ -156,6 +185,59 @@
 
 
         </androidx.cardview.widget.CardView>
+
+            <!-- A CardView that contains an airplane graph -->
+            <androidx.cardview.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/boot_access_card"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_below="@+id/root_access_card"
+                android:layout_alignParentStart="true"
+                android:layout_gravity="center"
+                android:layout_marginTop="20dp"
+                card_view:cardBackgroundColor="#fff"
+                card_view:cardCornerRadius="2dp"
+                card_view:cardElevation="10dp">
+
+                <TextView
+                    android:id="@+id/title_boot_access"
+                    android:layout_width="match_parent"
+                    android:layout_height="20dp"
+                    android:gravity="center_vertical"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="20dp"
+                    android:text="@string/title_boot_events"
+                    android:textColor="@android:color/black"
+                    android:textSize="14sp" />
+                <TextView
+                    android:id="@+id/title_no_log_data_boot_access"
+                    android:gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="@string/title_no_log_data"
+                    android:textColor="@android:color/black"
+                    android:textSize="24sp"/>
+
+                <com.db.chart.view.LineChartView
+                    android:id="@+id/linechart_boot_access"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:layout_below="@+id/root_access_card"
+                    android:layout_alignParentStart="true"
+                    android:paddingLeft="5dp"
+                    android:paddingTop="20dp"
+                    android:paddingRight="5dp">
+
+                    <ProgressBar
+                        android:id="@+id/progressBootAccess"
+                        style="?android:attr/progressBarStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true" />
+                </com.db.chart.view.LineChartView>
+
+
+            </androidx.cardview.widget.CardView>
 
 
         </RelativeLayout>

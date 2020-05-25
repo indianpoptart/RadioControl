@@ -17,6 +17,7 @@ import com.nikhilparanjape.radiocontrol.services.BackgroundJobService
  *
  * This uses some deprecated functions and may stop working :(
  *
+ * This file is only here for backwards compatibility
  *
  * @author Nikhil Paranjape
  */
@@ -40,7 +41,7 @@ class ConnectivityReceiver : WakefulBroadcastReceiver() {
         if (resultCode == JobScheduler.RESULT_SUCCESS) {
             Log.d("RadioControl-CR", "Job scheduled!")
         } else {
-            Log.d("RadioControl-CR", "Job not scheduled")
+            Log.d("RadioControl-CR", "Job could not be scheduled")
         }
 
     }

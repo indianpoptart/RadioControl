@@ -31,7 +31,7 @@ class TutorialActivity : AppIntro() {
         // Just set a title, description, background and image. AppIntro will do the rest.
         //addSlide(AppIntroFragment.newInstance("Welcome to RadioControl", "Use this app to auto toggle the cell radio when you join a WiFi network", R.mipmap.ic_launcher, R.color.colorPrimary));
 
-        // SHOW or HIDE the statusbar
+        // SHOW or HIDE the status bar
 
         showStatusBar(false)
         setFadeAnimation()
@@ -49,23 +49,18 @@ class TutorialActivity : AppIntro() {
     override fun onSkipPressed() {
         loadMainActivity()
     }
-
-    private fun loadMainActivity() {
-        val intent = Intent(this, MainActivity::class.java)
-        startActivity(intent)
-    }
-
-
     override fun onDonePressed() {
         loadMainActivity()
     }
-
     override fun onSlideChanged() {
         // Do something when the slide changes.
     }
-
     override fun onNextPressed() {
         // Do something when users tap on Next button.
+    }
+    private fun loadMainActivity() {
+        val intent = Intent(this, MainActivity::class.java)
+        startActivity(intent)
     }
 
 }

@@ -4,7 +4,6 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.preference.PreferenceManager
 import android.util.Log
 import com.nikhilparanjape.radiocontrol.receivers.*
 import java.util.*
@@ -109,9 +108,9 @@ class AlarmSchedulers{
     // Setup a recurring alarm every 15,30,60 minutes
     fun scheduleAlarm(c: Context) {
 
-        val preferences = PreferenceManager.getDefaultSharedPreferences(c)
+        val preferences = androidx.preference.PreferenceManager.getDefaultSharedPreferences(c)
         val intervalTimeString = preferences.getString("interval_prefs", "10")
-        val intervalTime = Integer.parseInt(intervalTimeString)
+        val intervalTime = Integer.parseInt(intervalTimeString.toString())
         val cal = Calendar.getInstance()
         // start 30 seconds after boot completed
         cal.add(Calendar.MINUTE, intervalTime)
