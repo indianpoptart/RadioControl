@@ -80,7 +80,6 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
     private var alarmUtil = AlarmSchedulers()
     private lateinit var deviceIcon: Drawable
     private lateinit var carrierIcon: Drawable
-    private lateinit var headerView: AccountHeaderView
     private var versionName = BuildConfig.VERSION_NAME
     internal var util = Utilities()
     private lateinit var clayout: CoordinatorLayout
@@ -179,9 +178,6 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
                 colorInt = Color.RED
             }
         } else {
-            IconicsDrawable(this, GoogleMaterial.Icon.gmd_check_circle).apply {
-                colorInt = Color.GREEN
-            }
             carrierIcon = IconicsDrawable(this, GoogleMaterial.Icon.gmd_check_circle).apply {
                 colorInt = Color.GREEN
             }
