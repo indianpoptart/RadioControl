@@ -175,6 +175,7 @@ class BackgroundJobService : JobService(), ConnectivityReceiver.ConnectivityRece
             Log.d("RadioControl-Job", "Something's wrong, I can feel it")
             jobFinished(params, false)
         }
+        Log.i(TAG, "Job completed")
 
         return true
     }

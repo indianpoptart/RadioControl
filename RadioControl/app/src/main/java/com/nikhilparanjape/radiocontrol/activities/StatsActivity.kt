@@ -868,6 +868,7 @@ class StatsActivity : AestheticActivity() {
                     .show()
         }
     }
+    @SuppressLint("SimpleDateFormat") //Required due to the way the app reads info for statistics
     private fun getBootTimes(){
         val formatter = SimpleDateFormat("yyyy")
         val year = formatter.format(Date())

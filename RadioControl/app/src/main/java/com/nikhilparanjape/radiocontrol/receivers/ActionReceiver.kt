@@ -14,7 +14,7 @@ class ActionReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
 
-        //Toast.makeText(context,"recieved",Toast.LENGTH_SHORT).show();
+        //Toast.makeText(context,"received",Toast.LENGTH_SHORT).show();
 
         val sharedPref = context.getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE)
         val editor = sharedPref.edit()
