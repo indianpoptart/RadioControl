@@ -17,18 +17,18 @@ import android.net.NetworkInfo
 import android.net.wifi.WifiManager
 import android.os.Build
 import android.provider.Settings
+import android.telephony.SubscriptionManager
 import android.telephony.TelephonyManager
-import android.telephony.cdma.CdmaCellLocation
-import android.telephony.gsm.GsmCellLocation
 import android.text.format.DateFormat
 import android.util.Log
-import androidx.core.app.ActivityCompat.requestPermissions
-import androidx.core.app.ActivityCompat.shouldShowRequestPermissionRationale
 import androidx.core.content.ContextCompat
 import com.nikhilparanjape.radiocontrol.R
 import com.nikhilparanjape.radiocontrol.services.BackgroundJobService
+import com.topjohnwu.superuser.Shell
 import java.io.File
 import java.io.IOException
+import java.lang.reflect.Field
+import java.lang.reflect.Method
 
 
 /**
@@ -73,6 +73,9 @@ class Utilities {
         fun getCellStatus(c: Context): Int {
             var z = 0
             val tm = c.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+            val connMgr = c.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            var isWifiConn: Boolean = false
+            var isMobileConn: Boolean = false
 
             try{
                 if (ContextCompat.checkSelfPermission(c, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED ){
@@ -84,10 +87,8 @@ class Utilities {
                         z = 1
                     }
                 }else{
-                    val cdma = tm.cellLocation as CdmaCellLocation
-                    val gsm = tm.cellLocation as GsmCellLocation
-                    Log.d("Radiocontrol-Util","CDMA: $cdma")
-                    Log.d("Radiocontrol-Util","GSM: $gsm")
+
+
                 }
             } catch (e: SecurityException) {
                 Log.e("RadioControl-util", "Unable to get Location Permission", e)
@@ -98,6 +99,77 @@ class Utilities {
             }
 
             return z
+        }
+
+        private fun isMobileDataEnabledFromLollipop(context: Context): Boolean {
+            var state = false
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                state = Settings.Global.getInt(context.contentResolver, "mobile_data", 0) == 1
+            }
+            return state
+        }
+
+        @Throws(java.lang.Exception::class)
+        private fun getTransactionCode(context: Context): String {
+            return try {
+                val mTelephonyManager = context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+                val mTelephonyClass = Class.forName(mTelephonyManager.javaClass.name)
+                val mTelephonyMethod: Method = mTelephonyClass.getDeclaredMethod("getITelephony")
+                mTelephonyMethod.isAccessible = true
+                val mTelephonyStub: Any = mTelephonyMethod.invoke(mTelephonyManager)
+                val mTelephonyStubClass = Class.forName(mTelephonyStub.javaClass.name)
+                val mClass = mTelephonyStubClass.declaringClass
+                val field: Field = mClass!!.getDeclaredField("TRANSACTION_setDataEnabled")
+                field.isAccessible = true
+                java.lang.String.valueOf(field.getInt(null))
+            } catch (e: java.lang.Exception) {
+                // The "TRANSACTION_setDataEnabled" field is not available,
+                // or named differently in the current API level, so we throw
+                // an exception and inform users that the method is not available.
+                throw e
+            }
+        }
+
+        @Throws(Exception::class)
+        fun setMobileNetworkfromLollipop(context: Context) {
+            var command: String? = null
+            var state = 0
+            try {
+                // Get the current state of the mobile network.
+                state = if (isMobileDataEnabledFromLollipop(context)) 0 else 1
+                // Get the value of the "TRANSACTION_setDataEnabled" field.
+                val transactionCode: String = getTransactionCode(context)
+                // Android 5.1+ (API 22) and later.
+                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
+                    val mSubscriptionManager: SubscriptionManager = context.getSystemService(Context.TELEPHONY_SUBSCRIPTION_SERVICE) as SubscriptionManager
+                    // Loop through the subscription list i.e. SIM list.
+                    for (i in 0 until mSubscriptionManager.activeSubscriptionInfoCountMax) {
+                        if (transactionCode.isNotEmpty()) {
+                            // Get the active subscription ID for a given SIM card.
+                            val subscriptionId: Int = mSubscriptionManager.activeSubscriptionInfoList[i].subscriptionId
+                            // Execute the command via `su` to turn off
+                            // mobile network for a subscription service.
+                            command = "service call phone $transactionCode i32 $subscriptionId i32 $state"
+                            val output = Shell.su(command).exec().out
+                        }
+                    }
+                } else if (Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP) {
+                    // Android 5.0 (API 21) only.
+                    if (transactionCode.isNotEmpty()) {
+                        // Execute the command via `su` to turn off mobile network.
+                        command = "service call phone $transactionCode i32 $state"
+                        val output = Shell.su(command).exec().out
+                    }
+                }
+            } catch (e: Exception) {
+                // Oops! Something went wrong, so we throw the exception here.
+                Log.e("RadioControl-util", "An unknown error occurred", e)
+            } catch (e: SecurityException) {
+                Log.e("RadioControl-util", "Unable to get Phone State Permission", e)
+
+            } catch (e: NullPointerException) {
+                Log.e("RadioControl-util", "NullPointer: ", e)
+            }
         }
 
         /**

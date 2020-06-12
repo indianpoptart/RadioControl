@@ -137,8 +137,9 @@ class BackgroundJobService : JobService(), ConnectivityReceiver.ConnectivityRece
                                         Log.d("RadioControl-Job", "Cell Radio is already off")
                                         jobFinished(params, false)
                                     }
-                                    Utilities.getCellStatus(applicationContext) >= 2 -> {
-                                        Log.e("RadioControl-Job", "Location can't be accessed")
+                                    Utilities.getCellStatus(applicationContext) == 2 -> {
+                                        Log.e("RadioControl-Job", "Location can't be accessed, try alt method")
+                                        Utilities.setMobileNetworkfromLollipop(applicationContext)
                                     }
                                 }
 

@@ -412,8 +412,9 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
         radioOffButton.setOnClickListener {
             //String[] cellOffCmd = {"service call phone 27","service call phone 14 s16"};
             //RootAccess.runCommands(cellOffCmd);
-            val cellIntent = Intent(applicationContext, CellRadioService::class.java)
-            startService(cellIntent)
+            Utilities.setMobileNetworkfromLollipop(applicationContext)
+            //val cellIntent = Intent(applicationContext, CellRadioService::class.java)
+            //startService(cellIntent)
             alarmUtil.scheduleRootAlarm(applicationContext)
         }
         toggle.setOnCheckedChangeListener { _, isChecked ->
