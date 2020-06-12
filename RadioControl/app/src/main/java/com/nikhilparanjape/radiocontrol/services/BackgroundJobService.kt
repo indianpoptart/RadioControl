@@ -125,15 +125,21 @@ class BackgroundJobService : JobService(), ConnectivityReceiver.ConnectivityRece
                             //Runs the cellular mode, otherwise, run default airplane mode
                             if (prefs.getBoolean("altRootCommand", false)) {
 
-                                if (Utilities.getCellStatus(applicationContext) == 0) {
-                                    val output = Shell.su("service call phone 27").exec().out
-                                    Utilities.writeLog("root accessed: $output", applicationContext)
-                                    Log.d("RadioControl-Job", "Cell Radio has been turned off")
-                                    writeLog("Cell radio has been turned off", applicationContext)
-                                    jobFinished(params, false)
-                                } else if (Utilities.getCellStatus(applicationContext) == 1) {
-                                    Log.d("RadioControl-Job", "Cell Radio is already off")
-                                    jobFinished(params, false)
+                                when {
+                                    Utilities.getCellStatus(applicationContext) == 0 -> {
+                                        val output = Shell.su("service call phone 27").exec().out
+                                        Utilities.writeLog("root accessed: $output", applicationContext)
+                                        Log.d("RadioControl-Job", "Cell Radio has been turned off")
+                                        writeLog("Cell radio has been turned off", applicationContext)
+                                        jobFinished(params, false)
+                                    }
+                                    Utilities.getCellStatus(applicationContext) == 1 -> {
+                                        Log.d("RadioControl-Job", "Cell Radio is already off")
+                                        jobFinished(params, false)
+                                    }
+                                    Utilities.getCellStatus(applicationContext) >= 2 -> {
+                                        Log.e("RadioControl-Job", "Location can't be accessed")
+                                    }
                                 }
 
                             } else {

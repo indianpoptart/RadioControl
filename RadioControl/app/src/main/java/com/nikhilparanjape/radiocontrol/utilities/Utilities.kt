@@ -1,5 +1,6 @@
 package com.nikhilparanjape.radiocontrol.utilities
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Notification
 import android.app.NotificationChannel
@@ -9,6 +10,7 @@ import android.app.job.JobInfo
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.media.AudioManager
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
@@ -16,8 +18,13 @@ import android.net.wifi.WifiManager
 import android.os.Build
 import android.provider.Settings
 import android.telephony.TelephonyManager
+import android.telephony.cdma.CdmaCellLocation
+import android.telephony.gsm.GsmCellLocation
 import android.text.format.DateFormat
 import android.util.Log
+import androidx.core.app.ActivityCompat.requestPermissions
+import androidx.core.app.ActivityCompat.shouldShowRequestPermissionRationale
+import androidx.core.content.ContextCompat
 import com.nikhilparanjape.radiocontrol.R
 import com.nikhilparanjape.radiocontrol.services.BackgroundJobService
 import java.io.File
@@ -65,21 +72,31 @@ class Utilities {
 
         fun getCellStatus(c: Context): Int {
             var z = 0
-            try {
-                val tm = c.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
-                val cellInfoList = tm.allCellInfo
+            val tm = c.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
 
-                Log.d("Radiocontrol-Util","Cell list: $cellInfoList")
-                //This means cell is off
-                if (cellInfoList.isEmpty()) {
-                    z = 1
+            try{
+                if (ContextCompat.checkSelfPermission(c, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED ){
+                    val cellInfoList = tm.allCellInfo
+
+                    Log.d("Radiocontrol-Util","Cell list: $cellInfoList")
+                    //This means cell is off
+                    if (cellInfoList.isEmpty()) {
+                        z = 1
+                    }
+                }else{
+                    val cdma = tm.cellLocation as CdmaCellLocation
+                    val gsm = tm.cellLocation as GsmCellLocation
+                    Log.d("Radiocontrol-Util","CDMA: $cdma")
+                    Log.d("Radiocontrol-Util","GSM: $gsm")
                 }
-                return z
             } catch (e: SecurityException) {
                 Log.e("RadioControl-util", "Unable to get Location Permission", e)
+                z = 2
             } catch (e: NullPointerException) {
                 Log.e("RadioControl-util", "NullPointer: ", e)
+                z = 3
             }
+
             return z
         }
 
@@ -145,8 +162,7 @@ class Utilities {
         fun frequency(c: Context): Int {
             val wifiManager = c.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
             val freq = wifiManager.connectionInfo.frequency
-            val gHz = freq / 1000
-            return when (gHz) {
+            return when (freq / 1000) {
                 2 -> {
                     Log.d("RadioControl-util", "Frequency = " + freq + "MHz")
                     2
