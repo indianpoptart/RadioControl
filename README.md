@@ -53,12 +53,12 @@ The app works properly, and has been personally tested on these devices:
 - ![Samsung](https://nikhilp.org/images/samsung.png) Samsung Galaxy S7 Edge
 
 As well as these Android versions
-- ![Q(10.0)](https://nikhilp.org/images/android_q_logo_v2.png) (v6.0-alpha3 only - Cellular Mode(Experimental) not working)  
-- ![P(9.0)](https://nikhilp.org/images/android_p_logo.png) (Debug version only)  
-- ![Oreo(8.0)](https://nikhilp.org/images/android_o_logo_v2.png) (Debug version only) 
-- ![Nougat(7.0)](https://nikhilp.org/images/android_n_logo.png)
-- ![Marshmallow(6.0)](https://nikhilp.org/images/android_m_logo.png)
-- ![Lollipop(5.0+)](https://nikhilp.org/images/android_l_logo.png)
+- (10)![Q(10.0)](https://nikhilp.org/images/android_q_logo_v2.png) (v6.0-alpha3 only - Cellular Mode(Experimental) not working)  
+- (9.0)![P(9.0)](https://nikhilp.org/images/android_p_logo.png) (Debug version only)  
+- (8.0)![Oreo(8.0)](https://nikhilp.org/images/android_o_logo_v2.png) (Debug version only) 
+- (7.0)![Nougat(7.0)](https://nikhilp.org/images/android_n_logo.png)
+- (6.0)![Marshmallow(6.0)](https://nikhilp.org/images/android_m_logo.png)
+- (5.0)![Lollipop(5.0+)](https://nikhilp.org/images/android_l_logo.png)
 
 # SU Binary Compatibility
 Working properly with the following SU binary
