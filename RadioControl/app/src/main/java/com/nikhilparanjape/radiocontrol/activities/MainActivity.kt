@@ -248,8 +248,6 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
         val headerView = AccountHeaderView(this).apply {
             attachToSliderView(slider)
             addProfiles(
-                    //ProfileDrawerItem().withName(deviceName).withEmail("v$versionName").withIcon(deviceIcon),
-                    //ProfileDrawerItem().withName(getString(R.string.profile_root_status)).withEmail(carrierName).withIcon(carrierIcon)
                     profile,
                     profile2
             )
@@ -1010,4 +1008,5 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
         }
 
     }
+
 }

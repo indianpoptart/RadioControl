@@ -8,8 +8,7 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_margin="16dp"
-        android:orientation="vertical"
-        android:layout_below="@+id/textView2">
+        android:orientation="vertical">
 
 
         <LinearLayout
