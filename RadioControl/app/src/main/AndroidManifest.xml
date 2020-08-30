@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.nikhilparanjape.radiocontrol">
 
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> <!-- Required for experimental portions of cellular mode -->
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" /> <!-- Required for experimental portions of cellular mode -->
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /> <!-- Required for the app to see WiFi state properties -->
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" /> <!-- Required to toggle Airplane mode -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- Required to see full network state propteries -->
@@ -26,8 +28,7 @@
         android:label="@string/app_name"
         android:theme="@style/MaterialDarkThemenoab"
         tools:ignore="GoogleAppIndexingWarning">
-
-
+        
         <activity
             android:name=".activities.SplashActivity"
             android:theme="@style/SplashTheme">

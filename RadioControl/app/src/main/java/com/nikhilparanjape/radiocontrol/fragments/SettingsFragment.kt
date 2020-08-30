@@ -56,7 +56,6 @@ class SettingsFragment : PreferenceFragmentCompat(), TimePickerDialog.OnTimeSetL
         val dozeSetting = preferenceManager.findPreference<androidx.preference.CheckBoxPreference>("isDozeOff")
         val workModePref = preferenceManager.findPreference<androidx.preference.CheckBoxPreference>("workMode")
         preferenceManager.findPreference<androidx.preference.CheckBoxPreference>("altRootCommand")
-        val fabricCrashlyticsPref = preferenceManager.findPreference<androidx.preference.CheckBoxPreference>("fabricCrashlytics")
         val callingCheck = preferenceManager.findPreference<androidx.preference.CheckBoxPreference>("isPhoneStateCheck")
         preferenceManager.findPreference<androidx.preference.CheckBoxPreference>("isAirplaneService")
         val checkboxPref = preferenceManager.findPreference<androidx.preference.CheckBoxPreference>("enableLogs")
