@@ -1,9 +1,10 @@
 # RadioControl
 ![icon](https://nikhilp.org/images/ic_launcher.png)
 
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/af8dea9ae1fe437f975a8326cbd45847)](https://www.codacy.com/app/indianpoptart/RadioControl?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=indianpoptart/RadioControl&amp;utm_campaign=Badge_Grade)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/ec1a9e5c4b174c609a39d0aa8d7a7ff7)](https://www.codacy.com/gh/indianpoptart/RadioControl/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=indianpoptart/RadioControl&amp;utm_campaign=Badge_Grade)
 [![Join the chat at https://gitter.im/indianpoptart/RadioControl](https://badges.gitter.im/indianpoptart/RadioControl.svg)](https://gitter.im/indianpoptart/RadioControl?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 ![Travis Badge](https://www.travis-ci.com/indianpoptart/RadioControl.svg?branch=master)
+
 
 **Root Required!**
 
