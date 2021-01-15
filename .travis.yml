@@ -1,0 +1,23 @@
+language: java
+android:
+  components:
+    - android-29
+    - build-tools-29.0.2
+
+env:
+  global:
+   # install timeout in minutes (2 minutes by default)
+    - ADB_INSTALL_TIMEOUT=8
+
+before_cache:
+  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+cache:
+  directories:
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
+    - $HOME/.android/build-cache
+
+# Run assemble and unit tests
+script:
+  - ./RadioControl/gradlew build
