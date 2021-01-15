@@ -4,13 +4,16 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.nikhilparanjape.radiocontrol.R
+import com.nikhilparanjape.radiocontrol.databinding.ActivityTroubleshootingBinding
 import com.nikhilparanjape.radiocontrol.fragments.AppFragment
 import com.nikhilparanjape.radiocontrol.fragments.CellFragment
 import com.nikhilparanjape.radiocontrol.fragments.WLANFragment
-import kotlinx.android.synthetic.main.activity_troubleshooting.*
 
 
 class TroubleshootingActivity : AppCompatActivity() {
+
+    private lateinit var binding: ActivityTroubleshootingBinding
+
 
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         when (item.itemId) {
@@ -37,9 +40,11 @@ class TroubleshootingActivity : AppCompatActivity() {
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_troubleshooting)
+        binding = ActivityTroubleshootingBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
 
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
+        binding.navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
 
     }
 
