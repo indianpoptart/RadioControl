@@ -1,4 +1,4 @@
-language: android
+language: java
 android:
   components:
     - android-29
@@ -11,4 +11,4 @@ env:
 
 # Run assemble and unit tests
 script:
-  - ./RadioControl/gradlew connectedCheck
+  - ./RadioControl/gradlew build
