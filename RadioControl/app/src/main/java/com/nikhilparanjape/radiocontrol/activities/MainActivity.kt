@@ -37,6 +37,7 @@ import com.github.stephenvinouze.core.models.KinAppPurchase
 import com.github.stephenvinouze.core.models.KinAppPurchaseResult
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.switchmaterial.SwitchMaterial
 import com.mikepenz.iconics.Iconics
 import com.mikepenz.iconics.IconicsDrawable
 import com.mikepenz.iconics.typeface.library.googlematerial.GoogleMaterial
@@ -53,6 +54,7 @@ import com.mikepenz.materialdrawer.util.addItems
 import com.mikepenz.materialdrawer.widget.AccountHeaderView
 import com.nikhilparanjape.radiocontrol.BuildConfig
 import com.nikhilparanjape.radiocontrol.R
+import com.nikhilparanjape.radiocontrol.databinding.ActivityMainBinding
 import com.nikhilparanjape.radiocontrol.receivers.ActionReceiver
 import com.nikhilparanjape.radiocontrol.receivers.ConnectivityReceiver
 import com.nikhilparanjape.radiocontrol.services.BackgroundJobService
@@ -61,7 +63,6 @@ import com.nikhilparanjape.radiocontrol.services.PersistenceService
 import com.nikhilparanjape.radiocontrol.utilities.AlarmSchedulers
 import com.nikhilparanjape.radiocontrol.utilities.Utilities
 import com.topjohnwu.superuser.Shell
-import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import java.io.File
@@ -80,11 +81,13 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
     private var alarmUtil = AlarmSchedulers()
     private lateinit var deviceIcon: Drawable
     private lateinit var carrierIcon: Drawable
+    //private lateinit var headerView: AccountHeaderView
     private var versionName = BuildConfig.VERSION_NAME
     internal var util = Utilities()
     private lateinit var clayout: CoordinatorLayout
     private lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
     private var mServiceComponent: ComponentName? = null
+    private lateinit var binding: ActivityMainBinding
 
     //test code
     private val base64EncodedPublicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxnZmUx4gqEFCsMW+/uPXIzJSaaoP4J/2RVaxYT9Be0jfga0qdGF+Vq56mzQ/LYEZgLvFelGdWwXJ5Izq5Wl/cEW8cExhQ/WDuJvYVaemuU+JnHP1zIZ2H28NtzrDH0hb59k9R8owSx7NPNITshuC4MPwwOQDgDaYk02Hgi4woSzbDtyrvwW1A1FWpftb78i8Pphr7bT14MjpNyNznk4BohLMncEVK22O1N08xrVrR66kcTgYs+EZnkRKk2uPZclsPq4KVKG8LbLcxmDdslDBnhQkSPe3ntAC8DxGhVdgJJDwulcepxWoCby1GcMZTUAC1OKCZlvGRGSwyfIqbqF2JQIDAQAB"
@@ -96,7 +99,11 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        val view = binding.root
+        val toolbar = binding.toolbar
+        val slider = binding.slider
+        setContentView(view)
         billingManager.bind(this)
         clayout = findViewById(R.id.clayout)
         val dialog = findViewById<ProgressBar>(R.id.pingProgressBar)
@@ -123,7 +130,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
             })
             actionBar.setDisplayHomeAsUpEnabled(true)
             actionBar.setHomeButtonEnabled(true)
-            actionBarDrawerToggle = ActionBarDrawerToggle(this, root, toolbar, com.mikepenz.materialdrawer.R.string.material_drawer_open, com.mikepenz.materialdrawer.R.string.material_drawer_close)
+            actionBarDrawerToggle = ActionBarDrawerToggle(this, view, toolbar, com.mikepenz.materialdrawer.R.string.material_drawer_open, com.mikepenz.materialdrawer.R.string.material_drawer_close)
         }
 
         //Creates the latency checker FAB button
@@ -146,7 +153,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
 
         //Switches and Buttons
         val linkSpeedButton = findViewById<Button>(R.id.linkSpeedButton)
-        val toggle = findViewById<Switch>(R.id.enableSwitch)
+        val toggle = findViewById<SwitchMaterial>(R.id.enableSwitch)
 
         //Dev buttons
         val conn = findViewById<Button>(R.id.pingTestButton)
@@ -562,7 +569,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (actionBarDrawerToggle.onOptionsItemSelected(item)) {
-            return true;
+            return true
         }
         return super.onOptionsItemSelected(item)
     }
@@ -578,7 +585,9 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
     }*/
 
 
-    override fun onBackPressed() {
+    fun onBackPressed(binding: ActivityMainBinding) {
+        val root = binding.root
+        val slider = binding.slider
         //handle the back press :D close the drawer first and if the drawer is closed close the activity
         if (root.isDrawerOpen(slider)) {
             root.closeDrawer(slider)
@@ -803,7 +812,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
         val btn3 = findViewById<Button>(R.id.linkSpeedButton)
         val linkText = findViewById<TextView>(R.id.linkSpeed)
         val statusText = findViewById<TextView>(R.id.statusText)
-        val toggle = findViewById<Switch>(R.id.enableSwitch)
+        val toggle = findViewById<SwitchMaterial>(R.id.enableSwitch)
 
         //Check if the easter egg is NOT activated
         if (!sharedPref.getBoolean(getString(R.string.preference_is_developer), false)) {
@@ -901,8 +910,8 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
                 if (reachable) {
                     when {
                         timeDifference <= 50 -> Snackbar.make(clayout, "Excellent Latency: $timeDifference ms", Snackbar.LENGTH_LONG).show()
-                        timeDifference in 51.0..100.0 -> Snackbar.make(clayout, "Average Latency: $timeDifference ms", Snackbar.LENGTH_LONG).show()
-                        timeDifference in 101.0..200.0 -> Snackbar.make(clayout, "Poor Latency: $timeDifference ms", Snackbar.LENGTH_LONG).show()
+                        51.0 <= timeDifference && timeDifference <= 100.0 -> Snackbar.make(clayout, "Average Latency: $timeDifference ms", Snackbar.LENGTH_LONG).show()
+                        101.0 <= timeDifference && timeDifference <= 200.0 -> Snackbar.make(clayout, "Poor Latency: $timeDifference ms", Snackbar.LENGTH_LONG).show()
                         timeDifference >= 201 -> Snackbar.make(clayout, "Very Poor Latency. VOIP and online gaming may suffer: $timeDifference ms", Snackbar.LENGTH_LONG).show()
                     }
                 }
