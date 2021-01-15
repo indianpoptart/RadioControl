@@ -3,6 +3,7 @@
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/af8dea9ae1fe437f975a8326cbd45847)](https://www.codacy.com/app/indianpoptart/RadioControl?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=indianpoptart/RadioControl&amp;utm_campaign=Badge_Grade)
 [![Join the chat at https://gitter.im/indianpoptart/RadioControl](https://badges.gitter.im/indianpoptart/RadioControl.svg)](https://gitter.im/indianpoptart/RadioControl?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+![Travis Badge](https://www.travis-ci.com/indianpoptart/RadioControl.svg?branch=master)
 
 **Root Required!**
 
