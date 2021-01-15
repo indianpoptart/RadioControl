@@ -8,9 +8,9 @@
 
 I created this app because of the lack of apps on the play store that enable airplane mode, while keeping WiFi on. Probably because not many carriers have WiFi calling and SMS over WiFi
 
-RadioControl automatically toggles WiFi and Cell radios to maximize battery life
+RadioControl intelligently toggles WiFi and Cell radios to maximize battery life
 
-This app will be useful to Google Fi and Republic Wireless users, as both carriers support Talk & Text through WiFi.
+This app will be useful to Google Fi, Republic Wireless, and Mint Mobile users, as these carriers support Talk & Text through WiFi.
 
 Feel free to ask questions related to Android programming or this project in the public Gitter chat room. The issues page should be primarily used for bug reports and enhancement ideas.
 
