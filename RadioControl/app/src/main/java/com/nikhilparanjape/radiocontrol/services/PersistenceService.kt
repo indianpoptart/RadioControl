@@ -77,7 +77,6 @@ class PersistenceService : Service() {
                     .setAutoCancel(true)
 
             val notification = builder.build()
-
             startForeground(id, notification)
 
         }

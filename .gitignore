@@ -1,10 +1,12 @@
 .gradle
-/RadioControl/local.properties
-/RadioControl/.idea/workspace.xml
-/RadioControl/.idea/libraries
-/RadioControl/.idea/caches
+RadioControl/local.properties
+RadioControl/.idea/workspace.xml
+RadioControl/.idea/libraries
+RadioControl/.idea/caches
 .DS_Store
-/RadioControl/build
+RadioControl/app/build/
+RadioControl/app/release/
+RadioControl/app/debug/
 RadioControl/app/src/main/res/values/key.txt
 
 RadioControl/app/src/main/res/key.txt

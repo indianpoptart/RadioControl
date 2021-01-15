@@ -177,8 +177,6 @@ class SettingsFragment : PreferenceFragmentCompat(), TimePickerDialog.OnTimeSetL
                 if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
                     ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION), 200)
                     //altRootCommandPref?.isChecked = true
-                } else {
-                    //altRootCommandPref?.isChecked = false
                 }
 
                 false

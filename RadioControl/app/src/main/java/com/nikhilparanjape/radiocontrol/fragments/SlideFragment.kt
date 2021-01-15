@@ -18,8 +18,8 @@ class SlideFragment : Fragment(){
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        if (arguments != null && arguments!!.containsKey(ARG_LAYOUT_RES_ID))
-            layoutResId = arguments!!.getInt(ARG_LAYOUT_RES_ID)
+        if (arguments != null && requireArguments().containsKey(ARG_LAYOUT_RES_ID))
+            layoutResId = requireArguments().getInt(ARG_LAYOUT_RES_ID)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
