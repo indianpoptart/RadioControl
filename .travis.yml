@@ -11,4 +11,4 @@ env:
 
 # Run assemble and unit tests
 script:
-  - ./RadioControl/gradlew clean assembleDebug assembleRelease testDebug
+  - ./RadioControl/gradlew clean assembleRelease
