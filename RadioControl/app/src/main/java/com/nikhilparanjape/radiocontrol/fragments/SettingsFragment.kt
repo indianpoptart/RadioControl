@@ -47,7 +47,6 @@ class SettingsFragment : PreferenceFragmentCompat(), TimePickerDialog.OnTimeSetL
         val ip = sp.getString("prefPingIp",null)
         pingIpPref?.summary = ip
 
-
     }
 
     override fun onPreferenceTreeClick(preference: androidx.preference.Preference): Boolean {
@@ -57,7 +56,6 @@ class SettingsFragment : PreferenceFragmentCompat(), TimePickerDialog.OnTimeSetL
         val dozeSetting = preferenceManager.findPreference<androidx.preference.CheckBoxPreference>("isDozeOff")
         val workModePref = preferenceManager.findPreference<androidx.preference.CheckBoxPreference>("workMode")
         preferenceManager.findPreference<androidx.preference.CheckBoxPreference>("altRootCommand")
-        val fabricCrashlyticsPref = preferenceManager.findPreference<androidx.preference.CheckBoxPreference>("fabricCrashlytics")
         val callingCheck = preferenceManager.findPreference<androidx.preference.CheckBoxPreference>("isPhoneStateCheck")
         preferenceManager.findPreference<androidx.preference.CheckBoxPreference>("isAirplaneService")
         val checkboxPref = preferenceManager.findPreference<androidx.preference.CheckBoxPreference>("enableLogs")
@@ -66,7 +64,7 @@ class SettingsFragment : PreferenceFragmentCompat(), TimePickerDialog.OnTimeSetL
         val alarmUtil = AlarmSchedulers()
         //editor.apply()
         return when (preference.key) {
-            getString(R.string.key_preference_settings_intelligent) -> {
+            getString(R.string.key_preference_settings_intelligent) -> { //Intelligent mode button
                 if ((preference as androidx.preference.CheckBoxPreference).isChecked) {
                     if (workModePref!!.isChecked) {
                         Log.i("RadioControl-Settings", "true-ischecked")
@@ -117,11 +115,11 @@ class SettingsFragment : PreferenceFragmentCompat(), TimePickerDialog.OnTimeSetL
 
                 false
             }
-            getString(R.string.key_preference_settings_clear_ssid) -> {
+            getString(R.string.key_preference_settings_clear_ssid) -> { //Reset Network Settings button
                 ssidClearButton()
                 false
             }
-            getString(R.string.key_preference_settings_reset_airplane) -> {
+            getString(R.string.key_preference_settings_reset_airplane) -> { //Reset Airplane Mode button
                 MaterialDialog(requireContext())
                         .icon(R.mipmap.wifi_off)
                         .message(R.string.title_airplane_reset)
@@ -135,7 +133,7 @@ class SettingsFragment : PreferenceFragmentCompat(), TimePickerDialog.OnTimeSetL
                         .show()
                 false
             }
-            getString(R.string.key_preference_settings_doze) -> {
+            getString(R.string.key_preference_settings_doze) -> { //Battery Optimization button
                 if ((preference as androidx.preference.CheckBoxPreference).isChecked) {
                     Log.i("RadioControl-Settings", "doze-bypassed")
                     if (Build.VERSION.SDK_INT >= 23) {
@@ -170,10 +168,10 @@ class SettingsFragment : PreferenceFragmentCompat(), TimePickerDialog.OnTimeSetL
                 }
                 false
             }
-            getString(R.string.key_preference_settings_battery_opimization) -> {
+            getString(R.string.key_preference_settings_battery_opimization) -> { //Background Optimization button
                 false
             }
-            getString(R.string.key_preference_settings_alternate_command) -> {
+            getString(R.string.key_preference_settings_alternate_command) -> { //Toggle Cellular Mode button
                 val permissionCheck = ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION)
 
                 if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
@@ -185,7 +183,7 @@ class SettingsFragment : PreferenceFragmentCompat(), TimePickerDialog.OnTimeSetL
 
                 false
             }
-            getString(R.string.key_preference_settings_phone_state) -> {
+            getString(R.string.key_preference_settings_phone_state) -> { //Call Handling button
                 if ((preference as androidx.preference.CheckBoxPreference).isChecked) {
                     val permissionCheck = ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_PHONE_STATE)
 
@@ -199,7 +197,7 @@ class SettingsFragment : PreferenceFragmentCompat(), TimePickerDialog.OnTimeSetL
 
                 false
             }
-            getString(R.string.key_preference_settings_airplane_service) -> {
+            getString(R.string.key_preference_settings_airplane_service) -> { //Keep-Alive service button
                 if ((preference as androidx.preference.CheckBoxPreference).isChecked) {
 
 
@@ -217,7 +215,7 @@ class SettingsFragment : PreferenceFragmentCompat(), TimePickerDialog.OnTimeSetL
                 }
                 false
             }
-            getString(R.string.key_preference_settings_night_mode) -> {
+            getString(R.string.key_preference_settings_night_mode) -> { //Night Mode button
                 //Initialize time picker
                 val now = Calendar.getInstance()
                 val tpd = TimePickerDialog.newInstance(
@@ -231,7 +229,7 @@ class SettingsFragment : PreferenceFragmentCompat(), TimePickerDialog.OnTimeSetL
                 tpd.show(requireActivity(), "Timepickerdialog")
                 false
             }
-            getString(R.string.key_preference_settings_notification) -> {
+            getString(R.string.key_preference_settings_notification) -> { //Notification Settings
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     val intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
                             .putExtra(Settings.EXTRA_APP_PACKAGE, requireContext().packageName)
@@ -239,7 +237,7 @@ class SettingsFragment : PreferenceFragmentCompat(), TimePickerDialog.OnTimeSetL
                 }
                 false
             }
-            getString(R.string.key_preference_settings_logging) -> {
+            getString(R.string.key_preference_settings_logging) -> { // Enable Logging button
                 if ((preference as androidx.preference.CheckBoxPreference).isChecked) {
                     //Request storage permissions if on MM or greater
                     if (Build.VERSION.SDK_INT >= 23) {
@@ -269,15 +267,15 @@ class SettingsFragment : PreferenceFragmentCompat(), TimePickerDialog.OnTimeSetL
                 }
                 false
             }
-            getString(R.string.key_preference_settings_log_directory) -> {
+            getString(R.string.key_preference_settings_log_directory) -> { //Log Directory button
                 logDirectoryButton()
                 false
             }
-            getString(R.string.key_preference_settings_log_delete) -> {
+            getString(R.string.key_preference_settings_log_delete) -> { //Delete Logs button
                 logDeleteButton()
                 false
             }
-            getString(R.string.key_preference_settings_ping_ip) -> {
+            getString(R.string.key_preference_settings_ping_ip) -> { //Latency IP Address set button
                 pingIpPref?.summary = ip
                 false
             }

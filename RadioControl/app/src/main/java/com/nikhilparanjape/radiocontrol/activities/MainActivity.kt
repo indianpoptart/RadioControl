@@ -185,9 +185,6 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
                 colorInt = Color.RED
             }
         } else {
-            IconicsDrawable(this, GoogleMaterial.Icon.gmd_check_circle).apply {
-                colorInt = Color.GREEN
-            }
             carrierIcon = IconicsDrawable(this, GoogleMaterial.Icon.gmd_check_circle).apply {
                 colorInt = Color.GREEN
             }
@@ -258,8 +255,6 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
         val headerView = AccountHeaderView(this).apply {
             attachToSliderView(slider)
             addProfiles(
-                    //ProfileDrawerItem().withName(deviceName).withEmail("v$versionName").withIcon(deviceIcon),
-                    //ProfileDrawerItem().withName(getString(R.string.profile_root_status)).withEmail(carrierName).withIcon(carrierIcon)
                     profile,
                     profile2
             )
@@ -421,7 +416,9 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
         }
         radioOffButton.setOnClickListener {
             //String[] cellOffCmd = {"service call phone 27","service call phone 14 s16"};
+            //Utilities.setMobileNetworkfromLollipop(applicationContext)
             //RootAccess.runCommands(cellOffCmd);
+
             val cellIntent = Intent(applicationContext, CellRadioService::class.java)
             startService(cellIntent)
             alarmUtil.scheduleRootAlarm(applicationContext)
@@ -1020,4 +1017,5 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
         }
 
     }
+
 }

@@ -3,20 +3,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.nikhilparanjape.radiocontrol">
 
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="com.android.vending.BILLING" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> <!-- Required for experimental portions of cellular mode -->
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" /> <!-- Required for experimental portions of cellular mode -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /> <!-- Required for the app to see WiFi state properties -->
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" /> <!-- Required to toggle Airplane mode -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- Required to see full network state propteries -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- Required for logging -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />  <!-- Required for logging -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> <!-- Required for cellular mode -->
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/> <!-- Required for Android 10+ to allow location access-->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" /> <!-- Required for knowing when to keep a phone call active while moving from Cell to WiFi -->
+    <uses-permission android:name="android.permission.INTERNET" /> <!-- Required for the app to access the internet/web -->
+    <uses-permission android:name="com.android.vending.BILLING" /> <!-- Required for donation purchases -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" /> <!-- Required for backwards compatibility to keep service running in the background -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" /> <!-- Required for the app to run its service on boot -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" /> <!-- Required to allow background service to run in the background -->
 
-    <uses-permission-sdk-23 android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+    <uses-permission-sdk-23 android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" /> <!-- Required for allowing the app to bypass doze restrictions -->
 
     <application
         android:allowBackup="true"
@@ -25,8 +28,7 @@
         android:label="@string/app_name"
         android:theme="@style/MaterialDarkThemenoab"
         tools:ignore="GoogleAppIndexingWarning">
-
-
+        
         <activity
             android:name=".activities.SplashActivity"
             android:theme="@style/SplashTheme">
