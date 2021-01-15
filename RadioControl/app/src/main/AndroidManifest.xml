@@ -8,7 +8,6 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /> <!-- Required for the app to see WiFi state properties -->
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" /> <!-- Required to toggle Airplane mode -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- Required to see full network state propteries -->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- Required for logging -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />  <!-- Required for logging -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> <!-- Required for cellular mode -->
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/> <!-- Required for Android 10+ to allow location access-->
