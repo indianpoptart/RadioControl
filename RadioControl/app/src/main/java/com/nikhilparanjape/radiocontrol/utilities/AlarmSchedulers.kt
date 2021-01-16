@@ -157,6 +157,11 @@ class AlarmSchedulers{
 
     }
 
+    /**
+     * Cancels the pending root reset clock
+     * @param context
+     * @return
+     */
     fun cancelRootAlarm(c: Context) {
         val intent = Intent(c, RootServiceReceiver::class.java)
         val pIntent = PendingIntent.getBroadcast(c, RootServiceReceiver.REQUEST_CODE,

@@ -1,8 +1,8 @@
 language: java
 android:
   components:
-    - android-29
-    - build-tools-29.0.2
+    - android-30
+    - build-tools-30.0.3
 
 env:
   global:
