@@ -398,6 +398,7 @@ class StatsActivity : AestheticActivity() {
             }
         }
     }
+    //fun hasCorrectEnding() = return
 
     //Airplane on graph
     private fun airplaneOnGraph() {

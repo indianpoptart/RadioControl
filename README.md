@@ -6,7 +6,7 @@
 ![Travis Badge](https://www.travis-ci.com/indianpoptart/RadioControl.svg?branch=master)
 
 
-**Root Required!**
+***Root IS Required!*** - [XDA Guide](https://www.xda-developers.com/root/)
 
 I created this app because of the lack of apps on the play store that enable airplane mode, while keeping WiFi on. Probably because not many carriers have WiFi calling and SMS over WiFi
 
@@ -19,7 +19,6 @@ Feel free to ask questions related to Android programming or this project in the
 This project attempts to follow [Semantic Versioning](http://semver.org/).
 
 
-
 # Battery Usage by RadioControl
 
 I have personally only detected a 0.3% decrease in battery with regular day to day use.
@@ -28,11 +27,14 @@ I will continue testing and possibly have an average battery usage(on my phone) 
 
 # Versions
 
-Latest **Stable** Release: [v5.0.2](https://github.com/indianpoptart/RadioControl/releases/latest) (2/1/2018)
+Latest **Stable**: [![Latest Stable Badge](https://img.shields.io/github/v/release/indianpoptart/radiocontrol)](https://github.com/indianpoptart/RadioControl/releases/latest) - (2/1/2018)
 
 Latest **Beta** Release: [v5.0.3-beta8](https://github.com/indianpoptart/RadioControl/releases/tag/v5.0.3-beta8) (11/13/2018)
 
-Current **Alpha** Release: [v6.0-alpha3](https://github.com/indianpoptart/RadioControl/releases/tag/v6.0-alpha3) (05/25/2020)
+[![Latest Beta Badge](https://img.shields.io/github/v/release/indianpoptart/radiocontrol)](https://github.com/indianpoptart/RadioControl/releases/latest)
+
+Current **Alpha:** [![Latest Pre-release Badge](https://img.shields.io/github/v/release/indianpoptart/radiocontrol?include_prereleases)](https://github.com/indianpoptart/RadioControl/releases) - (01/15/2021)
+
 
 # Help me translate to your native language
 https://crowdin.com/project/radiocontrol/invite
@@ -55,9 +57,11 @@ The app works properly, and has been personally tested on these devices:
 - ![Samsung](https://nikhilp.org/images/samsung.png) Samsung Galaxy S7 Edge
 
 As well as these Android versions
-- ![Q(10.0)](https://nikhilp.org/images/android_q_logo_v2.png) (v6.0-alpha3 only - Cellular Mode(Experimental) not working) - Android 10 
-- ![P(9.0)](https://nikhilp.org/images/android_p_logo.png) (Debug version only) - Android 9
-- ![Oreo(8.0)](https://nikhilp.org/images/android_o_logo_v2.png) (Debug version only) - Android 8
+- ![R(11.0)](https://nikhilp.org/radiocontrol/images/android_11-32.png)
+[Android 11](https://www.android.com/android-11/) - (Upcoming v6.0)
+- ![Q(10.0)](https://nikhilp.org/images/android_q_logo_v2.png)  Android 10 - (v6.0-alpha3+ - Cellular Mode(Experimental) not working)
+- ![P(9.0)](https://nikhilp.org/images/android_p_logo.png)  Android 9 - (Debug version only)
+- ![Oreo(8.0)](https://nikhilp.org/images/android_o_logo_v2.png)    Android 8 - (Debug version only)
 - ![Nougat(7.0)](https://nikhilp.org/images/android_n_logo.png) - Android 7
 - ![Marshmallow(6.0)](https://nikhilp.org/images/android_m_logo.png) - Android 6
 - ![Lollipop(5.0+)](https://nikhilp.org/images/android_l_logo.png) - Android 5+
@@ -65,15 +69,20 @@ As well as these Android versions
 # SU Binary Compatibility
 Working properly with the following SU binary
 - SuperSU 2.78+
-- MagiskSU (8+)
+- [MagiskSU](https://github.com/topjohnwu/Magisk) (8+)
 
 # Changelog
 [Check here for the new changelog](https://headwayapp.co/radiocontrol-release-notes)
 
+# Dev Branch Status
+
+![Dev Branch Badge](https://www.travis-ci.com/indianpoptart/RadioControl.svg?branch=development)
+
 # Upcoming Features
 
+- [New Network Join Notification](https://github.com/indianpoptart/RadioControl/issues/51)
 - [Alternate cellular mode](https://github.com/indianpoptart/RadioControl/issues/35)
-- Android Wear support (Maybe, it's only use would be to do a latency test, or to enable/disable cell radios)
+- [Android Wear support](https://github.com/indianpoptart/RadioControl/issues/31) - (For now a latency test, or to enable/disable cell radios)
 
 # Credits
 Thanks to [Mike Penz](https://github.com/mikepenz) for the Material Drawer design
