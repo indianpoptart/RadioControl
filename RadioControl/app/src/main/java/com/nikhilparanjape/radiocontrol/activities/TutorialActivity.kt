@@ -15,7 +15,7 @@ class TutorialActivity : AppIntro() {
     override fun onCreate(savedInstanceState: Bundle?){
         super.onCreate(savedInstanceState)
         supportActionBar?.hide()
-        hideSystemUI()
+        //hideSystemUI()
 
         // Add your slide's fragments here.
         // AppIntro will automatically generate the dots indicator and buttons.
@@ -38,13 +38,13 @@ class TutorialActivity : AppIntro() {
     }
 
     // This snippet hides the system bars.
-    private fun hideSystemUI() {
+    /*private fun hideSystemUI() {
         val w = this.window
         w.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                 or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                 or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
-    }
+    }*/
     @Override
     override fun onSkipPressed() {
         loadMainActivity()
