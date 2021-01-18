@@ -1,9 +1,10 @@
 package com.nikhilparanjape.radiocontrol.services
 
-import android.app.IntentService
+import android.content.Context
 import android.content.Intent
-import android.os.IBinder
+import android.os.SystemClock
 import android.util.Log
+import androidx.core.app.JobIntentService
 import com.nikhilparanjape.radiocontrol.utilities.Utilities
 import com.topjohnwu.superuser.Shell
 
@@ -14,19 +15,25 @@ import com.topjohnwu.superuser.Shell
  *
  * @description This class handles toggling the cell radio using a shell command.
  */
-class CellRadioService : IntentService("CellRadioService") {
+class CellRadioService: JobIntentService() {
+    /**
+     * Unique job ID for this service.
+     */
+    private val jobID = 1002
     private var mRunning: Boolean = false
 
-    override fun onCreate() {
-        // The service is being created
-        super.onCreate()
-        mRunning = false
+    /**
+     * Convenience method for enqueuing work in to this service.
+     */
+    fun enqueueWork(context: Context?, work: Intent?) {
+        if (work != null) {
+            mRunning = false
+            enqueueWork(applicationContext, CellRadioService::class.java, jobID, work)
+        }
     }
-    override fun onBind(intent: Intent): IBinder? {
-        // A client is binding to the service with bindService()
-        return null
-    }
-    override fun onHandleIntent(intent: Intent?) {
+
+    override fun onHandleWork(intent: Intent) {
+        Log.i("RadioControl-CRJS", "Executing work: $intent")
         if (!mRunning) {
             mRunning = true
             Log.d("RadioControl-cell", "CellService Toggled")
@@ -37,7 +44,9 @@ class CellRadioService : IntentService("CellRadioService") {
             Log.d("RadioControl-cell", "CellService Killed")
             this.stopSelf()
         }
+        Log.i("CellRadioJobService", "Completed service @ " + SystemClock.elapsedRealtime())
     }
+
     override fun onDestroy() {
         super.onDestroy()
         mRunning = false
