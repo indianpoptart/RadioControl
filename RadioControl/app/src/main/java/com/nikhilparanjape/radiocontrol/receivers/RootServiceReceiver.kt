@@ -14,10 +14,10 @@ import com.nikhilparanjape.radiocontrol.utilities.AlarmSchedulers
  */
 
 class RootServiceReceiver : WakefulBroadcastReceiver() {
+    private var alarmUtil = AlarmSchedulers()
 
     override fun onReceive(context: Context, intent: Intent) {
         val i = Intent(context, CellRadioService::class.java)
-        val alarmUtil = AlarmSchedulers()
 
         context.stopService(i)
         Log.d("RadioControl-root", "CellService Stopped")

@@ -6,9 +6,9 @@ import android.content.Intent
 import com.nikhilparanjape.radiocontrol.utilities.AlarmSchedulers
 
 class WakeupReceiver : BroadcastReceiver() {
+    private var alarmUtil = AlarmSchedulers()
 
     override fun onReceive(context: Context, intent: Intent) {
-        val alarmUtil = AlarmSchedulers()
         alarmUtil.scheduleAlarm(context)
 
         val pref = androidx.preference.PreferenceManager.getDefaultSharedPreferences(context)

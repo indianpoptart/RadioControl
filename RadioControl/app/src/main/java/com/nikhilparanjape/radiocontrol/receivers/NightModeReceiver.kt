@@ -14,9 +14,9 @@ import com.nikhilparanjape.radiocontrol.utilities.AlarmSchedulers
  */
 
 class NightModeReceiver : BroadcastReceiver() {
+    private var alarmUtil = AlarmSchedulers()
 
     override fun onReceive(context: Context, intent: Intent) {
-        val alarmUtil = AlarmSchedulers()
         alarmUtil.cancelAlarm(context)
 
         Log.d("RadioControl-Night", "Night Mode started")

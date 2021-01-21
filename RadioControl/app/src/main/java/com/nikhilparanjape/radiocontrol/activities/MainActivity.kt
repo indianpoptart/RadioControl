@@ -61,6 +61,7 @@ import com.nikhilparanjape.radiocontrol.services.BackgroundJobService
 import com.nikhilparanjape.radiocontrol.services.CellRadioService
 import com.nikhilparanjape.radiocontrol.services.PersistenceService
 import com.nikhilparanjape.radiocontrol.utilities.AlarmSchedulers
+import com.nikhilparanjape.radiocontrol.utilities.GraphicsUtility
 import com.nikhilparanjape.radiocontrol.utilities.Utilities
 import com.topjohnwu.superuser.Shell
 import org.jetbrains.anko.doAsync
@@ -79,17 +80,19 @@ import kotlin.system.measureTimeMillis
 class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
 
     private var alarmUtil = AlarmSchedulers()
+    private var gUtility = GraphicsUtility() //Implements all graphics and the like
     private lateinit var deviceIcon: Drawable
     private lateinit var carrierIcon: Drawable
-    //private lateinit var headerView: AccountHeaderView
+    //private lateinit var headerView: AccountHeaderView //Needed for MaterialDrawer
     private var versionName = BuildConfig.VERSION_NAME
     internal var util = Utilities()
     private lateinit var clayout: CoordinatorLayout
     private lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
     private var mServiceComponent: ComponentName? = null
     private lateinit var binding: ActivityMainBinding
+    private var isBillingReady = false
 
-    //test code
+    //Public key for donation
     private val base64EncodedPublicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxnZmUx4gqEFCsMW+/uPXIzJSaaoP4J/2RVaxYT9Be0jfga0qdGF+Vq56mzQ/LYEZgLvFelGdWwXJ5Izq5Wl/cEW8cExhQ/WDuJvYVaemuU+JnHP1zIZ2H28NtzrDH0hb59k9R8owSx7NPNITshuC4MPwwOQDgDaYk02Hgi4woSzbDtyrvwW1A1FWpftb78i8Pphr7bT14MjpNyNznk4BohLMncEVK22O1N08xrVrR66kcTgYs+EZnkRKk2uPZclsPq4KVKG8LbLcxmDdslDBnhQkSPe3ntAC8DxGhVdgJJDwulcepxWoCby1GcMZTUAC1OKCZlvGRGSwyfIqbqF2JQIDAQAB"
 
     private val billingManager = KinAppManager(this, base64EncodedPublicKey)
@@ -99,16 +102,24 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        //Bind activity to other components
         binding = ActivityMainBinding.inflate(layoutInflater)
+        billingManager.bind(this)
+
+        //Sets root view, toolbar, and the slider with the main binding
         val view = binding.root
         val toolbar = binding.toolbar
         val slider = binding.slider
+
         setContentView(view)
-        billingManager.bind(this)
+        //Sets the secondary view features
+
+        mServiceComponent = ComponentName(this, BackgroundJobService::class.java)
         clayout = findViewById(R.id.clayout)
         val dialog = findViewById<ProgressBar>(R.id.pingProgressBar)
-        mServiceComponent = ComponentName(this, BackgroundJobService::class.java)
         Iconics.init(this)
+
 
         // Handle Toolbar
         //val toolbar = findViewById<Toolbar>(R.id.toolbar)
@@ -169,7 +180,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
         val currentapiVersion = Build.VERSION.SDK_INT
 
         init()//initializes the whats new dialog
-        var carrierName = "Not Rooted" //For drawer
+        var carrierName = "Not Rooted" //For drawer display
         //Checks for root, if none, disabled toggle switch
 
         if (!Shell.rootAccess()) {
@@ -307,7 +318,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
                 } else if (position == 8) {
                     //Donation
                     Log.d("RadioControl-Main", "Donation button pressed")
-                    if (Utilities.isConnected(applicationContext)) {
+                    if (Utilities.isConnected(applicationContext) && isBillingReady) {
                         showDonateDialog()
                     } else {
                         showErrorDialog()
@@ -721,7 +732,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
     }
 
     override fun onBillingReady() {
-        // From this point you can use the Manager to fetch/purchase/consume/restore items
+        isBillingReady = true
     }
 
     override fun onPurchaseFinished(purchaseResult: KinAppPurchaseResult, purchase: KinAppPurchase?) {
@@ -885,10 +896,8 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
                 } catch (e: IOException) {
                     Log.e("RadioControl-Main", "Error saving log")
                 }
-
             }
         }
-
     }
 
     private fun pingCheck() {
@@ -1003,8 +1012,9 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
                 }
             }
 
-        //Capitalizes names for devices. Used by getDeviceName()
+        //Capitalizes names for devices. Used by deviceName()
         private fun capitalize(s: String?): String {
+            //Send nothing if string is empty
             if (s == null || s.isEmpty()) {
                 return ""
             }
@@ -1015,7 +1025,6 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
                 Character.toUpperCase(first) + s.substring(1)
             }
         }
-
     }
 
 }
