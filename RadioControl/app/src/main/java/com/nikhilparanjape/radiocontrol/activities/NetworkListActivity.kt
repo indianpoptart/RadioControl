@@ -1,10 +1,14 @@
 package com.nikhilparanjape.radiocontrol.activities
 
+import android.Manifest
 import android.content.Context
+import android.content.pm.PackageManager
 import android.database.DataSetObserver
 import android.graphics.Color
 import android.net.wifi.WifiConfiguration
 import android.net.wifi.WifiManager
+import android.net.wifi.WifiNetworkSpecifier.Builder
+import android.net.wifi.WifiNetworkSpecifier
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -15,6 +19,7 @@ import android.widget.ListView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
+import androidx.core.app.ActivityCompat
 import com.mikepenz.iconics.IconicsDrawable
 import com.mikepenz.iconics.typeface.library.googlematerial.GoogleMaterial
 import com.mikepenz.iconics.utils.colorInt
@@ -52,7 +57,10 @@ class NetworkListActivity : AppCompatActivity() {
 
     private fun listWifiNetworks(lv: ListView) {
         val wm = this.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
-        val networks = wm.configuredNetworks
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
+            val networks = wm.configuredNetworks
+        }
         val prefs = getSharedPreferences("disabled-networks", Context.MODE_PRIVATE)
 
         val la = object : ListAdapter {

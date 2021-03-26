@@ -5,6 +5,7 @@
       <w>airplanemode</w>
       <w>alertdialog</w>
       <w>clayout</w>
+      <w>commit's</w>
       <w>crashlytics</w>
       <w>currentapi</w>
       <w>dataset</w>
@@ -17,6 +18,7 @@
       <w>jobscheduler</w>
       <w>kbps</w>
       <w>libsu</w>
+      <w>magisksu</w>
       <w>mbps</w>
       <w>nametxt</w>
       <w>nikhil</w>
@@ -25,6 +27,7 @@
       <w>paranjape</w>
       <w>radiocontrol</w>
       <w>samsung</w>
+      <w>sharedprefs</w>
       <w>showcaseview</w>
       <w>ssid</w>
       <w>stringset</w>

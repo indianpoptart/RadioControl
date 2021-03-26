@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.NotificationManager.IMPORTANCE_DEFAULT
 import android.app.PendingIntent
 import android.app.job.JobInfo
 import android.content.ComponentName
@@ -29,6 +30,16 @@ import java.io.File
 import java.io.IOException
 import java.lang.reflect.Field
 import java.lang.reflect.Method
+import java.util.concurrent.ExecutionException
+
+import java.net.UnknownHostException
+
+import java.net.InetAddress
+
+import android.os.AsyncTask
+
+
+
 
 
 /**
@@ -47,6 +58,8 @@ class Utilities {
         val manager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
         return manager.mode == AudioManager.MODE_IN_CALL
     }
+
+
 
     companion object {
 
@@ -250,7 +263,7 @@ class Utilities {
 
         @SuppressLint("ByteOrderMark")
                 /**
-         * Makes a network alert
+         * Makes a basic network alert
          * @param context
          * @return
          */
@@ -279,7 +292,7 @@ class Utilities {
                         .setSmallIcon(R.drawable.ic_network_check_white_48dp)
                         .setContentIntent(pi)
                         .setContentText("Your WiFi connection is not functioning")
-                        .setPriority(-1)
+                        .setPriority(3)
                         .setAutoCancel(true)
                         .build()
             }

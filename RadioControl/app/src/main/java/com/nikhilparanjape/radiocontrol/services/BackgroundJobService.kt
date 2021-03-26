@@ -12,7 +12,6 @@ import com.nikhilparanjape.radiocontrol.receivers.ConnectivityReceiver
 import com.nikhilparanjape.radiocontrol.utilities.AlarmSchedulers
 import com.nikhilparanjape.radiocontrol.utilities.Utilities
 import com.topjohnwu.superuser.Shell
-import org.jetbrains.anko.doAsync
 import java.io.File
 import java.io.IOException
 import java.net.InetAddress
@@ -40,11 +39,7 @@ class BackgroundJobService : JobService(), ConnectivityReceiver.ConnectivityRece
         //Utilities.scheduleJob(applicationContext) // reschedule the job
 
         val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            connectivityManager.registerNetworkCallback(NetworkRequest.Builder().build(), object : ConnectivityManager.NetworkCallback() {})
-        } else {
-            Log.d("RadioControl-Job", "Test")
-        }
+        connectivityManager.registerNetworkCallback(NetworkRequest.Builder().build(), object : ConnectivityManager.NetworkCallback() {})
         val activeNetwork = connectivityManager.activeNetworkInfo
         Log.d("RadioControl-Job", "Active: $activeNetwork")
 
@@ -210,58 +205,56 @@ class BackgroundJobService : JobService(), ConnectivityReceiver.ConnectivityRece
     }
 
     private fun pingTask() {
-        doAsync {
-            try {
-                //Wait for network to be connected fully
-                while (!Utilities.isConnected(applicationContext)) {
-                    Thread.sleep(1000)
-                }
-                val address = InetAddress.getByName("1.1.1.1")
-                val reachable = address.isReachable(4000)
-                Log.d("RadioControl-Job", "Reachable?: $reachable")
-
-                val sp = applicationContext.getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE)
-                val prefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(applicationContext)
-
-                val alertPriority = prefs.getBoolean("networkPriority", false)//Setting for network notifier
-                val alertSounds = prefs.getBoolean("networkSound", false)
-                val alertVibrate = prefs.getBoolean("networkVibrate", false)
-
-
-                if (sp.getInt("isActive", 0) == 0) {
-                    //If the connection can't reach Google
-                    if (!reachable) {
-                        Utilities.sendNote(applicationContext, applicationContext.getString(com.nikhilparanjape.radiocontrol.R.string.not_connected_alert), alertVibrate, alertSounds, alertPriority)
-                        writeLog("Not connected to the internet", applicationContext)
-                    }
-                } else if (sp.getInt("isActive", 0) == 1) {
-                    //If the connection can't reach Google
-                    if (!reachable) {
-                        Utilities.sendNote(applicationContext, applicationContext.getString(com.nikhilparanjape.radiocontrol.R.string.not_connected_alert), alertVibrate, alertSounds, alertPriority)
-                        writeLog("Not connected to the internet", applicationContext)
-                    } else {
-                        //Runs the cellular mode
-                        if (prefs.getBoolean("altRootCommand", false)) {
-                            val output = Shell.su("service call phone 27").exec().out
-                            Utilities.writeLog("root accessed: $output", applicationContext)
-                            alarmUtil.scheduleRootAlarm(applicationContext)
-                            Log.d("RadioControl-Job", "Cell Radio has been turned off")
-                            writeLog("Cell radio has been turned off", applicationContext)
-                        } else if (!prefs.getBoolean("altRootCommand", false)) {
-                            val output = Shell.su("settings put global airplane_mode_radios  \"cell\"", "content update --uri content://settings/global --bind value:s:'cell' --where \"name='airplane_mode_radios'\"", "settings put global airplane_mode_on 1", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state true").exec().out
-                            Utilities.writeLog("root accessed: $output", applicationContext)
-                            //RootAccess.runCommands(airCmd)
-                            Log.d("RadioControl-Job", "Airplane mode has been turned on")
-                            writeLog("Airplane mode has been turned on", applicationContext)
-                        }
-                    }
-                }
-
-            } catch (e: IOException) {
-                e.printStackTrace()
-            } catch (e: InterruptedException) {
-                e.printStackTrace()
+        try {
+            //Wait for network to be connected fully
+            while (!Utilities.isConnected(applicationContext)) {
+                Thread.sleep(1000)
             }
+            val address = InetAddress.getByName("1.1.1.1")
+            val reachable = address.isReachable(4000)
+            Log.d("RadioControl-Job", "Reachable?: $reachable")
+
+            val sp = applicationContext.getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE)
+            val prefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(applicationContext)
+
+            val alertPriority = prefs.getBoolean("networkPriority", false)//Setting for network notifier
+            val alertSounds = prefs.getBoolean("networkSound", false)
+            val alertVibrate = prefs.getBoolean("networkVibrate", false)
+
+
+            if (sp.getInt("isActive", 0) == 0) {
+                //If the connection can't reach Google
+                if (!reachable) {
+                    Utilities.sendNote(applicationContext, applicationContext.getString(com.nikhilparanjape.radiocontrol.R.string.not_connected_alert), alertVibrate, alertSounds, alertPriority)
+                    writeLog("Not connected to the internet", applicationContext)
+                }
+            } else if (sp.getInt("isActive", 0) == 1) {
+                //If the connection can't reach Google
+                if (!reachable) {
+                    Utilities.sendNote(applicationContext, applicationContext.getString(com.nikhilparanjape.radiocontrol.R.string.not_connected_alert), alertVibrate, alertSounds, alertPriority)
+                    writeLog("Not connected to the internet", applicationContext)
+                } else {
+                    //Runs the cellular mode
+                    if (prefs.getBoolean("altRootCommand", false)) {
+                        val output = Shell.su("service call phone 27").exec().out
+                        Utilities.writeLog("root accessed: $output", applicationContext)
+                        alarmUtil.scheduleRootAlarm(applicationContext)
+                        Log.d("RadioControl-Job", "Cell Radio has been turned off")
+                        writeLog("Cell radio has been turned off", applicationContext)
+                    } else if (!prefs.getBoolean("altRootCommand", false)) {
+                        val output = Shell.su("settings put global airplane_mode_radios  \"cell\"", "content update --uri content://settings/global --bind value:s:'cell' --where \"name='airplane_mode_radios'\"", "settings put global airplane_mode_on 1", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state true").exec().out
+                        Utilities.writeLog("root accessed: $output", applicationContext)
+                        //RootAccess.runCommands(airCmd)
+                        Log.d("RadioControl-Job", "Airplane mode has been turned on")
+                        writeLog("Airplane mode has been turned on", applicationContext)
+                    }
+                }
+            }
+
+        } catch (e: IOException) {
+            e.printStackTrace()
+        } catch (e: InterruptedException) {
+            e.printStackTrace()
         }
 
     }

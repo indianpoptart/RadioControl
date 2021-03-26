@@ -12,6 +12,7 @@ import android.os.Build
 import android.os.IBinder
 import android.util.Log
 import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import com.nikhilparanjape.radiocontrol.R
 import com.nikhilparanjape.radiocontrol.receivers.ConnectivityReceiver
 import com.nikhilparanjape.radiocontrol.utilities.Utilities
@@ -93,7 +94,7 @@ class PersistenceService : Service() {
             channel.description = description
             // Register the channel with the system; you can't change the importance
             // or other notification behaviors after this
-            val notificationManager = getSystemService(NotificationManager::class.java)
+            val notificationManager = getSystemService(NotificationManagerCompat::class.java)
             notificationManager?.createNotificationChannel(channel)
         }
     }

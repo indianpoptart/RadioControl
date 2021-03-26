@@ -23,7 +23,6 @@ import com.nikhilparanjape.radiocontrol.activities.ChangeLogActivity
 import com.nikhilparanjape.radiocontrol.activities.TutorialActivity
 import com.nikhilparanjape.radiocontrol.utilities.Utilities
 import com.novoda.simplechromecustomtabs.SimpleChromeCustomTabs
-import org.jetbrains.anko.doAsync
 
 /**
  * Created by Nikhil on 4/5/2016.
@@ -46,9 +45,7 @@ class AboutFragment : PreferenceFragmentCompat() {
             preferenceScreen.findPreference<Preference>("source")?.isEnabled = false
             preferenceScreen.findPreference<Preference>("support")?.isEnabled = false
         }
-        doAsync {
-            SimpleChromeCustomTabs.initialize(requireContext())
-        }
+        SimpleChromeCustomTabs.initialize(requireContext())
     }
     override fun onPreferenceTreeClick(preference: Preference): Boolean {
 

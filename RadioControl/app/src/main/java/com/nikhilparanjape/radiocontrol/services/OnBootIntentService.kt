@@ -11,7 +11,6 @@ import androidx.annotation.NonNull
 import androidx.core.app.JobIntentService
 import androidx.core.app.NotificationCompat
 import com.nikhilparanjape.radiocontrol.R
-import org.jetbrains.anko.toast
 import java.io.File
 import java.io.IOException
 
@@ -86,6 +85,5 @@ class OnBootIntentService : JobIntentService() {
     }
     override fun onDestroy() {
         super.onDestroy()
-        toast("All work complete")
     }
 }

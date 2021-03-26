@@ -64,12 +64,21 @@ import com.nikhilparanjape.radiocontrol.utilities.AlarmSchedulers
 import com.nikhilparanjape.radiocontrol.utilities.GraphicsUtility
 import com.nikhilparanjape.radiocontrol.utilities.Utilities
 import com.topjohnwu.superuser.Shell
-import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.uiThread
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import java.io.File
 import java.io.IOException
 import java.net.InetAddress
+import kotlin.coroutines.CoroutineContext
 import kotlin.system.measureTimeMillis
+import android.os.StrictMode
+import android.os.StrictMode.ThreadPolicy
+import androidx.core.app.NotificationManagerCompat.IMPORTANCE_LOW
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.async
+import java.util.zip.Checksum
+
 
 /**
  * Created by Nikhil Paranjape on 11/3/2015.
@@ -77,29 +86,78 @@ import kotlin.system.measureTimeMillis
  * Converted to Kotlin on 10/06/2018.
  */
 
-class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
 
-    private var alarmUtil = AlarmSchedulers()
-    private var gUtility = GraphicsUtility() //Implements all graphics and the like
-    private lateinit var deviceIcon: Drawable
-    private lateinit var carrierIcon: Drawable
-    //private lateinit var headerView: AccountHeaderView //Needed for MaterialDrawer
-    private var versionName = BuildConfig.VERSION_NAME
-    internal var util = Utilities()
-    private lateinit var clayout: CoordinatorLayout
-    private lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
-    private var mServiceComponent: ComponentName? = null
-    private lateinit var binding: ActivityMainBinding
-    private var isBillingReady = false
+class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, CoroutineScope {
 
     //Public key for donation
     private val base64EncodedPublicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxnZmUx4gqEFCsMW+/uPXIzJSaaoP4J/2RVaxYT9Be0jfga0qdGF+Vq56mzQ/LYEZgLvFelGdWwXJ5Izq5Wl/cEW8cExhQ/WDuJvYVaemuU+JnHP1zIZ2H28NtzrDH0hb59k9R8owSx7NPNITshuC4MPwwOQDgDaYk02Hgi4woSzbDtyrvwW1A1FWpftb78i8Pphr7bT14MjpNyNznk4BohLMncEVK22O1N08xrVrR66kcTgYs+EZnkRKk2uPZclsPq4KVKG8LbLcxmDdslDBnhQkSPe3ntAC8DxGhVdgJJDwulcepxWoCby1GcMZTUAC1OKCZlvGRGSwyfIqbqF2JQIDAQAB"
 
     private val billingManager = KinAppManager(this, base64EncodedPublicKey)
 
-    //JobID for jobscheduler(BackgroundJobService)
-    private val jobID = 0x01
+    // Overridden from CoroutineScope,
+    // Main context that is combined with the context of the Job as well
+    override val coroutineContext: CoroutineContext
+        get() = Dispatchers.Main + job
+    // IO context that is combined with the context of the Job as well
+    val ioContext: CoroutineContext
+        get() = Dispatchers.IO + job
 
+    //All the constant values and contexts required
+    companion object {
+        private const val PRIVATE_PREF = "prefs" //Used for shared prefs
+        private const val VERSION_KEY = "version_number"
+        //Donation related keys
+        internal const val ITEM_ONE_DOLLAR = "com.nikihlparanjape.radiocontrol.donate.one"
+        internal const val ITEM_THREE_DOLLAR = "com.nikihlparanjape.radiocontrol.donate.three"
+        internal const val ITEM_FIVE_DOLLAR = "com.nikihlparanjape.radiocontrol.donate.five"
+        internal const val ITEM_TEN_DOLLAR = "com.nikihlparanjape.radiocontrol.donate.ten"
+        private var alarmUtil = AlarmSchedulers() //Allows methods to extend the AlarmScheduler Utility
+
+        //private var gUtility = GraphicsUtility() //Implements all graphics and the like
+        private lateinit var deviceIcon: Drawable
+        private lateinit var carrierIcon: Drawable
+        //private lateinit var headerView: AccountHeaderView //Needed for an older version of MaterialDrawer
+        private var versionName = BuildConfig.VERSION_NAME //Takes the apps current version name and makes it a variable
+        //private var util = Utilities() //Allows methods to extend any general utilities
+        private lateinit var clayout: CoordinatorLayout
+        private lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
+        private var mServiceComponent: ComponentName? = null
+        private lateinit var binding: ActivityMainBinding
+        private var isBillingReady = false
+
+        //JobID for jobscheduler(BackgroundJobService)
+        private val jobID = 0x01
+        // Job variable that is tied to the Activity lifecycle Coroutines
+        lateinit var job: Job
+
+        //Grab device make and model for drawer
+        val deviceName: String
+            get() {
+                val manufacturer = Build.MANUFACTURER
+                val model = Build.MODEL
+                return if (model.startsWith(manufacturer)) {
+                    capitalize(model)
+                } else {
+                    capitalize(manufacturer) + " " + model
+                }
+            }
+
+        //Capitalizes names for devices. Used by deviceName()
+        private fun capitalize(s: String?): String {
+            //Send nothing if string is empty
+            if (s == null || s.isEmpty()) {
+                return ""
+            }
+            val first = s[0]
+            return if (Character.isUpperCase(first)) {
+                s
+            } else {
+                Character.toUpperCase(first) + s.substring(1)
+            }
+        }
+    }
+
+    //This is the main activity
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -111,6 +169,9 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
         val view = binding.root
         val toolbar = binding.toolbar
         val slider = binding.slider
+
+        val policy = ThreadPolicy.Builder().permitAll().build()
+        StrictMode.setThreadPolicy(policy) // Sets thread policy to all threads THIS IS DANGEROUS
 
         setContentView(view)
         //Sets the secondary view features
@@ -148,7 +209,9 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
         fab.setImageDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.ic_network_check_white_48dp))
         fab.setOnClickListener {
             dialog.visibility = View.VISIBLE
-            pingCheck()
+            lifecycleScope.async {
+                pingCheck()
+            }
         }
 
         //Pref values
@@ -180,72 +243,65 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
         val currentapiVersion = Build.VERSION.SDK_INT
 
         init()//initializes the whats new dialog
-        var carrierName = "Not Rooted" //For drawer display
-        //Checks for root, if none, disabled toggle switch
+        var carrierName = "Not Rooted" //For drawer's root status
 
+        //Checks for root, if none, disabled toggle switch
         if (!Shell.rootAccess()) {
             //Preference handling
-            editor.putInt(getString(R.string.preference_app_active), 0)
-            toggle.isEnabled = false
-            statusText.setText(R.string.noRoot)
+            editor.putInt(getString(R.string.preference_app_active), 0)                 //Halt RadioControl services
+            toggle.isEnabled = false                    //Disables the main app toggle
+            statusText.setText(R.string.noRoot)    //Text formatters
             statusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_deactivated))
-            editor.apply()
+            editor.apply() //Commit new values to sharedprefs
 
             //Drawer icon
             carrierIcon = IconicsDrawable(this, GoogleMaterial.Icon.gmd_error_outline).apply {
                 colorInt = Color.RED
             }
-        } else {
+        } else { //We have root, do stuff accordingly
             carrierIcon = IconicsDrawable(this, GoogleMaterial.Icon.gmd_check_circle).apply {
                 colorInt = Color.GREEN
             }
             carrierName = "Rooted"
         }
-        //Async thread that does preference checks
-        doAsync {
-            //  If the activity has never started before...
-            if (isFirstStart) {
-                //  Make a new preferences editor
-                val e = getPrefs.edit()
-
-                if (currentapiVersion >= 24) {
-                    e.putBoolean(getString(R.string.preference_work_mode), true)
-                }
-                // Edit preference to make it false because we don't want this to run again
-                e.putBoolean(getString(R.string.preference_first_start), false)
-                e.apply() //  Apply changes
-
-                //  Launch app intro
-                uiThread {
-                    val i = Intent(applicationContext, TutorialActivity::class.java)
-                    startActivity(i)
-                }
+        //  If this is the first time the user has opened the app...
+        if (isFirstStart) {
+            //  Make a new preferences editor
+            val e = getPrefs.edit()
+            //Work mode enabler for Nougat+
+            if (currentapiVersion >= 24) {
+                e.putBoolean(getString(R.string.preference_work_mode), true)
             }
-            //Checks if workmode is enabled and starts the Persistence Service, otherwise it registers the broadcast receivers
-            if (getPrefs.getBoolean(getString(R.string.preference_work_mode), true)) {
-                val i = Intent(applicationContext, PersistenceService::class.java)
-                if (Build.VERSION.SDK_INT >= 26) {
-                    applicationContext.startForegroundService(i)
-                } else {
-                    applicationContext.startService(i)
-                }
-                Log.d("RadioControl-Main", "persist Service launched")
-            } else {
-                registerForBroadcasts(applicationContext)
-            }
-            //Checks if background optimization is enabled and schedules a job
-            if (getPrefs.getBoolean(getString(R.string.key_preference_settings_battery_opimization), false)) {
-                scheduleJob()
-            }
-            //Hides the progress dialog
-            dialog.visibility = View.GONE
+            // Edit preference to make it false because we don't want this to run again
+            e.putBoolean(getString(R.string.preference_first_start), false)
+            e.apply() //  Apply changes in sharedprefs
 
-            //EndAsync
+            //  Launch app intro
+            val i = Intent(applicationContext, TutorialActivity::class.java)
+            startActivity(i)
         }
+        //Checks if workmode is enabled and starts the Persistence Service, otherwise it registers the broadcast receivers
+        if (getPrefs.getBoolean(getString(R.string.preference_work_mode), true)) {
+            val i = Intent(applicationContext, PersistenceService::class.java)
+            if (Build.VERSION.SDK_INT >= 26) {
+                applicationContext.startForegroundService(i)
+            } else {
+                applicationContext.startService(i)
+            }
+            Log.d("RadioControl-Main", "persist Service launched")
+        } else {
+            registerForBroadcasts(applicationContext)
+        }
+        //Checks if background optimization is enabled and schedules a job
+        if (getPrefs.getBoolean(getString(R.string.key_preference_settings_battery_opimization), false)) {
+            scheduleJob()
+        }
+        //Hides the progress dialog
+        dialog.visibility = View.GONE
 
         //Begin initializing drawer
 
-
+        //Sets
         deviceIcon = when {
             deviceName.contains("Nexus") -> AppCompatResources.getDrawable(applicationContext, R.mipmap.ic_nexus_logo)!!
             deviceName.contains("Pixel") -> AppCompatResources.getDrawable(applicationContext, R.drawable.ic_google__g__logo)!!
@@ -408,7 +464,9 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
             connectionStatusText.setText(R.string.ping)
             connectionStatusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.material_grey_50))
             dialog.visibility = View.VISIBLE
-            pingCheck()
+            lifecycleScope.async {
+                pingCheck()
+            }
         }
         serviceTest.setOnClickListener {
             val i = Intent(applicationContext, BackgroundJobService::class.java)
@@ -499,34 +557,30 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
 
     //Initialize method for the Whats new dialog
     private fun init() {
-        doAsync {
-            val sharedPref = getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE)
-            val editor = sharedPref.edit()
-            var currentVersionNumber = 0
+        val sharedPref = getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE)
+        val editor = sharedPref.edit()
+        var currentVersionNumber = 0
 
-            val savedVersionNumber = sharedPref.getInt(VERSION_KEY, 0)
-            //Sets app version number
-            try {
-                val pi = packageManager.getPackageInfo(packageName, 0)
-                val longVersionCode = getLongVersionCode(pi)
-                currentVersionNumber = longVersionCode.toInt()
-            } catch (e: Exception) {
-                Log.e("RadioControl-Main", "Unable to get version number")
-            }
-            //Checks if app version has changed since last opening
-            if (currentVersionNumber > savedVersionNumber) {
-                uiThread {
-                    showUpdated(this@MainActivity)
-                }
-                editor.putInt(VERSION_KEY, currentVersionNumber)
-
-            }
-            //Enables work mode if Nougat+
-            if (Build.VERSION.SDK_INT >= 24 && !sharedPref.getBoolean(getString(R.string.preference_work_mode), false)) {
-                editor.putBoolean(getString(R.string.preference_work_mode), true)
-            }
-            editor.apply()
+        val savedVersionNumber = sharedPref.getInt(VERSION_KEY, 0)
+        //Sets app version number
+        try {
+            val pi = packageManager.getPackageInfo(packageName, 0)
+            val longVersionCode = getLongVersionCode(pi)
+            currentVersionNumber = longVersionCode.toInt()
+        } catch (e: Exception) {
+            Log.e("RadioControl-Main", "Unable to get version number")
         }
+        //Checks if app version has changed since last opening
+        if (currentVersionNumber > savedVersionNumber) {
+            showUpdated(this@MainActivity)
+            editor.putInt(VERSION_KEY, currentVersionNumber)
+
+        }
+        //Enables work mode if Nougat+
+        if (Build.VERSION.SDK_INT >= 24 && !sharedPref.getBoolean(getString(R.string.preference_work_mode), false)) {
+            editor.putBoolean(getString(R.string.preference_work_mode), true)
+        }
+        editor.apply()
 
     }
 
@@ -545,18 +599,14 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
 
     //Start a new activity for sending a feedback email
     private fun sendFeedback() {
-        doAsync {
-            val emailIntent = Intent(Intent.ACTION_SEND)
-            emailIntent.type = "text/html"
-            emailIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf(getString(R.string.mail_feedback_email)))
-            emailIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.mail_feedback_subject))
-            emailIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.mail_feedback_message))
+        val emailIntent = Intent(Intent.ACTION_SEND)
+        emailIntent.type = "text/html"
+        emailIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf(getString(R.string.mail_feedback_email)))
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.mail_feedback_subject))
+        emailIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.mail_feedback_message))
 
-            uiThread {
-                startActivity(Intent.createChooser(emailIntent, getString(R.string.title_send_feedback)))
-                writeLog("Feedback sent", applicationContext)
-            }
-        }
+        startActivity(Intent.createChooser(emailIntent, getString(R.string.title_send_feedback)))
+        writeLog("Feedback sent", applicationContext)
     }
 
     private fun registerForBroadcasts(context: Context) {
@@ -633,7 +683,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
                 .setContentText(getString(R.string.title_service_paused))
                 //Using this action button I would like to call logTest
                 .addAction(R.drawable.ic_appintro_done_white, getString(R.string.button_disable_standby), pIntentLogin)
-                .setPriority(-2)
+                .setPriority(IMPORTANCE_LOW)
                 .setOngoing(true)
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.notify(10110, note.build())
@@ -649,37 +699,69 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
     //starts about activity
     private fun startAboutActivity() {
         val intent = Intent(this, AboutActivity::class.java)
-        doAsync {
-            startActivity(intent)
-        }
+        startActivity(intent)
 
     }
 
     //starts settings
     private fun startSettingsActivity() {
         val intent = Intent(this, SettingsActivity::class.java)
-        doAsync {
-            startActivity(intent)
-        }
+        startActivity(intent)
 
     }
 
     //starts settings activity
     private fun startStatsActivity() {
         val intent = Intent(this, StatsActivity::class.java)
-        doAsync {
-            startActivity(intent)
-        }
+        startActivity(intent)}
 
+    override fun onBillingReady() {
+        isBillingReady = true
     }
 
-    private fun startChangelogActivity() {
-        val intent = Intent(this, ChangeLogActivity::class.java)
-        doAsync {
-            startActivity(intent)
-        }
+    override fun onPurchaseFinished(
+        purchaseResult: KinAppPurchaseResult,
+        purchase: KinAppPurchase?
+    ) {
+        // Handle your purchase result here
+        when (purchaseResult) {
+            KinAppPurchaseResult.SUCCESS -> {
+                Toast.makeText(applicationContext, R.string.donationThanks, Toast.LENGTH_LONG).show()
+                Log.d("RadioControl-Main", "In-app purchase succeeded")
+                val pref = androidx.preference.PreferenceManager.getDefaultSharedPreferences(applicationContext)
+                val editor = pref.edit()
+                editor.putBoolean(getString(R.string.preference_is_donated), true)
+                editor.apply()
 
+                //billingManager.consumePurchase(purchase!!).await()
+
+            }
+            KinAppPurchaseResult.ALREADY_OWNED -> {
+                Toast.makeText(applicationContext, R.string.donationExists, Toast.LENGTH_LONG).show()
+                Log.d("RadioControl-Main", "Donation already purchased")
+            }
+            KinAppPurchaseResult.INVALID_PURCHASE -> {
+                // Purchase invalid and cannot be processed
+            }
+            KinAppPurchaseResult.INVALID_SIGNATURE -> {
+                Toast.makeText(applicationContext, R.string.donationThanks, Toast.LENGTH_LONG).show()
+                Log.d("RadioControl-Main", "In-app purchase succeeded, however verification failed")
+                val pref = androidx.preference.PreferenceManager.getDefaultSharedPreferences(applicationContext)
+                val editor = pref.edit()
+                editor.putBoolean(getString(R.string.preference_is_donated), true)
+                editor.apply()
+            }
+            KinAppPurchaseResult.CANCEL -> {
+                //Toast.makeText(MainActivity.this, R.string.donationCancel, Toast.LENGTH_LONG).show();
+                Snackbar.make(findViewById(android.R.id.content), R.string.donationCancel, Snackbar.LENGTH_LONG)
+                    .show()
+                Log.d("RadioControl-Main", "Purchase Cancelled")
+            }
+        }
     }
+
+
+
 
     private fun showUpdated(c: Context) = MaterialDialog(c)
             .title(R.string.title_whats_new)
@@ -687,7 +769,8 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
                 dialog.dismiss()
             }
             .negativeButton(R.string.text_whats_new) {
-                startChangelogActivity()
+                val intent = Intent(this, ChangeLogActivity::class.java)
+                startActivity(intent)
             }
             .show()
 
@@ -731,84 +814,34 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
 
     }
 
-    override fun onBillingReady() {
-        isBillingReady = true
-    }
-
-    override fun onPurchaseFinished(purchaseResult: KinAppPurchaseResult, purchase: KinAppPurchase?) {
-        // Handle your purchase result here
-        when (purchaseResult) {
-            KinAppPurchaseResult.SUCCESS -> {
-                Toast.makeText(applicationContext, R.string.donationThanks, Toast.LENGTH_LONG).show()
-                Log.d("RadioControl-Main", "In-app purchase succeeded")
-                val pref = androidx.preference.PreferenceManager.getDefaultSharedPreferences(applicationContext)
-                val editor = pref.edit()
-                editor.putBoolean(getString(R.string.preference_is_donated), true)
-                editor.apply()
-
-                //billingManager.consumePurchase(purchase!!).await()
-
-            }
-            KinAppPurchaseResult.ALREADY_OWNED -> {
-                Toast.makeText(applicationContext, R.string.donationExists, Toast.LENGTH_LONG).show()
-                Log.d("RadioControl-Main", "Donation already purchased")
-            }
-            KinAppPurchaseResult.INVALID_PURCHASE -> {
-                // Purchase invalid and cannot be processed
-            }
-            KinAppPurchaseResult.INVALID_SIGNATURE -> {
-                Toast.makeText(applicationContext, R.string.donationThanks, Toast.LENGTH_LONG).show()
-                Log.d("RadioControl-Main", "In-app purchase succeeded, however verification failed")
-                val pref = androidx.preference.PreferenceManager.getDefaultSharedPreferences(applicationContext)
-                val editor = pref.edit()
-                editor.putBoolean(getString(R.string.preference_is_donated), true)
-                editor.apply()
-            }
-            KinAppPurchaseResult.CANCEL -> {
-                //Toast.makeText(MainActivity.this, R.string.donationCancel, Toast.LENGTH_LONG).show();
-                Snackbar.make(findViewById(android.R.id.content), R.string.donationCancel, Snackbar.LENGTH_LONG)
-                        .show()
-                Log.d("RadioControl-Main", "Purchase Cancelled")
-            }
-        }
-    }
-
-
     //Internet Error dialog
     private fun showErrorDialog() {
         val view = inflate(applicationContext, R.layout.dialog_no_internet, null)//Initializes the view for error dialog
         val builder = AlertDialog.Builder(this)//creates alertdialog
         val title = TextView(this)
-        doAsync {
 
-            // You Can Customise your Title here
-            title.setText(R.string.noInternet)
-            title.setBackgroundColor(Color.DKGRAY)
-            title.setPadding(10, 10, 10, 10)
-            title.gravity = Gravity.CENTER
-            title.setTextColor(Color.WHITE)
-            title.textSize = 20f
+        // You Can Customise your Title here
+        title.setText(R.string.noInternet)
+        title.setBackgroundColor(Color.DKGRAY)
+        title.setPadding(10, 10, 10, 10)
+        title.gravity = Gravity.CENTER
+        title.setTextColor(Color.WHITE)
+        title.textSize = 20f
 
-            builder.setCustomTitle(title)
-            builder.setView(view)
-                    .setPositiveButton(R.string.text_ok) { dialog, _ -> dialog.dismiss() }
+        builder.setCustomTitle(title)
+        builder.setView(view)
+            .setPositiveButton(R.string.text_ok) { dialog, _ -> dialog.dismiss() }
 
-            uiThread {
-                builder.create().show()
-            }
-        }
-
-
+        builder.create().show()
     }
 
     override fun onResume() {
         super.onResume()
         val sharedPref = getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE)
         val pref = androidx.preference.PreferenceManager.getDefaultSharedPreferences(applicationContext)
-        doAsync {
-            if (!pref.getBoolean(getString(R.string.preference_work_mode), true)) {
-                registerForBroadcasts(applicationContext)
-            }
+        //If workmode is false
+        if (!pref.getBoolean(getString(R.string.preference_work_mode), true)) {
+            registerForBroadcasts(applicationContext)
         }
         //drawerCreate()
 
@@ -878,89 +911,84 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
     }
 
     private fun writeLog(data: String, c: Context) {
-        doAsync {
-            val preferences = androidx.preference.PreferenceManager.getDefaultSharedPreferences(c)
-            if (preferences.getBoolean("enableLogs", false)) {
-                try {
-                    val h = DateFormat.format("yyyy-MM-dd HH:mm:ss", System.currentTimeMillis()).toString()
-                    val log = File(c.filesDir, "radiocontrol.log")
-                    if (!log.exists()) {
-                        log.createNewFile()
-                    }
-                    val logPath = "radiocontrol.log"
-                    val string = "\n$h: $data"
-
-                    val fos = c.openFileOutput(logPath, Context.MODE_APPEND)
-                    fos.write(string.toByteArray())
-                    fos.close()
-                } catch (e: IOException) {
-                    Log.e("RadioControl-Main", "Error saving log")
+        val preferences = androidx.preference.PreferenceManager.getDefaultSharedPreferences(c)
+        if (preferences.getBoolean("enableLogs", false)) {
+            try {
+                val h = DateFormat.format("yyyy-MM-dd HH:mm:ss", System.currentTimeMillis()).toString()
+                val log = File(c.filesDir, "radiocontrol.log")
+                if (!log.exists()) {
+                    log.createNewFile()
                 }
+                val logPath = "radiocontrol.log"
+                val string = "\n$h: $data"
+
+                val fos = c.openFileOutput(logPath, Context.MODE_APPEND)
+                fos.write(string.toByteArray())
+                fos.close()
+            } catch (e: IOException) {
+                Log.e("RadioControl-Main", "Error saving log")
             }
         }
     }
 
-    private fun pingCheck() {
-        var dialog: ProgressBar
+
+    private suspend fun pingCheck() {
         val preferences = androidx.preference.PreferenceManager.getDefaultSharedPreferences(applicationContext)
         val ip = preferences.getString("prefPingIp", "8.8.8.8")
-        doAsync {
-            val address = InetAddress.getByName(ip)
-            var reachable = false
-            val timeDifference = measureTimeMillis {
-                reachable = address.isReachable(4000)
+        val address = InetAddress.getByName(ip)
+        var reachable = false
+
+        val timeDifference = measureTimeMillis {
+            reachable = address.isReachable(4000)
+        }
+        Log.d("RadioControl-Main", "Reachable?: $reachable, Time: $timeDifference")
+
+        val dialog: ProgressBar = findViewById(R.id.pingProgressBar)
+        dialog.visibility = View.GONE
+        val connectionStatusText = findViewById<TextView>(R.id.pingStatus)
+        if (reachable) {
+            when {
+                timeDifference <= 50 -> Snackbar.make(clayout, "Excellent Latency: $timeDifference ms", Snackbar.LENGTH_LONG).show()
+                51.0 <= timeDifference && timeDifference <= 100.0 -> Snackbar.make(clayout, "Average Latency: $timeDifference ms", Snackbar.LENGTH_LONG).show()
+                101.0 <= timeDifference && timeDifference <= 200.0 -> Snackbar.make(clayout, "Poor Latency: $timeDifference ms", Snackbar.LENGTH_LONG).show()
+                timeDifference >= 201 -> Snackbar.make(clayout, "Very Poor Latency. VOIP and online gaming may suffer: $timeDifference ms", Snackbar.LENGTH_LONG).show()
             }
-            Log.d("RadioControl-Main", "Reachable?: $reachable, Time: $timeDifference")
+        }
+        //Sadly packet loss testing is gone :(
+        /*//Check for packet loss stuff
+        when {
+            pStatus!!.contains("100% packet loss") -> Snackbar.make(clayout, "100% packet loss detected", Snackbar.LENGTH_LONG).show()
+            pStatus.contains("25% packet loss") -> Snackbar.make(clayout, "25% packet loss detected", Snackbar.LENGTH_LONG).show()
+            pStatus.contains("50% packet loss") -> Snackbar.make(clayout, "50% packet loss detected", Snackbar.LENGTH_LONG).show()
+            pStatus.contains("75% packet loss") -> Snackbar.make(clayout, "75% packet loss detected", Snackbar.LENGTH_LONG).show()
+            pStatus.contains("unknown host") -> Snackbar.make(clayout, "Unknown host", Snackbar.LENGTH_LONG).show()
+        }*/
 
-            uiThread {
-                dialog = findViewById(R.id.pingProgressBar)
-                dialog.visibility = View.GONE
-                val connectionStatusText = findViewById<TextView>(R.id.pingStatus)
-                if (reachable) {
-                    when {
-                        timeDifference <= 50 -> Snackbar.make(clayout, "Excellent Latency: $timeDifference ms", Snackbar.LENGTH_LONG).show()
-                        51.0 <= timeDifference && timeDifference <= 100.0 -> Snackbar.make(clayout, "Average Latency: $timeDifference ms", Snackbar.LENGTH_LONG).show()
-                        101.0 <= timeDifference && timeDifference <= 200.0 -> Snackbar.make(clayout, "Poor Latency: $timeDifference ms", Snackbar.LENGTH_LONG).show()
-                        timeDifference >= 201 -> Snackbar.make(clayout, "Very Poor Latency. VOIP and online gaming may suffer: $timeDifference ms", Snackbar.LENGTH_LONG).show()
-                    }
+        if (reachable) {
+            if (Utilities.isConnectedWifi(applicationContext)) {
+                connectionStatusText.setText(R.string.connectedWifi)
+                connectionStatusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_activated))
+                writeLog(getString(R.string.connectedWifi), applicationContext)
+            } else if (Utilities.isConnectedMobile(applicationContext)) {
+                if (Utilities.isConnectedFast(applicationContext)) {
+                    connectionStatusText.setText(R.string.connectedFCell)
+                    connectionStatusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_activated))
+                    writeLog(getString(R.string.connectedFCell), applicationContext)
+                } else if (!Utilities.isConnectedFast(applicationContext)) {
+                    connectionStatusText.setText(R.string.connectedSCell)
+                    connectionStatusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_activated))
+                    writeLog(getString(R.string.connectedSCell), applicationContext)
                 }
-                //Sadly packet loss testing is gone :(
-                /*//Check for packet loss stuff
-                when {
-                    pStatus!!.contains("100% packet loss") -> Snackbar.make(clayout, "100% packet loss detected", Snackbar.LENGTH_LONG).show()
-                    pStatus.contains("25% packet loss") -> Snackbar.make(clayout, "25% packet loss detected", Snackbar.LENGTH_LONG).show()
-                    pStatus.contains("50% packet loss") -> Snackbar.make(clayout, "50% packet loss detected", Snackbar.LENGTH_LONG).show()
-                    pStatus.contains("75% packet loss") -> Snackbar.make(clayout, "75% packet loss detected", Snackbar.LENGTH_LONG).show()
-                    pStatus.contains("unknown host") -> Snackbar.make(clayout, "Unknown host", Snackbar.LENGTH_LONG).show()
-                }*/
+            }
 
-                if (reachable) {
-                    if (Utilities.isConnectedWifi(applicationContext)) {
-                        connectionStatusText.setText(R.string.connectedWifi)
-                        connectionStatusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_activated))
-                        writeLog(getString(R.string.connectedWifi), applicationContext)
-                    } else if (Utilities.isConnectedMobile(applicationContext)) {
-                        if (Utilities.isConnectedFast(applicationContext)) {
-                            connectionStatusText.setText(R.string.connectedFCell)
-                            connectionStatusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_activated))
-                            writeLog(getString(R.string.connectedFCell), applicationContext)
-                        } else if (!Utilities.isConnectedFast(applicationContext)) {
-                            connectionStatusText.setText(R.string.connectedSCell)
-                            connectionStatusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_activated))
-                            writeLog(getString(R.string.connectedSCell), applicationContext)
-                        }
-                    }
-
-                } else {
-                    if (Utilities.isAirplaneMode(applicationContext) && !Utilities.isConnected(applicationContext)) {
-                        connectionStatusText.setText(R.string.airplaneOn)
-                        connectionStatusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_deactivated))
-                    } else {
-                        connectionStatusText.setText(R.string.connectionUnable)
-                        connectionStatusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_deactivated))
-                        writeLog(getString(R.string.connectionUnable), applicationContext)
-                    }
-                }
+        } else {
+            if (Utilities.isAirplaneMode(applicationContext) && !Utilities.isConnected(applicationContext)) {
+                connectionStatusText.setText(R.string.airplaneOn)
+                connectionStatusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_deactivated))
+            } else {
+                connectionStatusText.setText(R.string.connectionUnable)
+                connectionStatusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_deactivated))
+                writeLog(getString(R.string.connectionUnable), applicationContext)
             }
         }
     }
@@ -991,40 +1019,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener {
         //stopService(Intent(this, BackgroundJobService::class.java))
         super.onStop()
     }*/
-    companion object {
-        private const val PRIVATE_PREF = "prefs"
-        private const val VERSION_KEY = "version_number"
-        internal const val ITEM_ONE_DOLLAR = "com.nikihlparanjape.radiocontrol.donate.one"
-        internal const val ITEM_THREE_DOLLAR = "com.nikihlparanjape.radiocontrol.donate.three"
-        internal const val ITEM_FIVE_DOLLAR = "com.nikihlparanjape.radiocontrol.donate.five"
-        internal const val ITEM_TEN_DOLLAR = "com.nikihlparanjape.radiocontrol.donate.ten"
 
 
-        //Grab device make and model for drawer
-        val deviceName: String
-            get() {
-                val manufacturer = Build.MANUFACTURER
-                val model = Build.MODEL
-                return if (model.startsWith(manufacturer)) {
-                    capitalize(model)
-                } else {
-                    capitalize(manufacturer) + " " + model
-                }
-            }
-
-        //Capitalizes names for devices. Used by deviceName()
-        private fun capitalize(s: String?): String {
-            //Send nothing if string is empty
-            if (s == null || s.isEmpty()) {
-                return ""
-            }
-            val first = s[0]
-            return if (Character.isUpperCase(first)) {
-                s
-            } else {
-                Character.toUpperCase(first) + s.substring(1)
-            }
-        }
-    }
 
 }

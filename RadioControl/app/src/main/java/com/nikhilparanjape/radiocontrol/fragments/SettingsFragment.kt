@@ -1,6 +1,7 @@
 package com.nikhilparanjape.radiocontrol.fragments
 
 import android.Manifest
+import android.app.Activity
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
@@ -17,6 +18,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 import androidx.preference.EditTextPreference
 import androidx.preference.PreferenceFragmentCompat
+import androidx.preference.PreferenceManager
 import com.afollestad.materialdialogs.MaterialDialog
 import com.borax12.materialdaterangepicker.time.RadialPickerLayout
 import com.borax12.materialdaterangepicker.time.TimePickerDialog
@@ -48,7 +50,6 @@ class SettingsFragment : PreferenceFragmentCompat(), TimePickerDialog.OnTimeSetL
         pingIpPref?.summary = ip
 
     }
-
     override fun onPreferenceTreeClick(preference: androidx.preference.Preference): Boolean {
         val sp = preferenceScreen.sharedPreferences
         //val editor = sp.edit()
@@ -140,8 +141,8 @@ class SettingsFragment : PreferenceFragmentCompat(), TimePickerDialog.OnTimeSetL
                         val intent = Intent()
                         val packageName = requireContext().packageName
                         val pm = requireContext().getSystemService(Context.POWER_SERVICE) as PowerManager
-                        if (pm.isIgnoringBatteryOptimizations(packageName)) {
-                            Log.i("RadioControl-Settings", "ignoring")
+                        if (pm.isIgnoringBatteryOptimizations(packageName)) { // Checks if
+                            Log.i("RadioControl-Settings", "doze-ignoring")
                             view?.let { it1 ->
                                 Snackbar.make(it1, "RadioControl is already excluded from Doze", Snackbar.LENGTH_LONG)
                                         .show()
@@ -155,7 +156,7 @@ class SettingsFragment : PreferenceFragmentCompat(), TimePickerDialog.OnTimeSetL
                     }
                 } else {
                     dozeSetting?.isChecked = false
-                    Log.i("RadioControl-Settings", "false")
+                    Log.i("RadioControl-Settings", "dozed-false")
                     if (Build.VERSION.SDK_INT >= 23) {
                         startActivityForResult(Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS), 0)
                         /*Intent intent = new Intent();
@@ -172,25 +173,29 @@ class SettingsFragment : PreferenceFragmentCompat(), TimePickerDialog.OnTimeSetL
                 false
             }
             getString(R.string.key_preference_settings_alternate_command) -> { //Toggle Cellular Mode button
-                val permissionCheck = ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION)
+                if ((preference as androidx.preference.CheckBoxPreference).isChecked) {
+                    val permissionCheck = ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION)
 
-                if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION), 200)
-                    //altRootCommandPref?.isChecked = true
+                    if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION), 200)
+                        //altRootCommandPref?.isChecked = true
+                    }
                 }
+
 
                 false
             }
             getString(R.string.key_preference_settings_phone_state) -> { //Call Handling button
                 if ((preference as androidx.preference.CheckBoxPreference).isChecked) {
-                    val permissionCheck = ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_PHONE_STATE)
-
-                    if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
-                        ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.READ_PHONE_STATE), 200)
-                        callingCheck?.isChecked = true
-                    } else {
-                        callingCheck?.isChecked = false
+                    //Check if RadioControl does not have permission to read the phone state
+                    if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.READ_PHONE_STATE), 200) // Request the permission to the user
+                        //callingCheck?.isChecked = true
                     }
+                } else {
+                    //Someone just unchecked the phone state button
+                    //callingCheck?.isChecked = false
+                    Log.i("RadioControl-Settings", "phone-check-no")
                 }
 
                 false
