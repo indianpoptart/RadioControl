@@ -1,24 +1,14 @@
 .gradle
 RadioControl/local.properties
-RadioControl/.idea/workspace.xml
-RadioControl/.idea/libraries
-RadioControl/.idea/caches
+RadioControl/.idea/*
 .DS_Store
-RadioControl/app/build/
-RadioControl/app/release/
-RadioControl/app/debug/
+RadioControl/app/build/*
+RadioControl/app/release/*
+RadioControl/app/debug/*
 RadioControl/app/src/main/res/values/key.txt
 
 RadioControl/app/src/main/res/key.txt
 RadioControl/java_pid12248.hprof
 RadioControl/lib
 
-RadioControl/.idea/caches/build_file_checksums.ser
-RadioControl/.idea/misc.xml
-RadioControl/.idea/compiler.xml
-RadioControl/.idea/misc.xml
-RadioControl/.idea/gradle.xml
-RadioControl/.idea/runConfigurations.xml
-RadioControl/.idea/modules/app/RadioControl.app.iml
-RadioControl/.idea/caches/build_file_checksums.ser
-RadioControl/.idea/dictionaries/admin.xml
+

@@ -13,7 +13,6 @@ import com.mikepenz.iconics.utils.sizeDp
 import com.nikhilparanjape.radiocontrol.R
 import com.nikhilparanjape.radiocontrol.fragments.SettingsFragment
 
-
 /**
  * Created by Nikhil Paranjape on 12/16/2015.
  */

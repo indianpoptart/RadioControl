@@ -5,7 +5,6 @@ import android.app.job.JobService
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkRequest
-import android.os.Build
 import android.text.format.DateFormat
 import android.util.Log
 import com.nikhilparanjape.radiocontrol.receivers.ConnectivityReceiver
@@ -134,7 +133,7 @@ class BackgroundJobService : JobService(), ConnectivityReceiver.ConnectivityRece
                                     }
                                     Utilities.getCellStatus(applicationContext) == 2 -> {
                                         Log.e("RadioControl-Job", "Location can't be accessed, try alt method")
-                                        Utilities.setMobileNetworkfromLollipop(applicationContext)
+                                        Utilities.setMobileNetworkFromLollipop(applicationContext)
                                     }
                                 }
 

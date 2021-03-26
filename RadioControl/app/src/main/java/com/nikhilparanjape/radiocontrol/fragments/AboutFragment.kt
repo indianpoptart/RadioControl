@@ -36,7 +36,6 @@ class AboutFragment : PreferenceFragmentCompat() {
         addPreferencesFromResource(R.xml.about)
         val versionPref = findPreference<Preference>("version")
 
-
         val cs = versionName
         versionPref?.summary = "v$cs"
 
@@ -218,6 +217,5 @@ class AboutFragment : PreferenceFragmentCompat() {
     companion object {
         private const val PRIVATE_PREF = "prefs"
     }
-
 
 }

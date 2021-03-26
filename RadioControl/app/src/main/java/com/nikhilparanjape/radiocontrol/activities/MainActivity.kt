@@ -77,15 +77,12 @@ import androidx.core.app.NotificationManagerCompat.IMPORTANCE_LOW
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.async
-import java.util.zip.Checksum
-
 
 /**
  * Created by Nikhil Paranjape on 11/3/2015.
  *
  * Converted to Kotlin on 10/06/2018.
  */
-
 
 class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, CoroutineScope {
 

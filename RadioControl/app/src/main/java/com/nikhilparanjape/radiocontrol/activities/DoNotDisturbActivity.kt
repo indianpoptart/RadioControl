@@ -55,7 +55,7 @@ class DoNotDisturbActivity : AppCompatActivity() {
 
         if (pref.getBoolean("isNoDisturbEnabled", false)) {
             status.setImageDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.ic_do_not_disturb_on_white_48px))
-            hourStatus.text = getString(R.string.text_status_set_for) + pref.getInt("dndHours", 0) + getString(R.string.text_hour_s)
+            (getString(R.string.text_status_set_for) + pref.getInt("dndHours", 0) + getString(R.string.text_hour_s)).also { hourStatus.text = it }
             cancelButton.visibility = View.VISIBLE
         } else {
             hourStatus.text = getString(R.string.text_not_set)

@@ -114,13 +114,7 @@ class Utilities {
             return z
         }
 
-        private fun isMobileDataEnabledFromLollipop(context: Context): Boolean {
-            var state = false
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                state = Settings.Global.getInt(context.contentResolver, "mobile_data", 0) == 1
-            }
-            return state
-        }
+
 
         @Throws(java.lang.Exception::class)
         private fun getTransactionCode(context: Context): String {
@@ -142,14 +136,22 @@ class Utilities {
                 throw e
             }
         }
+        //A function checkign whether
+        private fun isMobileDataEnabledFromLollipop(context: Context): Boolean {
+            var state = false
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                state = Settings.Global.getInt(context.contentResolver, "mobile_data", 0) == 1
+            }
+            return state
+        }
 
         @Throws(Exception::class)
-        fun setMobileNetworkfromLollipop(context: Context) {
+        fun setMobileNetworkFromLollipop(context: Context) {
             var command: String? = null
             var state = 0
             try {
-                // Get the current state of the mobile network.
-                state = if (isMobileDataEnabledFromLollipop(context)) 0 else 1
+                // Set the current state of the mobile network.
+                state = Settings.Global.getInt(context.contentResolver, "mobile_data", 0)
                 // Get the value of the "TRANSACTION_setDataEnabled" field.
                 val transactionCode: String = getTransactionCode(context)
                 // Android 5.1+ (API 22) and later.
