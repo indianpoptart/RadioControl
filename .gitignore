@@ -1,6 +1,6 @@
 .gradle
 RadioControl/local.properties
-RadioControl/.idea/*
+RadioControl/.idea/**
 .DS_Store
 RadioControl/app/build/*
 RadioControl/app/release/*
@@ -10,5 +10,3 @@ RadioControl/app/src/main/res/values/key.txt
 RadioControl/app/src/main/res/key.txt
 RadioControl/java_pid12248.hprof
 RadioControl/lib
-
-
