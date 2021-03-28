@@ -29,19 +29,21 @@ class PersistenceService : Service() {
     var context: Context = this
     override fun onCreate() {
         super.onCreate()
-        Log.i("RadioControl-persist", getString(R.string.log_persistence_created))
+        Log.i(TAG, getString(R.string.log_persistence_created))
         createNotificationChannel()
+        val filter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
+        registerReceiver(myConnectivityReceiver, filter)
         createNotification(1)
 
     }
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
-        Log.i("RadioControl-persist", getString(R.string.log_persistence_started))
+        Log.i(TAG, getString(R.string.log_persistence_started))
         createNotification(2)
 
         return START_STICKY
     }
     private fun createNotification(id: Int){
-        Log.i("RadioControl-persist", "Notification Created")
+        Log.i(TAG, "Notification Created")
         val filter = IntentFilter()
         filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION)
 
@@ -54,7 +56,7 @@ class PersistenceService : Service() {
         try {
             applicationContext.registerReceiver(myConnectivityReceiver, filter)
         } catch (e: Exception) {
-            Log.e("RadioControl-persist", "Registration Failed")
+            Log.e(TAG, "Registration Failed")
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
@@ -94,12 +96,12 @@ class PersistenceService : Service() {
             channel.description = description
             // Register the channel with the system; you can't change the importance
             // or other notification behaviors after this
-            val notificationManager = getSystemService(NotificationManagerCompat::class.java)
+            val notificationManager = getSystemService(NotificationManager::class.java)
             notificationManager?.createNotificationChannel(channel)
         }
     }
     override fun onBind(intent: Intent): IBinder? {
-        Log.i("RadioControl-persist", getString(R.string.log_persistence_bound))
+        Log.i(TAG, getString(R.string.log_persistence_bound))
 
         return null
     }

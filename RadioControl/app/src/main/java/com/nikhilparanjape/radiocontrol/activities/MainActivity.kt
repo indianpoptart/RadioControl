@@ -61,7 +61,6 @@ import com.nikhilparanjape.radiocontrol.services.BackgroundJobService
 import com.nikhilparanjape.radiocontrol.services.CellRadioService
 import com.nikhilparanjape.radiocontrol.services.PersistenceService
 import com.nikhilparanjape.radiocontrol.utilities.AlarmSchedulers
-import com.nikhilparanjape.radiocontrol.utilities.GraphicsUtility
 import com.nikhilparanjape.radiocontrol.utilities.Utilities
 import com.topjohnwu.superuser.Shell
 import kotlinx.coroutines.Dispatchers
@@ -123,7 +122,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
         private var isBillingReady = false
 
         //JobID for jobscheduler(BackgroundJobService)
-        private val jobID = 0x01
+        private const val jobID = 0x01
         // Job variable that is tied to the Activity lifecycle Coroutines
         lateinit var job: Job
 
@@ -482,7 +481,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
         }
         radioOffButton.setOnClickListener {
             //String[] cellOffCmd = {"service call phone 27","service call phone 14 s16"};
-            //Utilities.setMobileNetworkfromLollipop(applicationContext)
+            //Utilities.setMobileNetworkFromLollipop(applicationContext)
             //RootAccess.runCommands(cellOffCmd);
 
             val cellIntent = Intent(applicationContext, CellRadioService::class.java)
@@ -931,12 +930,12 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
 
     private suspend fun pingCheck() {
         val preferences = androidx.preference.PreferenceManager.getDefaultSharedPreferences(applicationContext)
-        val ip = preferences.getString("prefPingIp", "8.8.8.8")
+        val ip = preferences.getString("prefPingIp", "1.0.0.1")
         val address = InetAddress.getByName(ip)
         var reachable = false
 
         val timeDifference = measureTimeMillis {
-            reachable = address.isReachable(4000)
+            reachable = address.isReachable(1000)
         }
         Log.d("RadioControl-Main", "Reachable?: $reachable, Time: $timeDifference")
 

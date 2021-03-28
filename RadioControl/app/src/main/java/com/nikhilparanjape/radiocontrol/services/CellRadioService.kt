@@ -33,22 +33,28 @@ class CellRadioService: JobIntentService() {
     }
 
     override fun onHandleWork(intent: Intent) {
-        Log.i("RadioControl-CRJS", "Executing work: $intent")
+        Log.i(TAG, "Executing work: $intent")
         if (!mRunning) {
             mRunning = true
-            Log.d("RadioControl-cell", "CellService Toggled")
+            Log.d(TAG, "CellService Started")
             //val cellOffCmd = arrayOf("service call phone 27") *not needed as it can run on libsu shell
             // Run commands and get output immediately
             val output = Shell.su("service call phone 27").exec().out
             Utilities.writeLog("root accessed: $output", applicationContext)
-            Log.d("RadioControl-cell", "CellService Killed")
+            Log.d(TAG, "CellService Killed")
             this.stopSelf()
         }
-        Log.i("CellRadioJobService", "Completed service @ " + SystemClock.elapsedRealtime())
+        Log.i(TAG, "Completed service @ " + SystemClock.elapsedRealtime())
     }
 
     override fun onDestroy() {
         super.onDestroy()
         mRunning = false
+    }
+    companion object {
+
+        private const val TAG = "RadioControl-CRJS"
+        private const val PRIVATE_PREF = "prefs"
+
     }
 }

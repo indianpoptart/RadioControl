@@ -49,24 +49,21 @@ import android.os.AsyncTask
  */
 class Utilities {
 
-    /**
-     * Check if there is any active call
-     * @param context
-     * @return
-     */
-    fun isCallActive(context: Context): Boolean {
-        val manager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
-        return manager.mode == AudioManager.MODE_IN_CALL
-    }
-
-
-
     companion object {
+        /**
+         * Check if there is any active call
+         * @param context
+         * @return
+         */
+        fun isCallActive(context: Context): Boolean {
+            val manager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+            return manager.mode == AudioManager.MODE_IN_CALL
+        }
 
         /**
          * gets network ssid
          * @param context
-         * @return
+         * @return the current ssid the device is connected to
          */
         fun getCurrentSsid(context: Context): String? {
             var ssid: String? = null
@@ -82,9 +79,13 @@ class Utilities {
             }
             return ssid
         }
-
+        /**
+         * Check if there is any active call
+         * @param context
+         * @return a value between 0-3. 0 and 1 are good values, returning a 2 or 3 means there is some kind of error
+         */
         fun getCellStatus(c: Context): Int {
-            var z = 0
+            var z = 0 // Z of 0 means we assume the cell radio is connected
             val tm = c.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
             val connMgr = c.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
             var isWifiConn: Boolean = false
@@ -99,9 +100,6 @@ class Utilities {
                     if (cellInfoList.isEmpty()) {
                         z = 1
                     }
-                }else{
-
-
                 }
             } catch (e: SecurityException) {
                 Log.e("RadioControl-util", "Unable to get Location Permission", e)
@@ -111,7 +109,7 @@ class Utilities {
                 z = 3
             }
 
-            return z
+            return z //Any value above 1 means some kind of error
         }
 
 
@@ -136,13 +134,9 @@ class Utilities {
                 throw e
             }
         }
-        //A function checkign whether
+        //An old function used for checking of we are on lollipop and whether mobile data can be turned on/off
         private fun isMobileDataEnabledFromLollipop(context: Context): Boolean {
-            var state = false
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                state = Settings.Global.getInt(context.contentResolver, "mobile_data", 0) == 1
-            }
-            return state
+            return Settings.Global.getInt(context.contentResolver, "mobile_data", 0) == 1
         }
 
         @Throws(Exception::class)
@@ -327,7 +321,7 @@ class Utilities {
         }
 
         /**
-         * Check if there is any connectivity to a Wifi network
+         * Check if there is any connectivity via WiFi
          * @param context
          * @return
          */
@@ -335,14 +329,18 @@ class Utilities {
             val info = getNetworkInfo(context)
             return info != null && info.isConnectedOrConnecting && info.type == ConnectivityManager.TYPE_WIFI
         }
-
+        /**
+         * Check if the WiFi module is enabled.
+         * @param context
+         * @return
+         */
         fun isWifiOn(context: Context): Boolean {
             val wifiManager = context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
             return wifiManager.isWifiEnabled
         }
 
         /**
-         * Check if there is any connectivity
+         * Check if there is any connectivity at all(local or internet)
          * @param context
          * @return
          */
@@ -391,13 +389,13 @@ class Utilities {
                     TelephonyManager.NETWORK_TYPE_1xRTT -> false // ~ 50-100 kbps
                     TelephonyManager.NETWORK_TYPE_CDMA -> false // ~ 14-64 kbps
                     TelephonyManager.NETWORK_TYPE_EDGE -> false // ~ 50-100 kbps
-                    TelephonyManager.NETWORK_TYPE_EVDO_0 -> true // ~ 400-1000 kbps
-                    TelephonyManager.NETWORK_TYPE_EVDO_A -> true // ~ 600-1400 kbps
+                    TelephonyManager.NETWORK_TYPE_EVDO_0 -> false // ~ 400-1000 kbps
+                    TelephonyManager.NETWORK_TYPE_EVDO_A -> false // ~ 600-1400 kbps
                     TelephonyManager.NETWORK_TYPE_GPRS -> false // ~ 100 kbps
                     TelephonyManager.NETWORK_TYPE_HSDPA -> true // ~ 2-14 Mbps
-                    TelephonyManager.NETWORK_TYPE_HSPA -> true // ~ 700-1700 kbps
+                    TelephonyManager.NETWORK_TYPE_HSPA -> false // ~ 700-1700 kbps
                     TelephonyManager.NETWORK_TYPE_HSUPA -> true // ~ 1-23 Mbps
-                    TelephonyManager.NETWORK_TYPE_UMTS -> true // ~ 400-7000 kbps
+                    TelephonyManager.NETWORK_TYPE_UMTS -> false // ~ 400-7000 kbps
                     TelephonyManager.NETWORK_TYPE_EHRPD // API level 11
                     -> true // ~ 1-2 Mbps
                     TelephonyManager.NETWORK_TYPE_EVDO_B // API level 9
