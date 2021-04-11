@@ -207,6 +207,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
             dialog.visibility = View.VISIBLE
             lifecycleScope.async {
                 pingCheck()
+
             }
         }
 
