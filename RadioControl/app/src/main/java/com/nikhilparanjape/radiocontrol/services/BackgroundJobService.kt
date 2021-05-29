@@ -47,6 +47,7 @@ class BackgroundJobService : JobService(), ConnectivityReceiver.ConnectivityRece
         val prefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(applicationContext)
         val disabledPref = applicationContext.getSharedPreferences("disabled-networks", Context.MODE_PRIVATE)
 
+        //TODO Transfer to external algorithm class
         //val h = HashSet(listOf("")) //Set default empty set for SSID check
         val selections = prefs.getStringSet("ssid", HashSet(listOf(""))) //Gets stringset, if empty sets default
         val networkAlert = prefs.getBoolean("isNetworkAlive", false)

@@ -14,7 +14,7 @@ import com.nikhilparanjape.radiocontrol.utilities.Utilities
  * A service starter
  */
 
-class JobServiceStarter : BroadcastReceiver() {
+class OnBootServiceStarter : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
         if (Intent.ACTION_BOOT_COMPLETED == intent.action) {

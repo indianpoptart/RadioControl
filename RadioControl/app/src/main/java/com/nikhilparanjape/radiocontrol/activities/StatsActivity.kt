@@ -715,7 +715,7 @@ class StatsActivity : AppCompatActivity() {
                 while (line != null) {
                     line = reader.readLine()
                     if (countMatches(line, "lost") == 1) {
-                        when {
+                        when { //TODO replace with recursive methods
                             line!!.contains("$year-01") -> janWifiLost++
                             line.contains("$year-02") -> febWifiLost++
                             line.contains("$year-03") -> marWifiLost++

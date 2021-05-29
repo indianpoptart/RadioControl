@@ -20,7 +20,7 @@ class CellRadioService: JobIntentService() {
      * Unique job ID for this service.
      */
     private val jobID = 1002
-    private var mRunning: Boolean = false
+    private var mRunning: Boolean = false // This ensures the service doesn't run parallel
 
     /**
      * Convenience method for enqueuing work in to this service.
