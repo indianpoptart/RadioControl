@@ -98,3 +98,7 @@ lint/tmp/
 
 # Android Profiling
 *.hprof
+RadioControl/.idea/modules/app/RadioControl.app.iml
+RadioControl/.idea/discord.xml
+RadioControl/.idea/deploymentTargetDropDown.xml
+RadioControl/.idea/modules/app/RadioControl.app.iml
