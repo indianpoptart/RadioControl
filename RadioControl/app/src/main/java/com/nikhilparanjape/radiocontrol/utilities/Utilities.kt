@@ -38,10 +38,6 @@ import java.net.InetAddress
 
 import android.os.AsyncTask
 
-
-
-
-
 /**
  * Created by Nikhil on 2/3/2016.
  *
@@ -57,7 +53,7 @@ class Utilities {
          */
         fun isCallActive(context: Context): Boolean {
             val manager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
-            return manager.mode == AudioManager.MODE_IN_CALL
+            return manager.mode == AudioManager.MODE_IN_CALL //Checks if android's audiomanager is in curently in an active call
         }
 
         /**
@@ -76,6 +72,7 @@ class Utilities {
                 ssid = ssid!!.substring(1, ssid.length - 1)
             } else if (!networkInfo.isConnected) {
                 ssid = "Not Connected"
+                // TODO Check if this can use local isConnectedWifi method to reduce networkInfo usage
             }
             return ssid
         }
@@ -374,17 +371,16 @@ class Utilities {
                     Settings.Global.AIRPLANE_MODE_ON, 0) != 0
         }
 
-
-
         /**
          * Check if the connection is fast
          * @param type
          * @param subType
          * @return
+         * TODO Use transport types: https://developer.android.com/reference/kotlin/android/net/NetworkCapabilities
          */
         private fun isConnectionFast(type: Int, subType: Int): Boolean {
             return when (type) {
-                ConnectivityManager.TYPE_WIFI -> true
+                ConnectivityManager.TYPE_WIFI -> true //Assume WiFi is fast. TODO possible check for fast internet (but that may take too much CPU time to be efficient)
                 ConnectivityManager.TYPE_MOBILE -> when (subType) {
                     TelephonyManager.NETWORK_TYPE_1xRTT -> false // ~ 50-100 kbps
                     TelephonyManager.NETWORK_TYPE_CDMA -> false // ~ 14-64 kbps

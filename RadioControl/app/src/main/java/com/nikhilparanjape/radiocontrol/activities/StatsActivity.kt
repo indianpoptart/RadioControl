@@ -393,6 +393,7 @@ class StatsActivity : AppCompatActivity() {
         val dura = prefs.getInt("duration", 2)
         val anim = Animation()
         anim.setDuration(dura*1000)
+        // TODO cleanup this when statement to only have one instance of prefs.getInt
         when {
             prefs.getInt("easing", 4) == 0 -> anim.setEasing(BounceEase())
             prefs.getInt("easing", 4) == 1 -> anim.setEasing(CircEase())

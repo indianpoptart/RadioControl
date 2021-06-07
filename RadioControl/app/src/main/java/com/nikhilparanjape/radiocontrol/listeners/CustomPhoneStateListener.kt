@@ -15,7 +15,7 @@ import com.nikhilparanjape.radiocontrol.utilities.Utilities.Companion.writeLog
 import com.topjohnwu.superuser.Shell
 
 class CustomPhoneStateListener(//private static final String TAG = "PhoneStateChanged";
-        private val context: Context //Context to make Toast if required
+        private val context: Context //Context to make Toast if applicable
 ) : PhoneStateListener() {
     //Root commands which disable cell only
     private var airCmd = arrayOf("su", "settings put global airplane_mode_radios  \"cell\"", "content update --uri content://settings/global --bind value:s:'cell' --where \"name='airplane_mode_radios'\"", "settings put global airplane_mode_on 1", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state true")
@@ -37,7 +37,7 @@ class CustomPhoneStateListener(//private static final String TAG = "PhoneStateCh
 
         when (state) {
             TelephonyManager.CALL_STATE_RINGING -> {
-
+                //Do nothing for now
             }
             TelephonyManager.CALL_STATE_OFFHOOK -> {
                 //when Off hook i.e in call
@@ -60,10 +60,8 @@ class CustomPhoneStateListener(//private static final String TAG = "PhoneStateCh
                         } else {
                             cellChange()
                         }
-
                     }
                 }
-
             }
         }//when Idle i.e no call
         lastState = state
