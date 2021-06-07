@@ -69,11 +69,9 @@ class AboutFragment : PreferenceFragmentCompat() {
                         z = 0
                         Log.d("RadioControl-About", requireContext().getString(R.string.dev_deactivated))
 
-
                         editor.putBoolean("isDeveloper", false) //Puts the boolean into prefs.xml
                         editor.apply() //Ends writing to prefs file
                     }
-
                 }
                 false
             }
