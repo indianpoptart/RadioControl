@@ -51,7 +51,7 @@ class SettingsFragment : PreferenceFragmentCompat(), TimePickerDialog.OnTimeSetL
         pingIpPref?.summary = ip
 
     }
-    @SuppressLint("BatteryLife") // This app is one of the unusual circumstances where google doesn't have a built in platform feature to get arond this, so disregard Google's bitching about REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
+    @SuppressLint("BatteryLife") // This app is one of the unusual circumstances where google doesn't have a built in platform feature to get around this, so disregard Google's bitching about REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
     override fun onPreferenceTreeClick(preference: androidx.preference.Preference): Boolean {
         val sp = preferenceScreen.sharedPreferences
         //val editor = sp.edit()

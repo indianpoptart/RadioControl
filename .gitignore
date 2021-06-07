@@ -9,6 +9,7 @@ RadioControl/app/src/main/res/values/key.txt
 RadioControl/app/src/main/res/key.txt
 RadioControl/java_pid12248.hprof
 RadioControl/lib
+RadioControl/.idea/*
 
 # Built application files
 *.apk
@@ -61,11 +62,13 @@ captures/
 .idea/modules.xml
 # Comment next line if keeping position of elements in Navigation Editor is relevant for you
 .idea/navEditor.xml
+#idea folder
+.idea/
 
 # Keystore files
 # Uncomment the following lines if you do not want to check your keystore files in.
-#*.jks
-#*.keystore
+*.jks
+*.keystore
 
 # External native build folder generated in Android Studio 2.2 and later
 .externalNativeBuild
@@ -98,7 +101,3 @@ lint/tmp/
 
 # Android Profiling
 *.hprof
-RadioControl/.idea/modules/app/RadioControl.app.iml
-RadioControl/.idea/discord.xml
-RadioControl/.idea/deploymentTargetDropDown.xml
-RadioControl/.idea/modules/app/RadioControl.app.iml
