@@ -1037,7 +1037,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
             pStatus.contains("75% packet loss") -> Snackbar.make(clayout, "75% packet loss detected", Snackbar.LENGTH_LONG).show()
             pStatus.contains("unknown host") -> Snackbar.make(clayout, "Unknown host", Snackbar.LENGTH_LONG).show()
         }*/
-        //  TODO:Move to NetworkUtilities class
+        //  TODO: Refactor into NetworkUtilities class
         if (reachable) {
             if (Utilities.isConnectedWifi(applicationContext)) {
                 // TODO Return info back to main activity
@@ -1067,7 +1067,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
                 writeLog(getString(R.string.connectionUnable), applicationContext)
             }
         }
-        // END TODO: Move to NetworkUtilities class
+        // END TODO: Refactor into NetworkUtilities class
     }*/
 
     override fun onStart() {
