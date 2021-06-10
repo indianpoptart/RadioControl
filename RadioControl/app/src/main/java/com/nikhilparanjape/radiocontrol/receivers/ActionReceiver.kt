@@ -16,8 +16,8 @@ class ActionReceiver : BroadcastReceiver() {
 
         //Toast.makeText(context,"received",Toast.LENGTH_SHORT).show();
 
-        val sharedPref = context.getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE)
-        val editor = sharedPref.edit()
+        val getPrefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(context)
+        val editor = getPrefs.edit()
 
         editor.putInt("isActive", 1)
         editor.apply()

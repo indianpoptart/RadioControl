@@ -43,7 +43,7 @@ class BackgroundJobService : JobService(), ConnectivityReceiver.ConnectivityRece
         Log.i(TAG, "Job started")
         //Utilities.scheduleJob(applicationContext) // reschedule the job
 
-        val sp = applicationContext.getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE)
+        //val sp = applicationContext.getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE)
         val prefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(applicationContext)
         val disabledPref = applicationContext.getSharedPreferences("disabled-networks", Context.MODE_PRIVATE)
 
@@ -53,7 +53,7 @@ class BackgroundJobService : JobService(), ConnectivityReceiver.ConnectivityRece
         val networkAlert = prefs.getBoolean("isNetworkAlive", false)
 
         //Check if user wants the app on
-        if (sp.getInt("isActive", 0) == 0) {
+        if (prefs.getInt("isActive", 0) == 0) {
             Log.d("RadioControl-Job", "RadioControl has been disabled")
             //If the user wants to be alerted when the network is not internet reachable
             if (networkAlert) {
@@ -66,7 +66,7 @@ class BackgroundJobService : JobService(), ConnectivityReceiver.ConnectivityRece
                 writeLog("WiFi Signal lost", applicationContext)
                 jobFinished(params, false)
             }
-        } else if (sp.getInt("isActive", 0) == 1) {
+        } else if (prefs.getInt("isActive", 0) == 1) {
             val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
             connectivityManager.registerNetworkCallback(NetworkRequest.Builder().build(), object : ConnectivityManager.NetworkCallback() {})
             val activeNetwork = connectivityManager.activeNetworkInfo //This is used to check if the mobile network is currently off/disabled
@@ -220,7 +220,7 @@ class BackgroundJobService : JobService(), ConnectivityReceiver.ConnectivityRece
             val reachable = address.isReachable(4000)
             Log.d("RadioControl-Job", "Reachable?: $reachable")
 
-            val sp = applicationContext.getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE)
+            //val sp = applicationContext.getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE)
             val prefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(applicationContext)
 
             val alertPriority = prefs.getBoolean("networkPriority", false)//Setting for network notifier
@@ -228,13 +228,13 @@ class BackgroundJobService : JobService(), ConnectivityReceiver.ConnectivityRece
             val alertVibrate = prefs.getBoolean("networkVibrate", false)
 
 
-            if (sp.getInt("isActive", 0) == 0) {
+            if (prefs.getInt("isActive", 0) == 0) {
                 //If the connection can't reach Google
                 if (!reachable) {
                     Utilities.sendNote(applicationContext, applicationContext.getString(com.nikhilparanjape.radiocontrol.R.string.not_connected_alert), alertVibrate, alertSounds, alertPriority)
                     writeLog("Not connected to the internet", applicationContext)
                 }
-            } else if (sp.getInt("isActive", 0) == 1) {
+            } else if (prefs.getInt("isActive", 0) == 1) {
                 //If the connection can't reach Google
                 if (!reachable) {
                     Utilities.sendNote(applicationContext, applicationContext.getString(com.nikhilparanjape.radiocontrol.R.string.not_connected_alert), alertVibrate, alertSounds, alertPriority)

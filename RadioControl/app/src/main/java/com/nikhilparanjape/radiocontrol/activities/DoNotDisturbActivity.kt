@@ -112,10 +112,10 @@ class DoNotDisturbActivity : AppCompatActivity() {
     }
 
     private fun startStandbyMode() {
-        val sharedPref = getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE)
-        val editor = sharedPref.edit()
+        val getPrefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(applicationContext)
+        val editor = getPrefs.edit()
 
-        if (!sharedPref.getBoolean("isStandbyDialog", false)) {
+        if (!getPrefs.getBoolean("isStandbyDialog", false)) {
             MaterialDialog(this)
                     .title(R.string.permissionSample, "RadioControl")
                     .icon(R.mipmap.ic_launcher)

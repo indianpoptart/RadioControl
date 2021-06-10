@@ -39,6 +39,7 @@
 
     <color name="status_activated">#228B22</color>
     <color name="status_activated_debug">#cad600</color>
+    <color name="status_no_root">#cad600</color>
     <color name="status_deactivated">#b22222</color>
     <color name="persistence_slide">#9900ff</color>
     <color name="call_detector_slide">#2d59c7</color>

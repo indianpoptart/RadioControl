@@ -73,7 +73,7 @@ class CustomPhoneStateListener(//private static final String TAG = "PhoneStateCh
 
     // Highly experimental
     private fun cellChange() {
-        val sp = context.getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE)
+        val getPrefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(context)
         val prefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(context)
         //Utilities util = new Utilities();
         //Log.d("RadioControl-phone", "Active: $activeNetwork")
@@ -86,7 +86,7 @@ class CustomPhoneStateListener(//private static final String TAG = "PhoneStateCh
         prefs.getBoolean("isBatteryOn", true)
 
         //Check if user wants the app on
-        if (sp.getInt("isActive", 0) == 1 && prefs.getBoolean("isPhoneStateCheck", true)) {
+        if (getPrefs.getInt("isActive", 0) == 1 && prefs.getBoolean("isPhoneStateCheck", true)) {
             //If airplane mode is on or cell is off
             if (Utilities.isAirplaneMode(context) || !Utilities.isConnectedMobile(context)) {
                 //If Wifi is not connected
@@ -125,7 +125,7 @@ class CustomPhoneStateListener(//private static final String TAG = "PhoneStateCh
 
             }
         }
-        if (sp.getInt("isActive", 0) == 1) {
+        if (getPrefs.getInt("isActive", 0) == 1) {
             //Check if we just lost WiFi signal
             if (!Utilities.isConnectedWifi(context)) {
                 Log.d("RadioControl-phone", "WiFi signal LOST")

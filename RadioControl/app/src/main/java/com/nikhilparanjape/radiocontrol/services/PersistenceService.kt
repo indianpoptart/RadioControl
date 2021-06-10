@@ -12,7 +12,6 @@ import android.os.Build
 import android.os.IBinder
 import android.util.Log
 import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
 import com.nikhilparanjape.radiocontrol.R
 import com.nikhilparanjape.radiocontrol.receivers.ConnectivityReceiver
 import com.nikhilparanjape.radiocontrol.utilities.Utilities
@@ -47,9 +46,9 @@ class PersistenceService : Service() {
         val filter = IntentFilter()
         filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION)
 
-        val sp = context.getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE)
+        val getPrefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(applicationContext)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && sp.getInt("isActive", 0) == 1) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && getPrefs.getInt("isActive", 0) == 1) {
             Utilities.scheduleJob(context)
         }
 

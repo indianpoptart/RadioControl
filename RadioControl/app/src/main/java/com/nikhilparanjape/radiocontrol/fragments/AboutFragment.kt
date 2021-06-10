@@ -50,13 +50,13 @@ class AboutFragment : PreferenceFragmentCompat() {
 
         return when (preference.key) {
             getString(R.string.key_preference_about_version) -> {
-                val sp = requireContext().getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE) //Initializes prefs.xml
-                val editor = sp.edit()//Initializes xml editor
+                val getPrefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(requireContext()) //Initializes prefs.xml
+                val editor = getPrefs.edit()//Initializes xml editor
                 z++
                 Log.d("RadioControl-About", (7 - z).toString() + " steps away from easter egg")
                 //Toast.makeText(getActivity(), (7 - z) + " steps away from easter egg", Toast.LENGTH_SHORT).show();
                 if (z >= 7) {
-                    if (!sp.getBoolean("isDeveloper", false)) {
+                    if (!getPrefs.getBoolean("isDeveloper", false)) {
                         Toast.makeText(activity, R.string.dev_activated, Toast.LENGTH_LONG).show()
                         z = 0
                         Log.d("RadioControl-About", "Developer features activated")
@@ -64,7 +64,7 @@ class AboutFragment : PreferenceFragmentCompat() {
 
                         editor.putBoolean("isDeveloper", true) //Puts the boolean into prefs.xml
                         editor.apply() //Ends writing to prefs file
-                    } else if (sp.getBoolean("isDeveloper", false)) {
+                    } else if (getPrefs.getBoolean("isDeveloper", false)) {
                         Toast.makeText(activity, R.string.dev_deactivated, Toast.LENGTH_LONG).show()
                         z = 0
                         Log.d("RadioControl-About", requireContext().getString(R.string.dev_deactivated))

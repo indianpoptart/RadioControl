@@ -166,6 +166,12 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
         val policy = ThreadPolicy.Builder().permitAll().build()
         StrictMode.setThreadPolicy(policy) // Sets thread policy to all threads THIS IS DANGEROUS
 
+        //  Pref values
+        //  Initialize SharedPreferences
+        val getPrefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(applicationContext)
+        val sharedPref = getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE) /** Migrated away from custom prefs.xml file **/
+        val editor = getPrefs.edit()
+
         setContentView(view)
         //Sets the secondary view features
 
@@ -173,7 +179,6 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
         clayout = findViewById(R.id.clayout)
         val dialog = findViewById<ProgressBar>(R.id.pingProgressBar)
         Iconics.init(this)
-
 
         // Handle Toolbar
         //val toolbar = findViewById<Toolbar>(R.id.toolbar)
@@ -207,17 +212,12 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
             }
         }
 
-        //  Pref values
-        //  Initialize SharedPreferences
-        val getPrefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(applicationContext)
-        val sharedPref = getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE)
-        val editor = sharedPref.edit()
-
         //  TextViews
         val statusText = findViewById<TextView>(R.id.statusText)
         val linkText = findViewById<TextView>(R.id.linkSpeed)
         val connectionStatusText = findViewById<TextView>(R.id.pingStatus)
 
+        /**  BEGIN buttons **/
         //  UI Switches and Buttons
         val linkSpeedButton = findViewById<Button>(R.id.linkSpeedButton)
         val toggle = findViewById<SwitchMaterial>(R.id.enableSwitch)
@@ -229,7 +229,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
         val nightCancel = findViewById<Button>(R.id.night_mode_cancel)
         val radioOffButton = findViewById<Button>(R.id.cellRadioOff)
         val forceCrashButton = findViewById<Button>(R.id.forceCrashButton)
-        /*  END buttons */
+        /**  END buttons **/
 
         /*Other info setters*/
         //  Create a new boolean and preference and set it to true if it's not already there
@@ -384,10 +384,10 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
         slider.setSelection(1)
 
         //Check if the easter egg(Dev mode) is NOT activated
-        if (!sharedPref.getBoolean(getString(R.string.preference_is_developer), false)) {
+        if (!getPrefs.getBoolean(getString(R.string.preference_is_developer), false)) {
             linkSpeedButton.visibility = View.GONE
             linkText.visibility = View.GONE
-        } else if (sharedPref.getBoolean(getString(R.string.preference_is_developer), false)) {
+        } else if (getPrefs.getBoolean(getString(R.string.preference_is_developer), false)) {
             linkSpeedButton.visibility = View.VISIBLE
             linkText.visibility = View.VISIBLE
         }
@@ -427,14 +427,14 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
 
         //Dev mode handling
         //Check if the easter egg is NOT activated
-        if (!sharedPref.getBoolean(getString(R.string.preference_is_developer), false)) {
+        if (!getPrefs.getBoolean(getString(R.string.preference_is_developer), false)) {
             conn.visibility = View.GONE
             serviceTest.visibility = View.GONE
             nightCancel.visibility = View.GONE
             connectionStatusText.visibility = View.GONE
             radioOffButton.visibility = View.GONE
             forceCrashButton.visibility = View.GONE
-        } else if (sharedPref.getBoolean(getString(R.string.preference_is_developer), false)) {
+        } else if (getPrefs.getBoolean(getString(R.string.preference_is_developer), false)) {
             conn.visibility = View.VISIBLE
             serviceTest.visibility = View.VISIBLE
             nightCancel.visibility = View.VISIBLE
@@ -559,8 +559,8 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
     private fun programVersionUpdateInit(isFirstStart: Boolean) {
         Log.d("RadioControl-Main","CHECKING FOR NEW VERSION")
         lifecycleScope.launch {
-            val sharedPref = getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE)
-            val editor = sharedPref.edit()
+            val getPrefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(applicationContext)
+            val editor = getPrefs.edit()
             var currentVersionNumber: Int
 
             try {
@@ -580,16 +580,16 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
                 editor.putBoolean(getString(R.string.preference_first_start), false)
 
                 //Enables Intelligent Mode if Nougat+
-                if (Build.VERSION.SDK_INT >= 24) { // && !sharedPref.getBoolean(getString(R.string.preference_work_mode), false)
+                if (Build.VERSION.SDK_INT >= 24) { // && !getPrefs.getBoolean(getString(R.string.preference_work_mode), false)
                     editor.putBoolean(getString(R.string.preference_work_mode), true)
                 }
 
-                //  Launch app intro
+                //  Launch tutorial/onboarding
                 editor.apply()
                 val i = Intent(applicationContext, TutorialActivity::class.java)
                 startActivity(i)
             }
-            val savedVersionNumber = sharedPref.getInt(VERSION_KEY, 1)
+            val savedVersionNumber = getPrefs.getInt(VERSION_KEY, 1)
             //Sets app version number
 
             //Checks if app version has changed since last opening
@@ -598,11 +598,8 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
                 editor.apply()
                 showUpdated(this@MainActivity)
             }
-            editor.apply()
-
+            editor.apply() //Finalize shared pref changes
         }
-
-
     }
 
     private fun scheduleJob() {
@@ -679,10 +676,10 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
     }
 
     private fun startStandbyMode() {
-        val sharedPref = getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE)
-        val editor = sharedPref.edit()
+        val getPrefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(applicationContext)
+        val editor = getPrefs.edit()
 
-        if (!sharedPref.getBoolean(getString(R.string.preference_standby_dialog), false)) {
+        if (!getPrefs.getBoolean(getString(R.string.preference_standby_dialog), false)) {
             MaterialDialog(this)
                     .icon(R.mipmap.ic_launcher)
                     .title(R.string.permissionSample, "RadioControl")
@@ -728,7 +725,6 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
     private fun startSettingsActivity() {
         val intent = Intent(this, SettingsActivity::class.java)
         startActivity(intent)
-
     }
 
     //starts settings activity
@@ -749,8 +745,8 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
             KinAppPurchaseResult.SUCCESS -> {
                 Toast.makeText(applicationContext, R.string.donationThanks, Toast.LENGTH_LONG).show()
                 Log.d("RadioControl-Main", "In-app purchase succeeded")
-                val pref = androidx.preference.PreferenceManager.getDefaultSharedPreferences(applicationContext)
-                val editor = pref.edit()
+                val getPrefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(applicationContext)
+                val editor = getPrefs.edit()
                 editor.putBoolean(getString(R.string.preference_is_donated), true)
                 editor.apply()
 
@@ -859,7 +855,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
     override fun onResume() {
         super.onResume()
         //  TODO Figure out how to take init code and run without duplication
-        val sharedPref = getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE)
+        val getPrefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(applicationContext)
         val pref = androidx.preference.PreferenceManager.getDefaultSharedPreferences(applicationContext)
         //If workmode is false
         if (!pref.getBoolean(getString(R.string.preference_work_mode), true)) {
@@ -881,7 +877,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
         val toggle = findViewById<SwitchMaterial>(R.id.enableSwitch)
 
         //Check if the easter egg is NOT activated
-        if (!sharedPref.getBoolean(getString(R.string.preference_is_developer), false)) {
+        if (!getPrefs.getBoolean(getString(R.string.preference_is_developer), false)) {
             conn.visibility = View.GONE
             serviceTest.visibility = View.GONE
             nightCancel.visibility = View.GONE
@@ -890,7 +886,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
             forceCrashButton.visibility = View.GONE
             btn3.visibility = View.GONE
             linkText.visibility = View.GONE
-        } else if (sharedPref.getBoolean(getString(R.string.preference_is_developer), false)) {
+        } else if (getPrefs.getBoolean(getString(R.string.preference_is_developer), false)) {
             conn.visibility = View.VISIBLE
             serviceTest.visibility = View.VISIBLE
             nightCancel.visibility = View.VISIBLE
@@ -901,28 +897,28 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
             linkText.visibility = View.VISIBLE
         }
 
-        if (!Shell.rootAccess()) {
+        /*if (!Shell.rootAccess()) {
             //toggle.isEnabled = false
             statusText.setText(R.string.noRoot)
             statusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_deactivated))
-        }
+        }*/
 
-        if (sharedPref.getInt(getString(R.string.preference_app_active), 0) == 1) {
+        if (getPrefs.getInt(getString(R.string.preference_app_active), 0) == 1) {
             if (!Shell.rootAccess()) {
                 toggle.isEnabled = false
                 statusText.setText(R.string.noRoot)
-                statusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_deactivated))
+                statusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_no_root))
             } else {
                 statusText.setText(R.string.rEnabled)
                 statusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_activated))
                 toggle.isChecked = true
             }
 
-        } else if (sharedPref.getInt(getString(R.string.preference_app_active), 0) == 0) {
+        } else if (getPrefs.getInt(getString(R.string.preference_app_active), 0) == 0) {
             if (!Shell.rootAccess()) {
                 //toggle.isEnabled = false
                 statusText.setText(R.string.noRoot)
-                statusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_deactivated))
+                statusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_no_root))
             } else {
                 statusText.setText(R.string.rDisabled)
                 statusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_deactivated))
@@ -933,8 +929,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
     }
 
     private fun writeLog(data: String, c: Context) {
-        val preferences = androidx.preference.PreferenceManager.getDefaultSharedPreferences(c)
-        if (preferences.getBoolean("enableLogs", false)) {
+        if (androidx.preference.PreferenceManager.getDefaultSharedPreferences(c).getBoolean("enableLogs", false)) {
             try {
                 val h = DateFormat.format("yyyy-MM-dd HH:mm:ss", System.currentTimeMillis()).toString()
                 val log = File(c.filesDir, "radiocontrol.log")
