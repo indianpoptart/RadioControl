@@ -233,14 +233,14 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
 
         /*Other info setters*/
         //  Create a new boolean and preference and set it to true if it's not already there
-        val isFirstStart = getPrefs.getBoolean(getString(R.string.preference_first_start), true)
+        val isFirstStart = getPrefs.getBoolean(getString(R.string.preference_first_start), true) //TODO Check why it does this every launch
         //Gets the current android build version on device
         val currentapiVersion = Build.VERSION.SDK_INT
         /*END info setters*/
 
         /** First start init **/
-
         programVersionUpdateInit(isFirstStart)//initializes the whats new dialog
+
         //  If this is the first time the user has opened the app...
         var carrierName = "Not Rooted" //For drawer's root status and assume not rooted
         editor.putInt(getString(R.string.preference_app_active), 0)
@@ -561,27 +561,21 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
         lifecycleScope.launch {
             val sharedPref = getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE)
             val editor = sharedPref.edit()
-            var currentVersionNumber = 0
-            editor.putInt(getString(R.string.preference_app_active), 0) //Sets app to "off" for default
+            var currentVersionNumber: Int
 
-            val savedVersionNumber = sharedPref.getInt(VERSION_KEY, 0)
-            //Sets app version number
             try {
                 val pi = packageManager.getPackageInfo(packageName, 0)
                 val longVersionCode = getLongVersionCode(pi)
                 currentVersionNumber = longVersionCode.toInt()
             } catch (e: Exception) {
+                currentVersionNumber = -1
                 Log.e("RadioControl-Main", "Unable to get version number")
             }
-
-            //Checks if app version has changed since last opening
-            if (currentVersionNumber > savedVersionNumber) {
-                showUpdated(this@MainActivity)
-                editor.putInt(VERSION_KEY, currentVersionNumber)
-            }
-            editor.apply()
             if (isFirstStart){
                 Log.d("RadioControl-Main","IT'S YOUR FIRST TIME HERE")
+                currentVersionNumber = 0
+                editor.putInt(getString(R.string.preference_app_active), 0) //Sets app to "off" for default
+
                 // Edit preference to make it false because we don't want this to run again
                 editor.putBoolean(getString(R.string.preference_first_start), false)
 
@@ -595,6 +589,16 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
                 val i = Intent(applicationContext, TutorialActivity::class.java)
                 startActivity(i)
             }
+            val savedVersionNumber = sharedPref.getInt(VERSION_KEY, 1)
+            //Sets app version number
+
+            //Checks if app version has changed since last opening
+            if (currentVersionNumber > savedVersionNumber) {
+                editor.putInt(VERSION_KEY, currentVersionNumber)
+                editor.apply()
+                showUpdated(this@MainActivity)
+            }
+            editor.apply()
 
         }
 
