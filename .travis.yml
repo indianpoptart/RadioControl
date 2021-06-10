@@ -8,6 +8,8 @@ env:
   global:
    # install timeout in minutes (2 minutes by default)
     - ADB_INSTALL_TIMEOUT=8
+    - ANDROID_HOME=$HOME/android/sdk
+    - ANDROID_NDK_HOME=$HOME/android/sdk/ndk-bundle
 
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
