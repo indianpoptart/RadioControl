@@ -43,7 +43,7 @@ class SettingsFragment : PreferenceFragmentCompat(), TimePickerDialog.OnTimeSetL
         val workModePref = preferenceManager.findPreference<androidx.preference.CheckBoxPreference>("workMode")
         if (Build.VERSION.SDK_INT >= 24) {
             preferenceScreen.findPreference<androidx.preference.CheckBoxPreference>("workMode")?.isEnabled  = true
-            workModePref?.isChecked = true
+            //workModePref?.isChecked = true
         }
 
         val pingIpPref = findPreference<EditTextPreference>("prefPingIp")
@@ -70,7 +70,7 @@ class SettingsFragment : PreferenceFragmentCompat(), TimePickerDialog.OnTimeSetL
             getString(R.string.key_preference_settings_intelligent) -> { //Intelligent mode button
                 if ((preference as androidx.preference.CheckBoxPreference).isChecked) {
                     if (workModePref!!.isChecked) {
-                        Log.i("RadioControl-Settings", "true-ischecked")
+                        Log.d("RadioControl-Settings", "true-ischecked")
                         if (sp.getBoolean("workMode", true)) {
                             if (Build.VERSION.SDK_INT >= 26) {
                                 activity?.startForegroundService(Intent(activity, PersistenceService::class.java))

@@ -72,7 +72,7 @@ class Utilities {
                 ssid = ssid!!.substring(1, ssid.length - 1)
             } else if (!networkInfo.isConnected) {
                 ssid = "Not Connected"
-                // TODO Check if this can use local isConnectedWifi method to reduce networkInfo usage
+                // TODO Check if this can use local isConnectedWifi method to reduce networkInfo/ConnectivityMananger usage
             }
             return ssid
         }

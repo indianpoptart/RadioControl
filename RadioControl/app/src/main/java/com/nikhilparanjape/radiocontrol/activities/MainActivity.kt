@@ -63,8 +63,6 @@ import com.nikhilparanjape.radiocontrol.services.PersistenceService
 import com.nikhilparanjape.radiocontrol.utilities.AlarmSchedulers
 import com.nikhilparanjape.radiocontrol.utilities.Utilities
 import com.topjohnwu.superuser.Shell
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import java.io.File
 import java.io.IOException
 import java.net.InetAddress
@@ -74,8 +72,7 @@ import android.os.StrictMode
 import android.os.StrictMode.ThreadPolicy
 import androidx.core.app.NotificationManagerCompat.IMPORTANCE_LOW
 import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.async
+import kotlinx.coroutines.*
 
 /**
  * Created by Nikhil Paranjape on 11/3/2015.
@@ -205,87 +202,76 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
         fab.setImageDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.ic_network_check_white_48dp))
         fab.setOnClickListener {
             dialog.visibility = View.VISIBLE
-            lifecycleScope.async {
+            lifecycleScope.launch {
                 pingCheck()
-
             }
         }
 
-        //Pref values
+        //  Pref values
         //  Initialize SharedPreferences
         val getPrefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(applicationContext)
         val sharedPref = getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE)
         val editor = sharedPref.edit()
 
-        //TextViews
+        //  TextViews
         val statusText = findViewById<TextView>(R.id.statusText)
         val linkText = findViewById<TextView>(R.id.linkSpeed)
         val connectionStatusText = findViewById<TextView>(R.id.pingStatus)
 
-        //Switches and Buttons
+        //  UI Switches and Buttons
         val linkSpeedButton = findViewById<Button>(R.id.linkSpeedButton)
         val toggle = findViewById<SwitchMaterial>(R.id.enableSwitch)
+        //UI Switches and Buttons
 
-        //Dev buttons
+        //  Dev buttons
         val conn = findViewById<Button>(R.id.pingTestButton)
         val serviceTest = findViewById<Button>(R.id.airplane_service_test)
         val nightCancel = findViewById<Button>(R.id.night_mode_cancel)
         val radioOffButton = findViewById<Button>(R.id.cellRadioOff)
         val forceCrashButton = findViewById<Button>(R.id.forceCrashButton)
+        /*  END buttons */
 
-        //Other info related values
+        /*Other info setters*/
         //  Create a new boolean and preference and set it to true if it's not already there
         val isFirstStart = getPrefs.getBoolean(getString(R.string.preference_first_start), true)
         //Gets the current android build version on device
         val currentapiVersion = Build.VERSION.SDK_INT
+        /*END info setters*/
 
-        init()//initializes the whats new dialog
-        var carrierName = "Not Rooted" //For drawer's root status
+        /** First start init **/
 
+        programVersionUpdateInit(isFirstStart)//initializes the whats new dialog
+        //  If this is the first time the user has opened the app...
+        var carrierName = "Not Rooted" //For drawer's root status and assume not rooted
+        editor.putInt(getString(R.string.preference_app_active), 0)
         //Checks for root, if none, disabled toggle switch
         if (!Shell.rootAccess()) {
-            //Preference handling
-            editor.putInt(getString(R.string.preference_app_active), 0)                 //Halt RadioControl services
-            toggle.isEnabled = false                    //Disables the main app toggle
             statusText.setText(R.string.noRoot)    //Text formatters
-            statusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_deactivated))
+
+            statusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_deactivated)) //Sets text to deactivated (RED) color
             editor.apply() //Commit new values to sharedprefs
 
             //Drawer icon
             carrierIcon = IconicsDrawable(this, GoogleMaterial.Icon.gmd_error_outline).apply {
-                colorInt = Color.RED
+                colorInt = Color.RED /**    Useful now as the toggle is no longer disabled here**/
             }
-        } else { //We have root, do stuff accordingly
+            // TODO Show snackbar asking to request root (Maybe only do this when flipping switch?)
+        } else { //We have root, do root related initializations
             carrierIcon = IconicsDrawable(this, GoogleMaterial.Icon.gmd_check_circle).apply {
                 colorInt = Color.GREEN
             }
             carrierName = "Rooted"
         }
-        //  If this is the first time the user has opened the app...
-        if (isFirstStart) {
-            //  Make a new preferences editor
-            val e = getPrefs.edit()
-            //Work mode enabler for Nougat+
-            if (currentapiVersion >= 24) {
-                e.putBoolean(getString(R.string.preference_work_mode), true)
-            }
-            // Edit preference to make it false because we don't want this to run again
-            e.putBoolean(getString(R.string.preference_first_start), false)
-            e.apply() //  Apply changes in sharedprefs
 
-            //  Launch app intro
-            val i = Intent(applicationContext, TutorialActivity::class.java)
-            startActivity(i)
-        }
-        //Checks if workmode is enabled and starts the Persistence Service, otherwise it registers the broadcast receivers
-        if (getPrefs.getBoolean(getString(R.string.preference_work_mode), true)) {
+        //Checks if workmode(Intelligent Mode) is enabled and starts the Persistence Service, otherwise it registers the legacy broadcast receivers
+        if (getPrefs.getBoolean(getString(R.string.preference_work_mode), false)) {
             val i = Intent(applicationContext, PersistenceService::class.java)
-            if (Build.VERSION.SDK_INT >= 26) {
+            if (Build.VERSION.SDK_INT >= 26) { //   Check that we are running on Android Nougat+
                 applicationContext.startForegroundService(i)
             } else {
-                applicationContext.startService(i)
+                applicationContext.startService(i) //Start legacy service mode
             }
-            Log.d("RadioControl-Main", "persist Service launched")
+            Log.d("RadioControl-Main", "persistence service launched")
         } else {
             registerForBroadcasts(applicationContext)
         }
@@ -489,6 +475,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
             startService(cellIntent)
             alarmUtil.scheduleRootAlarm(applicationContext)
         }
+        /** Main Radiocontrol toggle switch  **/
         toggle.setOnCheckedChangeListener { _, isChecked ->
             val bgj = Intent(applicationContext, BackgroundJobService::class.java)
 
@@ -497,38 +484,54 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
                 editor.putInt(getString(R.string.preference_app_active), 0)
 
                 //UI Handling
-                statusText.setText(R.string.showDisabled)
+                statusText.setText(R.string.showDisabled) //Sets status text to disabled
                 statusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_deactivated))
-                if (!Shell.rootAccess()) {
-                    toggle.isEnabled = false
-                    statusText.setText(R.string.noRoot)
-                }
+
+                // TODO Don't check for this here, change to checking when enabling
+                /*if (!Shell.rootAccess()) {
+                    //toggle.isEnabled = false
+                    //statusText.setText(R.string.noRoot)
+                }*/
 
             } else {
                 //Preference handling
                 editor.putInt(getString(R.string.preference_app_active), 1)
-                //UI Handling
-                statusText.setText(R.string.showEnabled)
-                statusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_activated))
-                applicationContext.startService(bgj)
-                alarmUtil.scheduleAlarm(applicationContext)
 
-                //Checks if workmode is enabled and starts the Persistence Service, otherwise it registers the broadcast receivers
-                if (getPrefs.getBoolean(getString(R.string.preference_work_mode), true)) {
-                    val i = Intent(applicationContext, PersistenceService::class.java)
-                    if (Build.VERSION.SDK_INT >= 26) {
-                        applicationContext.startForegroundService(i)
+                //Check for root first
+                if (!Shell.rootAccess()) {
+                    //toggle.isEnabled = false
+                    toggle.isChecked = false //Uncheck toggle
+                    statusText.setText(R.string.noRoot) //Sets the status text to no root
+                }
+                else{
+                    //UI Handling
+                    statusText.setText(R.string.showEnabled) //Sets the status text to enabled
+                    statusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_activated))
+
+                    //Service initialization
+                    applicationContext.startService(bgj)
+                    //Alarm scheduling
+                    alarmUtil.scheduleAlarm(applicationContext)
+
+                    //Checks if workmode is enabled and starts the Persistence Service, otherwise it registers the broadcast receivers
+                    if (getPrefs.getBoolean(getString(R.string.preference_work_mode), true)) {
+                        val i = Intent(applicationContext, PersistenceService::class.java)
+                        if (Build.VERSION.SDK_INT >= 26) {
+                            applicationContext.startForegroundService(i)
+                        } else {
+                            applicationContext.startService(i)
+                        }
+                        Log.d("RadioControl-Main", "persist Service launched")
                     } else {
-                        applicationContext.startService(i)
+                        registerForBroadcasts(applicationContext)
                     }
-                    Log.d("RadioControl-Main", "persist Service launched")
-                } else {
-                    registerForBroadcasts(applicationContext)
+                    //Checks if background optimization is enabled and schedules a job
+                    if (getPrefs.getBoolean(getString(R.string.key_preference_settings_battery_opimization), false)) {
+                        scheduleJob()
+                    }
                 }
-                //Checks if background optimization is enabled and schedules a job
-                if (getPrefs.getBoolean(getString(R.string.key_preference_settings_battery_opimization), false)) {
-                    scheduleJob()
-                }
+
+
 
             }
             editor.apply()
@@ -553,31 +556,48 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
     }
 
     //Initialize method for the Whats new dialog
-    private fun init() {
-        val sharedPref = getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE)
-        val editor = sharedPref.edit()
-        var currentVersionNumber = 0
+    private fun programVersionUpdateInit(isFirstStart: Boolean) {
+        Log.d("RadioControl-Main","CHECKING FOR NEW VERSION")
+        lifecycleScope.launch {
+            val sharedPref = getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE)
+            val editor = sharedPref.edit()
+            var currentVersionNumber = 0
+            editor.putInt(getString(R.string.preference_app_active), 0) //Sets app to "off" for default
 
-        val savedVersionNumber = sharedPref.getInt(VERSION_KEY, 0)
-        //Sets app version number
-        try {
-            val pi = packageManager.getPackageInfo(packageName, 0)
-            val longVersionCode = getLongVersionCode(pi)
-            currentVersionNumber = longVersionCode.toInt()
-        } catch (e: Exception) {
-            Log.e("RadioControl-Main", "Unable to get version number")
-        }
-        //Checks if app version has changed since last opening
-        if (currentVersionNumber > savedVersionNumber) {
-            showUpdated(this@MainActivity)
-            editor.putInt(VERSION_KEY, currentVersionNumber)
+            val savedVersionNumber = sharedPref.getInt(VERSION_KEY, 0)
+            //Sets app version number
+            try {
+                val pi = packageManager.getPackageInfo(packageName, 0)
+                val longVersionCode = getLongVersionCode(pi)
+                currentVersionNumber = longVersionCode.toInt()
+            } catch (e: Exception) {
+                Log.e("RadioControl-Main", "Unable to get version number")
+            }
+
+            //Checks if app version has changed since last opening
+            if (currentVersionNumber > savedVersionNumber) {
+                showUpdated(this@MainActivity)
+                editor.putInt(VERSION_KEY, currentVersionNumber)
+            }
+            editor.apply()
+            if (isFirstStart){
+                Log.d("RadioControl-Main","IT'S YOUR FIRST TIME HERE")
+                // Edit preference to make it false because we don't want this to run again
+                editor.putBoolean(getString(R.string.preference_first_start), false)
+
+                //Enables Intelligent Mode if Nougat+
+                if (Build.VERSION.SDK_INT >= 24) { // && !sharedPref.getBoolean(getString(R.string.preference_work_mode), false)
+                    editor.putBoolean(getString(R.string.preference_work_mode), true)
+                }
+
+                //  Launch app intro
+                editor.apply()
+                val i = Intent(applicationContext, TutorialActivity::class.java)
+                startActivity(i)
+            }
 
         }
-        //Enables work mode if Nougat+
-        if (Build.VERSION.SDK_INT >= 24 && !sharedPref.getBoolean(getString(R.string.preference_work_mode), false)) {
-            editor.putBoolean(getString(R.string.preference_work_mode), true)
-        }
-        editor.apply()
+
 
     }
 
@@ -834,6 +854,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
 
     override fun onResume() {
         super.onResume()
+        //  TODO Figure out how to take init code and run without duplication
         val sharedPref = getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE)
         val pref = androidx.preference.PreferenceManager.getDefaultSharedPreferences(applicationContext)
         //If workmode is false
@@ -877,7 +898,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
         }
 
         if (!Shell.rootAccess()) {
-            toggle.isEnabled = false
+            //toggle.isEnabled = false
             statusText.setText(R.string.noRoot)
             statusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_deactivated))
         }
@@ -895,7 +916,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
 
         } else if (sharedPref.getInt(getString(R.string.preference_app_active), 0) == 0) {
             if (!Shell.rootAccess()) {
-                toggle.isEnabled = false
+                //toggle.isEnabled = false
                 statusText.setText(R.string.noRoot)
                 statusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_deactivated))
             } else {
@@ -928,7 +949,6 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
         }
     }
 
-
     private suspend fun pingCheck() {
         val preferences = androidx.preference.PreferenceManager.getDefaultSharedPreferences(applicationContext)
         val ip = preferences.getString("prefPingIp", "1.0.0.1")
@@ -960,12 +980,14 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
             pStatus.contains("75% packet loss") -> Snackbar.make(clayout, "75% packet loss detected", Snackbar.LENGTH_LONG).show()
             pStatus.contains("unknown host") -> Snackbar.make(clayout, "Unknown host", Snackbar.LENGTH_LONG).show()
         }*/
-
+        //  TODO:Move to NetworkUtilities class
         if (reachable) {
             if (Utilities.isConnectedWifi(applicationContext)) {
+                // TODO Return info back to main activity
                 connectionStatusText.setText(R.string.connectedWifi)
                 connectionStatusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_activated))
                 writeLog(getString(R.string.connectedWifi), applicationContext)
+                // TODO move UI elements to react to return statements
             } else if (Utilities.isConnectedMobile(applicationContext)) {
                 if (Utilities.isConnectedFast(applicationContext)) {
                     connectionStatusText.setText(R.string.connectedFCell)
@@ -988,7 +1010,65 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
                 writeLog(getString(R.string.connectionUnable), applicationContext)
             }
         }
+        // END TODO: Move to NetworkUtilities class
     }
+    /*
+    private suspend fun pingCheckUI() {
+        val dialog: ProgressBar = findViewById(R.id.pingProgressBar)
+        dialog.visibility = View.GONE
+        val connectionStatusText = findViewById<TextView>(R.id.pingStatus)
+
+        when {
+            NetworkUtility.reachable(applicationContext) -> {
+                when {
+                    timeDifference <= 50 -> Snackbar.make(clayout, "Excellent Latency: $timeDifference ms", Snackbar.LENGTH_LONG).show()
+                    51.0 <= timeDifference && timeDifference <= 100.0 -> Snackbar.make(clayout, "Average Latency: $timeDifference ms", Snackbar.LENGTH_LONG).show()
+                    101.0 <= timeDifference && timeDifference <= 200.0 -> Snackbar.make(clayout, "Poor Latency: $timeDifference ms", Snackbar.LENGTH_LONG).show()
+                    timeDifference >= 201 -> Snackbar.make(clayout, "Very Poor Latency. VOIP and online gaming may suffer: $timeDifference ms", Snackbar.LENGTH_LONG).show()
+                }
+            }
+        }
+        //Sadly packet loss testing is gone :(
+        /*//Check for packet loss stuff
+        when {
+            pStatus!!.contains("100% packet loss") -> Snackbar.make(clayout, "100% packet loss detected", Snackbar.LENGTH_LONG).show()
+            pStatus.contains("25% packet loss") -> Snackbar.make(clayout, "25% packet loss detected", Snackbar.LENGTH_LONG).show()
+            pStatus.contains("50% packet loss") -> Snackbar.make(clayout, "50% packet loss detected", Snackbar.LENGTH_LONG).show()
+            pStatus.contains("75% packet loss") -> Snackbar.make(clayout, "75% packet loss detected", Snackbar.LENGTH_LONG).show()
+            pStatus.contains("unknown host") -> Snackbar.make(clayout, "Unknown host", Snackbar.LENGTH_LONG).show()
+        }*/
+        //  TODO:Move to NetworkUtilities class
+        if (reachable) {
+            if (Utilities.isConnectedWifi(applicationContext)) {
+                // TODO Return info back to main activity
+                connectionStatusText.setText(R.string.connectedWifi)
+                connectionStatusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_activated))
+                writeLog(getString(R.string.connectedWifi), applicationContext)
+                // TODO move UI elements to react to return statements
+            } else if (Utilities.isConnectedMobile(applicationContext)) {
+                if (Utilities.isConnectedFast(applicationContext)) {
+                    connectionStatusText.setText(R.string.connectedFCell)
+                    connectionStatusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_activated))
+                    writeLog(getString(R.string.connectedFCell), applicationContext)
+                } else if (!Utilities.isConnectedFast(applicationContext)) {
+                    connectionStatusText.setText(R.string.connectedSCell)
+                    connectionStatusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_activated))
+                    writeLog(getString(R.string.connectedSCell), applicationContext)
+                }
+            }
+
+        } else {
+            if (Utilities.isAirplaneMode(applicationContext) && !Utilities.isConnected(applicationContext)) {
+                connectionStatusText.setText(R.string.airplaneOn)
+                connectionStatusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_deactivated))
+            } else {
+                connectionStatusText.setText(R.string.connectionUnable)
+                connectionStatusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_deactivated))
+                writeLog(getString(R.string.connectionUnable), applicationContext)
+            }
+        }
+        // END TODO: Move to NetworkUtilities class
+    }*/
 
     override fun onStart() {
         super.onStart()
@@ -1007,7 +1087,9 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
         super.onDestroy()
         billingManager.unbind()
     }
+}
 
+    /** Archived code **/
     /*fun onStop() {
         // A service can be "started" and/or "bound". In this case, it's "started" by this Activity
         // and "bound" to the JobScheduler (also called "Scheduled" by the JobScheduler). This call
@@ -1019,4 +1101,4 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
 
 
 
-}
+

@@ -47,20 +47,18 @@ class TutorialActivity : AppIntro() {
     }*/
     @Override
     override fun onSkipPressed() {
-        loadMainActivity()
+        finish()
+        // loadMainActivity()
     }
     override fun onDonePressed() {
-        loadMainActivity()
+        //loadMainActivity()
+        finish()
     }
     override fun onSlideChanged() {
         // Do something when the slide changes.
     }
     override fun onNextPressed() {
         // Do something when users tap on Next button.
-    }
-    private fun loadMainActivity() {
-        val intent = Intent(this, MainActivity::class.java)
-        startActivity(intent)
     }
 
 }
