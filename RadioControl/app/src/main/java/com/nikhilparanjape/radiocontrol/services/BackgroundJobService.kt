@@ -280,7 +280,7 @@ class BackgroundJobService : JobService(), ConnectivityReceiver.ConnectivityRece
 
     companion object {
         private const val TAG = "RadioControl-JobSrv"
-        private const val PRIVATE_PREF = "prefs"
+        /*private const val PRIVATE_PREF = "prefs"*/
     }
 
 }

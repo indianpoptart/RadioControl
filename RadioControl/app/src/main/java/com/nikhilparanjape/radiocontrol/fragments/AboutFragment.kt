@@ -212,8 +212,8 @@ class AboutFragment : PreferenceFragmentCompat() {
         }
     }
 
-    companion object {
+    /*companion object {
         private const val PRIVATE_PREF = "prefs"
-    }
+    }*/
 
 }

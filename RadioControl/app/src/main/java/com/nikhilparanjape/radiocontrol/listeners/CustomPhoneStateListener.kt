@@ -196,8 +196,8 @@ class CustomPhoneStateListener(//private static final String TAG = "PhoneStateCh
         }
     }
 
-    companion object {
+    /*companion object {
         private const val PRIVATE_PREF = "prefs"
-    }
+    }*/
 
 }

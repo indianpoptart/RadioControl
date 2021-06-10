@@ -97,7 +97,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
 
     //All the constant values and contexts required
     companion object {
-        private const val PRIVATE_PREF = "prefs" //Used for shared prefs
+        /*private const val PRIVATE_PREF = "prefs"*/ //Used for shared prefs
         private const val VERSION_KEY = "version_number"
         //Donation related keys
         internal const val ITEM_ONE_DOLLAR = "com.nikihlparanjape.radiocontrol.donate.one"
@@ -169,7 +169,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
         //  Pref values
         //  Initialize SharedPreferences
         val getPrefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(applicationContext)
-        val sharedPref = getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE) /** Migrated away from custom prefs.xml file **/
+        /*val sharedPref = getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE)*/ /** Migrated away from custom prefs.xml file **/
         val editor = getPrefs.edit()
 
         setContentView(view)
@@ -530,9 +530,6 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
                         scheduleJob()
                     }
                 }
-
-
-
             }
             editor.apply()
         }
@@ -551,8 +548,6 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
             editor.apply()
             false
         }
-
-
     }
 
     //Initialize method for the Whats new dialog
@@ -776,9 +771,6 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
             }
         }
     }
-
-
-
 
     private fun showUpdated(c: Context) = MaterialDialog(c)
             .title(R.string.title_whats_new)

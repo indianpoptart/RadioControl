@@ -143,7 +143,7 @@ class DoNotDisturbActivity : AppCompatActivity() {
         notificationManager.notify(10110, note.build())
     }
 
-    companion object {
+    /*companion object {
         private const val PRIVATE_PREF = "prefs"
-    }
+    }*/
 }

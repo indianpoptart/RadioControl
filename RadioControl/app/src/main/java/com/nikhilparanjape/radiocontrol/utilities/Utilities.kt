@@ -228,7 +228,7 @@ class Utilities {
             (intervalTime?.times(1000))?.toLong()?.let { builder.setMinimumLatency(it) } // wait at least
             (intervalTime?.times(1000))?.toLong()?.let { builder.setOverrideDeadline(it) } // maximum delay
             builder.setPersisted(true) // Persist at boot
-            builder.setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY) // require any network
+            builder.setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY) // set required to any network
 
             builder.build()
             //mJobScheduler.schedule(builder.build())

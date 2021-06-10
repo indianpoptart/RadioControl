@@ -111,7 +111,7 @@ class PersistenceService : Service() {
     companion object {
 
         private const val TAG = "RadioControl-Persist"
-        private const val PRIVATE_PREF = "prefs"
+        /*private const val PRIVATE_PREF = "prefs"*/
 
     }
 
