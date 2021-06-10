@@ -20,9 +20,8 @@ cache:
     - $HOME/.gradle/wrapper/
     - $HOME/.android/build-cache
     
-before_install: cd RadioControl
+#before_install: cd RadioControl
 
 # Run assemble and unit tests
 script:
-  - ls
   - ./RadioControl/gradlew build
