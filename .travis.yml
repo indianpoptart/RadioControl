@@ -22,5 +22,5 @@ before_install: cd RadioControl
 
 # Run assemble and unit tests
 script:
-  - cd RadioControl
-  - ./gradlew build
+  - ls
+  - ./RadioControl/gradlew build
