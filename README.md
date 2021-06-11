@@ -29,7 +29,9 @@ I will continue testing and possibly have an average battery usage(on my phone) 
 
 Latest **Stable**: [![Latest Stable Badge](https://img.shields.io/github/v/release/indianpoptart/radiocontrol)](https://github.com/indianpoptart/RadioControl/releases/latest) - (2/1/2018)
 
-Latest **Beta** Release: [v5.0.3-beta8](https://github.com/indianpoptart/RadioControl/releases/tag/v5.0.3-beta8) (11/13/2018)
+Latest **Beta** Release: [![Latest Pre-release Badge](https://img.shields.io/badge/release-v5.0.3--beta8-yellow)](https://github.com/indianpoptart/RadioControl/releases/tag/v5.0.3-beta8) (11/13/2018)
+
+
 
 Current **Alpha:** [![Latest Pre-release Badge](https://img.shields.io/github/v/release/indianpoptart/radiocontrol?include_prereleases)](https://github.com/indianpoptart/RadioControl/releases) - (06/10/2021)
 
