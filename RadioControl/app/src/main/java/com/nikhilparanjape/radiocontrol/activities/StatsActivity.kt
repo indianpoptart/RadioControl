@@ -559,7 +559,7 @@ class StatsActivity : AppCompatActivity() {
         dataset.addPoint("Dec", decRootOn)
 
 
-        //Checker of
+        //Checker of TODO Change complexity to if is default
         if (janRootOn == 0f && febRootOn == 0f && marRootOn == 0f && aprRootOn == 0f && mayRootOn == 0f && junRootOn == 0f && julRootOn == 0f && augRootOn == 0f &&
             sepRootOn == 0f && octRootOn == 0f && novRootOn == 0f && decRootOn == 0f) {
             Log.d("RadioControl", "No log data")

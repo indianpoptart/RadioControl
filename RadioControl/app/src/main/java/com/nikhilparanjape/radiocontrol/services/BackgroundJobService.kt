@@ -262,7 +262,6 @@ class BackgroundJobService : JobService(), ConnectivityReceiver.ConnectivityRece
         } catch (e: InterruptedException) {
             e.printStackTrace()
         }
-
     }
 
     private fun waitFor(timer: Long) {
@@ -271,7 +270,6 @@ class BackgroundJobService : JobService(), ConnectivityReceiver.ConnectivityRece
         } catch (e: InterruptedException) {
             e.printStackTrace()
         }
-
     }
 
     override fun onStopJob(params: JobParameters): Boolean {

@@ -1,5 +1,6 @@
 package com.nikhilparanjape.radiocontrol.activities
 
+import android.annotation.SuppressLint
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.job.JobInfo
@@ -70,8 +71,10 @@ import kotlin.coroutines.CoroutineContext
 import kotlin.system.measureTimeMillis
 import android.os.StrictMode
 import android.os.StrictMode.ThreadPolicy
+import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationManagerCompat.IMPORTANCE_LOW
 import androidx.lifecycle.lifecycleScope
+import com.mikepenz.materialdrawer.widget.MaterialDrawerSliderView
 import kotlinx.coroutines.*
 
 /**
@@ -109,19 +112,23 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
         //private var gUtility = GraphicsUtility() //Implements all graphics and the like
         private lateinit var deviceIcon: Drawable
         private lateinit var carrierIcon: Drawable
+        private lateinit var carrierName: String
         //private lateinit var headerView: AccountHeaderView //Needed for an older version of MaterialDrawer
         private var versionName = BuildConfig.VERSION_NAME //Takes the apps current version name and makes it a variable
         //private var util = Utilities() //Allows methods to extend any general utilities
         private lateinit var clayout: CoordinatorLayout
         private lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
+        private lateinit var slider: MaterialDrawerSliderView
         private var mServiceComponent: ComponentName? = null
         private lateinit var binding: ActivityMainBinding
         private var isBillingReady = false
+        private var isFirstStart = true
 
         //JobID for jobscheduler(BackgroundJobService)
         private const val jobID = 0x01
         // Job variable that is tied to the Activity lifecycle Coroutines
         lateinit var job: Job
+        var isRooted: Boolean = false
 
         //Grab device make and model for drawer
         val deviceName: String
@@ -207,9 +214,16 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
         fab.setImageDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.ic_network_check_white_48dp))
         fab.setOnClickListener {
             dialog.visibility = View.VISIBLE
-            lifecycleScope.launch {
-                pingCheck()
+            if (Build.VERSION.SDK_INT >= 30){
+                Snackbar.make(clayout, "Android 12 support is still in progress", Snackbar.LENGTH_LONG)
+                    .show()
+                dialog.visibility = View.GONE
+            } else{
+                lifecycleScope.launch {
+                    pingCheck()
+                }
             }
+
         }
 
         //  TextViews
@@ -232,31 +246,41 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
         /**  END buttons **/
 
         /*Other info setters*/
+        editor.putInt(getString(R.string.preference_app_active), 0)
         //  Create a new boolean and preference and set it to true if it's not already there
         val isFirstStart = getPrefs.getBoolean(getString(R.string.preference_first_start), true) //TODO Check why it does this every launch
-        //Gets the current android build version on device
-        val currentapiVersion = Build.VERSION.SDK_INT
         /*END info setters*/
 
         /** First start init **/
         programVersionUpdateInit(isFirstStart)//initializes the whats new dialog
 
         //  If this is the first time the user has opened the app...
-        var carrierName = "Not Rooted" //For drawer's root status and assume not rooted
-        editor.putInt(getString(R.string.preference_app_active), 0)
+        var carrierName = "Root Pending" //For drawer's root status and assume not rooted
+
+        //Drawer icon
+        carrierIcon = IconicsDrawable(this, GoogleMaterial.Icon.gmd_help).apply {
+            colorInt = Color.YELLOW
+        }
+
         //Checks for root, if none, disabled toggle switch
-        if (!Shell.rootAccess()) {
+        /*if (!isRooted) {
             statusText.setText(R.string.noRoot)    //Text formatters
 
-            statusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_deactivated)) //Sets text to deactivated (RED) color
+            statusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_no_root)) //Sets text to deactivated (RED) color
             editor.apply() //Commit new values to sharedprefs
 
             //Drawer icon
-            carrierIcon = IconicsDrawable(this, GoogleMaterial.Icon.gmd_error_outline).apply {
+            /*carrierIcon = IconicsDrawable(this, GoogleMaterial.Icon.gmd_error_outline).apply {
                 colorInt = Color.RED /**    Useful now as the toggle is no longer disabled here**/
-            }
+            }*/
             // TODO Show snackbar asking to request root (Maybe only do this when flipping switch?)
         } else { //We have root, do root related initializations
+            carrierIcon = IconicsDrawable(this, GoogleMaterial.Icon.gmd_check_circle).apply {
+                colorInt = Color.GREEN
+            }
+            carrierName = "Rooted"
+        }*/
+        if (isRooted){
             carrierIcon = IconicsDrawable(this, GoogleMaterial.Icon.gmd_check_circle).apply {
                 colorInt = Color.GREEN
             }
@@ -266,6 +290,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
         //Checks if workmode(Intelligent Mode) is enabled and starts the Persistence Service, otherwise it registers the legacy broadcast receivers
         if (getPrefs.getBoolean(getString(R.string.preference_work_mode), false)) {
             val i = Intent(applicationContext, PersistenceService::class.java)
+
             if (Build.VERSION.SDK_INT >= 26) { //   Check that we are running on Android Nougat+
                 applicationContext.startForegroundService(i)
             } else {
@@ -281,6 +306,77 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
         }
         //Hides the progress dialog
         dialog.visibility = View.GONE
+
+        /** Main Radiocontrol toggle switch  **/
+        toggle.setOnCheckedChangeListener { _, isChecked ->
+            val bgj = Intent(applicationContext, BackgroundJobService::class.java)
+
+            Log.d("RadioControl-Main","Clickety Clockety")
+
+            if (!isChecked) {
+                Log.d("RadioControl-Main", "Not CHedked")
+                //Preference handling
+                editor.putInt(getString(R.string.preference_app_active), 0)
+
+                //UI Handling
+                statusText.setText(R.string.showDisabled) //Sets status text to disabled
+                statusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_deactivated))
+
+            } else {
+                //Check for root first
+                rootCheck()
+                if (!isRooted) {
+                    Log.d("RadioControl-Main","NotRooted")
+                    //toggle.isEnabled = false
+                    toggle.isChecked = false //Uncheck toggle
+                    statusText.setText(R.string.noRoot) //Sets the status text to no root
+
+                    statusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_no_root)) //Sets text to deactivated (RED) color
+
+                    //Drawer icon
+                    carrierIcon = IconicsDrawable(this, GoogleMaterial.Icon.gmd_error_outline).apply {
+                        colorInt = Color.RED
+                    }
+
+                }
+                else{
+                    Log.d("RadioControl-Main","RootedIGuess")
+                    //Preference handling
+                    editor.putInt(getString(R.string.preference_app_active), 1)
+                    //UI Handling
+                    statusText.setText(R.string.showEnabled) //Sets the status text to enabled
+                    statusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_activated))
+
+                    carrierIcon = IconicsDrawable(this, GoogleMaterial.Icon.gmd_check_circle).apply {
+                        colorInt = Color.GREEN
+                    }
+                    carrierName = "Rooted"
+
+                    //Service initialization
+                    applicationContext.startService(bgj)
+                    //Alarm scheduling
+                    alarmUtil.scheduleAlarm(applicationContext)
+
+                    //Checks if workmode is enabled and starts the Persistence Service, otherwise it registers the broadcast receivers
+                    if (getPrefs.getBoolean(getString(R.string.preference_work_mode), true)) {
+                        val i = Intent(applicationContext, PersistenceService::class.java)
+                        if (Build.VERSION.SDK_INT >= 26) {
+                            applicationContext.startForegroundService(i)
+                        } else {
+                            applicationContext.startService(i)
+                        }
+                        Log.d("RadioControl-Main", "persist Service launched")
+                    } else {
+                        registerForBroadcasts(applicationContext)
+                    }
+                    //Checks if background optimization is enabled and schedules a job
+                    if (getPrefs.getBoolean(getString(R.string.key_preference_settings_battery_opimization), false)) {
+                        scheduleJob()
+                    }
+                }
+            }
+            editor.apply()
+        }
 
         //Begin initializing drawer
 
@@ -298,14 +394,14 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
         }
 
 
-        val profile = ProfileDrawerItem().apply { nameText = deviceName; descriptionText = "v$versionName"; iconDrawable = deviceIcon }
+        val profile1 = ProfileDrawerItem().apply { nameText = deviceName; descriptionText = "v$versionName"; iconDrawable = deviceIcon }
         val profile2 = ProfileDrawerItem().apply { nameText = getString(R.string.profile_root_status); descriptionText = carrierName; iconDrawable = carrierIcon }
 
         //Creates navigation drawer header
         val headerView = AccountHeaderView(this).apply {
             attachToSliderView(slider)
             addProfiles(
-                    profile,
+                    profile1,
                     profile2
             )
             withSavedInstance(savedInstanceState)
@@ -338,6 +434,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
                     startSettingsActivity()
 
                     Log.d("drawer", "Started settings activity")
+
                 } else if (position == 4) {
                     val log = File(applicationContext.filesDir, "radiocontrol.log")
                     if (log.exists() && log.canRead()) {
@@ -378,7 +475,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
             slider.setSelection(21, false)
 
             //set the active profile
-            headerView.activeProfile = profile
+            headerView.activeProfile = profile1
         }
         //Create navigation drawer
         slider.setSelection(1)
@@ -447,6 +544,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
             connectionStatusText.setText(R.string.ping)
             connectionStatusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.material_grey_50))
             dialog.visibility = View.VISIBLE
+            Log.d("RadioControl-Ping","Build SDK Version: " + Build.VERSION.SDK_INT)
             lifecycleScope.async {
                 pingCheck()
             }
@@ -475,64 +573,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
             startService(cellIntent)
             alarmUtil.scheduleRootAlarm(applicationContext)
         }
-        /** Main Radiocontrol toggle switch  **/
-        toggle.setOnCheckedChangeListener { _, isChecked ->
-            val bgj = Intent(applicationContext, BackgroundJobService::class.java)
 
-            if (!isChecked) {
-                //Preference handling
-                editor.putInt(getString(R.string.preference_app_active), 0)
-
-                //UI Handling
-                statusText.setText(R.string.showDisabled) //Sets status text to disabled
-                statusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_deactivated))
-
-                // TODO Don't check for this here, change to checking when enabling
-                /*if (!Shell.rootAccess()) {
-                    //toggle.isEnabled = false
-                    //statusText.setText(R.string.noRoot)
-                }*/
-
-            } else {
-                //Preference handling
-                editor.putInt(getString(R.string.preference_app_active), 1)
-
-                //Check for root first
-                if (!Shell.rootAccess()) {
-                    //toggle.isEnabled = false
-                    toggle.isChecked = false //Uncheck toggle
-                    statusText.setText(R.string.noRoot) //Sets the status text to no root
-                }
-                else{
-                    //UI Handling
-                    statusText.setText(R.string.showEnabled) //Sets the status text to enabled
-                    statusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_activated))
-
-                    //Service initialization
-                    applicationContext.startService(bgj)
-                    //Alarm scheduling
-                    alarmUtil.scheduleAlarm(applicationContext)
-
-                    //Checks if workmode is enabled and starts the Persistence Service, otherwise it registers the broadcast receivers
-                    if (getPrefs.getBoolean(getString(R.string.preference_work_mode), true)) {
-                        val i = Intent(applicationContext, PersistenceService::class.java)
-                        if (Build.VERSION.SDK_INT >= 26) {
-                            applicationContext.startForegroundService(i)
-                        } else {
-                            applicationContext.startService(i)
-                        }
-                        Log.d("RadioControl-Main", "persist Service launched")
-                    } else {
-                        registerForBroadcasts(applicationContext)
-                    }
-                    //Checks if background optimization is enabled and schedules a job
-                    if (getPrefs.getBoolean(getString(R.string.key_preference_settings_battery_opimization), false)) {
-                        scheduleJob()
-                    }
-                }
-            }
-            editor.apply()
-        }
         toggle.setOnLongClickListener {
             val bgj = Intent(applicationContext, BackgroundJobService::class.java)
 
@@ -562,13 +603,13 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
                 val pi = packageManager.getPackageInfo(packageName, 0)
                 val longVersionCode = getLongVersionCode(pi)
                 currentVersionNumber = longVersionCode.toInt()
-            } catch (e: Exception) {
+            } catch (e: PackageManager.NameNotFoundException) {
                 currentVersionNumber = -1
                 Log.e("RadioControl-Main", "Unable to get version number")
             }
             if (isFirstStart){
                 Log.d("RadioControl-Main","IT'S YOUR FIRST TIME HERE")
-                currentVersionNumber = 0
+                editor.putInt(VERSION_KEY, currentVersionNumber)
                 editor.putInt(getString(R.string.preference_app_active), 0) //Sets app to "off" for default
 
                 // Edit preference to make it false because we don't want this to run again
@@ -589,10 +630,9 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
 
             //Checks if app version has changed since last opening
             if (currentVersionNumber > savedVersionNumber) {
-                editor.putInt(VERSION_KEY, currentVersionNumber)
-                editor.apply()
                 showUpdated(this@MainActivity)
             }
+            editor.putInt(VERSION_KEY, currentVersionNumber)
             editor.apply() //Finalize shared pref changes
         }
     }
@@ -894,20 +934,31 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
             statusText.setText(R.string.noRoot)
             statusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_deactivated))
         }*/
-
+        if (!isFirstStart){
+            if (rootCheck()){
+                isRooted = true
+            }
+        }
+        if (isRooted){
+            carrierIcon = IconicsDrawable(this, GoogleMaterial.Icon.gmd_check_circle).apply {
+                colorInt = Color.GREEN
+            }
+            carrierName = "Rooted"
+        }
         if (getPrefs.getInt(getString(R.string.preference_app_active), 0) == 1) {
-            if (!Shell.rootAccess()) {
+            if (!isRooted) {
                 toggle.isEnabled = false
                 statusText.setText(R.string.noRoot)
                 statusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_no_root))
             } else {
+                isRooted = true
                 statusText.setText(R.string.rEnabled)
                 statusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_activated))
                 toggle.isChecked = true
             }
 
         } else if (getPrefs.getInt(getString(R.string.preference_app_active), 0) == 0) {
-            if (!Shell.rootAccess()) {
+            if (!isRooted) {
                 //toggle.isEnabled = false
                 statusText.setText(R.string.noRoot)
                 statusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_no_root))
@@ -918,6 +969,20 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
             }
 
         }
+    }
+
+    private fun rootCheck(): Boolean {
+        lifecycleScope.async {
+            Log.d("RadioControl-Main","Lifecycled")
+            if(Shell.rootAccess()){
+                isRooted = true
+                writeLog("root accessed: ", applicationContext)
+                return@async true
+            } else{
+                return@async false
+            }
+        }
+        return false
     }
 
     private fun writeLog(data: String, c: Context) {
