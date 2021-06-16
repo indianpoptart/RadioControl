@@ -1,6 +1,5 @@
 package com.nikhilparanjape.radiocontrol.activities
 
-import android.annotation.SuppressLint
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.job.JobInfo
@@ -223,7 +222,6 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
                     pingCheck()
                 }
             }
-
         }
 
         //  TextViews

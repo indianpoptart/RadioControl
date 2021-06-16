@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Users/admin/Documents/GitHub/RadioControl/RadioControl/app/src/main/res/layout/activity_main.xml" value="0.2015625" />
+        <entry key="..\:/Users/admin/Documents/GitHub/RadioControl/RadioControl/app/src/main/res/layout/activity_stats.xml" value="0.24166666666666667" />
+        <entry key="..\:/Users/admin/Documents/GitHub/RadioControl/RadioControl/app/src/main/res/xml/settings.xml" value="0.2015625" />
+      </map>
+    </option>
+  </component>
   <component name="ExternalStorageConfigurationManager" enabled="true" />
   <component name="NullableNotNullManager">
     <option name="myDefaultNullable" value="android.support.annotation.Nullable" />
@@ -46,9 +55,7 @@
       </value>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_X" default="false" project-jdk-name="Android API 30 Platform" project-jdk-type="Android SDK"/>
-
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_15_PREVIEW" project-jdk-name="Android API 30 Platform" project-jdk-type="Android SDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_16_PREVIEW" project-jdk-name="Android API 30 Platform" project-jdk-type="Android SDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">
