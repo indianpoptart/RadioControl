@@ -256,7 +256,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
         /** First start init **/
         programVersionUpdateInit(isFirstStart)//initializes the whats new dialog
 
-        //Drawer icon
+        //Sets a default Profile2 Drawer icon
         carrierIcon = IconicsDrawable(this, GoogleMaterial.Icon.gmd_help).apply {
             colorInt = Color.YELLOW
         }
@@ -315,6 +315,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
             val bgj = Intent(applicationContext, BackgroundJobService::class.java)
 
             Log.d("RadioControl-Main","Clickety Clockety")
+            dialog.visibility = View.VISIBLE
 
             if (!isChecked) {
                 Log.d("RadioControl-Main", "Not Checked")
@@ -324,6 +325,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
                 //UI Handling
                 statusText.setText(R.string.showDisabled) //Sets status text to disabled
                 statusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_deactivated))
+                dialog.visibility = View.GONE
 
             } else {
                 // Starts a deferred task to check for root and then returns true or false
@@ -342,7 +344,6 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
                     delay(100)
                     if (deferred.isActive) {
                         try{
-                            dialog.visibility = View.VISIBLE
                             val result = deferred.await()
                             Log.d("RadioControl-TryCycle","Result is: $result")
 
@@ -357,9 +358,11 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
                         val result = deferred.await()
                         Log.d("RadioControl-LifeCycle","Result is: $result")
                         uiSetToggle(result,editor,getPrefs)
+                        dialog.visibility = View.GONE
                     }
                 }
             }
+            //dialog.visibility = View.GONE //Make sure the dialog is gone
             editor.apply()
         }
 
@@ -432,9 +435,9 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
                     startAboutActivity()
                     Log.d("drawer", "Started about activity")
                 } else if (position == 7) {
-                    Snackbar.make(clayout, "Coming in v5.1!", Snackbar.LENGTH_LONG)
+                    Snackbar.make(clayout, "Coming in v6.1!", Snackbar.LENGTH_LONG)
                             .show()
-                    startTroubleActivity()
+                    //startTroubleActivity()
                 } else if (position == 8) {
                     //Donation
                     Log.d("RadioControl-Main", "Donation button pressed")

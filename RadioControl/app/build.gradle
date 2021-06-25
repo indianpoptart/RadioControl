@@ -16,8 +16,8 @@ android {
         applicationId "com.nikhilparanjape.radiocontrol"
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 80
-        versionName '6.0-Alpha5'
+        versionCode 81
+        versionName '6.0-Alpha6'
         // Enabling multidex support.
         multiDexEnabled true
     }
@@ -72,7 +72,7 @@ dependencies {
     implementation 'androidx.cardview:cardview:1.0.0'
     //noinspection GradleDependency
     implementation 'androidx.constraintlayout:constraintlayout:2.1.0-beta02'
-    implementation group: 'androidx.core', name: 'core-ktx', version: '1.6.0-beta02'
+    implementation group: 'androidx.core', name: 'core-ktx', version: '1.6.0-rc01'
 
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.preference:preference-ktx:1.1.1'
@@ -91,7 +91,7 @@ dependencies {
 
     implementation "com.github.topjohnwu.libsu:core:${libsuVersion}"
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.0-native-mt'
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.5.10'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.5.20'
     implementation 'com.novoda:simple-chrome-custom-tabs:0.1.6'
     implementation 'me.zhanghai.android.customtabshelper:library:1.0.6'
 
