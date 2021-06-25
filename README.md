@@ -27,11 +27,11 @@ I will continue testing and possibly have an average battery usage(on my phone) 
 
 # Versions
 
-Latest **Stable:** [![Latest Stable Badge](https://img.shields.io/github/v/release/indianpoptart/radiocontrol)](https://github.com/indianpoptart/RadioControl/releases/latest) - (2/1/2018)
+Latest **Stable:** [![Latest Stable Badge](https://img.shields.io/github/v/release/indianpoptart/radiocontrol)](https://github.com/indianpoptart/RadioControl/releases/latest) - ![Latest Stable Date badge](https://img.shields.io/github/release-date/indianpoptart/radiocontrol?label=date)
 
-Current **Beta:** [![Latest Pre-release Badge](https://img.shields.io/badge/release-v5.0.3--beta8-yellow)](https://github.com/indianpoptart/RadioControl/releases/tag/v5.0.3-beta8) - (11/13/2018)
+Current **Beta:** [![Latest Pre-release Badge](https://img.shields.io/badge/release-v5.0.3--beta8-yellow)](https://github.com/indianpoptart/RadioControl/releases/tag/v5.0.3-beta8) - ![Latest Beta Date badge](https://img.shields.io/badge/date-november%202018-yellow) 
 
-Current **Alpha:** [![Latest Pre-release Badge](https://img.shields.io/github/v/release/indianpoptart/radiocontrol?include_prereleases)](https://github.com/indianpoptart/RadioControl/releases) - (06/10/2021)
+Current **Alpha:** [![Latest Pre-release Badge](https://img.shields.io/github/v/release/indianpoptart/radiocontrol?include_prereleases)](https://github.com/indianpoptart/RadioControl/releases) - ![Latest Pre-release Date badge](https://img.shields.io/github/release-date-pre/indianpoptart/RadioControl?label=date)
 
 
 # Help me translate to your native language
