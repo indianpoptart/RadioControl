@@ -20,7 +20,8 @@
     <string name="cancel">Cancel</string>
     <string name="noInternet">No Internet Connection</string>
     <!--couldn\'t get root-->
-    <string name="noRoot">is waiting for root</string>
+    <string name="waitRoot">is waiting for root</string>
+    <string name="noRoot">couldn\'t get root</string>
     <string name="rEnabled">is Enabled</string>
     <string name="rDisabled">is Disabled</string>
     <string name="donationThanks">Thanks for the donation :)</string>

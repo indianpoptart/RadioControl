@@ -249,7 +249,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
         /*END info setters*/
 
         //  Assume this is the first time the user has opened the app...
-        var carrierName = "Root Pending" //For drawer's root status and assume not rooted
+        val carrierName = "Root Pending" //For drawer's root status and assume not rooted
 
         toggle.isEnabled = true
 
@@ -285,10 +285,6 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
             }
             carrierName = "Rooted"
         }*/
-        if (isRooted){
-            carrierIcon = isRootedIcon
-            carrierName = "Rooted"
-        }
 
         //Checks if workmode(Intelligent Mode) is enabled and starts the Persistence Service, otherwise it registers the legacy broadcast receivers
         if (getPrefs.getBoolean(getString(R.string.preference_work_mode), false)) {
@@ -574,7 +570,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
             Toast.makeText(applicationContext, "The impossible was just attempted",
                     Toast.LENGTH_LONG).show()
             editor.apply()
-            false
+            true
         }
     }
 
@@ -610,6 +606,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
             carrierIcon = isRootedIcon
             carrierName = "Rooted"
 
+            // TODO Move background init to a different method if possible
             //Service initialization
             applicationContext.startService(bgj)
             //Alarm scheduling
@@ -634,7 +631,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
         }
     }
 
-    //Initialize method for the Whats new dialog
+    //Initialize method for the Whats new dialog as well as the first start protocol
     private fun programVersionUpdateInit(isFirstStart: Boolean) {
         Log.d("RadioControl-Main","CHECKING FOR NEW VERSION")
         lifecycleScope.launch {
@@ -650,26 +647,24 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
                 currentVersionNumber = -1
                 Log.e("RadioControl-Main", "Unable to get version number")
             }
-            if (isFirstStart){
-                Log.d("RadioControl-Main","IT'S YOUR FIRST TIME HERE")
-                editor.putInt(VERSION_KEY, currentVersionNumber)
-                editor.putInt(getString(R.string.preference_app_active), 0) //Sets app to "off" for default
+            when {
+                isFirstStart -> {
+                    Log.d("RadioControl-Main","IT'S YOUR FIRST TIME HERE")
+                    editor.putInt(VERSION_KEY, currentVersionNumber)
+                    editor.putInt(getString(R.string.preference_app_active), 0) //Sets app to "off" for default
 
-                // Edit preference to make it false because we don't want this to run again
-                editor.putBoolean(getString(R.string.preference_first_start), false)
+                    // Edit preference to make it false because we don't want this to run again
+                    editor.putBoolean(getString(R.string.preference_first_start), false)
 
-                //Enables Intelligent Mode if Nougat+
-                if (Build.VERSION.SDK_INT >= 24) { // && !getPrefs.getBoolean(getString(R.string.preference_work_mode), false)
-                    editor.putBoolean(getString(R.string.preference_work_mode), true)
-                }
+                    //Enables Intelligent Mode if Nougat+
+                    if (Build.VERSION.SDK_INT >= 24) { // && !getPrefs.getBoolean(getString(R.string.preference_work_mode), false)
+                        editor.putBoolean(getString(R.string.preference_work_mode), true)
+                    }
 
-                //  Launch tutorial/onboarding
-                editor.apply()
-                val i = Intent(applicationContext, TutorialActivity::class.java)
-                startActivity(i)
-            } else{
-                if (rootCheck()){
-                    isRooted = true
+                    //  Launch tutorial/onboarding
+                    editor.apply()
+                    val i = Intent(applicationContext, TutorialActivity::class.java)
+                    startActivity(i)
                 }
             }
             val savedVersionNumber = getPrefs.getInt(VERSION_KEY, 1)
@@ -981,55 +976,20 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
             statusText.setText(R.string.noRoot)
             statusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_deactivated))
         }*/
-        if (!isFirstStart){
-            if (rootCheck()){
-                isRooted = true
-            }
-        }
-        if (isRooted){
-            carrierIcon = IconicsDrawable(this, GoogleMaterial.Icon.gmd_check_circle).apply {
-                colorInt = Color.GREEN
-            }
-            carrierName = "Rooted"
-        }
         if (getPrefs.getInt(getString(R.string.preference_app_active), 0) == 1) {
-            if (!isRooted) {
-                toggle.isEnabled = false
-                statusText.setText(R.string.noRoot)
-                statusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_no_root))
-            } else {
-                isRooted = true
-                statusText.setText(R.string.rEnabled)
-                statusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_activated))
-                toggle.isChecked = true
-            }
+            statusText.setText(R.string.rEnabled)
+            statusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_activated))
+
+            carrierIcon = isRootedIcon
+            carrierName = "Rooted"
+
+            toggle.isChecked = true
 
         } else if (getPrefs.getInt(getString(R.string.preference_app_active), 0) == 0) {
-            if (!isRooted) {
-                //toggle.isEnabled = false
-                statusText.setText(R.string.noRoot)
-                statusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_no_root))
-            } else {
-                statusText.setText(R.string.rDisabled)
-                statusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_deactivated))
-                toggle.isChecked = false
-            }
-
+            statusText.setText(R.string.rDisabled)
+            statusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_deactivated))
+            toggle.isChecked = false
         }
-    }
-
-    private fun rootCheck(): Boolean {
-        val deferred = lifecycleScope.async(Dispatchers.IO) {
-            return@async when {
-                Shell.rootAccess() -> {
-                    isRooted = true
-                    writeLog("root accessed: ", applicationContext)
-                    true
-                }
-                else -> false
-            }
-        }
-        return false
     }
 
     private fun writeLog(data: String, c: Context) {
