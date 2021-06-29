@@ -67,9 +67,9 @@ import kotlin.coroutines.CoroutineContext
 import kotlin.system.measureTimeMillis
 import android.os.StrictMode
 import android.os.StrictMode.ThreadPolicy
-import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationManagerCompat.IMPORTANCE_LOW
 import androidx.lifecycle.lifecycleScope
+import com.mikepenz.materialdrawer.iconics.iconicsIcon
 import com.mikepenz.materialdrawer.widget.MaterialDrawerSliderView
 import kotlinx.coroutines.*
 
@@ -80,20 +80,6 @@ import kotlinx.coroutines.*
  */
 
 class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, CoroutineScope {
-
-    //Public key for donation
-    private val base64EncodedPublicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxnZmUx4gqEFCsMW+/uPXIzJSaaoP4J/2RVaxYT9Be0jfga0qdGF+Vq56mzQ/LYEZgLvFelGdWwXJ5Izq5Wl/cEW8cExhQ/WDuJvYVaemuU+JnHP1zIZ2H28NtzrDH0hb59k9R8owSx7NPNITshuC4MPwwOQDgDaYk02Hgi4woSzbDtyrvwW1A1FWpftb78i8Pphr7bT14MjpNyNznk4BohLMncEVK22O1N08xrVrR66kcTgYs+EZnkRKk2uPZclsPq4KVKG8LbLcxmDdslDBnhQkSPe3ntAC8DxGhVdgJJDwulcepxWoCby1GcMZTUAC1OKCZlvGRGSwyfIqbqF2JQIDAQAB"
-
-    private val billingManager = KinAppManager(this, base64EncodedPublicKey)
-
-    // Overridden from CoroutineScope,
-    // Main context that is combined with the context of the Job as well
-    override val coroutineContext: CoroutineContext
-        get() = Dispatchers.Main + job
-    // IO context that is combined with the context of the Job as well
-    val ioContext: CoroutineContext
-        get() = Dispatchers.IO + job
-
     //All the constant values and contexts required
     companion object {
         /*private const val PRIVATE_PREF = "prefs"*/ //Used for shared prefs
@@ -106,21 +92,24 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
         private var alarmUtil = AlarmSchedulers() //Allows methods to extend the AlarmScheduler Utility
 
         //private var gUtility = GraphicsUtility() //Implements all graphics and the like
+
+        /**Variables for Drawer items**/
         private lateinit var deviceIcon: Drawable
         private lateinit var carrierIcon: Drawable
         private lateinit var isRootedIcon: Drawable
         private lateinit var notRootedIcon: Drawable
         private lateinit var carrierName: String
-        //private lateinit var headerView: AccountHeaderView //Needed for an older version of MaterialDrawer
         private var versionName = BuildConfig.VERSION_NAME //Takes the apps current version name and makes it a variable
+
+        /**Variables for Drawer items**/
         //private var util = Utilities() //Allows methods to extend any general utilities
+
         private lateinit var clayout: CoordinatorLayout
         private lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
         private lateinit var slider: MaterialDrawerSliderView
         private var mServiceComponent: ComponentName? = null
         private lateinit var binding: ActivityMainBinding
         private var isBillingReady = false
-        private var isFirstStart = true
 
         //JobID for jobscheduler(BackgroundJobService)
         private const val jobID = 0x01
@@ -142,7 +131,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
 
         //Capitalizes names for devices. Used by deviceName()
         private fun capitalize(s: String?): String {
-            //Send nothing if string is empty
+            //Return nothing if string is empty
             if (s == null || s.isEmpty()) {
                 return ""
             }
@@ -155,10 +144,25 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
         }
     }
 
-    //This is the main activity
+    //Public key for donation
+    private val base64EncodedPublicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxnZmUx4gqEFCsMW+/uPXIzJSaaoP4J/2RVaxYT9Be0jfga0qdGF+Vq56mzQ/LYEZgLvFelGdWwXJ5Izq5Wl/cEW8cExhQ/WDuJvYVaemuU+JnHP1zIZ2H28NtzrDH0hb59k9R8owSx7NPNITshuC4MPwwOQDgDaYk02Hgi4woSzbDtyrvwW1A1FWpftb78i8Pphr7bT14MjpNyNznk4BohLMncEVK22O1N08xrVrR66kcTgYs+EZnkRKk2uPZclsPq4KVKG8LbLcxmDdslDBnhQkSPe3ntAC8DxGhVdgJJDwulcepxWoCby1GcMZTUAC1OKCZlvGRGSwyfIqbqF2JQIDAQAB"
+
+    private val billingManager = KinAppManager(this, base64EncodedPublicKey)
+
+    // Overridden from CoroutineScope,
+    // Main context that is combined with the context of the Job as well
+    override val coroutineContext: CoroutineContext
+        get() = Dispatchers.Main + job
+    // IO context that is combined with the context of the Job as well
+    val ioContext: CoroutineContext
+        get() = Dispatchers.IO + job
+
+
+    /** This is the main activity **/
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+    /**BEGIN bindings**/
         //Bind activity to other components
         binding = ActivityMainBinding.inflate(layoutInflater)
         billingManager.bind(this)
@@ -167,34 +171,49 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
         val view = binding.root
         val toolbar = binding.toolbar
         val slider = binding.slider
+    /**END bindings**/
 
+    /** BEGIN Core init**/
         val policy = ThreadPolicy.Builder().permitAll().build()
         StrictMode.setThreadPolicy(policy) // Sets thread policy to all threads THIS IS DANGEROUS
+        mServiceComponent = ComponentName(this, BackgroundJobService::class.java)
 
+        //Adds filter for app to receive Connectivity_Action
+        val filter = IntentFilter()
+        @Suppress("DEPRECATION") // This is used for legacy support
+        filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION)
+        val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        //  Assume this is the first time the user has opened the app...
+        val carrierName = "Root Pending" //For drawer's root status and assume not rooted
         //  Pref values
         //  Initialize SharedPreferences
-        val getPrefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(applicationContext)
+        val mySharedPref = androidx.preference.PreferenceManager.getDefaultSharedPreferences(applicationContext)
         /*val sharedPref = getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE)*/ /** Migrated away from custom prefs.xml file **/
-        val editor = getPrefs.edit()
+        val editor = mySharedPref.edit()
 
+        editor.putInt(getString(R.string.preference_app_active), 0) // Sets the main ON/OFF for the app
+        //  Create a new boolean and preference and set it to true if it's not already there
+        val isFirstStart = mySharedPref.getBoolean(getString(R.string.preference_first_start), true)
+    /** END Core init**/
+
+    /** BEGIN View related init **/
         setContentView(view)
         //Sets the secondary view features
-
-        mServiceComponent = ComponentName(this, BackgroundJobService::class.java)
         clayout = findViewById(R.id.clayout)
-        val dialog = findViewById<ProgressBar>(R.id.pingProgressBar)
-        Iconics.init(this)
+        Iconics.init(this) // Main icon set initialization
+
+        val mainProgressBar = findViewById<ProgressBar>(R.id.pingProgressBar) //A progress bar that shows up when the app is hard at work
 
         // Handle Toolbar
         //val toolbar = findViewById<Toolbar>(R.id.toolbar)
-        setSupportActionBar(toolbar)
+        setSupportActionBar(toolbar) // Sets the actionBar to the ActivityBinding toolbar
         val actionBar = supportActionBar
-        val fab = findViewById<FloatingActionButton>(R.id.fab)
+        val latencyFAB = findViewById<FloatingActionButton>(R.id.fab) //Main action button for ping testing
 
-        //Adds filter for app to get Connectivity_Action
-        val filter = IntentFilter()
-        @Suppress("DEPRECATION")
-        filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION)
+        //  TextViews
+        val statusText = findViewById<TextView>(R.id.statusText)
+        val linkText = findViewById<TextView>(R.id.linkSpeed)
+        val connectionStatusText = findViewById<TextView>(R.id.pingStatus)
 
         //Sets the actionbar with hamburger icon, colors, and padding
         if (actionBar != null) {
@@ -209,26 +228,9 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
         }
 
         //Creates the latency checker FAB button
-        fab.setImageDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.ic_network_check_white_48dp))
-        fab.setOnClickListener {
-            dialog.visibility = View.VISIBLE
-            if (Build.VERSION.SDK_INT >= 10000){
-                Snackbar.make(clayout, "Android 12 support is still in progress", Snackbar.LENGTH_LONG)
-                    .show()
-                dialog.visibility = View.GONE
-            } else{
-                lifecycleScope.launch {
-                    pingCheck()
-                }
-            }
-        }
+        latencyFAB.setImageDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.ic_network_check_white_48dp))
 
-        //  TextViews
-        val statusText = findViewById<TextView>(R.id.statusText)
-        val linkText = findViewById<TextView>(R.id.linkSpeed)
-        val connectionStatusText = findViewById<TextView>(R.id.pingStatus)
-
-        /**  BEGIN buttons **/
+    /**  BEGIN buttons **/
         //  UI Switches and Buttons
         val linkSpeedButton = findViewById<Button>(R.id.linkSpeedButton)
         val toggle = findViewById<SwitchMaterial>(R.id.enableSwitch)
@@ -240,20 +242,9 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
         val nightCancel = findViewById<Button>(R.id.night_mode_cancel)
         val radioOffButton = findViewById<Button>(R.id.cellRadioOff)
         val forceCrashButton = findViewById<Button>(R.id.forceCrashButton)
-        /**  END buttons **/
+    /**  END buttons **/
 
-        /*Other info setters*/
-        editor.putInt(getString(R.string.preference_app_active), 0)
-        //  Create a new boolean and preference and set it to true if it's not already there
-        val isFirstStart = getPrefs.getBoolean(getString(R.string.preference_first_start), true) //TODO Check why it does this every launch
-        /*END info setters*/
-
-        //  Assume this is the first time the user has opened the app...
-        val carrierName = "Root Pending" //For drawer's root status and assume not rooted
-
-        toggle.isEnabled = true
-
-        /** First start init **/
+        /* First start init  */
         programVersionUpdateInit(isFirstStart)//initializes the whats new dialog
 
         //Sets a default Profile2 Drawer icon
@@ -267,27 +258,10 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
             colorInt = Color.GREEN
         }
 
-        //Checks for root, if none, disabled toggle switch
-        /*if (!isRooted) {
-            statusText.setText(R.string.noRoot)    //Text formatters
-
-            statusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_no_root)) //Sets text to deactivated (RED) color
-            editor.apply() //Commit new values to sharedprefs
-
-            //Drawer icon
-            /*carrierIcon = IconicsDrawable(this, GoogleMaterial.Icon.gmd_error_outline).apply {
-                colorInt = Color.RED /**    Useful now as the toggle is no longer disabled here**/
-            }*/
-            // TODO Show snackbar asking to request root (Maybe only do this when flipping switch?)
-        } else { //We have root, do root related initializations
-            carrierIcon = IconicsDrawable(this, GoogleMaterial.Icon.gmd_check_circle).apply {
-                colorInt = Color.GREEN
-            }
-            carrierName = "Rooted"
-        }*/
+        /** Archive Code #2 **/
 
         //Checks if workmode(Intelligent Mode) is enabled and starts the Persistence Service, otherwise it registers the legacy broadcast receivers
-        if (getPrefs.getBoolean(getString(R.string.preference_work_mode), false)) {
+        if (mySharedPref.getBoolean(getString(R.string.preference_work_mode), false)) {
             val i = Intent(applicationContext, PersistenceService::class.java)
 
             if (Build.VERSION.SDK_INT >= 26) { //   Check that we are running on Android Nougat+
@@ -300,69 +274,13 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
             registerForBroadcasts(applicationContext)
         }
         //Checks if background optimization is enabled and schedules a job
-        if (getPrefs.getBoolean(getString(R.string.key_preference_settings_battery_opimization), false)) {
+        if (mySharedPref.getBoolean(getString(R.string.key_preference_settings_battery_opimization), false)) {
             scheduleJob()
         }
         //Hides the progress dialog
-        dialog.visibility = View.GONE
+        mainProgressBar.visibility = View.GONE
 
-        /** Main Radiocontrol toggle switch  **/
-        toggle.setOnCheckedChangeListener { _, isChecked ->
-            val bgj = Intent(applicationContext, BackgroundJobService::class.java)
-
-            Log.d("RadioControl-Main","Clickety Clockety")
-            dialog.visibility = View.VISIBLE
-
-            if (!isChecked) {
-                Log.d("RadioControl-Main", "Not Checked")
-                //Preference handling
-                editor.putInt(getString(R.string.preference_app_active), 0)
-                editor.apply()
-                //UI Handling
-                statusText.setText(R.string.showDisabled) //Sets status text to disabled
-                statusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_deactivated))
-                dialog.visibility = View.GONE
-
-            } else {
-                // Starts a deferred task to check for root and then returns true or false
-                val deferred = lifecycleScope.async(Dispatchers.IO) {
-                    return@async when {
-                        Shell.rootAccess() -> {
-                            isRooted = true
-                            writeLog("root accessed: ", applicationContext)
-                            true
-                        }
-                        else -> false
-                    }
-                }
-                lifecycleScope.launch(Dispatchers.Main) {
-                    Log.d("RadioControl-Main","Lifecycled")
-                    delay(100)
-                    if (deferred.isActive) {
-                        try{
-                            val result = deferred.await()
-                            Log.d("RadioControl-TryCycle","Result is: $result")
-
-                        } finally {
-                            val result = deferred.await()
-                            Log.d("RadioControl-FinalCycle","Result is: $result")
-                            uiSetToggle(result,editor,getPrefs)
-                            dialog.visibility = View.GONE
-                        }
-
-                    } else {
-                        val result = deferred.await()
-                        Log.d("RadioControl-LifeCycle","Result is: $result")
-                        uiSetToggle(result,editor,getPrefs)
-                        dialog.visibility = View.GONE
-                    }
-                }
-            }
-            //dialog.visibility = View.GONE //Make sure the dialog is gone
-            editor.apply()
-        }
-
-        //Begin initializing drawer
+    /** Begin initializing drawer **/
 
         //Sets
         deviceIcon = when {
@@ -389,15 +307,16 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
             )
             withSavedInstance(savedInstanceState)
         }
+
         //Creates navigation drawer items
-        val item1 = PrimaryDrawerItem().withIdentifier(1).withName(R.string.home).withIcon(GoogleMaterial.Icon.gmd_wifi)
-        val item2 = SecondaryDrawerItem().withIdentifier(2).withName(R.string.settings).withIcon(GoogleMaterial.Icon.gmd_settings).withSelectable(false)
-        val item3 = SecondaryDrawerItem().withIdentifier(3).withName(R.string.about).withIcon(GoogleMaterial.Icon.gmd_info).withSelectable(false)
-        val item4 = SecondaryDrawerItem().withIdentifier(4).withName(R.string.donate).withIcon(GoogleMaterial.Icon.gmd_attach_money).withSelectable(false)
-        val item5 = SecondaryDrawerItem().withIdentifier(5).withName(R.string.sendFeedback).withIcon(GoogleMaterial.Icon.gmd_send).withSelectable(false)
-        val item6 = SecondaryDrawerItem().withIdentifier(6).withName(R.string.stats).withIcon(GoogleMaterial.Icon.gmd_timeline).withSelectable(false)
-        val item7 = SecondaryDrawerItem().withIdentifier(7).withName(R.string.standby_drawer_name).withIcon(GoogleMaterial.Icon.gmd_pause_circle_outline).withSelectable(false)
-        val item8 = SecondaryDrawerItem().withIdentifier(8).withName(R.string.drawer_string_troubleshooting).withIcon(GoogleMaterial.Icon.gmd_help).withSelectable(false)
+        val item1 = PrimaryDrawerItem().apply { identifier = 1; nameRes = R.string.home; iconicsIcon = GoogleMaterial.Icon.gmd_wifi }
+        val item2 = SecondaryDrawerItem().apply { identifier = 2; nameRes = R.string.settings; iconicsIcon = GoogleMaterial.Icon.gmd_settings; isSelectable = false }
+        val item3 = SecondaryDrawerItem().apply { identifier = 3; nameRes = R.string.about; iconicsIcon = GoogleMaterial.Icon.gmd_info; isSelectable = false }
+        val item4 = SecondaryDrawerItem().apply { identifier = 4; nameRes = R.string.donate; iconicsIcon = GoogleMaterial.Icon.gmd_attach_money; isSelectable = false }
+        val item5 = SecondaryDrawerItem().apply { identifier = 5; nameRes = R.string.sendFeedback; iconicsIcon = GoogleMaterial.Icon.gmd_send; isSelectable = false }
+        val item6 = SecondaryDrawerItem().apply { identifier = 6; nameRes = R.string.stats; iconicsIcon = GoogleMaterial.Icon.gmd_timeline; isSelectable = false }
+        val item7 = SecondaryDrawerItem().apply { identifier = 7; nameRes = R.string.standby_drawer_name; iconicsIcon = GoogleMaterial.Icon.gmd_pause_circle_outline; isSelectable = false }
+        val item8 = SecondaryDrawerItem().apply { identifier = 7; nameRes = R.string.drawer_string_troubleshooting; iconicsIcon = GoogleMaterial.Icon.gmd_help; isSelectable = false }
         slider.apply {
             addItems(
                     item1,
@@ -462,71 +381,134 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
         }
         //Create navigation drawer
         slider.setSelection(1)
+    /** END initializing drawer **/
 
-        //Check if the easter egg(Dev mode) is NOT activated
-        if (!getPrefs.getBoolean(getString(R.string.preference_is_developer), false)) {
-            linkSpeedButton.visibility = View.GONE
-            linkText.visibility = View.GONE
-        } else if (getPrefs.getBoolean(getString(R.string.preference_is_developer), false)) {
-            linkSpeedButton.visibility = View.VISIBLE
-            linkText.visibility = View.VISIBLE
-        }
-
-        val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-
-        //DEV View | Listener for the link speed button
-        linkSpeedButton.setOnClickListener {
-            //showWifiInfoDialog();
-            val activeNetwork = connectivityManager.activeNetworkInfo
-            val cellStat = Utilities.getCellStatus(applicationContext)
-            Log.d("RadioControl-Job", "Active: $activeNetwork")
-            Log.d("RadioControl-Main", "Cell: $cellStat")
-            val linkSpeed = Utilities.linkSpeed(applicationContext)
-            val gHz = Utilities.frequency(applicationContext)
-            if (linkSpeed == -1) {
-                linkText.setText(R.string.cellNetwork)
-            } else {
-                if (gHz == 2) {
-                    linkText.text = getString(R.string.link_speed_24, linkSpeed)
-
-                } else if (gHz == 5) {
-                    linkText.text = getString(R.string.link_speed_5, linkSpeed)
-
-                }
-            }
-        }
-        //Kotlin - KinApp needs to update
-        /*launch() {
-            val list: ArrayList<String> = ArrayList()
-            list.add(ITEM_ONE_DOLLAR)
-            list.add(ITEM_THREE_DOLLAR)
-            list.add(ITEM_FIVE_DOLLAR)
-            list.add(ITEM_TEN_DOLLAR)
-            billingManager.fetchProducts(list, KinAppProductType.INAPP).await()
-        }*/
-
-        //Dev mode handling
+    /** BEGIN Dev mode init handling **/
         //Check if the easter egg is NOT activated
-        if (!getPrefs.getBoolean(getString(R.string.preference_is_developer), false)) {
+        if (!mySharedPref.getBoolean(getString(R.string.preference_is_developer), false)) {
             conn.visibility = View.GONE
             serviceTest.visibility = View.GONE
             nightCancel.visibility = View.GONE
             connectionStatusText.visibility = View.GONE
             radioOffButton.visibility = View.GONE
             forceCrashButton.visibility = View.GONE
-        } else if (getPrefs.getBoolean(getString(R.string.preference_is_developer), false)) {
+            linkSpeedButton.visibility = View.GONE
+            linkText.visibility = View.GONE
+        } else if (mySharedPref.getBoolean(getString(R.string.preference_is_developer), false)) {
             conn.visibility = View.VISIBLE
             serviceTest.visibility = View.VISIBLE
             nightCancel.visibility = View.VISIBLE
             connectionStatusText.visibility = View.VISIBLE
             radioOffButton.visibility = View.VISIBLE
             forceCrashButton.visibility = View.VISIBLE
+            linkSpeedButton.visibility = View.VISIBLE
+            linkText.visibility = View.VISIBLE
         }
+    /** END Dev mode init handling **/
 
+    /** BEGIN Payment Item fetch **/
+        /*launch() {
+            val productList: ArrayList<String> = ArrayList()
+            productList.add(ITEM_ONE_DOLLAR)
+            productList.add(ITEM_THREE_DOLLAR)
+            productList.add(ITEM_FIVE_DOLLAR)
+            productList.add(ITEM_TEN_DOLLAR)
+            billingManager.fetchProductsAsync(productList, KinAppProductType.INAPP).await()
+        }*/
+    /** END Payment Item fetch **/
+
+    /** BEGIN Button Click Listeners **/
+
+        /** Main Radiocontrol toggle switch  **/
+        toggle.setOnCheckedChangeListener { _, isChecked ->
+            Log.d("RadioControl-Main","Clickety Clockety")
+            mainProgressBar.visibility = View.VISIBLE
+
+            if (!isChecked) {
+                Log.d("RadioControl-Main", "Not Checked")
+                //Preference handling
+                editor.putInt(getString(R.string.preference_app_active), 0)
+                editor.apply()
+                //UI Handling
+                statusText.setText(R.string.showDisabled) //Sets status text to disabled
+                statusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_deactivated))
+                mainProgressBar.visibility = View.GONE
+
+            } else {
+                // Starts a deferred task to check for root and then returns true or false
+                val deferred = lifecycleScope.async(Dispatchers.IO) {
+                    return@async when {
+                        Shell.rootAccess() -> {
+                            isRooted = true
+                            writeLog("root accessed: ", applicationContext)
+                            true
+                        }
+                        else -> false
+                    }
+                }
+                lifecycleScope.launch(Dispatchers.Main) {
+                    Log.d("RadioControl-Main","Lifecycled")
+                    delay(100)
+                    if (deferred.isActive) {
+                        try{
+                            val result = deferred.await()
+                            Log.d("RadioControl-TryCycle","Result is: $result")
+
+                        } finally {
+                            val result = deferred.await()
+                            Log.d("RadioControl-FinalCycle","Result is: $result")
+                            uiSetToggle(result,editor,mySharedPref)
+                            mainProgressBar.visibility = View.GONE
+                        }
+
+                    } else {
+                        val result = deferred.await()
+                        Log.d("RadioControl-LifeCycle","Result is: $result")
+                        uiSetToggle(result,editor,mySharedPref)
+                        mainProgressBar.visibility = View.GONE
+                    }
+                }
+            }
+            //dialog.visibility = View.GONE //Make sure the dialog is gone
+            editor.apply()
+        }
+        /** END Radiocontrol toggle switch  **/
+
+        toggle.setOnLongClickListener {
+            val bgj = Intent(applicationContext, BackgroundJobService::class.java)
+
+            //Preference handling
+            editor.putInt(getString(R.string.preference_app_active), 1)
+            //UI Handling
+            statusText.setText(R.string.showEnabledDebug)
+            statusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_activated_debug))
+            applicationContext.startService(bgj)
+            alarmUtil.scheduleAlarm(applicationContext)
+            Toast.makeText(applicationContext, "The impossible was just attempted",
+                Toast.LENGTH_LONG).show()
+            editor.apply()
+            true
+        }
+        // Runs the latency check on click of the FAB
+        latencyFAB.setOnClickListener {
+            mainProgressBar.visibility = View.VISIBLE
+            if (Build.VERSION.SDK_INT >= 10000){
+                Snackbar.make(clayout, "Android 12 support is still in progress", Snackbar.LENGTH_LONG)
+                    .show()
+                mainProgressBar.visibility = View.GONE
+            } else{
+                lifecycleScope.launch {
+                    pingCheck()
+                }
+            }
+        }
+    /** END Button Click Listeners **/
+
+    /** BEGIN DEV Button Click Listeners **/
         conn.setOnClickListener {
             connectionStatusText.setText(R.string.ping)
             connectionStatusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.material_grey_50))
-            dialog.visibility = View.VISIBLE
+            mainProgressBar.visibility = View.VISIBLE
             Log.d("RadioControl-Ping","Build SDK Version: " + Build.VERSION.SDK_INT)
             lifecycleScope.async {
                 pingCheck()
@@ -557,21 +539,30 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
             alarmUtil.scheduleRootAlarm(applicationContext)
         }
 
-        toggle.setOnLongClickListener {
-            val bgj = Intent(applicationContext, BackgroundJobService::class.java)
+        //DEV View | Listener for the link speed button
+        linkSpeedButton.setOnClickListener {
+            //showWifiInfoDialog();
+            val activeNetwork = connectivityManager.activeNetworkInfo
+            val cellStat = Utilities.getCellStatus(applicationContext)
+            Log.d("RadioControl-Job", "Active: $activeNetwork") //Shows more info when debugging
+            Log.d("RadioControl-Main", "Cell: $cellStat")
+            val linkSpeed = Utilities.linkSpeed(applicationContext)
+            val gHz = Utilities.frequency(applicationContext)
+            if (linkSpeed == -1) {
+                linkText.setText(R.string.cellNetwork)
+            } else {
+                if (gHz == 2) {
+                    linkText.text = getString(R.string.link_speed_24, linkSpeed)
 
-            //Preference handling
-            editor.putInt(getString(R.string.preference_app_active), 1)
-            //UI Handling
-            statusText.setText(R.string.showEnabledDebug)
-            statusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_activated_debug))
-            applicationContext.startService(bgj)
-            alarmUtil.scheduleAlarm(applicationContext)
-            Toast.makeText(applicationContext, "The impossible was just attempted",
-                    Toast.LENGTH_LONG).show()
-            editor.apply()
-            true
+                } else if (gHz == 5) {
+                    linkText.text = getString(R.string.link_speed_5, linkSpeed)
+
+                }
+            }
         }
+
+    /** END DEV Button Click Listeners **/
+
     }
 
     //function for setting main toggle related UI elements as well as
@@ -1023,8 +1014,8 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
         }
         Log.d("RadioControl-Main", "Reachable?: $reachable, Time: $timeDifference")
 
-        val dialog: ProgressBar = findViewById(R.id.pingProgressBar)
-        dialog.visibility = View.GONE
+        val latencyProgressBar: ProgressBar = findViewById(R.id.pingProgressBar)
+        latencyProgressBar.visibility = View.GONE
         val connectionStatusText = findViewById<TextView>(R.id.pingStatus)
         if (reachable) {
             when {
@@ -1048,7 +1039,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
             if (Utilities.isConnectedWifi(applicationContext)) {
                 // TODO Return info back to main activity
                 connectionStatusText.setText(R.string.connectedWifi)
-                connectionStatusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_activated))
+                connectionStatusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_activated)) // This is all debug anyways
                 writeLog(getString(R.string.connectedWifi), applicationContext)
                 // TODO move UI elements to react to return statements
             } else if (Utilities.isConnectedMobile(applicationContext)) {
@@ -1065,9 +1056,11 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
 
         } else {
             if (Utilities.isAirplaneMode(applicationContext) && !Utilities.isConnected(applicationContext)) {
+                Snackbar.make(clayout, R.string.airplaneOn, Snackbar.LENGTH_LONG).show()
                 connectionStatusText.setText(R.string.airplaneOn)
                 connectionStatusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_deactivated))
             } else {
+                Snackbar.make(clayout, R.string.connectionUnable, Snackbar.LENGTH_LONG).show()
                 connectionStatusText.setText(R.string.connectionUnable)
                 connectionStatusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_deactivated))
                 writeLog(getString(R.string.connectionUnable), applicationContext)
@@ -1152,16 +1145,36 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
     }
 }
 
-    /** Archived code **/
-    /*fun onStop() {
-        // A service can be "started" and/or "bound". In this case, it's "started" by this Activity
-        // and "bound" to the JobScheduler (also called "Scheduled" by the JobScheduler). This call
-        // to stopService() won't prevent scheduled jobs to be processed. However, failing
-        // to call stopService() would keep it alive indefinitely.
-        //stopService(Intent(this, BackgroundJobService::class.java))
-        super.onStop()
-    }*/
+/** Archived code **/
+    /** #1 **/
+        /*fun onStop() {
+            // A service can be "started" and/or "bound". In this case, it's "started" by this Activity
+            // and "bound" to the JobScheduler (also called "Scheduled" by the JobScheduler). This call
+            // to stopService() won't prevent scheduled jobs to be processed. However, failing
+            // to call stopService() would keep it alive indefinitely.
+            //stopService(Intent(this, BackgroundJobService::class.java))
+            super.onStop()
+        }*/
+    /** #1 **/
 
+    /** #2 **/
+        //Checks for root, if none, disabled toggle switch
+        /*if (!isRooted) {
+            statusText.setText(R.string.noRoot)    //Text formatters
 
+            statusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_no_root)) //Sets text to deactivated (RED) color
+            editor.apply() //Commit new values to sharedprefs
 
-
+            //Drawer icon
+            /*carrierIcon = IconicsDrawable(this, GoogleMaterial.Icon.gmd_error_outline).apply {
+                colorInt = Color.RED /**    Useful now as the toggle is no longer disabled here**/
+            }*/
+            // DID Show snackbar asking to request root (Maybe only do this when flipping switch?)
+        } else { //We have root, do root related initializations
+            carrierIcon = IconicsDrawable(this, GoogleMaterial.Icon.gmd_check_circle).apply {
+                colorInt = Color.GREEN
+            }
+            carrierName = "Rooted"
+        }*/
+    /** #2 **/
+/** Archived code **/
