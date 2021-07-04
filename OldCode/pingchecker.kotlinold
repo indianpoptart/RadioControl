@@ -1,0 +1,63 @@
+private suspend fun pingCheck() {
+    val preferences = androidx.preference.PreferenceManager.getDefaultSharedPreferences(applicationContext)
+    val ip = preferences.getString("prefPingIp", "1.0.0.1")
+    val address = InetAddress.getByName(ip)
+    var reachable = false
+
+    val timeDifference = measureTimeMillis {
+        reachable = address.isReachable(1000)
+    }
+    Log.d("RadioControl-Main", "Reachable?: $reachable, Time: $timeDifference")
+
+    val dialog: ProgressBar = findViewById(R.id.pingProgressBar)
+    dialog.visibility = View.GONE
+    val connectionStatusText = findViewById<TextView>(R.id.pingStatus)
+    if (reachable) {
+        when {
+            timeDifference <= 50 -> Snackbar.make(clayout, "Excellent Latency: $timeDifference ms", Snackbar.LENGTH_LONG).show()
+            51.0 <= timeDifference && timeDifference <= 100.0 -> Snackbar.make(clayout, "Average Latency: $timeDifference ms", Snackbar.LENGTH_LONG).show()
+            101.0 <= timeDifference && timeDifference <= 200.0 -> Snackbar.make(clayout, "Poor Latency: $timeDifference ms", Snackbar.LENGTH_LONG).show()
+            timeDifference >= 201 -> Snackbar.make(clayout, "Very Poor Latency. VOIP and online gaming may suffer: $timeDifference ms", Snackbar.LENGTH_LONG).show()
+        }
+    }
+    //Sadly packet loss testing is gone :(
+    /*//Check for packet loss stuff
+    when {
+        pStatus!!.contains("100% packet loss") -> Snackbar.make(clayout, "100% packet loss detected", Snackbar.LENGTH_LONG).show()
+        pStatus.contains("25% packet loss") -> Snackbar.make(clayout, "25% packet loss detected", Snackbar.LENGTH_LONG).show()
+        pStatus.contains("50% packet loss") -> Snackbar.make(clayout, "50% packet loss detected", Snackbar.LENGTH_LONG).show()
+        pStatus.contains("75% packet loss") -> Snackbar.make(clayout, "75% packet loss detected", Snackbar.LENGTH_LONG).show()
+        pStatus.contains("unknown host") -> Snackbar.make(clayout, "Unknown host", Snackbar.LENGTH_LONG).show()
+    }*/
+    //  TODO:Move to NetworkUtilities class
+    if (reachable) {
+        if (Utilities.isConnectedWifi(applicationContext)) {
+            // TODO Return info back to main activity
+            connectionStatusText.setText(R.string.connectedWifi)
+            connectionStatusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_activated))
+            writeLog(getString(R.string.connectedWifi), applicationContext)
+            // TODO move UI elements to react to return statements
+        } else if (Utilities.isConnectedMobile(applicationContext)) {
+            if (Utilities.isConnectedFast(applicationContext)) {
+                connectionStatusText.setText(R.string.connectedFCell)
+                connectionStatusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_activated))
+                writeLog(getString(R.string.connectedFCell), applicationContext)
+            } else if (!Utilities.isConnectedFast(applicationContext)) {
+                connectionStatusText.setText(R.string.connectedSCell)
+                connectionStatusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_activated))
+                writeLog(getString(R.string.connectedSCell), applicationContext)
+            }
+        }
+
+    } else {
+        if (Utilities.isAirplaneMode(applicationContext) && !Utilities.isConnected(applicationContext)) {
+            connectionStatusText.setText(R.string.airplaneOn)
+            connectionStatusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_deactivated))
+        } else {
+            connectionStatusText.setText(R.string.connectionUnable)
+            connectionStatusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.status_deactivated))
+            writeLog(getString(R.string.connectionUnable), applicationContext)
+        }
+    }
+    // END TODO: Move to NetworkUtilities class
+}

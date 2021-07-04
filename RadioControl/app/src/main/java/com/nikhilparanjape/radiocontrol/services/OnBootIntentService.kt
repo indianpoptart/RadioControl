@@ -25,6 +25,7 @@ import java.io.IOException
  */
 class OnBootIntentService : JobIntentService() {
 
+
     override fun onHandleWork(@NonNull intent: Intent) {
         createNotificationChannel(applicationContext)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -42,7 +43,7 @@ class OnBootIntentService : JobIntentService() {
             } else {
                 applicationContext.startService(i)
             }
-            Log.d("RadioControl-boot", "persist Service launched")
+            Log.d(TAG, "persist Service launched")
         }
         "boot procedure handled".writeLog(applicationContext)
     }
@@ -78,12 +79,15 @@ class OnBootIntentService : JobIntentService() {
                 fos.write(string.toByteArray())
                 fos.close()
             } catch (e: IOException) {
-                Log.d("RadioControl-Job", "There was an error saving the log: $e")
+                Log.d(TAG, "There was an error saving the log: $e")
             }
 
         }
     }
     override fun onDestroy() {
         super.onDestroy()
+    }
+    companion object {
+        private const val TAG = "RadioControl-Boot"
     }
 }

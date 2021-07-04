@@ -20,12 +20,13 @@ class RootServiceReceiver : WakefulBroadcastReceiver() {
         val i = Intent(context, CellRadioService::class.java)
 
         context.stopService(i)
-        Log.d("RadioControl-root", "CellService Stopped")
+        Log.d(TAG, "CellService Stopped")
         alarmUtil.cancelRootAlarm(context)
-        Log.d("RadioControl-root", "RootClock cancelled")
+        Log.d(TAG, "RootClock cancelled")
     }
 
     companion object {
         const val REQUEST_CODE = 35718
+        private const val TAG = "RadioControl-RSR"
     }
 }

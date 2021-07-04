@@ -5,6 +5,7 @@ import android.net.ConnectivityManager
 import android.net.Network
 import android.os.Build
 import android.util.Log
+import com.google.android.material.tabs.TabLayout
 import kotlinx.coroutines.flow.MutableStateFlow
 
 class ReachabilityClass (private val context: Context){
@@ -13,12 +14,12 @@ class ReachabilityClass (private val context: Context){
     private val connectivityManager: ConnectivityManager? = null
     private val networkCallback = object : ConnectivityManager.NetworkCallback() {
         override fun onAvailable(network: Network) {
-            Log.d("RadioControl-NetReach", "Connected")
+            Log.d(TAG, "Connected")
             isNetworkConnected.value = true
         }
 
         override fun onLost(network: Network) {
-            Log.d("RadioControl-NetReach", "Disconnected")
+            Log.d(TAG, "Disconnected")
             isNetworkConnected.value = false
         }
     }
@@ -30,7 +31,7 @@ class ReachabilityClass (private val context: Context){
                 connectivityManager.registerDefaultNetworkCallback(networkCallback)
             }
         } catch (e: Exception) {
-            Log.d("RadioControl-NetReach", "Could not start: ${e.message.toString()}")
+            Log.d(TAG, "Could not start: ${e.message.toString()}")
             e.printStackTrace()
             isNetworkConnected.value = false
         }
@@ -38,5 +39,8 @@ class ReachabilityClass (private val context: Context){
 
     fun stop() {
         connectivityManager?.unregisterNetworkCallback(networkCallback)
+    }
+    companion object{
+        private const val TAG = "RadioControl-NetReach"
     }
 }

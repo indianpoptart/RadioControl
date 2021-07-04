@@ -53,13 +53,13 @@ class AboutFragment : PreferenceFragmentCompat() {
                 val getPrefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(requireContext()) //Initializes prefs.xml
                 val editor = getPrefs.edit()//Initializes xml editor
                 z++
-                Log.d("RadioControl-About", (7 - z).toString() + " steps away from easter egg")
+                Log.d(TAG, (7 - z).toString() + " steps away from easter egg")
                 //Toast.makeText(getActivity(), (7 - z) + " steps away from easter egg", Toast.LENGTH_SHORT).show();
                 if (z >= 7) {
                     if (!getPrefs.getBoolean("isDeveloper", false)) {
                         Toast.makeText(activity, R.string.dev_activated, Toast.LENGTH_LONG).show()
                         z = 0
-                        Log.d("RadioControl-About", "Developer features activated")
+                        Log.d(TAG, "Developer features activated")
 
 
                         editor.putBoolean("isDeveloper", true) //Puts the boolean into prefs.xml
@@ -67,7 +67,7 @@ class AboutFragment : PreferenceFragmentCompat() {
                     } else if (getPrefs.getBoolean("isDeveloper", false)) {
                         Toast.makeText(activity, R.string.dev_deactivated, Toast.LENGTH_LONG).show()
                         z = 0
-                        Log.d("RadioControl-About", requireContext().getString(R.string.dev_deactivated))
+                        Log.d(TAG, requireContext().getString(R.string.dev_deactivated))
 
                         editor.putBoolean("isDeveloper", false) //Puts the boolean into prefs.xml
                         editor.apply() //Ends writing to prefs file
@@ -156,11 +156,11 @@ class AboutFragment : PreferenceFragmentCompat() {
 
     private var libTaskCallback: LibTaskCallback = object : LibTaskCallback {
         override fun onLibTaskStarted() {
-            Log.e("AboutLibraries", "started")
+            Log.d(TAG, "About libraries started")
         }
 
         override fun onLibTaskFinished(itemAdapter: ItemAdapter<*>) {
-            Log.e("AboutLibraries", "finished")
+            Log.d(TAG, "About libraries finished")
         }
     }
 
@@ -212,8 +212,9 @@ class AboutFragment : PreferenceFragmentCompat() {
         }
     }
 
-    /*companion object {
+    companion object {
         private const val PRIVATE_PREF = "prefs"
-    }*/
+        private const val TAG = ""
+    }
 
 }

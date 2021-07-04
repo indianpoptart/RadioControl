@@ -27,7 +27,7 @@ class ConnectivityReceiver : WakefulBroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
         intent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND)
-        Log.d("RadioControl-CR", "Get action-ConRec: " + intent.action!!)
+        Log.d(TAG, "Get action-ConRec: " + intent.action!!)
 
         val componentName = ComponentName(context, BackgroundJobService::class.java)
         val jobInfo = JobInfo.Builder(12, componentName)
@@ -39,11 +39,15 @@ class ConnectivityReceiver : WakefulBroadcastReceiver() {
         val jobScheduler = context.getSystemService(JOB_SCHEDULER_SERVICE) as JobScheduler?
         val resultCode = jobScheduler!!.schedule(jobInfo)
         if (resultCode == JobScheduler.RESULT_SUCCESS) {
-            Log.d("RadioControl-CR", "Job scheduled!")
+            Log.d(TAG, "Job scheduled!")
         } else {
-            Log.d("RadioControl-CR", "Job could not be scheduled")
+            Log.d(TAG, "Job could not be scheduled")
         }
 
     }
     interface ConnectivityReceiverListener
+
+    companion object {
+        private const val TAG = "RadioControl-CR"
+    }
 }

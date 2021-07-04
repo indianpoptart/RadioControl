@@ -190,7 +190,7 @@ class StatsActivity : AppCompatActivity() {
 
             bootHandleGraph()
         }catch (e: Exception){
-            Log.d("RadioControl", "Error: $e")
+            Log.d(TAG, "Error: $e")
         }
     }
 
@@ -201,7 +201,7 @@ class StatsActivity : AppCompatActivity() {
         MaterialDialog(this)
                 .title(R.string.title_easing_animation)
                 .listItemsSingleChoice(R.array.easing){ _, index, _ ->
-                    Log.d("RadioControl", "Easing: $index")
+                    Log.d(TAG, "Easing: $index")
                     when (index) {
                         0 -> editor.putInt("easing", 0)
                         1 -> editor.putInt("easing", 1)
@@ -230,7 +230,7 @@ class StatsActivity : AppCompatActivity() {
         MaterialDialog(this)
                 .title(R.string.title_animation_duration)
                 .listItemsSingleChoice(R.array.animation_duration_values){ _, index, _ ->
-                    Log.d("RadioControl", "You chose $index")
+                    Log.d(TAG, "You chose $index")
                     floatArrayOf(0f, 0f)
                     when (index) {
                         0 -> //1 second delay
@@ -347,7 +347,7 @@ class StatsActivity : AppCompatActivity() {
 
         if (janWifiLost == 0f && febWifiLost == 0f && marWifiLost == 0f && aprWifiLost == 0f && mayWifiLost == 0f && junWifiLost == 0f && julWifiLost == 0f && augWifiLost == 0f &&
             sepWifiLost == 0f && octWifiLost == 0f && novWifiLost == 0f && decWifiLost == 0f) {
-            Log.d("RadioControl", "No log data")
+            Log.d(TAG, "No log data")
             logStatus.visibility = View.VISIBLE
             progress1.visibility = View.GONE
         } else {
@@ -358,7 +358,7 @@ class StatsActivity : AppCompatActivity() {
             chart.setAxisBorderValues(0, 0, max)
         }
 
-        Log.d("RadioControl", "Lost Signal $wifiSigLost times")
+        Log.d(TAG, "Lost Signal $wifiSigLost times")
 
         val p = Paint()
         p.color = Color.BLACK
@@ -455,7 +455,7 @@ class StatsActivity : AppCompatActivity() {
         //Checker of
         if (janAirOn == 0f && febAirOn == 0f && marAirOn == 0f && aprAirOn == 0f && mayAirOn == 0f && junAirOn == 0f && julAirOn == 0f && augAirOn == 0f &&
             sepAirOn == 0f && octAirOn == 0f && novAirOn == 0f && decAirOn == 0f) {
-            Log.d("RadioControl", "No log data")
+            Log.d(TAG, "No log data")
             logStatus.visibility = View.VISIBLE
             progress2.visibility = View.GONE
         } else {
@@ -466,7 +466,7 @@ class StatsActivity : AppCompatActivity() {
         }
 
 
-        Log.d("RadioControl", "Lost Signal $airplaneOn times")
+        Log.d(TAG, "Lost Signal $airplaneOn times")
 
         val p = Paint()
         p.color = Color.BLACK
@@ -562,7 +562,7 @@ class StatsActivity : AppCompatActivity() {
         //Checker of TODO Change complexity to if is default
         if (janRootOn == 0f && febRootOn == 0f && marRootOn == 0f && aprRootOn == 0f && mayRootOn == 0f && junRootOn == 0f && julRootOn == 0f && augRootOn == 0f &&
             sepRootOn == 0f && octRootOn == 0f && novRootOn == 0f && decRootOn == 0f) {
-            Log.d("RadioControl", "No log data")
+            Log.d(TAG, "No log data")
             logStatus.visibility = View.VISIBLE
             progress3.visibility = View.GONE
         } else {
@@ -573,7 +573,7 @@ class StatsActivity : AppCompatActivity() {
         }
 
 
-        Log.d("RadioControl", "Root Accessed $rootOn times")
+        Log.d(TAG, "Root Accessed $rootOn times")
 
         val p = Paint()
         p.color = Color.BLACK
@@ -669,7 +669,7 @@ class StatsActivity : AppCompatActivity() {
         //Checker of
         if (janBootOn == 0f && febBootOn == 0f && marBootOn == 0f && aprBootOn == 0f && mayBootOn == 0f && junBootOn == 0f && julBootOn == 0f && augBootOn == 0f &&
             sepBootOn == 0f && octBootOn == 0f && novBootOn == 0f && decBootOn == 0f) {
-            Log.d("RadioControl", "No log data")
+            Log.d(TAG, "No log data")
         } else {
             dataAvailable = true
             val largest = Collections.max(listOf(janBootOn, febBootOn, marBootOn, aprBootOn, mayBootOn, junBootOn, julBootOn, augBootOn, sepBootOn, octBootOn, novBootOn, decBootOn))
@@ -678,7 +678,7 @@ class StatsActivity : AppCompatActivity() {
         }
 
 
-        Log.d("RadioControl", "Boot Accessed $bootOn times")
+        Log.d(TAG, "Boot Accessed $bootOn times")
 
         val p = Paint()
         p.color = Color.BLACK
@@ -732,7 +732,7 @@ class StatsActivity : AppCompatActivity() {
                         }
                         wifiSigLost++
                     }
-                    //Log.d("RadioControl", "LINE: " + line + " contains " + wifiSigLost);
+                    //Log.d(_root_ide_package_.com.nikhilparanjape.radiocontrol.activities.StatsActivity.Companion.TAG, "LINE: " + line + " contains " + wifiSigLost);
                 }
             } else {
                 Snackbar.make(findViewById(android.R.id.content), "No log file found", Snackbar.LENGTH_LONG)
@@ -778,14 +778,14 @@ class StatsActivity : AppCompatActivity() {
                         }
                         airplaneOn++
                     }
-                    //Log.d("RadioControl", "LINE: " + line + " contains " + airplaneOn);
+                    //Log.d(_root_ide_package_.com.nikhilparanjape.radiocontrol.activities.StatsActivity.Companion.TAG, "LINE: " + line + " contains " + airplaneOn);
                 }
             } else {
                 Snackbar.make(findViewById(android.R.id.content), "No log file found", Snackbar.LENGTH_LONG)
                         .show()
             }
         } catch (e: IOException) {
-            Log.d("RadioControl", "Error: $e")
+            Log.d(TAG, "Error: $e")
             Snackbar.make(findViewById(android.R.id.content), "Error: $e", Snackbar.LENGTH_LONG)
                     .show()
         }
@@ -824,7 +824,7 @@ class StatsActivity : AppCompatActivity() {
                         }
                         rootOn++
                     }
-                    //Log.d("RadioControl", "LINE: " + line + " contains " + wifiSigLost);
+                    //Log.d(_root_ide_package_.com.nikhilparanjape.radiocontrol.activities.StatsActivity.Companion.TAG, "LINE: " + line + " contains " + wifiSigLost);
                 }
             } else {
                 Snackbar.make(findViewById(android.R.id.content), "No log file found", Snackbar.LENGTH_LONG)
@@ -868,7 +868,7 @@ class StatsActivity : AppCompatActivity() {
                         }
                         bootOn++
                     }
-                    //Log.d("RadioControl", "LINE: " + line + " contains " + wifiSigLost);
+                    //Log.d(_root_ide_package_.com.nikhilparanjape.radiocontrol.activities.StatsActivity.Companion.TAG, "LINE: " + line + " contains " + wifiSigLost);
                 }
             } else {
                 Snackbar.make(findViewById(android.R.id.content), "No log file found", Snackbar.LENGTH_LONG)
@@ -891,7 +891,7 @@ class StatsActivity : AppCompatActivity() {
             return if (str!!.contains(sub)) { 1 }
             else { 0 }
         } catch (e: NullPointerException) {
-            Log.d("RadioControl", getString(R.string.error_count_return_null))
+            Log.d(TAG, getString(R.string.error_count_return_null))
         }
         return 0
 
@@ -914,6 +914,8 @@ class StatsActivity : AppCompatActivity() {
             super.onOptionsItemSelected(item)
         }
     }
-
+    companion object {
+        private const val TAG = "RadioControl-Stats"
+    }
 
 }

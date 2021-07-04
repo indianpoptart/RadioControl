@@ -100,8 +100,8 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
         private lateinit var notRootedIcon: Drawable
         private lateinit var carrierName: String
         private var versionName = BuildConfig.VERSION_NAME //Takes the apps current version name and makes it a variable
-
         /**Variables for Drawer items**/
+
         //private var util = Utilities() //Allows methods to extend any general utilities
 
         private lateinit var clayout: CoordinatorLayout

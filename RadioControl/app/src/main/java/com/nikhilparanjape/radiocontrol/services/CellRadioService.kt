@@ -55,6 +55,5 @@ class CellRadioService: JobIntentService() {
 
         private const val TAG = "RadioControl-CRJS"
         /*private const val PRIVATE_PREF = "prefs"*/
-
     }
 }

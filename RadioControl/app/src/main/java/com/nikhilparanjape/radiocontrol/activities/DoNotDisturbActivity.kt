@@ -126,7 +126,7 @@ class DoNotDisturbActivity : AppCompatActivity() {
         editor.putInt("isActive", 0)
         editor.apply()
         val intentAction = Intent(applicationContext, ActionReceiver::class.java)
-        Log.d("RadioControl", "Value Changed")
+        Log.d("RadioControl-DND", "Value Changed")
         Toast.makeText(applicationContext, "Standby Mode enabled",
                 Toast.LENGTH_LONG).show()
 

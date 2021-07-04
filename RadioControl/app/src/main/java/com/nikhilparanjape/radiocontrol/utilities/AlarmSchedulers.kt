@@ -65,7 +65,7 @@ class AlarmSchedulers{
 
         val alarm = c.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         alarm.cancel(pIntent)
-        Log.d("RadioControl", "$intentApp cancelled")
+        Log.d(TAG, "$intentApp cancelled")
     }
     fun scheduleWakeupAlarm(c: Context, hour: Int) {
         val cal = Calendar.getInstance()
@@ -114,7 +114,7 @@ class AlarmSchedulers{
         val cal = Calendar.getInstance()
         // start 30 seconds after boot completed
         cal.add(Calendar.MINUTE, intervalTime)
-        Log.d("RadioControl", "Interval: " + intervalTime + cal.time)
+        Log.d(TAG, "Interval: " + intervalTime + cal.time)
 
         // Construct an intent that will execute the AlarmReceiver
         val intent = Intent(c, TimedAlarmReceiver::class.java)
@@ -127,7 +127,7 @@ class AlarmSchedulers{
         val alarm = c.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         // First parameter is the type: ELAPSED_REALTIME, ELAPSED_REALTIME_WAKEUP, RTC_WAKEUP
         // Interval can be INTERVAL_FIFTEEN_MINUTES, INTERVAL_HALF_HOUR, INTERVAL_HOUR, INTERVAL_DAY
-        Log.d("RadioControl", "Time: " + (cal.timeInMillis - firstMillis))
+        Log.d(TAG, "Time: " + (cal.timeInMillis - firstMillis))
         //alarm.setInexactRepeating(RTC, firstMillis,
         //cal.getTimeInMillis(), pIntent);
 
@@ -153,7 +153,7 @@ class AlarmSchedulers{
 
         alarm.setInexactRepeating(AlarmManager.RTC_WAKEUP, firstMillis,
                 cal.timeInMillis, pIntent)
-        Log.d("RadioControl", "RootClock enabled for " + cal.time)
+        Log.d(TAG, "RootClock enabled for " + cal.time)
 
     }
 
@@ -168,7 +168,7 @@ class AlarmSchedulers{
                 intent, PendingIntent.FLAG_UPDATE_CURRENT)
         val alarm = c.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         alarm.cancel(pIntent)
-        Log.d("RadioControl", "RootClock cancelled")
+        Log.d(TAG, "RootClock cancelled")
     }
 
     fun cancelAlarm(c: Context) {
@@ -204,5 +204,8 @@ class AlarmSchedulers{
                 intent, PendingIntent.FLAG_UPDATE_CURRENT)
         val alarm = c.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         alarm.cancel(pIntent)
+    }
+    companion object {
+        private const val TAG = "RadioControl-Alarms"
     }
 }
