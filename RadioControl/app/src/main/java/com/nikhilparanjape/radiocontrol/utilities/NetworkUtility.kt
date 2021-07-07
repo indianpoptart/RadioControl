@@ -33,7 +33,6 @@ class NetworkUtility {
             Log.d("RadioControl-Networking", "Reachable?: $reachable, Time: $timeDifference")
 
             return reachable
-
         }
     }
 }

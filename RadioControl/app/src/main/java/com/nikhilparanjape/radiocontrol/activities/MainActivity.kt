@@ -41,7 +41,6 @@ import com.mikepenz.iconics.typeface.library.googlematerial.GoogleMaterial
 import com.mikepenz.iconics.utils.colorInt
 import com.mikepenz.iconics.utils.paddingDp
 import com.mikepenz.iconics.utils.sizeDp
-import com.mikepenz.materialdrawer.iconics.withIcon
 import com.mikepenz.materialdrawer.model.DividerDrawerItem
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem
 import com.mikepenz.materialdrawer.model.ProfileDrawerItem
@@ -118,20 +117,20 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
         var isRooted: Boolean = false // Assume not rooted
 
         //Grab device make and model for drawer
-        val deviceName: String
+        val getDeviceName: String
             get() {
                 val manufacturer = Build.MANUFACTURER
                 val model = Build.MODEL
                 return if (model.startsWith(manufacturer)) {
-                    capitalize(model)
+                    capitalizeText(model)
                 } else {
-                    capitalize(manufacturer) + " " + model
+                    capitalizeText(manufacturer) + " " + model
                 }
             }
 
-        //Capitalizes names for devices. Used by deviceName()
-        private fun capitalize(s: String?): String {
-            //Return nothing if string is empty
+        //Capitalizes names for devices. Used by getDeviceName()
+        private fun capitalizeText(s: String?): String {
+            //Return nothing if string 's' is empty or null
             if (s == null || s.isEmpty()) {
                 return ""
             }
@@ -143,12 +142,12 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
             }
         }
     }
-
+    /** BEGIN Billing setup **/
     //Public key for donation
     private val base64EncodedPublicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxnZmUx4gqEFCsMW+/uPXIzJSaaoP4J/2RVaxYT9Be0jfga0qdGF+Vq56mzQ/LYEZgLvFelGdWwXJ5Izq5Wl/cEW8cExhQ/WDuJvYVaemuU+JnHP1zIZ2H28NtzrDH0hb59k9R8owSx7NPNITshuC4MPwwOQDgDaYk02Hgi4woSzbDtyrvwW1A1FWpftb78i8Pphr7bT14MjpNyNznk4BohLMncEVK22O1N08xrVrR66kcTgYs+EZnkRKk2uPZclsPq4KVKG8LbLcxmDdslDBnhQkSPe3ntAC8DxGhVdgJJDwulcepxWoCby1GcMZTUAC1OKCZlvGRGSwyfIqbqF2JQIDAQAB"
-
     private val billingManager = KinAppManager(this, base64EncodedPublicKey)
-
+    /** END Billing setup **/
+    
     // Overridden from CoroutineScope,
     // Main context that is combined with the context of the Job as well
     override val coroutineContext: CoroutineContext
@@ -284,18 +283,18 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
 
         //Sets
         deviceIcon = when {
-            deviceName.contains("Nexus") -> AppCompatResources.getDrawable(applicationContext, R.mipmap.ic_nexus_logo)!!
-            deviceName.contains("Pixel") -> AppCompatResources.getDrawable(applicationContext, R.drawable.ic_google__g__logo)!!
-            deviceName.contains("Huawei") -> AppCompatResources.getDrawable(applicationContext, R.drawable.ic_huawei_logo)!!
-            deviceName.contains("LG") -> AppCompatResources.getDrawable(applicationContext, R.drawable.ic_lg_logo_white)!!
-            deviceName.contains("Motorola") -> AppCompatResources.getDrawable(applicationContext, R.mipmap.moto2)!!
-            deviceName.contains("OnePlus") -> AppCompatResources.getDrawable(applicationContext, R.mipmap.oneplus)!!
-            deviceName.contains("Samsung") -> AppCompatResources.getDrawable(applicationContext, R.mipmap.samsung)!!
+            getDeviceName.contains("Nexus") -> AppCompatResources.getDrawable(applicationContext, R.mipmap.ic_nexus_logo)!!
+            getDeviceName.contains("Pixel") -> AppCompatResources.getDrawable(applicationContext, R.drawable.ic_google__g__logo)!!
+            getDeviceName.contains("Huawei") -> AppCompatResources.getDrawable(applicationContext, R.drawable.ic_huawei_logo)!!
+            getDeviceName.contains("LG") -> AppCompatResources.getDrawable(applicationContext, R.drawable.ic_lg_logo_white)!!
+            getDeviceName.contains("Motorola") -> AppCompatResources.getDrawable(applicationContext, R.mipmap.moto2)!!
+            getDeviceName.contains("OnePlus") -> AppCompatResources.getDrawable(applicationContext, R.mipmap.oneplus)!!
+            getDeviceName.contains("Samsung") -> AppCompatResources.getDrawable(applicationContext, R.mipmap.samsung)!!
 
             else -> AppCompatResources.getDrawable(applicationContext, R.mipmap.ic_launcher)!!
         }
 
-        val profile1 = ProfileDrawerItem().apply { nameText = deviceName; descriptionText = "v$versionName"; iconDrawable = deviceIcon }
+        val profile1 = ProfileDrawerItem().apply { nameText = getDeviceName; descriptionText = "v$versionName"; iconDrawable = deviceIcon }
         val profile2 = ProfileDrawerItem().apply { nameText = getString(R.string.profile_root_status); descriptionText = carrierName; iconDrawable = carrierIcon }
 
         //Creates navigation drawer header
