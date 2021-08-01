@@ -87,7 +87,7 @@ class BackgroundJobService : JobService(), ConnectivityReceiver.ConnectivityRece
                     if (!isCallActive(applicationContext)) {
 
                         //Runs the cellular mode, otherwise, run the standard airplane mode
-                        if (prefs.getBoolean("altRootCommand", true)) {
+                        if (prefs.getBoolean("altRootCommand", false)) {
                             if (getCellStatus(applicationContext) == 1) {
                                 val output = Shell.su("service call phone 27").exec().out
                                 writeLog("root accessed: $output", applicationContext)
@@ -112,7 +112,7 @@ class BackgroundJobService : JobService(), ConnectivityReceiver.ConnectivityRece
                         }
                     }
                 }
-            //Here we check if the device connected to a wifi network, as well as if airplane mode and/or the cell radio are off and/or connected respectively
+            //Here we check if the device just connected to a wifi network, as well as if airplane mode and/or the cell radio are off and/or connected respectively
             } else if (isConnectedWifi(applicationContext) && !isAirplaneMode(applicationContext)) {
                 Log.d(TAG, "WiFi signal got")
 
@@ -173,11 +173,14 @@ class BackgroundJobService : JobService(), ConnectivityReceiver.ConnectivityRece
                     writeLog("The current SSID was blocked from list $selections", applicationContext)
                     jobFinished(params, false)
                 }//Pauses because WiFi network is in the list of disabled SSIDs
-            } else {
+            }
+            //Handle any other event not covered above, usually something is not right, or we lack some permission
+            else {
                 if (activeNetwork == null) {
                     Log.d(TAG, "Yeah, we connected")
                 } else {
-                    Log.e(TAG, "EGADS")
+                    //So activeNetwork has to have some value, lets see what that is
+                    Log.e(TAG, "EGADS: $activeNetwork")
                 }
                 jobFinished(params, false)
             }

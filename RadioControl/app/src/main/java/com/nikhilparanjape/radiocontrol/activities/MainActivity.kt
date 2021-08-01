@@ -147,7 +147,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
     private val base64EncodedPublicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxnZmUx4gqEFCsMW+/uPXIzJSaaoP4J/2RVaxYT9Be0jfga0qdGF+Vq56mzQ/LYEZgLvFelGdWwXJ5Izq5Wl/cEW8cExhQ/WDuJvYVaemuU+JnHP1zIZ2H28NtzrDH0hb59k9R8owSx7NPNITshuC4MPwwOQDgDaYk02Hgi4woSzbDtyrvwW1A1FWpftb78i8Pphr7bT14MjpNyNznk4BohLMncEVK22O1N08xrVrR66kcTgYs+EZnkRKk2uPZclsPq4KVKG8LbLcxmDdslDBnhQkSPe3ntAC8DxGhVdgJJDwulcepxWoCby1GcMZTUAC1OKCZlvGRGSwyfIqbqF2JQIDAQAB"
     private val billingManager = KinAppManager(this, base64EncodedPublicKey)
     /** END Billing setup **/
-    
+
     // Overridden from CoroutineScope,
     // Main context that is combined with the context of the Job as well
     override val coroutineContext: CoroutineContext
@@ -257,7 +257,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
             colorInt = Color.GREEN
         }
 
-        /** Archive Code #2 **/
+        /** Archived Code #2 **/
 
         //Checks if workmode(Intelligent Mode) is enabled and starts the Persistence Service, otherwise it registers the legacy broadcast receivers
         if (mySharedPref.getBoolean(getString(R.string.preference_work_mode), false)) {

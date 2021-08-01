@@ -8,6 +8,7 @@ import android.app.NotificationManager
 import android.app.NotificationManager.IMPORTANCE_DEFAULT
 import android.app.PendingIntent
 import android.app.job.JobInfo
+import android.app.job.JobScheduler
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
@@ -37,6 +38,8 @@ import java.net.UnknownHostException
 import java.net.InetAddress
 
 import android.os.AsyncTask
+import androidx.core.content.ContextCompat.getSystemService
+import androidx.core.content.getSystemService
 
 /**
  * Created by Nikhil on 2/3/2016.
