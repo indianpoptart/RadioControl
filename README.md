@@ -42,6 +42,7 @@ The app works properly, and has been personally tested on these devices:
 - ![Google](https://nikhilp.org/images/google.png) Google Pixel/XL
 - ![Google](https://nikhilp.org/images/google.png) Google Pixel 2/2XL
 - ![LG](https://nikhilp.org/images/lg.png) LG V10 
+- ![LG](https://nikhilp.org/images/lg.png) LG V20 
 - ![Motorola](https://nikhilp.org/images/moto.png) Moto X (2nd Gen.) 
 - ![Motorola](https://nikhilp.org/images/moto.png) Nexus 6 
 - ![Huawei](https://nikhilp.org/images/huawei.png) Nexus 6P 
