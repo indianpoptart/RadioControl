@@ -101,3 +101,4 @@ lint/tmp/
 
 # Android Profiling
 *.hprof
+RadioControl/gradle/wrapper/gradle-wrapper.properties
