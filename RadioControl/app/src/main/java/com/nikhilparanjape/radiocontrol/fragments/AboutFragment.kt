@@ -22,7 +22,6 @@ import com.nikhilparanjape.radiocontrol.R
 import com.nikhilparanjape.radiocontrol.activities.ChangeLogActivity
 import com.nikhilparanjape.radiocontrol.activities.TutorialActivity
 import com.nikhilparanjape.radiocontrol.utilities.Utilities
-import com.novoda.simplechromecustomtabs.SimpleChromeCustomTabs
 
 /**
  * Created by Nikhil on 4/5/2016.
@@ -44,7 +43,7 @@ class AboutFragment : PreferenceFragmentCompat() {
             preferenceScreen.findPreference<Preference>("source")?.isEnabled = false
             preferenceScreen.findPreference<Preference>("support")?.isEnabled = false
         }
-        SimpleChromeCustomTabs.initialize(requireContext())
+        //SimpleChromeCustomTabs.initialize(requireContext()) //Wow I already migrated away from this nice
     }
     override fun onPreferenceTreeClick(preference: Preference): Boolean {
 
