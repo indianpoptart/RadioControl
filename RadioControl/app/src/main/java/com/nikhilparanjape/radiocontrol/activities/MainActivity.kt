@@ -83,7 +83,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
     companion object {
         /*private const val PRIVATE_PREF = "prefs"*/ //Used for shared prefs
         private const val VERSION_KEY = "version_number"
-        //Donation related keys
+        //Donation related keys (wow I misspelled the shit out of my own name for these variables, which I can't change since they are hardcoded into google play, nice going)
         internal const val ITEM_ONE_DOLLAR = "com.nikihlparanjape.radiocontrol.donate.one"
         internal const val ITEM_THREE_DOLLAR = "com.nikihlparanjape.radiocontrol.donate.three"
         internal const val ITEM_FIVE_DOLLAR = "com.nikihlparanjape.radiocontrol.donate.five"
@@ -128,7 +128,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
                 }
             }
 
-        //Capitalizes names for devices. Used by getDeviceName()
+        //A function that capitalizes names for strings. Used directly by getDeviceName()
         private fun capitalizeText(s: String?): String {
             //Return nothing if string 's' is empty or null
             if (s == null || s.isEmpty()) {
@@ -207,7 +207,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
         //val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar) // Sets the actionBar to the ActivityBinding toolbar
         val actionBar = supportActionBar
-        val latencyFAB = findViewById<FloatingActionButton>(R.id.fab) //Main action button for ping testing
+        val latencyFAB = findViewById<FloatingActionButton>(R.id.fab) //Main action button for ping testing (Should be in the bottom right of the main activity)
 
         //  TextViews
         val statusText = findViewById<TextView>(R.id.statusText)
@@ -229,7 +229,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
         //Creates the latency checker FAB button
         latencyFAB.setImageDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.ic_network_check_white_48dp))
 
-    /**  BEGIN buttons **/
+    /**  BEGIN button initialization **/
         //  UI Switches and Buttons
         val linkSpeedButton = findViewById<Button>(R.id.linkSpeedButton)
         val toggle = findViewById<SwitchMaterial>(R.id.enableSwitch)
@@ -241,10 +241,10 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
         val nightCancel = findViewById<Button>(R.id.night_mode_cancel)
         val radioOffButton = findViewById<Button>(R.id.cellRadioOff)
         val forceCrashButton = findViewById<Button>(R.id.forceCrashButton)
-    /**  END buttons **/
+    /**  END buttons initialization **/
 
         /* First start init  */
-        programVersionUpdateInit(isFirstStart)//initializes the whats new dialog
+        programVersionUpdateInit(isFirstStart) //initializes the whats new dialog; Set first start parameters
 
         //Sets a default Profile2 Drawer icon
         carrierIcon = IconicsDrawable(this, GoogleMaterial.Icon.gmd_help).apply {
@@ -418,9 +418,9 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
 
     /** BEGIN Button Click Listeners **/
 
-        /** Main Radiocontrol toggle switch  **/
+        /** Main RadioControl toggle switch listener **/
         toggle.setOnCheckedChangeListener { _, isChecked ->
-            Log.d("RadioControl-Main","Clickety Clockety")
+            Log.d("RadioControl-Main","Click Clock")
             mainProgressBar.visibility = View.VISIBLE
 
             if (!isChecked) {
@@ -471,7 +471,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
             //dialog.visibility = View.GONE //Make sure the dialog is gone
             editor.apply()
         }
-        /** END Radiocontrol toggle switch  **/
+        /** END RadioControl toggle switch listener **/
 
         toggle.setOnLongClickListener {
             val bgj = Intent(applicationContext, BackgroundJobService::class.java)
