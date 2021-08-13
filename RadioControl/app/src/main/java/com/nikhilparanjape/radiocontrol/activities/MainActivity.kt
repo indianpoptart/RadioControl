@@ -355,10 +355,14 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
                 } else if (position == 8) {
                     //Donation
                     Log.d("RadioControl-Main", "Donation button pressed")
-                    if (Utilities.isConnected(applicationContext) && isBillingReady) {
+                    if (!isBillingReady){
+                        showBillingErrorDialog()
+                    }
+                    else if (!Utilities.isConnected(applicationContext)){
+                        showNetworkErrorDialog()
+                    }
+                    else{
                         showDonateDialog()
-                    } else {
-                        showErrorDialog()
                     }
                 } else if (position == 9) {
                     Log.d("RadioControl-Main", "Feedback")
@@ -896,13 +900,30 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
     }
 
     //Internet Error dialog
-    private fun showErrorDialog() {
+    private fun showNetworkErrorDialog() {
         val view = inflate(applicationContext, R.layout.dialog_no_internet, null)//Initializes the view for error dialog
         val builder = AlertDialog.Builder(this)//creates alertdialog
         val title = TextView(this)
 
-        // You Can Customise your Title here
         title.setText(R.string.noInternet)
+        title.setBackgroundColor(Color.DKGRAY)
+        title.setPadding(10, 10, 10, 10)
+        title.gravity = Gravity.CENTER
+        title.setTextColor(Color.WHITE)
+        title.textSize = 20f
+
+        builder.setCustomTitle(title)
+        builder.setView(view)
+            .setPositiveButton(R.string.text_ok) { dialog, _ -> dialog.dismiss() }
+
+        builder.create().show()
+    }
+    private fun showBillingErrorDialog() {
+        val view = inflate(applicationContext, R.layout.dialog_no_billing, null)//Initializes the view for billing error dialog
+        val builder = AlertDialog.Builder(this)//creates alertdialog
+        val title = TextView(this)
+
+        title.setText(R.string.noBilling)
         title.setBackgroundColor(Color.DKGRAY)
         title.setPadding(10, 10, 10, 10)
         title.gravity = Gravity.CENTER

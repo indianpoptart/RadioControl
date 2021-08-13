@@ -19,6 +19,7 @@
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="noInternet">No Internet Connection</string>
+    <string name="noBilling">Billing Error</string>
     <!--couldn\'t get root-->
     <string name="waitRoot">is waiting for root</string>
     <string name="noRoot">couldn\'t get root</string>
@@ -170,6 +171,7 @@
     <string name="text_billing_5">$4.99</string>
     <string name="text_billing_10">$9.99</string>
     <string name="text_donate_no_internet">Please connect to the internet before trying to donate</string>
+    <string name="text_donate_no_billing">A problem occurred with billing services</string>
     <string name="text_intro_network_connectivity">The network connectivity checker alerts you when the current WiFi network is not connected to the internet. This is not required in newer versions of Android as it is a built-in feature</string>
     <string name="title_magisksu">MagiskSU</string>
     <string name="title_call_detector">Call Detector (Experimental)</string>
