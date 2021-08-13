@@ -2,13 +2,6 @@ package com.nikhilparanjape.radiocontrol.utilities
 
 import android.content.Context
 import android.util.Log
-import android.view.View
-import android.widget.ProgressBar
-import android.widget.TextView
-import androidx.core.content.ContextCompat
-import com.google.android.material.snackbar.Snackbar
-import com.nikhilparanjape.radiocontrol.R
-import com.nikhilparanjape.radiocontrol.activities.MainActivity
 import java.net.InetAddress
 import kotlin.system.measureTimeMillis
 

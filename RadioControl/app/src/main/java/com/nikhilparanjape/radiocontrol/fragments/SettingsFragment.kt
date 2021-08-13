@@ -2,7 +2,6 @@ package com.nikhilparanjape.radiocontrol.fragments
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
@@ -19,7 +18,6 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 import androidx.preference.EditTextPreference
 import androidx.preference.PreferenceFragmentCompat
-import androidx.preference.PreferenceManager
 import com.afollestad.materialdialogs.MaterialDialog
 import com.borax12.materialdaterangepicker.time.RadialPickerLayout
 import com.borax12.materialdaterangepicker.time.TimePickerDialog
@@ -30,7 +28,7 @@ import com.nikhilparanjape.radiocontrol.services.PersistenceService
 import com.nikhilparanjape.radiocontrol.utilities.AlarmSchedulers
 import com.nikhilparanjape.radiocontrol.utilities.RootAccess
 import java.io.File
-import java.util.*
+import java.util.Calendar
 
 
 /**

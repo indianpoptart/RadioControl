@@ -257,7 +257,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
             colorInt = Color.GREEN
         }
 
-        /** Archived Code #2 **/
+        /** Insert Archived Code #2 here **/
 
         //Checks if workmode(Intelligent Mode) is enabled and starts the Persistence Service, otherwise it registers the legacy broadcast receivers
         if (mySharedPref.getBoolean(getString(R.string.preference_work_mode), false)) {
@@ -281,7 +281,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
 
     /** Begin initializing drawer **/
 
-        //Sets
+        //Sets device logo icons
         deviceIcon = when {
             getDeviceName.contains("Nexus") -> AppCompatResources.getDrawable(applicationContext, R.mipmap.ic_nexus_logo)!!
             getDeviceName.contains("Pixel") -> AppCompatResources.getDrawable(applicationContext, R.drawable.ic_google__g__logo)!!
@@ -356,10 +356,10 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
                     //Donation
                     Log.d("RadioControl-Main", "Donation button pressed")
                     if (!isBillingReady){
-                        showBillingErrorDialog()
+                        showErrorDialog(R.layout.dialog_no_billing,R.string.noBilling)
                     }
                     else if (!Utilities.isConnected(applicationContext)){
-                        showNetworkErrorDialog()
+                        showErrorDialog(R.layout.dialog_no_internet,R.string.noInternet)
                     }
                     else{
                         showDonateDialog()
@@ -563,7 +563,6 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
                 }
             }
         }
-
     /** END DEV Button Click Listeners **/
 
     }
@@ -704,24 +703,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
         pm.setComponentEnabledSetting(
                 component,
                 PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
-                PackageManager.DONT_KILL_APP)
-    }
-
-    override fun onConfigurationChanged(newConfig: Configuration) {
-        super.onConfigurationChanged(newConfig)
-        actionBarDrawerToggle.onConfigurationChanged(newConfig)
-    }
-
-    override fun onPostCreate(savedInstanceState: Bundle?) {
-        super.onPostCreate(savedInstanceState)
-        actionBarDrawerToggle.syncState()
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (actionBarDrawerToggle.onOptionsItemSelected(item)) {
-            return true
-        }
-        return super.onOptionsItemSelected(item)
+                PackageManager.DONT_KILL_APP) //Don't Kill App is supposed to tell android, hey, back off. Sometimes it works
     }
 
     /*override fun onSaveInstanceState(_outState: Bundle) {
@@ -803,51 +785,6 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
         val intent = Intent(this, StatsActivity::class.java)
         startActivity(intent)}
 
-    override fun onBillingReady() {
-        isBillingReady = true
-    }
-
-    override fun onPurchaseFinished(
-        purchaseResult: KinAppPurchaseResult,
-        purchase: KinAppPurchase?
-    ) {
-        // Handle your purchase result here
-        when (purchaseResult) {
-            KinAppPurchaseResult.SUCCESS -> {
-                Toast.makeText(applicationContext, R.string.donationThanks, Toast.LENGTH_LONG).show()
-                Log.d("RadioControl-Main", "In-app purchase succeeded")
-                val getPrefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(applicationContext)
-                val editor = getPrefs.edit()
-                editor.putBoolean(getString(R.string.preference_is_donated), true)
-                editor.apply()
-
-                //billingManager.consumePurchase(purchase!!).await()
-
-            }
-            KinAppPurchaseResult.ALREADY_OWNED -> {
-                Toast.makeText(applicationContext, R.string.donationExists, Toast.LENGTH_LONG).show()
-                Log.d("RadioControl-Main", "Donation already purchased")
-            }
-            KinAppPurchaseResult.INVALID_PURCHASE -> {
-                // Purchase invalid and cannot be processed
-            }
-            KinAppPurchaseResult.INVALID_SIGNATURE -> {
-                Toast.makeText(applicationContext, R.string.donationThanks, Toast.LENGTH_LONG).show()
-                Log.d("RadioControl-Main", "In-app purchase succeeded, however verification failed")
-                val pref = androidx.preference.PreferenceManager.getDefaultSharedPreferences(applicationContext)
-                val editor = pref.edit()
-                editor.putBoolean(getString(R.string.preference_is_donated), true)
-                editor.apply()
-            }
-            KinAppPurchaseResult.CANCEL -> {
-                //Toast.makeText(MainActivity.this, R.string.donationCancel, Toast.LENGTH_LONG).show();
-                Snackbar.make(findViewById(android.R.id.content), R.string.donationCancel, Snackbar.LENGTH_LONG)
-                    .show()
-                Log.d("RadioControl-Main", "Purchase Cancelled")
-            }
-        }
-    }
-
     private fun showUpdated(c: Context) = MaterialDialog(c)
             .title(R.string.title_whats_new)
             .positiveButton(R.string.text_got_it) { dialog ->
@@ -896,45 +833,89 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
             billingManager.purchase(this, ITEM_TEN_DOLLAR, KinAppProductType.INAPP)
         }
 
-
     }
-
-    //Internet Error dialog
-    private fun showNetworkErrorDialog() {
-        val view = inflate(applicationContext, R.layout.dialog_no_internet, null)//Initializes the view for error dialog
-        val builder = AlertDialog.Builder(this)//creates alertdialog
+    private fun showErrorDialog(layout: Int, errorTitle: Int){
+        /** Variable Initialization **/
+        val view = inflate(applicationContext, layout, null)//Initializes the view for error dialog with specified dialog layout
+        val builder = AlertDialog.Builder(this)//creates alertdialog builder
         val title = TextView(this)
 
-        title.setText(R.string.noInternet)
+        /** DialogTitle Customization **/
+        title.setText(errorTitle)
         title.setBackgroundColor(Color.DKGRAY)
         title.setPadding(10, 10, 10, 10)
         title.gravity = Gravity.CENTER
         title.setTextColor(Color.WHITE)
         title.textSize = 20f
 
+        /** Dialog Finalization **/
         builder.setCustomTitle(title)
         builder.setView(view)
             .setPositiveButton(R.string.text_ok) { dialog, _ -> dialog.dismiss() }
 
         builder.create().show()
     }
-    private fun showBillingErrorDialog() {
-        val view = inflate(applicationContext, R.layout.dialog_no_billing, null)//Initializes the view for billing error dialog
-        val builder = AlertDialog.Builder(this)//creates alertdialog
-        val title = TextView(this)
 
-        title.setText(R.string.noBilling)
-        title.setBackgroundColor(Color.DKGRAY)
-        title.setPadding(10, 10, 10, 10)
-        title.gravity = Gravity.CENTER
-        title.setTextColor(Color.WHITE)
-        title.textSize = 20f
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        actionBarDrawerToggle.onConfigurationChanged(newConfig)
+    }
 
-        builder.setCustomTitle(title)
-        builder.setView(view)
-            .setPositiveButton(R.string.text_ok) { dialog, _ -> dialog.dismiss() }
+    override fun onPostCreate(savedInstanceState: Bundle?) {
+        super.onPostCreate(savedInstanceState)
+        actionBarDrawerToggle.syncState()
+    }
 
-        builder.create().show()
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (actionBarDrawerToggle.onOptionsItemSelected(item)) {
+            return true
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    override fun onBillingReady() {
+        isBillingReady = true
+    }
+
+    override fun onPurchaseFinished(
+        purchaseResult: KinAppPurchaseResult,
+        purchase: KinAppPurchase?
+    ) {
+        // Handle your purchase result here
+        when (purchaseResult) {
+            KinAppPurchaseResult.SUCCESS -> {
+                Toast.makeText(applicationContext, R.string.donationThanks, Toast.LENGTH_LONG).show()
+                Log.d("RadioControl-Main", "In-app purchase succeeded")
+                val getPrefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(applicationContext)
+                val editor = getPrefs.edit()
+                editor.putBoolean(getString(R.string.preference_is_donated), true)
+                editor.apply()
+
+                //billingManager.consumePurchase(purchase!!).await()
+
+            }
+            KinAppPurchaseResult.ALREADY_OWNED -> {
+                Toast.makeText(applicationContext, R.string.donationExists, Toast.LENGTH_LONG).show()
+                Log.d("RadioControl-Main", "Donation already purchased")
+            }
+            KinAppPurchaseResult.INVALID_PURCHASE -> {
+                // Purchase invalid and cannot be processed
+            }
+            KinAppPurchaseResult.INVALID_SIGNATURE -> {
+                Toast.makeText(applicationContext, R.string.donationThanks, Toast.LENGTH_LONG).show()
+                Log.d("RadioControl-Main", "In-app purchase succeeded, however verification failed")
+                val pref = androidx.preference.PreferenceManager.getDefaultSharedPreferences(applicationContext)
+                val editor = pref.edit()
+                editor.putBoolean(getString(R.string.preference_is_donated), true)
+                editor.apply()
+            }
+            KinAppPurchaseResult.CANCEL -> {
+                //Toast.makeText(MainActivity.this, R.string.donationCancel, Toast.LENGTH_LONG).show();
+                Snackbar.make(findViewById(android.R.id.content), R.string.donationCancel, Snackbar.LENGTH_LONG)
+                    .show()
+                Log.d("RadioControl-Main", "Purchase Cancelled")
+            }
+        }
     }
 
     override fun onResume() {

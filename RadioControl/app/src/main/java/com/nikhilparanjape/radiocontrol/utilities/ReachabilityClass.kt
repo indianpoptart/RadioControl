@@ -5,7 +5,6 @@ import android.net.ConnectivityManager
 import android.net.Network
 import android.os.Build
 import android.util.Log
-import com.google.android.material.tabs.TabLayout
 import kotlinx.coroutines.flow.MutableStateFlow
 
 class ReachabilityClass (private val context: Context){
