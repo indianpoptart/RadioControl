@@ -3,7 +3,7 @@
 
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/ec1a9e5c4b174c609a39d0aa8d7a7ff7)](https://www.codacy.com/gh/indianpoptart/RadioControl/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=indianpoptart/RadioControl&amp;utm_campaign=Badge_Grade)
 [![Join the chat at https://gitter.im/indianpoptart/RadioControl](https://badges.gitter.im/indianpoptart/RadioControl.svg)](https://gitter.im/indianpoptart/RadioControl?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-![Travis Badge](https://www.travis-ci.com/indianpoptart/RadioControl.svg?branch=master)
+[![Android CI](https://github.com/indianpoptart/RadioControl/actions/workflows/android.yml/badge.svg)](https://github.com/indianpoptart/RadioControl/actions/workflows/android.yml)
 
 
 ***Root IS Required!*** - [XDA Guide](https://www.xda-developers.com/root/)
