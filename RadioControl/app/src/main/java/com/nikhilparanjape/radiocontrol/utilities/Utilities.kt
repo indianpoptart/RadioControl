@@ -40,7 +40,7 @@ class Utilities {
     companion object {
         /**
          * Check if there is any active call
-         * @param context
+         * @param context allows access to application-specific resources and classes
          * @return
          */
         fun isCallActive(context: Context): Boolean {
@@ -50,7 +50,7 @@ class Utilities {
 
         /**
          * gets network ssid
-         * @param context
+         * @param context allows access to application-specific resources and classes
          * @return the current ssid the device is connected to
          */
         fun getCurrentSsid(context: Context): String? {
@@ -70,7 +70,7 @@ class Utilities {
         }
         /**
          * Check if there is any active call
-         * @param context
+         * @param c allows access to application-specific resources and classes
          * @return a value between 0-3. 0 and 1 are good values, returning a 2 or 3 means there is some kind of error
          */
         fun getCellStatus(c: Context): Int {
@@ -103,7 +103,7 @@ class Utilities {
 
 
 
-        @Throws(java.lang.Exception::class)
+        //@Throws(java.lang.Exception::class)
         private fun getTransactionCode(context: Context): String {
             return try {
                 val mTelephonyManager = context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
@@ -128,6 +128,13 @@ class Utilities {
             return Settings.Global.getInt(context.contentResolver, "mobile_data", 0) == 1
         }
 
+        /**
+         * Runs a root level command to control the mobile network on device
+         *
+         * This method always requires transactionCodes that are device specific from getTransactionCode()
+         *
+         * @param context allows access to application-specific resources and classes
+         */
         @Throws(Exception::class)
         fun setMobileNetworkFromLollipop(context: Context) {
             var command: String? = null
@@ -172,8 +179,8 @@ class Utilities {
 
         /**
          * Checks link speed
-         * @param c
-         * @return
+         * @param c allows access to application-specific resources and classes
+         * @return linkSpeed The current wifi networks link speed
          */
         fun linkSpeed(c: Context): Int {
             val wifiManager = c.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
@@ -183,9 +190,8 @@ class Utilities {
         }
 
         /**
-         * Writes logs
-         * @param c
-         * @return
+         * Writes to radiocontrol logs
+         * @param c allows access to application-specific resources and classes
          */
         fun writeLog(data: String, c: Context) {
             val preferences = androidx.preference.PreferenceManager.getDefaultSharedPreferences(c)
@@ -207,8 +213,12 @@ class Utilities {
                 }
             }
         }
-
-        // Schedule the start of the service every 10 - 30 seconds
+        /**
+         * Schedule the start of the BackgroundJobService every 10 - 30 seconds
+         * This ensures that the device is properly connected
+         *
+         * @param context allows access to application-specific resources and classes
+         */
         fun scheduleJob(context: Context) {
             val serviceComponent = ComponentName(context, BackgroundJobService::class.java)
             val builder = JobInfo.Builder(1, serviceComponent)
@@ -228,7 +238,13 @@ class Utilities {
             //(getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler).schedule(builder.build())
         }
 
-
+        /**
+         * Gets and returns the frequency of the connected WiFi network (eg. 2.4 or 5 GHz)
+         *
+         * @param c allows access to application-specific resources and classes
+         *
+         * @return frequency of WiFi network
+         */
         fun frequency(c: Context): Int {
             val wifiManager = c.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
             val freq = wifiManager.connectionInfo.frequency
@@ -247,10 +263,13 @@ class Utilities {
         }
 
         @SuppressLint("ByteOrderMark")
-                /**
-         * Makes a basic network alert
-         * @param context
-         * @return
+        /**
+         * Makes a basic network alert notification
+         * @param context allows access to application-specific resources and classes
+         * @param mes The main body of the notification
+         * @param vibrate Sets if the notification will vibrate
+         * @param sound Sets if the notification will make a sound
+         * @param heads Should the notification appear in a floating window
          */
         fun sendNote(context: Context, mes: String, vibrate: Boolean, sound: Boolean, heads: Boolean) {
 
@@ -301,7 +320,7 @@ class Utilities {
 
         /**
          * Get the network info
-         * @param context
+         * @param context allows access to application-specific resources and classes
          * @return
          */
         private fun getNetworkInfo(context: Context): NetworkInfo? {
@@ -311,8 +330,9 @@ class Utilities {
 
         /**
          * Check if there is any connectivity via WiFi
-         * @param context
-         * @return
+         *
+         * @param context allows access to application-specific resources and classes
+         * @return info about the current WiFi network
          */
         fun isConnectedWifi(context: Context): Boolean {
             val info = getNetworkInfo(context)
@@ -320,7 +340,8 @@ class Utilities {
         }
         /**
          * Check if the WiFi module is enabled.
-         * @param context
+         *
+         * @param context allows access to application-specific resources and classes
          * @return
          */
         fun isWifiOn(context: Context): Boolean {
@@ -330,7 +351,8 @@ class Utilities {
 
         /**
          * Check if there is any connectivity at all(local or internet)
-         * @param context
+         *
+         * @param context allows access to application-specific resources and classes
          * @return
          */
         fun isConnected(context: Context): Boolean {
@@ -357,7 +379,11 @@ class Utilities {
             val info = getNetworkInfo(context)
             return info != null && info.isConnectedOrConnecting && isConnectionFast(info.type, info.subtype)
         }
-
+        /**
+         * Return whether airplane mode is on or off
+         * @param context
+         * @return bool
+         */
         fun isAirplaneMode(context: Context): Boolean {
             return Settings.Global.getInt(context.contentResolver,
                     Settings.Global.AIRPLANE_MODE_ON, 0) != 0
