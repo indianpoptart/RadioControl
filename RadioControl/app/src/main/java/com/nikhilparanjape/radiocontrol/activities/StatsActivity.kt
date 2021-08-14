@@ -119,17 +119,18 @@ class StatsActivity : AppCompatActivity() {
             editor.putInt("easing", 4)
             editor.apply()
         }
-        val actionBar = findViewById<Toolbar>(R.id.toolbar)
+        setSupportActionBar(findViewById(R.id.toolbar))
+        val actionBar = supportActionBar
         //Sets coordlayout
         findViewById<CoordinatorLayout>(R.id.clayout)
 
         if (actionBar != null) {
-            supportActionBar?.setHomeAsUpIndicator(IconicsDrawable(this, GoogleMaterial.Icon.gmd_arrow_back).apply {
+            actionBar.setHomeAsUpIndicator(IconicsDrawable(this, GoogleMaterial.Icon.gmd_arrow_back).apply {
                 colorInt = Color.WHITE
                 sizeDp = 24
                 paddingDp = 1
             })
-            supportActionBar?.setDisplayHomeAsUpEnabled(true)
+            actionBar.setDisplayHomeAsUpEnabled(true)
             actionBar.title = "Statistics"
 
         }
@@ -898,7 +899,7 @@ class StatsActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        if (materialSheetFab.isSheetVisible()) {
+        if (materialSheetFab.isSheetVisible) {
             materialSheetFab.hideSheet()
         } else {
             super.onBackPressed()

@@ -212,8 +212,7 @@ class AboutFragment : PreferenceFragmentCompat() {
     }
 
     companion object {
-        private const val PRIVATE_PREF = "prefs"
-        private const val TAG = ""
+        private const val TAG = "RadioControl-About"
     }
 
 }

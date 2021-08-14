@@ -5,6 +5,7 @@ import android.database.DataSetObserver
 import android.graphics.Color
 import android.net.ConnectivityManager
 import android.net.wifi.WifiConfiguration
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -34,6 +35,7 @@ class NetworkListActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_network_list)
+        setSupportActionBar(findViewById(R.id.toolbar))
         val actionBar = supportActionBar
 
         if (actionBar != null) {
@@ -46,8 +48,16 @@ class NetworkListActivity : AppCompatActivity() {
             actionBar.setTitle(R.string.title_activity_network)
         }
         val netList = findViewById<ListView>(R.id.network_list)
+        val errorText = findViewById<TextView>(R.id.errorTextView)
+        if (Build.VERSION.SDK_INT >= 30){
+            //listWifiNetworks will crash on versions above SDK 30 due to deprecations
+            // TODO Fix/make an alternative network blocklist solution
+            errorText.visibility = View.VISIBLE
 
-        listWifiNetworks(netList)
+        } else{
+            listWifiNetworks(netList)
+        }
+
     }
 
     private fun listWifiNetworks(lv: ListView) {
@@ -144,4 +154,5 @@ class NetworkListActivity : AppCompatActivity() {
         }
         return super.onOptionsItemSelected(item)
     }
+
 }

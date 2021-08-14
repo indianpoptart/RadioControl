@@ -38,7 +38,7 @@ class CustomPhoneStateListener(private val context: Context) : PhoneStateListene
             TelephonyManager.CALL_STATE_OFFHOOK -> {
                 //when Off hook i.e in call
                 //doThingChangeNameLater()
-                Log.d(TAG,"Outgoing Call Starting");
+                Log.d(TAG,"Outgoing Call Starting")
                 isIncoming = false
                 lastState = state
             }

@@ -1,8 +1,6 @@
 package com.nikhilparanjape.radiocontrol.activities
 
-import android.content.Intent
 import android.os.Bundle
-import android.view.View
 import com.github.paolorotolo.appintro.AppIntro
 import com.nikhilparanjape.radiocontrol.R
 import com.nikhilparanjape.radiocontrol.fragments.SlideFragment

@@ -54,10 +54,9 @@ class Fab : FloatingActionButton, AnimatedFab {
             val pivotX = pivotX + translationX
             val pivotY = pivotY + translationY
 
-            val anim: ScaleAnimation
             // If pivots are 0, that means the FAB hasn't been drawn yet so just use the
             // center of the FAB
-            anim = if (pivotX == 0f || pivotY == 0f) {
+            val anim: ScaleAnimation = if (pivotX == 0f || pivotY == 0f) {
                 ScaleAnimation(0f, 1f, 0f, 1f, Animation.RELATIVE_TO_SELF, 0.5f,
                         Animation.RELATIVE_TO_SELF, 0.5f)
             } else {
