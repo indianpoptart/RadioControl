@@ -381,7 +381,7 @@ class Utilities {
         }
         /**
          * Return whether airplane mode is on or off
-         * @param context
+         * @param context allows access to application-specific resources and classes
          * @return bool
          */
         fun isAirplaneMode(context: Context): Boolean {
@@ -391,8 +391,8 @@ class Utilities {
 
         /**
          * Check if the connection is fast
-         * @param type
-         * @param subType
+         * @param type Type of the current network (WiFi/Mobile)
+         * @param subType A subtype of mobile networks (eg. CDMA, HSPA, UMTS, LTE)
          * @return
          * TODO Use transport types: https://developer.android.com/reference/kotlin/android/net/NetworkCapabilities
          */
