@@ -24,7 +24,7 @@ import com.mikepenz.iconics.utils.sizeDp
 import com.nikhilparanjape.radiocontrol.R
 
 /**
- * Created by Nikhil on Fill
+ * Created by Nikhil on 04/11/2016
  *
  * @author
  * An activity that lists all saved WiFi Networks

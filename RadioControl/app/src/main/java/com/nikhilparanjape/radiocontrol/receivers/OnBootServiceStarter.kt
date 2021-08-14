@@ -8,7 +8,7 @@ import com.nikhilparanjape.radiocontrol.services.OnBootIntentService
 import com.nikhilparanjape.radiocontrol.utilities.Utilities
 
 /**
- * Created by Nikhil on Fillin.
+ * Created by Nikhil on 05/29/2021.
  *
  * @author
  * A service starter

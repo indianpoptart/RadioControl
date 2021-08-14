@@ -11,6 +11,10 @@ import com.mikepenz.iconics.utils.paddingDp
 import com.mikepenz.iconics.utils.sizeDp
 import com.nikhilparanjape.radiocontrol.R
 
+/**
+ * Created by Nikhil Paranjape on 04/11/2016.
+ */
+
 class ChangeLogActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {

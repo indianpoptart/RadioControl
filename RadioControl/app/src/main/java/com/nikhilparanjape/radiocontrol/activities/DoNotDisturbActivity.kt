@@ -27,6 +27,10 @@ import com.nikhilparanjape.radiocontrol.R
 import com.nikhilparanjape.radiocontrol.receivers.ActionReceiver
 import com.nikhilparanjape.radiocontrol.utilities.AlarmSchedulers
 
+/**
+ * Created by Nikhil Paranjape on 08/26/2016.
+ */
+
 class DoNotDisturbActivity : AppCompatActivity() {
 
     private var hours: Int = 0

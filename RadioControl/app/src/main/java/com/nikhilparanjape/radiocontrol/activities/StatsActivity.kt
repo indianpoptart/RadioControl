@@ -36,6 +36,9 @@ import java.io.*
 import java.text.SimpleDateFormat
 import java.util.*
 
+/**
+ * Created by Nikhil Paranjape on 04/17/2016.
+ */
 
 class StatsActivity : AppCompatActivity() {
     private var wifiSigLost = 0
