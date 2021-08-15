@@ -21,7 +21,7 @@ import java.util.*
 class AlarmSchedulers{
     //PendingIntent Variables
     private val defaultFlag = PendingIntent.FLAG_UPDATE_CURRENT
-    private val marshmallowFlag = defaultFlag or PendingIntent.FLAG_UPDATE_CURRENT
+    private val marshmallowFlag = PendingIntent.FLAG_IMMUTABLE or defaultFlag
 
     fun scheduleGeneralAlarm (c: Context, schedule: Boolean, hour: Int, minute: Int, intentApp: String, pIntentApp: String){
         val cal = Calendar.getInstance()
