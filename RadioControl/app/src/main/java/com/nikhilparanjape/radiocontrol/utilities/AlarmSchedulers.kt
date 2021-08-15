@@ -1,9 +1,11 @@
 package com.nikhilparanjape.radiocontrol.utilities
 
+import android.annotation.SuppressLint
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.util.Log
 import com.nikhilparanjape.radiocontrol.receivers.*
 import java.util.*
@@ -17,6 +19,10 @@ import java.util.*
  */
 
 class AlarmSchedulers{
+    //PendingIntent Variables
+    private val defaultFlag = PendingIntent.FLAG_UPDATE_CURRENT
+    private val marshmallowFlag = defaultFlag or PendingIntent.FLAG_UPDATE_CURRENT
+
     fun scheduleGeneralAlarm (c: Context, schedule: Boolean, hour: Int, minute: Int, intentApp: String, pIntentApp: String){
         val cal = Calendar.getInstance()
         // start 30 seconds after boot completed
@@ -29,20 +35,30 @@ class AlarmSchedulers{
             intentApp.contains("NightMode") -> Intent(c, NightModeReceiver::class.java)
             else -> Intent(c,TimedAlarmReceiver::class.java)
         }
+        val flags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            marshmallowFlag
+        } else{
+            defaultFlag
+        }
         val pIntent = when {
             pIntentApp.contains("Wakeup") -> PendingIntent.getBroadcast(c, WakeupReceiver.REQUEST_CODE,
-                    intent, PendingIntent.FLAG_UPDATE_CURRENT)
+                    intent, flags)
             pIntentApp.contains("TimedAlarm") -> PendingIntent.getBroadcast(c, TimedAlarmReceiver.REQUEST_CODE,
-                    intent, PendingIntent.FLAG_UPDATE_CURRENT)
+                    intent, flags)
             pIntentApp.contains("RootService") -> PendingIntent.getBroadcast(c, RootServiceReceiver.REQUEST_CODE,
-                    intent, PendingIntent.FLAG_UPDATE_CURRENT)
+                    intent, flags)
             pIntentApp.contains("NightMode") -> PendingIntent.getBroadcast(c, NightModeReceiver.REQUEST_CODE,
-                    intent, PendingIntent.FLAG_UPDATE_CURRENT)
+                    intent, flags)
             else -> PendingIntent.getBroadcast(c, TimedAlarmReceiver.REQUEST_CODE,
-                    intent, PendingIntent.FLAG_UPDATE_CURRENT)
+                    intent, flags)
         }
     }
     fun cancelAlarm(c: Context, intentApp: String, pIntentApp: String){
+        val flags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            marshmallowFlag
+        } else{
+            defaultFlag
+        }
         val intent = when {
             intentApp.contains("Wakeup") -> Intent(c, WakeupReceiver::class.java)
             intentApp.contains("TimedAlarm") -> Intent(c, TimedAlarmReceiver::class.java)
@@ -52,15 +68,15 @@ class AlarmSchedulers{
         }
         val pIntent = when {
             pIntentApp.contains("Wakeup") -> PendingIntent.getBroadcast(c, WakeupReceiver.REQUEST_CODE,
-                    intent, PendingIntent.FLAG_UPDATE_CURRENT)
+                    intent, flags)
             pIntentApp.contains("TimedAlarm") -> PendingIntent.getBroadcast(c, TimedAlarmReceiver.REQUEST_CODE,
-                    intent, PendingIntent.FLAG_UPDATE_CURRENT)
+                    intent, flags)
             pIntentApp.contains("RootService") -> PendingIntent.getBroadcast(c, RootServiceReceiver.REQUEST_CODE,
-                    intent, PendingIntent.FLAG_UPDATE_CURRENT)
+                    intent, flags)
             pIntentApp.contains("NightMode") -> PendingIntent.getBroadcast(c, NightModeReceiver.REQUEST_CODE,
-                    intent, PendingIntent.FLAG_UPDATE_CURRENT)
+                    intent, flags)
             else -> PendingIntent.getBroadcast(c, TimedAlarmReceiver.REQUEST_CODE,
-                    intent, PendingIntent.FLAG_UPDATE_CURRENT)
+                    intent, flags)
         }
 
         val alarm = c.getSystemService(Context.ALARM_SERVICE) as AlarmManager
@@ -73,9 +89,16 @@ class AlarmSchedulers{
         cal.add(Calendar.HOUR, hour)
         // Construct an intent that will execute the AlarmReceiver
         val intent = Intent(c, WakeupReceiver::class.java)
+
+        val flags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            marshmallowFlag
+        } else{
+            defaultFlag
+        }
+
         // Create a PendingIntent to be triggered when the alarm goes off
         val pIntent = PendingIntent.getBroadcast(c, ActionReceiver.REQUEST_CODE,
-                intent, PendingIntent.FLAG_UPDATE_CURRENT)
+            intent, flags)
         // Setup periodic alarm every 5 seconds
         val firstMillis = System.currentTimeMillis() // alarm is set right away
         val alarm = c.getSystemService(Context.ALARM_SERVICE) as AlarmManager
@@ -93,9 +116,16 @@ class AlarmSchedulers{
         cal.add(Calendar.MINUTE, minute)
         // Construct an intent that will execute the AlarmReceiver
         val intent = Intent(c, TimedAlarmReceiver::class.java)
+
+        val flags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            marshmallowFlag
+        } else{
+            defaultFlag
+        }
+
         // Create a PendingIntent to be triggered when the alarm goes off
         val pIntent = PendingIntent.getBroadcast(c, TimedAlarmReceiver.REQUEST_CODE,
-                intent, PendingIntent.FLAG_UPDATE_CURRENT)
+            intent, flags)
         // Setup periodic alarm every 5 seconds
         val firstMillis = System.currentTimeMillis() // alarm is set right away
         val alarm = c.getSystemService(Context.ALARM_SERVICE) as AlarmManager
@@ -106,6 +136,7 @@ class AlarmSchedulers{
     }
 
     // Setup a recurring alarm every 15,30,60 minutes
+    @SuppressLint("UnspecifiedImmutableFlag") // Covered this
     fun scheduleAlarm(c: Context) {
 
         val preferences = androidx.preference.PreferenceManager.getDefaultSharedPreferences(c)
@@ -118,9 +149,16 @@ class AlarmSchedulers{
 
         // Construct an intent that will execute the AlarmReceiver
         val intent = Intent(c, TimedAlarmReceiver::class.java)
+
+        val flags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            marshmallowFlag
+        } else{
+            defaultFlag
+        }
+
         // Create a PendingIntent to be triggered when the alarm goes off
         val pIntent = PendingIntent.getBroadcast(c, TimedAlarmReceiver.REQUEST_CODE,
-                intent, PendingIntent.FLAG_UPDATE_CURRENT)
+            intent, flags)
         // Setup periodic alarm every 5 seconds
         val firstMillis = System.currentTimeMillis() // alarm is set right away
         val interval = cal.timeInMillis
@@ -142,9 +180,16 @@ class AlarmSchedulers{
 
         // Construct an intent that will execute the AlarmReceiver
         val intent = Intent(c, RootServiceReceiver::class.java)
+
+        val flags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            marshmallowFlag
+        } else{
+            defaultFlag
+        }
+
         // Create a PendingIntent to be triggered when the alarm goes off
         val pIntent = PendingIntent.getBroadcast(c, RootServiceReceiver.REQUEST_CODE,
-                intent, PendingIntent.FLAG_UPDATE_CURRENT)
+            intent, flags)
         // Setup periodic alarm every X seconds
         val firstMillis = System.currentTimeMillis() // alarm is set right away
         val alarm = c.getSystemService(Context.ALARM_SERVICE) as AlarmManager
@@ -159,13 +204,19 @@ class AlarmSchedulers{
 
     /**
      * Cancels the pending root reset clock
-     * @param context
+     * @param c
      * @return
      */
     fun cancelRootAlarm(c: Context) {
         val intent = Intent(c, RootServiceReceiver::class.java)
+        val flags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            marshmallowFlag
+        } else{
+            defaultFlag
+        }
         val pIntent = PendingIntent.getBroadcast(c, RootServiceReceiver.REQUEST_CODE,
-                intent, PendingIntent.FLAG_UPDATE_CURRENT)
+            intent, flags)
+
         val alarm = c.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         alarm.cancel(pIntent)
         Log.d(TAG, "RootClock cancelled")
@@ -173,8 +224,15 @@ class AlarmSchedulers{
 
     fun cancelAlarm(c: Context) {
         val intent = Intent(c, TimedAlarmReceiver::class.java)
+
+        val flags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            marshmallowFlag
+        } else{
+            defaultFlag
+        }
+
         val pIntent = PendingIntent.getBroadcast(c, TimedAlarmReceiver.REQUEST_CODE,
-                intent, PendingIntent.FLAG_UPDATE_CURRENT)
+            intent, flags)
         val alarm = c.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         alarm.cancel(pIntent)
     }
@@ -186,9 +244,16 @@ class AlarmSchedulers{
         cal.add(Calendar.MINUTE, minute)
         // Construct an intent that will execute the AlarmReceiver
         val intent = Intent(c, NightModeReceiver::class.java)
+
+        val flags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            marshmallowFlag
+        } else{
+            defaultFlag
+        }
+
         // Create a PendingIntent to be triggered when the alarm goes off
         val pIntent = PendingIntent.getBroadcast(c, NightModeReceiver.REQUEST_CODE,
-                intent, PendingIntent.FLAG_UPDATE_CURRENT)
+            intent, flags)
         // Setup periodic alarm every 5 seconds
         val firstMillis = System.currentTimeMillis() // alarm is set right away
         val alarm = c.getSystemService(Context.ALARM_SERVICE) as AlarmManager
@@ -200,8 +265,16 @@ class AlarmSchedulers{
 
     fun cancelWakeupAlarm(c: Context) {
         val intent = Intent(c, WakeupReceiver::class.java)
+
+        val flags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            marshmallowFlag
+        } else{
+            defaultFlag
+        }
+
         val pIntent = PendingIntent.getBroadcast(c, WakeupReceiver.REQUEST_CODE,
-                intent, PendingIntent.FLAG_UPDATE_CURRENT)
+            intent, flags)
+
         val alarm = c.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         alarm.cancel(pIntent)
     }
