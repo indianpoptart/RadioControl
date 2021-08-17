@@ -84,6 +84,7 @@ dependencies {
     //debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.0-beta-3'
 
     //Google
+    implementation "com.android.billingclient:billing-ktx:4.0.0"
     implementation 'com.google.androidbrowserhelper:androidbrowserhelper:2.2.2'
     implementation 'com.google.android.material:material:1.4.0'
 
