@@ -69,19 +69,19 @@ class Utilities {
             return ssid
         }
         /**
-         * Check if there is any active call
-         * @param c allows access to application-specific resources and classes
+         * Return the status of the cellular radio
+         * @param context allows access to application-specific resources and classes
          * @return a value between 0-3. 0 and 1 are good values, returning a 2 or 3 means there is some kind of error
          */
-        fun getCellStatus(c: Context): Int {
+        fun getCellStatus(context: Context): Int {
             var z = 0 // Z of 0 means we assume the cell radio is connected
-            val tm = c.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
-            val connMgr = c.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-            var isWifiConn: Boolean = false
-            var isMobileConn: Boolean = false
+            val tm = context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+            //val connMgr = c.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            //var isWifiConn: Boolean = false
+            //var isMobileConn: Boolean = false
 
             try{
-                if (ContextCompat.checkSelfPermission(c, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED ){
+                if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED ){
                     val cellInfoList = tm.allCellInfo
 
                     Log.d("Radiocontrol-Util","Cell list: $cellInfoList")
@@ -92,10 +92,10 @@ class Utilities {
                 }
             } catch (e: SecurityException) {
                 Log.e("RadioControl-util", "Unable to get Location Permission", e)
-                z = 2
+                return 2
             } catch (e: NullPointerException) {
                 Log.e("RadioControl-util", "NullPointer: ", e)
-                z = 3
+                return 3
             }
 
             return z //Any value above 1 means some kind of error

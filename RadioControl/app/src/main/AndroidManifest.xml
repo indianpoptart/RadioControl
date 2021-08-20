@@ -3,12 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.nikhilparanjape.radiocontrol">
 
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> <!-- Required for experimental portions of cellular mode -->
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /> <!-- Required for the app to see WiFi state properties -->
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" /> <!-- Required to toggle Airplane mode -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- Required to see full network state propteries -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />  <!-- Required for logging -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> <!-- Required for cellular mode -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> <!-- Required for experimental portions of cellular mode -->
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/> <!-- Required for Android 10+ to allow location access-->
     <uses-permission android:name="android.permission.READ_PHONE_STATE" /> <!-- Required for knowing when to keep a phone call active while moving from Cell to WiFi -->
     <uses-permission android:name="android.permission.INTERNET" /> <!-- Required for the app to access the internet/web -->

@@ -1,9 +1,5 @@
 package com.nikhilparanjape.radiocontrol.utilities
 
-/**
- * Added and modified by Nikhil on 5/17/2016.
- */
-
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
@@ -17,6 +13,8 @@ import com.nikhilparanjape.radiocontrol.R
 
 /**
  * Created by Gordon Wong on 7/17/2015.
+ *
+ * Modified by Nikhil Paranjape on 5/17/2016.
  *
  * Sample floating action button implementation.
  */
