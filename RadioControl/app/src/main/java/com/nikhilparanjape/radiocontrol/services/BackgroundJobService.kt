@@ -60,7 +60,7 @@ class BackgroundJobService : JobService(), ConnectivityReceiver.ConnectivityRece
                 pingTask()
                 jobFinished(params, false)
             }
-            //Adds wifi signal lost log for nonrooters
+            //Adds wifi signal lost log for devices that aren't rooted
             if (!isConnectedWifi(applicationContext)) {
                 Log.d(TAG, "WiFi signal LOST")
                 writeLog("WiFi Signal lost", applicationContext)
@@ -75,7 +75,7 @@ class BackgroundJobService : JobService(), ConnectivityReceiver.ConnectivityRece
 
             Log.d(TAG, "Main Program Begin")
 
-            //Check if we have no WiFi signal && Cell network is still not active
+            //Check if there is no WiFi connection && the Cell network is still not active
             if (!isConnectedWifi(applicationContext) && activeNetwork == null) {
                 Log.d(TAG, "WiFi signal LOST")
                 writeLog("WiFi Signal lost", applicationContext)
@@ -83,10 +83,10 @@ class BackgroundJobService : JobService(), ConnectivityReceiver.ConnectivityRece
                 // Ensures that Airplane mode is on, or that the cell radio is off
                 if (isAirplaneMode(applicationContext) || !isConnectedMobile(applicationContext)) {
 
-                    //Continue of the device is not in an active call
+                    //Continue iff the device is not in an active call
                     if (!isCallActive(applicationContext)) {
 
-                        //Runs the cellular mode, otherwise, run the standard airplane mode
+                        //Runs the alt cellular mode, otherwise, run the standard airplane mode
                         if (prefs.getBoolean("altRootCommand", false)) {
                             if (getCellStatus(applicationContext) == 1) {
                                 val output = Shell.su("service call phone 27").exec().out
@@ -104,7 +104,7 @@ class BackgroundJobService : JobService(), ConnectivityReceiver.ConnectivityRece
                             jobFinished(params, false)
                         }
                     }
-                    //Waits for the call to finish before initiating
+                    //Waits for the active call to finish before initiating
                     else if (isCallActive(applicationContext)) {
                         while (isCallActive(applicationContext)) {
                             waitFor(1000)//Wait every second for call to end
