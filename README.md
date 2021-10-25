@@ -56,7 +56,9 @@ The app works properly, and has been personally tested on these devices:
 - ![Samsung](https://nikhilp.org/images/samsung.png) Samsung Galaxy S7 Edge
 
 As well as these Android versions
-- ![R(11.0)](https://nikhilp.org/radiocontrol/images/android_11-32.png)
+- ![S(12.0)](https://nikhilp.org/radiocontrol/images/android_11-32.png)
+[Android 12](https://www.android.com/android-12/) - (Upcoming v6.0)
+- ![R(11.0)](https://nikhilp.org/radiocontrol/images/android11-logo.png)
 [Android 11](https://www.android.com/android-11/) - (Upcoming v6.0)
 - ![Q(10.0)](https://nikhilp.org/images/android_q_logo_v2.png)  Android 10 - (v6.0-alpha3+ - Cellular Mode(Experimental) not working)
 - ![P(9.0)](https://nikhilp.org/images/android_p_logo.png)  Android 9 - (Debug version only)
