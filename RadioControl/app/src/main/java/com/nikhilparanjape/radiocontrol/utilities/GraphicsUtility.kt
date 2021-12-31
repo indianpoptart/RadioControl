@@ -8,5 +8,4 @@ package com.nikhilparanjape.radiocontrol.utilities
  *
  * This "offloads" the UI rendering and imaging to this class
  */
-class GraphicsUtility {
-}
+class GraphicsUtility

@@ -84,9 +84,7 @@ class OnBootIntentService : JobIntentService() {
 
         }
     }
-    override fun onDestroy() {
-        super.onDestroy()
-    }
+
     companion object {
         private const val TAG = "RadioControl-Boot"
     }

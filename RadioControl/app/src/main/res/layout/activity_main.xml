@@ -106,7 +106,8 @@
                 android:layout_alignEnd="@+id/pingTestButton"
                 android:layout_marginTop="89dp"
                 android:onClick="forceCrash"
-                android:text="@string/text_force_crash" />
+                android:text="@string/text_force_crash"
+                tools:ignore="OnClick,UsingOnClickInXml" /> <!--This is because it is designed to crash the app-->
 
 
             <Button

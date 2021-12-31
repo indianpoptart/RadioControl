@@ -14,7 +14,7 @@ import kotlin.system.measureTimeMillis
  */
 class NetworkUtility {
     companion object{
-        public suspend fun reachable(context: Context): Boolean {
+        fun reachable(context: Context): Boolean {
             val preferences = androidx.preference.PreferenceManager.getDefaultSharedPreferences(context)
             val ip = preferences.getString("prefPingIp", "1.0.0.1")
             val address = InetAddress.getByName(ip)

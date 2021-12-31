@@ -3,10 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#3F51B5"
+
     android:layout_weight="10"
     android:id="@+id/main">
-
+    <!--android:background="#3F51B5"-->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="0dp"

@@ -1004,7 +1004,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
         }
     }
 
-    private suspend fun pingCheck() {
+    private fun pingCheck() {
         val preferences = androidx.preference.PreferenceManager.getDefaultSharedPreferences(applicationContext)
         val ip = preferences.getString("prefPingIp", "1.0.0.1")
         val address = InetAddress.getByName(ip)

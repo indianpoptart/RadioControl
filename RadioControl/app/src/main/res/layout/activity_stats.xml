@@ -287,8 +287,8 @@
                     style="@style/TextAppearance.MaterialSheetFab.Sheet.Item"
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
-                    android:drawableStart="@drawable/ic_timer_black_24dp"
-                    android:text="@string/animation_duration_sheet_text" />
+                    android:text="@string/animation_duration_sheet_text"
+                    app:drawableStartCompat="@drawable/ic_timer_black_24dp" />
 
                 <!-- Gridlines -->
                 <TextView
@@ -296,8 +296,8 @@
                     style="@style/TextAppearance.MaterialSheetFab.Sheet.Item"
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
-                    android:drawableStart="@drawable/ic_grid_on_black_24dp"
-                    android:text="@string/gridline_text_box" />
+                    android:text="@string/gridline_text_box"
+                    app:drawableStartCompat="@drawable/ic_grid_on_black_24dp" />
 
                 <!-- Easing -->
                 <TextView
@@ -305,8 +305,8 @@
                     style="@style/TextAppearance.MaterialSheetFab.Sheet.Item"
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
-                    android:drawableStart="@drawable/ic_timeline_black_24dp"
-                    android:text="@string/animation_text_box" />
+                    android:text="@string/animation_text_box"
+                    app:drawableStartCompat="@drawable/ic_timeline_black_24dp" />
 
 
             </LinearLayout>
