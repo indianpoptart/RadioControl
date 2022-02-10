@@ -18,6 +18,10 @@ Feel free to ask questions related to Android programming or this project in the
 
 This project attempts to follow [Semantic Versioning](http://semver.org/).
 
+# Buy me a Coffee
+If you like my work, consider buying me a cup of coffee! ❤️
+
+<a href="https://www.buymeacoffee.com/lKSG0bXnbB" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a> 
 
 # Battery Usage by RadioControl
 
