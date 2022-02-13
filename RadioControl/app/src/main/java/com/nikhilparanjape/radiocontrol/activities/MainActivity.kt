@@ -68,6 +68,10 @@ import android.os.StrictMode
 import android.os.StrictMode.ThreadPolicy
 import androidx.core.app.NotificationManagerCompat.IMPORTANCE_LOW
 import androidx.lifecycle.lifecycleScope
+import com.android.billingclient.api.BillingClient
+import com.android.billingclient.api.BillingClientStateListener
+import com.android.billingclient.api.BillingResult
+import com.android.billingclient.api.PurchasesUpdatedListener
 import com.mikepenz.materialdrawer.iconics.iconicsIcon
 import com.mikepenz.materialdrawer.widget.MaterialDrawerSliderView
 import kotlinx.coroutines.*
@@ -195,6 +199,32 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
         val isFirstStart = mySharedPref.getBoolean(getString(R.string.preference_first_start), true)
     /** END Core init**/
 
+    /** BEGIN Billing Init **/
+        val purchasesUpdatedListener =
+            PurchasesUpdatedListener { billingResult, purchases ->
+                // To be implemented in a later section.
+            }
+
+        var billingClient = BillingClient.newBuilder(applicationContext)
+            .setListener(purchasesUpdatedListener)
+            .enablePendingPurchases()
+            .build()
+
+        billingClient.startConnection(object : BillingClientStateListener {
+            override fun onBillingSetupFinished(billingResult: BillingResult) {
+                if (billingResult.responseCode ==  BillingClient.BillingResponseCode.OK) {
+                    // The BillingClient is ready. You can query purchases here.
+                    onBillingReady()
+                }
+            }
+            override fun onBillingServiceDisconnected() {
+                // Try to restart the connection on the next request to
+                // Google Play by calling the startConnection() method.
+            }
+        })
+
+    /** END Billing Init **/
+
     /** BEGIN View related init **/
         setContentView(view)
         //Sets the secondary view features
@@ -243,9 +273,10 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
         val forceCrashButton = findViewById<Button>(R.id.forceCrashButton)
     /**  END buttons initialization **/
 
-        /* First start init  */
+        /** First start init  **/
         programVersionUpdateInit(isFirstStart) //initializes the whats new dialog; Set first start parameters
 
+    /** BEGIN Drawer icon initialization **/
         //Sets a default Profile2 Drawer icon
         carrierIcon = IconicsDrawable(this, GoogleMaterial.Icon.gmd_help).apply {
             colorInt = Color.YELLOW
@@ -256,6 +287,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
         isRootedIcon = IconicsDrawable(this, GoogleMaterial.Icon.gmd_check_circle).apply {
             colorInt = Color.GREEN
         }
+    /** END Drawer icon initialization **/
 
         /** Insert Archived Code #2 here **/
 
@@ -418,6 +450,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
             productList.add(ITEM_TEN_DOLLAR)
             billingManager.fetchProductsAsync(productList, KinAppProductType.INAPP).await()
         }*/
+        //TODO Migrate to Android Billing library
     /** END Payment Item fetch **/
 
     /** BEGIN Button Click Listeners **/
