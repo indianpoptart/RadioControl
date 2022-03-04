@@ -165,9 +165,9 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-    /**BEGIN bindings**/
         //Bind activity to other components
-        binding = ActivityMainBinding.inflate(layoutInflater)
+        /**BEGIN bindings**/
+        val binding: ActivityMainBinding = ActivityMainBinding.inflate(layoutInflater)
         billingManager.bind(this)
 
         //Sets root view, toolbar, and the slider with the main binding
@@ -176,28 +176,28 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
         val slider = binding.slider
     /**END bindings**/
 
-    /** BEGIN Core init**/
-        val policy = ThreadPolicy.Builder().permitAll().build()
-        StrictMode.setThreadPolicy(policy) // Sets thread policy to all threads THIS IS DANGEROUS
-        mServiceComponent = ComponentName(this, BackgroundJobService::class.java)
+/** BEGIN Core init**/
+    val policy = ThreadPolicy.Builder().permitAll().build()
+    StrictMode.setThreadPolicy(policy) // Sets thread policy to all threads THIS IS DANGEROUS
+    mServiceComponent = ComponentName(this, BackgroundJobService::class.java)
 
-        //Adds filter for app to receive Connectivity_Action
-        val filter = IntentFilter()
-        @Suppress("DEPRECATION") // This is used for legacy support
-        filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION)
-        val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        //  Assume this is the first time the user has opened the app...
-        val carrierName = "Root Pending" //For drawer's root status and assume not rooted
-        //  Pref values
-        //  Initialize SharedPreferences
-        val mySharedPref = androidx.preference.PreferenceManager.getDefaultSharedPreferences(applicationContext)
-        /*val sharedPref = getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE)*/ /** Migrated away from custom prefs.xml file **/
-        val editor = mySharedPref.edit()
+    //Adds filter for app to receive Connectivity_Action
+    val filter = IntentFilter()
+    @Suppress("DEPRECATION") // This is used for legacy support
+    filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION)
+    val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    //  Assume this is the first time the user has opened the app...
+    val carrierName = "Root Pending" //For drawer's root status and assume not rooted
+    //  Pref values
+    //  Initialize SharedPreferences
+    val mySharedPref = androidx.preference.PreferenceManager.getDefaultSharedPreferences(applicationContext)
+    /*val sharedPref = getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE)*/ /** Migrated away from custom prefs.xml file **/
+    val editor = mySharedPref.edit()
 
-        editor.putInt(getString(R.string.preference_app_active), 0) // Sets the main ON/OFF for the app
-        //  Create a new boolean and preference and set it to true if it's not already there
-        val isFirstStart = mySharedPref.getBoolean(getString(R.string.preference_first_start), true)
-    /** END Core init**/
+    editor.putInt(getString(R.string.preference_app_active), 0) // Sets the main ON/OFF for the app
+    //  Create a new boolean and preference and set it to true if it's not already there
+    val isFirstStart = mySharedPref.getBoolean(getString(R.string.preference_first_start), true)
+/** END Core init**/
 
     /** BEGIN Billing Init **/
         val purchasesUpdatedListener =

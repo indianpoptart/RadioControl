@@ -166,7 +166,9 @@ class BackgroundJobService : JobService(), ConnectivityReceiver.ConnectivityRece
                         /*while (isCallActive(applicationContext)) {
                             waitFor(1000)//Wait for call to end
                             Log.d(_root_ide_package_.com.nikhilparanjape.radiocontrol.services.BackgroundJobService.Companion.TAG, "waiting for call to end")
-                        }*/
+                        }
+
+                        [Legacy Code] Waits for the active call to end, however, now it will just do a jobFinished. Idk if it works properly*/
                     }//Checks that user is currently in call and pauses execution till the call ends
                 } else if (selections!!.contains(getCurrentSsid(applicationContext))) {
                     Log.d(TAG, "The current SSID was blocked from list $selections")
@@ -269,7 +271,7 @@ class BackgroundJobService : JobService(), ConnectivityReceiver.ConnectivityRece
         }
     }
 
-    private fun waitFor(timer: Long) {
+    private fun waitFor(timer: Long) { // It's complaining that the timer is always 1000. Like, ok, but what if it isn't? Didn't think if that did you
         try {
             Thread.sleep(timer)
         } catch (e: InterruptedException) {

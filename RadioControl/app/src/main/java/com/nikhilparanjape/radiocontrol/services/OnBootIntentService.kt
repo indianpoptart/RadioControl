@@ -26,7 +26,7 @@ import java.io.IOException
 class OnBootIntentService : JobIntentService() {
 
 
-    override fun onHandleWork(@NonNull intent: Intent) {
+    override fun onHandleWork(intent: Intent) {
         createNotificationChannel(applicationContext)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationCompat.Builder(this, "Startup")
