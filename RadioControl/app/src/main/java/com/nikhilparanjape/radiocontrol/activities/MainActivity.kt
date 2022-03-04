@@ -353,7 +353,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
         * item7 - Standby Mode
         * _____________________
         * */
-        
+
         val item1 = PrimaryDrawerItem().apply { identifier = 1; nameRes = R.string.home; iconicsIcon = GoogleMaterial.Icon.gmd_wifi }
         val item2 = SecondaryDrawerItem().apply { identifier = 2; nameRes = R.string.settings; iconicsIcon = GoogleMaterial.Icon.gmd_settings; isSelectable = false }
         val item3 = SecondaryDrawerItem().apply { identifier = 3; nameRes = R.string.about; iconicsIcon = GoogleMaterial.Icon.gmd_info; isSelectable = false }

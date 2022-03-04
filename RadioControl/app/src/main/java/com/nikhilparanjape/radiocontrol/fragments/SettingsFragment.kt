@@ -45,7 +45,7 @@ class SettingsFragment : PreferenceFragmentCompat(), TimePickerDialog.OnTimeSetL
         }
 
         val pingIpPref = findPreference<EditTextPreference>("prefPingIp")
-        val ip = sp.getString("prefPingIp",null)
+        val ip = sp?.getString("prefPingIp",null)
         pingIpPref?.summary = ip
 
     }
@@ -61,7 +61,7 @@ class SettingsFragment : PreferenceFragmentCompat(), TimePickerDialog.OnTimeSetL
         preferenceManager.findPreference<androidx.preference.CheckBoxPreference>("isAirplaneService")
         val checkboxPref = preferenceManager.findPreference<androidx.preference.CheckBoxPreference>("enableLogs")
         val pingIpPref = findPreference<EditTextPreference>("prefPingIp")
-        val ip = sp.getString("prefPingIp",null)
+        val ip = sp?.getString("prefPingIp",null)
         val alarmUtil = AlarmSchedulers()
         //editor.apply()
         return when (preference.key) {
@@ -69,7 +69,7 @@ class SettingsFragment : PreferenceFragmentCompat(), TimePickerDialog.OnTimeSetL
                 if ((preference as androidx.preference.CheckBoxPreference).isChecked) {
                     if (workModePref!!.isChecked) {
                         Log.d(TAG, "true-ischecked")
-                        if (sp.getBoolean("workMode", true)) {
+                        if (sp?.getBoolean("workMode", true) == true) {
                             if (Build.VERSION.SDK_INT >= 26) {
                                 activity?.startForegroundService(Intent(activity, PersistenceService::class.java))
                             } else {
@@ -85,7 +85,7 @@ class SettingsFragment : PreferenceFragmentCompat(), TimePickerDialog.OnTimeSetL
                                 .message(R.string.permissionIntelligent)
                                 .positiveButton(R.string.button_text_allow) {
                                     workModePref.isChecked = true
-                                    if (sp.getBoolean("workMode", true)) {
+                                    if (sp?.getBoolean("workMode", true) == true) {
                                         if (Build.VERSION.SDK_INT >= 26) {
                                             activity?.startForegroundService(Intent(activity, PersistenceService::class.java))
                                         } else {
@@ -96,7 +96,7 @@ class SettingsFragment : PreferenceFragmentCompat(), TimePickerDialog.OnTimeSetL
                                     }
                                 }
                                 .negativeButton(R.string.button_text_deny) {
-                                    if (sp.getBoolean("workMode", true)) {
+                                    if (sp?.getBoolean("workMode", true) == true) {
                                         if (Build.VERSION.SDK_INT >= 26) {
                                             activity?.startForegroundService(Intent(activity, PersistenceService::class.java))
                                         } else {
@@ -204,11 +204,11 @@ class SettingsFragment : PreferenceFragmentCompat(), TimePickerDialog.OnTimeSetL
                 if ((preference as androidx.preference.CheckBoxPreference).isChecked) {
 
 
-                    val intervalTimeString = sp.getString("interval_prefs", "60")
+                    val intervalTimeString = sp?.getString("interval_prefs", "60")
                     val intervalTime = Integer.parseInt(intervalTimeString.toString())
-                    val airplaneService = sp.getBoolean("isAirplaneService", false)
+                    val airplaneService = sp?.getBoolean("isAirplaneService", false)
 
-                    if (intervalTime != 0 && airplaneService) {
+                    if (intervalTime != 0 && airplaneService == true) {
                         Log.d(TAG, "Alarm Scheduled")
                         alarmUtil.scheduleAlarm(requireContext())
                     }
