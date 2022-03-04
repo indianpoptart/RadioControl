@@ -340,6 +340,20 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
         }
 
         //Creates navigation drawer items
+        /*
+        * item1 - Home
+        * ____________________
+        * item2 - Settings
+        * item6 - Statistics
+        * item3 - About
+        * ____________________
+        * item8 - Troubleshooting
+        * item4 - Donate
+        * item5 - Send Feedback
+        * item7 - Standby Mode
+        * _____________________
+        * */
+        
         val item1 = PrimaryDrawerItem().apply { identifier = 1; nameRes = R.string.home; iconicsIcon = GoogleMaterial.Icon.gmd_wifi }
         val item2 = SecondaryDrawerItem().apply { identifier = 2; nameRes = R.string.settings; iconicsIcon = GoogleMaterial.Icon.gmd_settings; isSelectable = false }
         val item3 = SecondaryDrawerItem().apply { identifier = 3; nameRes = R.string.about; iconicsIcon = GoogleMaterial.Icon.gmd_info; isSelectable = false }
@@ -347,7 +361,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
         val item5 = SecondaryDrawerItem().apply { identifier = 5; nameRes = R.string.sendFeedback; iconicsIcon = GoogleMaterial.Icon.gmd_send; isSelectable = false }
         val item6 = SecondaryDrawerItem().apply { identifier = 6; nameRes = R.string.stats; iconicsIcon = GoogleMaterial.Icon.gmd_timeline; isSelectable = false }
         val item7 = SecondaryDrawerItem().apply { identifier = 7; nameRes = R.string.standby_drawer_name; iconicsIcon = GoogleMaterial.Icon.gmd_pause_circle_outline; isSelectable = false }
-        val item8 = SecondaryDrawerItem().apply { identifier = 7; nameRes = R.string.drawer_string_troubleshooting; iconicsIcon = GoogleMaterial.Icon.gmd_help; isSelectable = false }
+        val item8 = SecondaryDrawerItem().apply { identifier = 8; nameRes = R.string.drawer_string_troubleshooting; iconicsIcon = GoogleMaterial.Icon.gmd_help; isSelectable = false }
         slider.apply {
             addItems(
                     item1,
@@ -442,18 +456,21 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
     /** END Dev mode init handling **/
 
     /** BEGIN Payment Item fetch **/
-        /*launch() {
-            val productList: ArrayList<String> = ArrayList()
-            productList.add(ITEM_ONE_DOLLAR)
-            productList.add(ITEM_THREE_DOLLAR)
-            productList.add(ITEM_FIVE_DOLLAR)
-            productList.add(ITEM_TEN_DOLLAR)
-            billingManager.fetchProductsAsync(productList, KinAppProductType.INAPP).await()
-        }*/
+        /*  launch() {
+                val productList: ArrayList<String> = ArrayList()
+                productList.add(ITEM_ONE_DOLLAR)
+                productList.add(ITEM_THREE_DOLLAR)
+                productList.add(ITEM_FIVE_DOLLAR)
+                productList.add(ITEM_TEN_DOLLAR)
+                billingManager.fetchProductsAsync(productList, KinAppProductType.INAPP).await()
+            }
+
+            [Legacy Code] Temporarily disabled due to issues with KinApp*/
+
         //TODO Migrate to Android Billing library
     /** END Payment Item fetch **/
 
-    /** BEGIN Button Click Listeners **/
+    /** BEGIN UI Button Click Listeners **/
 
         /** Main RadioControl toggle switch listener **/
         toggle.setOnCheckedChangeListener { _, isChecked ->
@@ -538,10 +555,11 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
                 }
             }
         }
-    /** END Button Click Listeners **/
+    /** END UI Button Click Listeners **/
 
     /** BEGIN DEV Button Click Listeners **/
         conn.setOnClickListener {
+            /** Runs a latency check and gives debug info about build sdk **/
             connectionStatusText.setText(R.string.ping)
             connectionStatusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.material_grey_50))
             mainProgressBar.visibility = View.VISIBLE
@@ -551,25 +569,33 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
             }
         }
         serviceTest.setOnClickListener {
+            /** Tests the BackgroundJobService class once**/
             val i = Intent(applicationContext, BackgroundJobService::class.java)
             applicationContext.startService(i)
             alarmUtil.scheduleAlarm(applicationContext)
             Log.d("RadioControl-Main", "Service started")
         }
         nightCancel.setOnClickListener {
-            /*val intent = Intent(applicationContext, NightModeReceiver::class.java)
-            val pIntent = PendingIntent.getBroadcast(applicationContext, NightModeReceiver.REQUEST_CODE,
-                    intent, PendingIntent.FLAG_UPDATE_CURRENT)
-            val alarm = applicationContext.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-            alarm.cancel(pIntent)*/
+            /*  val intent = Intent(applicationContext, NightModeReceiver::class.java)
+                val pIntent = PendingIntent.getBroadcast(applicationContext, NightModeReceiver.REQUEST_CODE,
+                        intent, PendingIntent.FLAG_UPDATE_CURRENT)
+                val alarm = applicationContext.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+                alarm.cancel(pIntent)
+
+                [Legacy Code] Used to have the full setup for setting up the intent for NightMode and cancelling the alarm*/
+
+            /** Cancels the alarm for nightmode **/
             val app = "NightMode"
             alarmUtil.cancelAlarm(applicationContext, app, app)
         }
         radioOffButton.setOnClickListener {
-            //String[] cellOffCmd = {"service call phone 27","service call phone 14 s16"};
-            //Utilities.setMobileNetworkFromLollipop(applicationContext)
-            //RootAccess.runCommands(cellOffCmd);
+            /*  String[] cellOffCmd = {"service call phone 27","service call phone 14 s16"};
+                Utilities.setMobileNetworkFromLollipop(applicationContext)
+                RootAccess.runCommands(cellOffCmd);
 
+                [Legacy Code] Used to directly run shell commands*/
+
+            /** Toggles cellular radio once **/
             val cellIntent = Intent(applicationContext, CellRadioService::class.java)
             startService(cellIntent)
             alarmUtil.scheduleRootAlarm(applicationContext)
@@ -578,9 +604,9 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
         //DEV View | Listener for the link speed button
         linkSpeedButton.setOnClickListener {
             //showWifiInfoDialog();
-            val activeNetwork = connectivityManager.activeNetworkInfo
-            val cellStat = Utilities.getCellStatus(applicationContext)
-            Log.d("RadioControl-Job", "Active: $activeNetwork") //Shows more info when debugging
+            val activeNetwork = connectivityManager.activeNetworkInfo          //   For legacy systems
+            val cellStat = Utilities.getCellStatus(applicationContext)        //    Uses Telephony Manager to return the status of the cellular radio
+            Log.d("RadioControl-Job", "Active: $activeNetwork")     //     Shows more info when debugging about the active network
             Log.d("RadioControl-Main", "Cell: $cellStat")
             val linkSpeed = Utilities.linkSpeed(applicationContext)
             val gHz = Utilities.frequency(applicationContext)
