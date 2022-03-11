@@ -24,8 +24,9 @@ import java.io.IOException
 import java.net.InetAddress
 
 /**
- * This service starts the BackgroundAirplaneService as a foreground service if on Android Oreo or higher.
+ * This service starts the BackgroundJobService as a foreground service if on Android Oreo or higher.
  *
+ * This is the brains of the app
  *
  * @author Nikhil Paranjape
  */

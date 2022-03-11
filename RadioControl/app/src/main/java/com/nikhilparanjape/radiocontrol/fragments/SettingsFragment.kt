@@ -65,6 +65,9 @@ class SettingsFragment : PreferenceFragmentCompat(), TimePickerDialog.OnTimeSetL
         val alarmUtil = AlarmSchedulers()
         //editor.apply()
         return when (preference.key) {
+            //This is the intelligent mode setting that allows the app to continue to receive connectivty broadcasts
+            //Sometimes on Android 7+ devices, the app will not function at all without this checked, so it is
+            //enabled by default on first launch on a nougat+ device
             getString(R.string.key_preference_settings_intelligent) -> { //Intelligent mode button
                 if ((preference as androidx.preference.CheckBoxPreference).isChecked) {
                     if (workModePref!!.isChecked) {
@@ -116,6 +119,7 @@ class SettingsFragment : PreferenceFragmentCompat(), TimePickerDialog.OnTimeSetL
 
                 false
             }
+
             getString(R.string.key_preference_settings_clear_ssid) -> { //Reset Network Settings button
                 ssidClearButton()
                 false
@@ -141,7 +145,7 @@ class SettingsFragment : PreferenceFragmentCompat(), TimePickerDialog.OnTimeSetL
                         val intent = Intent()
                         val packageName = requireContext().packageName
                         val pm = requireContext().getSystemService(Context.POWER_SERVICE) as PowerManager
-                        if (pm.isIgnoringBatteryOptimizations(packageName)) { // Checks if
+                        if (pm.isIgnoringBatteryOptimizations(packageName)) { // Checks if the app is already ignored on the doze list
                             Log.i(TAG, "doze-ignoring")
                             view?.let { it1 ->
                                 Snackbar.make(it1, "RadioControl is already excluded from Doze", Snackbar.LENGTH_LONG)
@@ -169,6 +173,7 @@ class SettingsFragment : PreferenceFragmentCompat(), TimePickerDialog.OnTimeSetL
                 }
                 false
             }
+            //Not to be confused with the Doze optimization feature :P
             getString(R.string.key_preference_settings_battery_opimization) -> { //Background Optimization button
                 false
             }
