@@ -34,14 +34,19 @@ import java.lang.reflect.Method
  * Created by Nikhil on 2/3/2016.
  *
  * A custom Utilities class for RadioControl
+ *
+ * @author Nikhil Paranjape
+ *
+ * 
  */
 class Utilities {
 
     companion object {
         /**
          * Check if there is any active call
+         *
          * @param context allows access to application-specific resources and classes
-         * @return
+         * @return true if the device is in an active call
          */
         fun isCallActive(context: Context): Boolean {
             val manager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
@@ -51,7 +56,7 @@ class Utilities {
         /**
          * gets network ssid
          * @param context allows access to application-specific resources and classes
-         * @return the current ssid the device is connected to
+         * @return the current ssid the device is connected to as a string
          */
         fun getCurrentSsid(context: Context): String? {
             var ssid: String? = null
@@ -180,7 +185,7 @@ class Utilities {
         /**
          * Checks link speed
          * @param c allows access to application-specific resources and classes
-         * @return linkSpeed The current wifi networks link speed
+         * @return linkSpeed of the current wifi network in mbps
          */
         fun linkSpeed(c: Context): Int {
             val wifiManager = c.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
@@ -190,7 +195,13 @@ class Utilities {
         }
 
         /**
-         * Writes to radiocontrol logs
+         * Write a private log for the Statistics Activity
+         *
+         * Sets the date in yyyy-MM-dd HH:mm:ss format
+         *
+         * This method always requires appropriate context
+         *
+         * @param data The data to be written to the log file radiocontrol.log
          * @param c allows access to application-specific resources and classes
          */
         fun writeLog(data: String, c: Context) {
@@ -243,7 +254,7 @@ class Utilities {
          *
          * @param c allows access to application-specific resources and classes
          *
-         * @return frequency of WiFi network
+         * @return signal frequency of WiFi network (2.4GHz or 5GHz)
          */
         fun frequency(c: Context): Int {
             val wifiManager = c.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
@@ -265,6 +276,7 @@ class Utilities {
         @SuppressLint("ByteOrderMark")
         /**
          * Makes a basic network alert notification
+         *
          * @param context allows access to application-specific resources and classes
          * @param mes The main body of the notification
          * @param vibrate Sets if the notification will vibrate
@@ -319,9 +331,9 @@ class Utilities {
         }
 
         /**
-         * Get the network info
+         * Get the currently active network info
          * @param context allows access to application-specific resources and classes
-         * @return
+         * @return ActiveNetwork info
          */
         private fun getNetworkInfo(context: Context): NetworkInfo? {
             val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
@@ -332,7 +344,7 @@ class Utilities {
          * Check if there is any connectivity via WiFi
          *
          * @param context allows access to application-specific resources and classes
-         * @return info about the current WiFi network
+         * @return true if connected to a WiFi network. False otherwise
          */
         fun isConnectedWifi(context: Context): Boolean {
             val info = getNetworkInfo(context)
@@ -342,7 +354,7 @@ class Utilities {
          * Check if the WiFi module is enabled.
          *
          * @param context allows access to application-specific resources and classes
-         * @return
+         * @return True if WiFi is enabled, but not connected. False if otherwise
          */
         fun isWifiOn(context: Context): Boolean {
             val wifiManager = context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
@@ -353,7 +365,7 @@ class Utilities {
          * Check if there is any connectivity at all(local or internet)
          *
          * @param context allows access to application-specific resources and classes
-         * @return
+         * @return true if connected to any network
          */
         fun isConnected(context: Context): Boolean {
             val info = getNetworkInfo(context)
@@ -363,7 +375,7 @@ class Utilities {
         /**
          * Check if there is any connectivity to a mobile network
          * @param context
-         * @return
+         * @return return true if the device is connected to a cellular network
          */
         fun isConnectedMobile(context: Context): Boolean {
             val info = getNetworkInfo(context)
@@ -373,7 +385,7 @@ class Utilities {
         /**
          * Check if there is fast connectivity
          * @param context
-         * @return
+         * @return true if the connection is fast wifi/mobile
          */
         fun isConnectedFast(context: Context): Boolean {
             val info = getNetworkInfo(context)
@@ -382,7 +394,7 @@ class Utilities {
         /**
          * Return whether airplane mode is on or off
          * @param context allows access to application-specific resources and classes
-         * @return bool
+         * @return true if airplane mode is enabled, false if otherwise
          */
         fun isAirplaneMode(context: Context): Boolean {
             return Settings.Global.getInt(context.contentResolver,
@@ -393,7 +405,7 @@ class Utilities {
          * Check if the connection is fast
          * @param type Type of the current network (WiFi/Mobile)
          * @param subType A subtype of mobile networks (eg. CDMA, HSPA, UMTS, LTE)
-         * @return
+         * @return true if the connection is faster than 1 Mbps(Or Better than HSPA)
          * TODO Use transport types: https://developer.android.com/reference/kotlin/android/net/NetworkCapabilities
          */
         private fun isConnectionFast(type: Int, subType: Int): Boolean {

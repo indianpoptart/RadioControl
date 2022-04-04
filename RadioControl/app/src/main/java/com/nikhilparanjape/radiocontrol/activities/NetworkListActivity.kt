@@ -26,7 +26,9 @@ import com.nikhilparanjape.radiocontrol.R
 /**
  * Created by Nikhil on 04/11/2016
  *
- * @author
+ * @author Nikhil Paranjape
+ *
+ *
  * An activity that lists all saved WiFi Networks
  */
 

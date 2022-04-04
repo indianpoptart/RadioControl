@@ -7,6 +7,10 @@ import com.nikhilparanjape.radiocontrol.utilities.AlarmSchedulers
 
 /**
  * Created by Nikhil Paranjape on 12/16/2015.
+ *
+ * @author Nikhil Paranjape
+ *
+ *
  */
 
 class WakeupReceiver : BroadcastReceiver() {

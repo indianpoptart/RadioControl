@@ -80,6 +80,10 @@ import kotlinx.coroutines.*
  * Created by Nikhil Paranjape on 11/3/2015.
  *
  * Converted to Kotlin on 10/06/2018.
+ *
+ * @author Nikhil Paranjape
+ *
+ *
  */
 
 class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, CoroutineScope {
@@ -161,7 +165,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
         get() = Dispatchers.IO + job
 
 
-    /** This is the main activity **/
+/** BEGIN main activity initialization **/
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -174,7 +178,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
         val view = binding.root
         val toolbar = binding.toolbar
         val slider = binding.slider
-    /**END bindings**/
+        /**END bindings**/
 
 /** BEGIN Core init**/
     val policy = ThreadPolicy.Builder().permitAll().build()
@@ -625,7 +629,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
     /** END DEV Button Click Listeners **/
 
     }
-
+/** END Main Activity initialization **/
     //function for setting main toggle related UI elements as well as
     private fun uiSetToggle(result: Boolean, editor: SharedPreferences.Editor, getPrefs: SharedPreferences){
         val bgj = Intent(applicationContext, BackgroundJobService::class.java)

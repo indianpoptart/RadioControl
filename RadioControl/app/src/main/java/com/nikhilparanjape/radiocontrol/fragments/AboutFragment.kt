@@ -25,6 +25,11 @@ import com.nikhilparanjape.radiocontrol.utilities.Utilities
 
 /**
  * Created by Nikhil on 4/5/2016.
+ *
+ * @author Nikhil Paranjape
+ *
+ * This class renders the about.xml layout into a fragment inside AboutActivity
+ * It also allows for programmable control of the preferences in about.xml
  */
 
 class AboutFragment : PreferenceFragmentCompat() {

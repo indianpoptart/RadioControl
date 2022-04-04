@@ -2,6 +2,10 @@ package com.nikhilparanjape.radiocontrol.fragments
 
 /**
  * Created by Nikhil on 4/24/2016.
+ *
+ * @author Nikhil Paranjape
+ *
+ *
  */
 import android.os.Bundle
 import android.view.LayoutInflater

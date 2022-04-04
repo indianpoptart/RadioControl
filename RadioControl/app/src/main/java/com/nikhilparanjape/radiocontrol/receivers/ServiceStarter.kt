@@ -2,6 +2,10 @@ package com.nikhilparanjape.radiocontrol.receivers
 
 /**
  * Created by admin on 4/23/2017.
+ *
+ * @author Nikhil Paranjape
+ *
+ *
  */
 
 import android.annotation.SuppressLint

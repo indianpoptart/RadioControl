@@ -13,6 +13,11 @@ import com.nikhilparanjape.radiocontrol.fragments.AboutFragment
 
 /**
  * Created by Nikhil Paranjape on 12/16/2015.
+ *
+ * @author Nikhil Paranjape
+ *
+ * Renders the About.xml into a scrolling list
+ * This class allows for actionbar customization as well as handles button presses on the actionbar
  */
 
 class AboutActivity : AppCompatActivity() {

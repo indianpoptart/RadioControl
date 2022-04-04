@@ -6,6 +6,10 @@ import androidx.appcompat.app.AppCompatActivity
 
 /**
  * Created by Nikhil on 4/24/2016.
+ *
+ * @author Nikhil Paranjape
+ *
+ *
  */
 class SplashActivity : AppCompatActivity() {
 

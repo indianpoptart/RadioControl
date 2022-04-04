@@ -11,6 +11,10 @@ import com.nikhilparanjape.radiocontrol.fragments.WLANFragment
 
 /**
  * Created by Nikhil Paranjape on 06/26/2018.
+ *
+ * @author Nikhil Paranjape
+ *
+ *
  */
 
 class TroubleshootingActivity : AppCompatActivity() {

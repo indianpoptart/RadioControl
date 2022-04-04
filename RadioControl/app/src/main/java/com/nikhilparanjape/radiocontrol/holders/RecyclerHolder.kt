@@ -8,6 +8,8 @@ import com.nikhilparanjape.radiocontrol.R
 /**
  * Created by Nikhil on 10/12/2018.
  *
+ * @author Nikhil Paranjape
+ *
  * An holder class for TroubleShooting Activity
  */
 class RecyclerHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

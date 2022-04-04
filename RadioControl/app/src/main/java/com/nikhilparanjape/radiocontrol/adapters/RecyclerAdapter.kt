@@ -9,6 +9,8 @@ import com.nikhilparanjape.radiocontrol.holders.RecyclerHolder
 /**
  * Created by Nikhil on 10/12/2018.
  *
+ * @author Nikhil Paranjape
+ *
  * An adapter class for TroubleShooting Activity
  */
 class RecyclerAdapter(private var troubleshoot: Array<String>) : RecyclerView.Adapter<RecyclerHolder>() {

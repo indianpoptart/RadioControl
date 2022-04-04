@@ -13,6 +13,10 @@ import com.nikhilparanjape.radiocontrol.R
 
 /**
  * Created by Nikhil Paranjape on 04/11/2016.
+ *
+ * @author Nikhil Paranjape
+ *
+ * Renders the static changelog into a scrolling view
  */
 
 class ChangeLogActivity : AppCompatActivity() {

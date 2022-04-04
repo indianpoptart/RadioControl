@@ -11,6 +11,10 @@ import kotlin.system.measureTimeMillis
  * A custom Networking Utility class for RadioControl
  *
  * This "offloads" the networking tasks to this class allowing for easy returns for UI elements
+ *
+ * @author Nikhil Paranjape
+ *
+ *
  */
 class NetworkUtility {
     companion object{

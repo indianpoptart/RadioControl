@@ -14,7 +14,8 @@ import com.nikhilparanjape.radiocontrol.listeners.CustomPhoneStateListener
 /**
  * Created by Nikhil on 10/12/2018.
  *
- * @author
+ * @author Nikhil Paranjape
+ *
  * An adapter class for TroubleShooting Activity
  */
 class PhoneStateBroadcastReceiver : WakefulBroadcastReceiver() {

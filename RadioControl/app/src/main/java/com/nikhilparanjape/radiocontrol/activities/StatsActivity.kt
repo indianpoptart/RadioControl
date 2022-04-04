@@ -37,9 +37,15 @@ import java.util.*
 
 /**
  * Created by Nikhil Paranjape on 04/17/2016.
+ *
+ * @author Nikhil Paranjape
+ *
+ *
  */
 
 class StatsActivity : AppCompatActivity() {
+
+    //Setting these variables like this is probably extremely inefficient and janky. Sorry in advance.
     private var wifiSigLost = 0
     //Sets float for wifiLost
     private var janWifiLost = 0f

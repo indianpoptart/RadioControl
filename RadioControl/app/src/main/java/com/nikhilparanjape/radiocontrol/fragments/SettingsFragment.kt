@@ -33,6 +33,11 @@ import java.util.Calendar
 
 /**
  * Created by Nikhil on 4/5/2016.
+ *
+ * @author Nikhil Paranjape
+ *
+ * This class renders the settings.xml layout as a fragment into SettingsActivity
+ * It also controls every setting in the app, and performs the necessary backend updates to ensure the app works seamlessly without needing a restart
  */
 class SettingsFragment : PreferenceFragmentCompat(), TimePickerDialog.OnTimeSetListener {
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {

@@ -12,11 +12,15 @@ import com.gordonwong.materialsheetfab.AnimatedFab
 import com.nikhilparanjape.radiocontrol.R
 
 /**
- * Created by Gordon Wong on 7/17/2015.
+ * Created by Gordon Wong(https://github.com/gowong) on 7/17/2015.
  *
  * Modified by Nikhil Paranjape on 5/17/2016.
  *
  * Sample floating action button implementation.
+ *
+ * @author Gordon Wong & Nikhil Paranjape
+ *
+ *
  */
 class Fab : FloatingActionButton, AnimatedFab {
 

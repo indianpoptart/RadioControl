@@ -15,6 +15,10 @@ import com.nikhilparanjape.radiocontrol.fragments.SettingsFragment
 
 /**
  * Created by Nikhil Paranjape on 12/16/2015.
+ *
+ * @author Nikhil Paranjape
+ *
+ *
  */
 
 class SettingsActivity : AppCompatActivity() {

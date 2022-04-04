@@ -7,6 +7,10 @@ import java.io.IOException
  * Created by Nikhil on 12/25/2015.
  *
  * A custom RootAccess object for usage in RadioControl (You may want to use topjohnwu's libSU)
+ *
+ * @author Nikhil Paranjape
+ *
+ *
  */
 object RootAccess {
     @JvmStatic

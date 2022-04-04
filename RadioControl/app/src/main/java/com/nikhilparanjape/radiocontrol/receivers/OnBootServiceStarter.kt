@@ -10,8 +10,9 @@ import com.nikhilparanjape.radiocontrol.utilities.Utilities
 /**
  * Created by Nikhil on 05/29/2021.
  *
- * @author
- * A service starter
+ * @author Nikhil Paranjape
+ *
+ * Another on boot service starter
  */
 
 class OnBootServiceStarter : BroadcastReceiver() {

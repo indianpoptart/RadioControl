@@ -12,6 +12,10 @@ import com.nikhilparanjape.radiocontrol.adapters.RecyclerAdapter
 
 /**
  * Created by Nikhil on 07/31/2018.
+ *
+ * @author Nikhil Paranjape
+ *
+ *
  */
 
 class WLANFragment : Fragment() {

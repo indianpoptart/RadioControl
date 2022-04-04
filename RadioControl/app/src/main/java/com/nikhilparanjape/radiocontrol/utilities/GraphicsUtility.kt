@@ -7,5 +7,9 @@ package com.nikhilparanjape.radiocontrol.utilities
  * A custom Graphics Utility class for RadioControl
  *
  * This "offloads" the UI rendering and imaging to this class
+ *
+ * @author Nikhil Paranjape
+ *
+ *
  */
 class GraphicsUtility

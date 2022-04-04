@@ -29,6 +29,7 @@ import java.net.InetAddress
  * This is the brains of the app
  *
  * @author Nikhil Paranjape
+ *
  */
 class BackgroundJobService : JobService(), ConnectivityReceiver.ConnectivityReceiverListener {
 
@@ -68,13 +69,17 @@ class BackgroundJobService : JobService(), ConnectivityReceiver.ConnectivityRece
                 jobFinished(params, false)
             }
         } else if (prefs.getInt("isActive", 0) == 1) {
-            val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-            connectivityManager.registerNetworkCallback(NetworkRequest.Builder().build(), object : ConnectivityManager.NetworkCallback() {})
-            val activeNetwork = connectivityManager.activeNetworkInfo //This is used to check if the mobile network is currently off/disabled
-
-            Log.d(TAG, "Connected?: $activeNetwork")
-
             Log.d(TAG, "Main Program Begin")
+            val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager //Initializes the Connectivity Manager. This should only be done if the user requested the app to be active
+            connectivityManager.registerNetworkCallback(NetworkRequest.Builder().build(), object : ConnectivityManager.NetworkCallback() {}) //Registers for network callback notifications
+            val activeNetwork = connectivityManager.activeNetworkInfo //This is used to check if the mobile network is currently off/disabled
+            /**^This can be changed with
+             *  ConnectivityManager.NetworkCallback API
+                or ConnectivityManager#getNetworkCapabilities or ConnectivityManager#getLinkProperties
+
+                https://stackoverflow.com/questions/53532406/activenetworkinfo-type-is-deprecated-in-api-level-28
+             **/
+            Log.d(TAG, "Connected?: $activeNetwork")
 
             //Check if there is no WiFi connection && the Cell network is still not active
             if (!isConnectedWifi(applicationContext) && activeNetwork == null) {
@@ -197,6 +202,16 @@ class BackgroundJobService : JobService(), ConnectivityReceiver.ConnectivityRece
         return true
     }
 
+    /**
+     * Write a private log for the Statistics Activity
+     *
+     * Sets the date in yyyy-MM-dd HH:mm:ss format
+     *
+     * This method always requires appropriate context
+     *
+     * @param data The data to be written to the log file radiocontrol.log
+     * @param c context allows access to application-specific resources and classes
+     */
     private fun writeLog(data: String, c: Context) {
         val preferences = androidx.preference.PreferenceManager.getDefaultSharedPreferences(c)
         if (preferences.getBoolean("enableLogs", false)) {
@@ -218,6 +233,12 @@ class BackgroundJobService : JobService(), ConnectivityReceiver.ConnectivityRece
         }
     }
 
+    /**
+     * Checks latency to CloudFlare
+     *
+     * This method always requires application context
+     *
+     */
     private fun pingTask() {
         try {
             //Wait for network to be connected fully

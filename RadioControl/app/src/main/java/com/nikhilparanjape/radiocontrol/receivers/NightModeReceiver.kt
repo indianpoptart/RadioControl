@@ -10,6 +10,8 @@ import com.nikhilparanjape.radiocontrol.utilities.AlarmSchedulers
 /**
  * Created by Nikhil on 10/12/2018.
  *
+ * @author Nikhil Paranjape
+ *
  * A class that receives when night mode is activated
  */
 

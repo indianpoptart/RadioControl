@@ -11,6 +11,10 @@ import com.nikhilparanjape.radiocontrol.utilities.AlarmSchedulers
 
 /**
  * Created by admin on 9/24/2016.
+ *
+ * @author Nikhil Paranjape
+ *
+ *
  */
 
 class RootServiceReceiver : WakefulBroadcastReceiver() {

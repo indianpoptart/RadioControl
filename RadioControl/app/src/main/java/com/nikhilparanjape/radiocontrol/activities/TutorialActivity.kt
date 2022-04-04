@@ -7,6 +7,10 @@ import com.nikhilparanjape.radiocontrol.fragments.SlideFragment
 
 /**
  * Created by Nikhil on 4/24/2016.
+ *
+ * @author Nikhil Paranjape
+ *
+ *
  */
 class TutorialActivity : AppIntro() {
     // Please DO NOT override onCreate. Use init.
