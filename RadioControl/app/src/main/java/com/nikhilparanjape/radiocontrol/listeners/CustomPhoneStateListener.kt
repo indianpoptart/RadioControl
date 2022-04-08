@@ -24,7 +24,7 @@ class CustomPhoneStateListener(private val context: Context) : PhoneStateListene
     //private val airOffCmd2 = arrayOf("su", "settings put global airplane_mode_on 0", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state false", "settings put global airplane_mode_radios  \"cell,bluetooth,nfc,wimax\"", "content update --uri content://settings/global --bind value:s:'cell,bluetooth,nfc,wimax' --where \"name='airplane_mode_radios'\"")
 
     private var lastState = TelephonyManager.CALL_STATE_IDLE // We assume the last state of the phone call is idle for now
-    private var isIncoming: Boolean = false
+    private var isIncoming: Boolean = false //Boolean for if there is an incoming call
 
     override fun onCallStateChanged(state: Int, phoneNumber: String?) {
         super.onCallStateChanged(state, "1") // Do not pull phone number for privacy

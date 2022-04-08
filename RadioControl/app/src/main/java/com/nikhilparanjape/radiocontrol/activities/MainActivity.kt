@@ -136,7 +136,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
                 }
             }
 
-        //A function that capitalizes names for strings. Used directly by getDeviceName()
+        //A function that capitalizes the first letter in strings. Used directly by getDeviceName()
         private fun capitalizeText(s: String?): String {
             //Return nothing if string 's' is empty or null
             if (s == null || s.isEmpty()) {
@@ -182,7 +182,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
 
 /** BEGIN Core init**/
     val policy = ThreadPolicy.Builder().permitAll().build()
-    StrictMode.setThreadPolicy(policy) // Sets thread policy to all threads THIS IS DANGEROUS
+    StrictMode.setThreadPolicy(policy) // Sets thread policy to all threads THIS IS DANGEROUS, but we will do it anyways
     mServiceComponent = ComponentName(this, BackgroundJobService::class.java)
 
     //Adds filter for app to receive Connectivity_Action
