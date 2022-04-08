@@ -115,7 +115,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
         private lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
         private lateinit var slider: MaterialDrawerSliderView
         private var mServiceComponent: ComponentName? = null
-        private lateinit var binding: ActivityMainBinding
+        //private lateinit var binding: ActivityMainBinding
         private var isBillingReady = false
 
         //JobID for jobscheduler(BackgroundJobService)
