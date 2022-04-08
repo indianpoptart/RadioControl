@@ -95,14 +95,14 @@ class BackgroundJobService : JobService(), ConnectivityReceiver.ConnectivityRece
                         //Runs the alt cellular mode, otherwise, run the standard airplane mode
                         if (prefs.getBoolean("altRootCommand", false)) {
                             if (getCellStatus(applicationContext) == 1) {
-                                val output = Shell.su("service call phone 27").exec().out
+                                val output = Shell.cmd("service call phone 27").exec()
                                 writeLog("root accessed: $output", applicationContext)
                                 Log.d(TAG, "Cell Radio has been turned on")
                                 writeLog("Cell radio has been turned on", applicationContext)
                                 jobFinished(params, false)
                             }
                         } else {
-                            val output = Shell.su("settings put global airplane_mode_on 0", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state false").exec().out
+                            val output = Shell.cmd("settings put global airplane_mode_on 0", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state false").exec()
                             writeLog("root accessed: $output", applicationContext)
                             //RootAccess.runCommands(airOffCmd3)
                             Log.d(TAG, "Airplane mode has been turned off")
@@ -137,7 +137,7 @@ class BackgroundJobService : JobService(), ConnectivityReceiver.ConnectivityRece
 
                                 when {
                                     getCellStatus(applicationContext) == 0 -> {
-                                        val output = Shell.su("service call phone 27").exec().out
+                                        val output = Shell.cmd("service call phone 27").exec()
                                         writeLog("root accessed: $output", applicationContext)
                                         Log.d(TAG, "Cell Radio has been turned off")
                                         writeLog("Cell radio has been turned off", applicationContext)
@@ -154,7 +154,7 @@ class BackgroundJobService : JobService(), ConnectivityReceiver.ConnectivityRece
                                 }
 
                             } else {
-                                val output = Shell.su("settings put global airplane_mode_radios  \"cell\"", "content update --uri content://settings/global --bind value:s:'cell' --where \"name='airplane_mode_radios'\"", "settings put global airplane_mode_on 1", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state true").exec().out
+                                val output = Shell.cmd("settings put global airplane_mode_radios  \"cell\"", "content update --uri content://settings/global --bind value:s:'cell' --where \"name='airplane_mode_radios'\"", "settings put global airplane_mode_on 1", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state true").exec()
                                 writeLog("root accessed: $output", applicationContext)
                                 //RootAccess.runCommands(airCmd)
                                 Log.d(TAG, "Airplane mode has been turned on")
@@ -271,13 +271,13 @@ class BackgroundJobService : JobService(), ConnectivityReceiver.ConnectivityRece
                 } else {
                     //Runs the cellular mode
                     if (prefs.getBoolean("altRootCommand", false)) {
-                        val output = Shell.su("service call phone 27").exec().out
+                        val output = Shell.cmd("service call phone 27").exec()
                         Utilities.writeLog("root accessed: $output", applicationContext)
                         alarmUtil.scheduleRootAlarm(applicationContext)
                         Log.d(TAG, "Cell Radio has been turned off")
                         writeLog("Cell radio has been turned off", applicationContext)
                     } else if (!prefs.getBoolean("altRootCommand", false)) {
-                        val output = Shell.su("settings put global airplane_mode_radios  \"cell\"", "content update --uri content://settings/global --bind value:s:'cell' --where \"name='airplane_mode_radios'\"", "settings put global airplane_mode_on 1", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state true").exec().out
+                        val output = Shell.cmd("settings put global airplane_mode_radios  \"cell\"", "content update --uri content://settings/global --bind value:s:'cell' --where \"name='airplane_mode_radios'\"", "settings put global airplane_mode_on 1", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state true").exec()
                         Utilities.writeLog("root accessed: $output", applicationContext)
                         //RootAccess.runCommands(airCmd)
                         Log.d(TAG, "Airplane mode has been turned on")
