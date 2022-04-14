@@ -241,8 +241,12 @@ class BackgroundJobService : JobService(), ConnectivityReceiver.ConnectivityRece
     private fun pingTask() {
         try {
             //Wait for network to be connected fully
-            while (!isConnected(applicationContext)) {
-                Thread.sleep(1000)
+            /*while (!isConnected(applicationContext)) {
+                //Thread.sleep(1000)
+            }*/
+            //Fix this, as it causes a hang when wifi is disconnected and the app is on airplane mode(Only if Internet Test is active)
+            if (!isConnected(applicationContext)){
+                waitFor(5000)
             }
             val address = InetAddress.getByName("1.1.1.1")
             val reachable = address.isReachable(4000)
