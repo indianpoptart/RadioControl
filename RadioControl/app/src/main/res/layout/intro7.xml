@@ -36,6 +36,7 @@
             android:layout_gravity="center"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
+            android:contentDescription="@string/airplane_mode_content_description"
             app:srcCompat="@drawable/ic_airplanemode_active_white_24dp" />
     </LinearLayout>
 

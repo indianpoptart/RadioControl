@@ -79,6 +79,7 @@
         android:layout_alignParentBottom="true"
         android:layout_marginStart="12dp"
         android:layout_marginBottom="510dp"
+        android:contentDescription="@string/dnd_status_content_description"
         app:srcCompat="@drawable/ic_do_not_disturb_off_white_48px" />
 
 </RelativeLayout>

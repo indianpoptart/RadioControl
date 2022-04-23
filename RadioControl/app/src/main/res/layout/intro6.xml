@@ -36,6 +36,7 @@
             android:layout_gravity="center"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
+            android:contentDescription="@string/phone_icon_content_description"
             app:srcCompat="@drawable/ic_phone_black_24dp" />
     </LinearLayout>
 

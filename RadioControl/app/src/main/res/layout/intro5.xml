@@ -36,6 +36,7 @@
             android:layout_gravity="center"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
+            android:contentDescription="@string/persistence_content_description"
             app:srcCompat="@drawable/ic_memory_white_128dp" />
     </LinearLayout>
 

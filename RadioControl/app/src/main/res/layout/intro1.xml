@@ -34,6 +34,7 @@
             android:layout_gravity="center"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
+            android:contentDescription="@string/app_icon_content_description"
             app:srcCompat="@drawable/web_icon" />
     </LinearLayout>
     <TextView

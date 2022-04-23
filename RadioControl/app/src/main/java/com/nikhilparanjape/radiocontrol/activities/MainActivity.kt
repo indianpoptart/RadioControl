@@ -12,22 +12,33 @@ import android.graphics.drawable.Drawable
 import android.net.ConnectivityManager
 import android.os.Build
 import android.os.Bundle
+import android.os.StrictMode
+import android.os.StrictMode.ThreadPolicy
 import android.text.format.DateFormat
 import android.util.Log
 import android.view.Gravity
 import android.view.MenuItem
 import android.view.View
 import android.view.View.inflate
-import android.widget.*
+import android.widget.Button
+import android.widget.ProgressBar
+import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat.IMPORTANCE_LOW
 import androidx.core.content.ContextCompat
 import androidx.core.content.pm.PackageInfoCompat.getLongVersionCode
+import androidx.lifecycle.lifecycleScope
 import com.afollestad.materialdialogs.MaterialDialog
+import com.android.billingclient.api.BillingClient
+import com.android.billingclient.api.BillingClientStateListener
+import com.android.billingclient.api.BillingResult
+import com.android.billingclient.api.PurchasesUpdatedListener
 import com.github.stephenvinouze.core.managers.KinAppManager
 import com.github.stephenvinouze.core.models.KinAppProductType
 import com.github.stephenvinouze.core.models.KinAppPurchase
@@ -41,13 +52,18 @@ import com.mikepenz.iconics.typeface.library.googlematerial.GoogleMaterial
 import com.mikepenz.iconics.utils.colorInt
 import com.mikepenz.iconics.utils.paddingDp
 import com.mikepenz.iconics.utils.sizeDp
+import com.mikepenz.materialdrawer.iconics.iconicsIcon
 import com.mikepenz.materialdrawer.model.DividerDrawerItem
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem
 import com.mikepenz.materialdrawer.model.ProfileDrawerItem
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem
-import com.mikepenz.materialdrawer.model.interfaces.*
+import com.mikepenz.materialdrawer.model.interfaces.descriptionText
+import com.mikepenz.materialdrawer.model.interfaces.iconDrawable
+import com.mikepenz.materialdrawer.model.interfaces.nameRes
+import com.mikepenz.materialdrawer.model.interfaces.nameText
 import com.mikepenz.materialdrawer.util.addItems
 import com.mikepenz.materialdrawer.widget.AccountHeaderView
+import com.mikepenz.materialdrawer.widget.MaterialDrawerSliderView
 import com.nikhilparanjape.radiocontrol.BuildConfig
 import com.nikhilparanjape.radiocontrol.R
 import com.nikhilparanjape.radiocontrol.databinding.ActivityMainBinding
@@ -59,22 +75,12 @@ import com.nikhilparanjape.radiocontrol.services.PersistenceService
 import com.nikhilparanjape.radiocontrol.utilities.AlarmSchedulers
 import com.nikhilparanjape.radiocontrol.utilities.Utilities
 import com.topjohnwu.superuser.Shell
+import kotlinx.coroutines.*
 import java.io.File
 import java.io.IOException
 import java.net.InetAddress
 import kotlin.coroutines.CoroutineContext
 import kotlin.system.measureTimeMillis
-import android.os.StrictMode
-import android.os.StrictMode.ThreadPolicy
-import androidx.core.app.NotificationManagerCompat.IMPORTANCE_LOW
-import androidx.lifecycle.lifecycleScope
-import com.android.billingclient.api.BillingClient
-import com.android.billingclient.api.BillingClientStateListener
-import com.android.billingclient.api.BillingResult
-import com.android.billingclient.api.PurchasesUpdatedListener
-import com.mikepenz.materialdrawer.iconics.iconicsIcon
-import com.mikepenz.materialdrawer.widget.MaterialDrawerSliderView
-import kotlinx.coroutines.*
 
 /**
  * Created by Nikhil Paranjape on 11/3/2015.
@@ -209,7 +215,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
                 // To be implemented in a later section.
             }
 
-        var billingClient = BillingClient.newBuilder(applicationContext)
+        val billingClient = BillingClient.newBuilder(applicationContext)
             .setListener(purchasesUpdatedListener)
             .enablePendingPurchases()
             .build()
