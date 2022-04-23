@@ -210,7 +210,7 @@ class BackgroundJobService : JobService(), ConnectivityReceiver.ConnectivityRece
      *
      * @param data The data to be written to the log file radiocontrol.log
      * @param c context allows access to application-specific resources and classes
-     */
+    */
     private fun writeLog(data: String, c: Context) {
         val preferences = androidx.preference.PreferenceManager.getDefaultSharedPreferences(c)
         if (preferences.getBoolean("enableLogs", false)) {

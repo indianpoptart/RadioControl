@@ -21,7 +21,7 @@ class TroubleshootingActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityTroubleshootingBinding
 
-
+    // TODO FIX THIS OR GET RID OF IT
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         when (item.itemId) {
             R.id.navigation_home -> {

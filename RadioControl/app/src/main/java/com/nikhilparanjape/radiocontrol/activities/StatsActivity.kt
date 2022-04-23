@@ -45,6 +45,7 @@ import java.util.*
 
 class StatsActivity : AppCompatActivity() {
 
+    //TODO COMBINE THESE VARIABLES SOMEHOW
     //Setting these variables like this is probably extremely inefficient and janky. Sorry in advance.
     private var wifiSigLost = 0
     //Sets float for wifiLost

@@ -14,8 +14,6 @@ import android.telephony.TelephonyManager
 import android.util.Log
 import com.nikhilparanjape.radiocontrol.utilities.Utilities
 
-
-
 class CustomPhoneStateListener(private val context: Context) : PhoneStateListener() { //Context for making a Toast if applicable
     //Root commands which disable cell only
     //private var airCmd = arrayOf("su", "settings put global airplane_mode_radios  \"cell\"", "content update --uri content://settings/global --bind value:s:'cell' --where \"name='airplane_mode_radios'\"", "settings put global airplane_mode_on 1", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state true")

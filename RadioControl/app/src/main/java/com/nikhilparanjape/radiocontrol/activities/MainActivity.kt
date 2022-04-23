@@ -97,7 +97,8 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
     companion object {
         /*private const val PRIVATE_PREF = "prefs"*/ //Used for shared prefs
         private const val VERSION_KEY = "version_number"
-        //Donation related keys (wow I misspelled the shit out of my own name for these variables, which I can't change since they are hardcoded into google play, nice going)
+        //Donation related keys (wow I misspelled the shit out of my own name for these variables,
+        //which I can't change since they are hardcoded into google play, nice going)
         internal const val ITEM_ONE_DOLLAR = "com.nikihlparanjape.radiocontrol.donate.one"
         internal const val ITEM_THREE_DOLLAR = "com.nikihlparanjape.radiocontrol.donate.three"
         internal const val ITEM_FIVE_DOLLAR = "com.nikihlparanjape.radiocontrol.donate.five"
