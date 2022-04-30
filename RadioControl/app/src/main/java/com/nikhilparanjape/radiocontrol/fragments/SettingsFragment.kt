@@ -27,6 +27,7 @@ import com.nikhilparanjape.radiocontrol.receivers.ConnectivityReceiver
 import com.nikhilparanjape.radiocontrol.services.PersistenceService
 import com.nikhilparanjape.radiocontrol.utilities.AlarmSchedulers
 import com.nikhilparanjape.radiocontrol.utilities.RootAccess
+import com.nikhilparanjape.radiocontrol.utilities.Utilities
 import java.io.File
 import java.util.*
 
@@ -130,17 +131,7 @@ class SettingsFragment : PreferenceFragmentCompat(), TimePickerDialog.OnTimeSetL
                 false
             }
             getString(R.string.key_preference_settings_reset_airplane) -> { //Reset Airplane Mode button
-                MaterialDialog(requireContext())
-                        .icon(R.mipmap.wifi_off)
-                        .message(R.string.title_airplane_reset)
-                        .positiveButton(R.string.text_ok) {
-                            val airOffCmd2 = arrayOf("su", "settings put global airplane_mode_radios  \"cell,bluetooth,nfc,wimax\"", "content update --uri content://settings/global --bind value:s:'cell,bluetooth,nfc,wimax' --where \"name='airplane_mode_radios'\"")
-                            RootAccess.runCommands(airOffCmd2)
-                            Toast.makeText(activity,
-                                    "Airplane mode reset", Toast.LENGTH_LONG).show()
-                        }
-                        .negativeButton(R.string.text_cancel)
-                        .show()
+                airplaneModeResetButton(requireActivity())
                 false
             }
             getString(R.string.key_preference_settings_doze) -> { //Battery Optimization button
@@ -189,7 +180,9 @@ class SettingsFragment : PreferenceFragmentCompat(), TimePickerDialog.OnTimeSetL
                     if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
                         ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION), 200)
                         //altRootCommandPref?.isChecked = true
+                        //TODO add a check for if airplane mode is on, if so, run the script to reset airplane mode
                     }
+                    airplaneModeResetButton(requireActivity())
                 }
 
 
@@ -331,6 +324,33 @@ class SettingsFragment : PreferenceFragmentCompat(), TimePickerDialog.OnTimeSetL
         editor.apply()
         Toast.makeText(activity,
                 R.string.reset_ssid, Toast.LENGTH_LONG).show()
+    }
+    /**
+     * Resets the airplane mode radios when switching to cellular radio mode, or when there are issues with the standard operation
+     *
+     * @param context allows access to application-specific resources and classes
+     *
+     */
+    private fun airplaneModeResetButton(context: Context) {
+        MaterialDialog(requireContext())
+            .icon(R.mipmap.wifi_off)
+            .message(R.string.title_airplane_reset)
+            .positiveButton(R.string.text_ok) {
+                if(!Utilities.isAirplaneMode(context) && !Utilities.isWifiOn(context)){
+                    val airOffCmd2 = arrayOf("su", "settings put global airplane_mode_radios  \"cell,bluetooth,nfc,wimax\"", "content update --uri content://settings/global --bind value:s:'cell,bluetooth,nfc,wimax' --where \"name='airplane_mode_radios'\"")
+                    RootAccess.runCommands(airOffCmd2)
+                    Toast.makeText(activity,
+                        "Airplane mode reset", Toast.LENGTH_LONG).show()
+                }
+                else{
+                    Toast.makeText(activity,
+                        R.string.title_airplane_reset,
+                        Toast.LENGTH_LONG).show()
+                }
+
+            }
+            .negativeButton(R.string.text_cancel)
+            .show()
     }
 
     private fun logDirectoryButton() {

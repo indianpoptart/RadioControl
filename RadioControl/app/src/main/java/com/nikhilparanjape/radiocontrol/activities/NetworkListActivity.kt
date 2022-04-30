@@ -28,7 +28,6 @@ import com.nikhilparanjape.radiocontrol.R
  *
  * @author Nikhil Paranjape
  *
- *
  * An activity that lists all saved WiFi Networks
  */
 
@@ -156,5 +155,4 @@ class NetworkListActivity : AppCompatActivity() {
         }
         return super.onOptionsItemSelected(item)
     }
-
 }
