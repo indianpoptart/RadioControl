@@ -502,11 +502,16 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
                 // Starts a deferred task to check for root and then returns true or false
                 val deferred = lifecycleScope.async(Dispatchers.IO) {
                     return@async when {
-                        Shell.rootAccess() -> {
+                        Shell.isAppGrantedRoot() == true -> {
                             isRooted = true
                             writeLog("root accessed: ", applicationContext)
                             true
                         }
+                        /*Shell.rootAccess() -> {
+                            isRooted = true
+                            writeLog("root accessed: ", applicationContext)
+                            true
+                        }*/
                         else -> false
                     }
                 }
