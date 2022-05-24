@@ -6,10 +6,10 @@ repositories {
     google()
     mavenCentral()
 }
-def libsuVersion = '4.0.3'
+def libsuVersion = '5.0.1'
 android {
     compileSdkVersion 32
-    buildToolsVersion '33.0.0 rc2'
+    buildToolsVersion '33.0.0 rc4'
     kotlinOptions.useIR = true
     defaultConfig {
         applicationId "com.nikhilparanjape.radiocontrol"
