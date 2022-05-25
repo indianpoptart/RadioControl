@@ -72,7 +72,7 @@ class BackgroundJobService : JobService(), ConnectivityReceiver.ConnectivityRece
             val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager //Initializes the Connectivity Manager. This should only be done if the user requested the app to be active
             connectivityManager.registerNetworkCallback(NetworkRequest.Builder().build(), object : ConnectivityManager.NetworkCallback() {}) //Registers for network callback notifications
             val activeNetwork = connectivityManager.activeNetworkInfo //This is used to check if the mobile network is currently off/disabled
-            /**^This can be changed with
+            /**^TODO refactor activeNetworkInfo to NetworkCallback API
              *  ConnectivityManager.NetworkCallback API
                 or ConnectivityManager#getNetworkCapabilities or ConnectivityManager#getLinkProperties
 
