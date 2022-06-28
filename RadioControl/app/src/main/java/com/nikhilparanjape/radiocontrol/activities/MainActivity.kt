@@ -500,11 +500,12 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
 
             } else {
                 // Starts a deferred task to check for root and then returns true or false
+                // Deferred allows the app to run in the foreground and removes any lag while the Superuser prompt is on screen
                 val deferred = lifecycleScope.async(Dispatchers.IO) {
-                    Shell.getShell()
+                    Shell.getShell() // This is to get a shell session, useful if this is the first time the app is requesting root
                     return@async when {
                         Shell.isAppGrantedRoot() == true -> {
-                            isRooted = true
+                            isRooted = true // Sets global flag of root access
                             writeLog("root accessed: ", applicationContext)
                             true
                         }
@@ -512,8 +513,8 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
                             isRooted = true
                             writeLog("root accessed: ", applicationContext)
                             true
-                        }*/
-                        else -> false
+                        }*/ // Removed for newer versions of libSU
+                        else -> false //Return false if no root granted
                     }
                 }
                 lifecycleScope.launch(Dispatchers.Main) {
