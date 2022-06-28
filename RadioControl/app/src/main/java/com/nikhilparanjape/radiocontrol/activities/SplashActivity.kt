@@ -3,6 +3,8 @@ package com.nikhilparanjape.radiocontrol.activities
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.nikhilparanjape.radiocontrol.BuildConfig
+import com.topjohnwu.superuser.Shell
 
 /**
  * Created by Nikhil on 4/24/2016.
