@@ -70,7 +70,7 @@ class BackgroundJobService : JobService(), ConnectivityReceiver.ConnectivityRece
         } else if (prefs.getInt("isActive", 0) == 1) { //This means the user DOES want the app enabled
             Log.d(TAG, "Main Program Begin")
             val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager //Initializes the Connectivity Manager. This should only be done if the user requested the app to be active
-            connectivityManager.registerNetworkCallback(NetworkRequest.Builder().build(), object : ConnectivityManager.NetworkCallback() {}) //Registers for network callback notifications
+            connectivityManager.registerNetworkCallback(NetworkRequest.Builder().build(), NetworkCallbackRequest) //Registers for network callback notifications - TODO Bug reported ConnectivityManager$TooManyRequestsException
             val activeNetwork = connectivityManager.activeNetworkInfo //This is used to check if the mobile network is currently off/disabled
             /**^TODO refactor activeNetworkInfo to NetworkCallback API
              *  ConnectivityManager.NetworkCallback API
@@ -78,8 +78,11 @@ class BackgroundJobService : JobService(), ConnectivityReceiver.ConnectivityRece
 
                 https://stackoverflow.com/questions/53532406/activenetworkinfo-type-is-deprecated-in-api-level-28
              **/
-            Log.d(TAG, "Connected?: $activeNetwork") //Gives a run down of the current network
+            Log.d(TAG, "Status?: $activeNetwork") //Gives a run down of the current network
 
+            /** Section for on network losing status
+             * connectivityManager.requestNetwork(NetworkRequest.Builder().build(), object : ConnectivityManager.NetworkCallback() {}, 5000)
+             * **/
             //Check if there is no WiFi connection && the Cell network is still not active
             if (!isConnectedWifi(applicationContext) && activeNetwork == null) {
                 Log.d(TAG, WIFI_LOST)
@@ -88,33 +91,22 @@ class BackgroundJobService : JobService(), ConnectivityReceiver.ConnectivityRece
                 // Ensures that Airplane mode is on, or that the cell radio is off
                 if (isAirplaneMode(applicationContext) || !isConnectedMobile(applicationContext)) {
 
-                    //Continue iff the device is not in an active call
-                    if (!isCallActive(applicationContext)) {
-
-                        //Runs the alt cellular mode, otherwise, run the standard airplane mode
-                        if (prefs.getBoolean("altRootCommand", false)) {
-                            if (getCellStatus(applicationContext) == 1) {
-                                val output = Shell.cmd("service call phone 27").exec()
-                                writeLog("root accessed: $output", applicationContext)
-                                Log.d(TAG, CELL_RADIO_ON)
-                                writeLog(CELL_RADIO_ON, applicationContext)
-                                jobFinished(params, false)
-                            }
-                        } else {
-                            val output = Shell.cmd("settings put global airplane_mode_on 0", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state false").exec()
+                    //Runs the alt cellular mode, otherwise, run the standard airplane mode
+                    if (prefs.getBoolean("altRootCommand", false)) {
+                        if (getCellStatus(applicationContext) == 1) {
+                            val output = Shell.cmd("service call phone 27").exec()
                             writeLog("root accessed: $output", applicationContext)
-                            //RootAccess.runCommands(airOffCmd3) *Here for legacy purposes
-                            Log.d(TAG, AIRPLANE_MODE_OFF)
-                            writeLog(AIRPLANE_MODE_OFF, applicationContext)
+                            Log.d(TAG, CELL_RADIO_ON)
+                            writeLog(CELL_RADIO_ON, applicationContext)
                             jobFinished(params, false)
                         }
-                    }
-                    //Waits for the active call to finish before initiating
-                    else if (isCallActive(applicationContext)) {
-                        while (isCallActive(applicationContext)) {
-                            waitFor(1000)//Wait every second for call to end
-                            Log.d(TAG, "waiting for call to end")
-                        }
+                    } else {
+                        val output = Shell.cmd("settings put global airplane_mode_on 0", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state false").exec()
+                        writeLog("root accessed: $output", applicationContext)
+                        //RootAccess.runCommands(airOffCmd3) *Here for legacy purposes
+                        Log.d(TAG, AIRPLANE_MODE_OFF)
+                        writeLog(AIRPLANE_MODE_OFF, applicationContext)
+                        jobFinished(params, false)
                     }
                 }
             //Here we check if the device just connected to a wifi network, as well as if airplane mode and/or the cell radio are off and/or connected respectively
@@ -166,15 +158,23 @@ class BackgroundJobService : JobService(), ConnectivityReceiver.ConnectivityRece
                         }//The user does want network alert notifications
 
                     } else if (isCallActive(applicationContext)) {
+                        //Here we want to wait for the phone call to end before closing off the cellular connection. Don't assume WiFi handoff
                         Log.d(TAG, "Still on the phone")
                         jobFinished(params, true)
-                        /*while (isCallActive(applicationContext)) {
-                            waitFor(1000)//Wait for call to end
-                            Log.d(_root_ide_package_.com.nikhilparanjape.radiocontrol.services.BackgroundJobService.Companion.TAG, "waiting for call to end")
+                        while (isCallActive(applicationContext)) {
+                            waitFor(2000)//Wait for call to end. TODO this is actually dangerous and should be changed as it hangs the whole app
+                            Log.d(TAG, "waiting for call to end")
                         }
 
-                        [Legacy Code] Waits for the active call to end, however, now it will just do a jobFinished. Idk if it works properly*/
+                        /*[Legacy Code] Waits for the active call to end, however, now it will just do a jobFinished. Idk if it works properly*/
                     }//Checks that user is currently in call and pauses execution till the call ends
+                    //Waits for the active call to finish before initiating
+                    else if (isCallActive(applicationContext)) {
+                        while (isCallActive(applicationContext)) {
+                            waitFor(1000)//Wait every second for call to end
+                            Log.d(TAG, "waiting for call to end")
+                        }
+                    }
                 } else if (selections!!.contains(getCurrentSsid(applicationContext))) {
                     Log.d(TAG, "The current SSID was blocked from list $selections")
                     writeLog("The current SSID was blocked from list $selections", applicationContext)
@@ -191,7 +191,9 @@ class BackgroundJobService : JobService(), ConnectivityReceiver.ConnectivityRece
                 }
                 jobFinished(params, false)
             }
-
+            //Since the code is finished, we should run the unregisterNetworkCallback
+            //This is to avoid hitting 100 request limit shared with registerNetworkCallback
+            connectivityManager.unregisterNetworkCallback(NetworkCallbackRequest)
         } else {
             Log.e(TAG, "Something's wrong, I can feel it")
             jobFinished(params, false)
@@ -308,7 +310,10 @@ class BackgroundJobService : JobService(), ConnectivityReceiver.ConnectivityRece
         return true
     }
 
+
+
     companion object {
+        object NetworkCallbackRequest : ConnectivityManager.NetworkCallback()
         private const val TAG = "RadioControl-JobSrv"
         /*private const val PRIVATE_PREF = "prefs"*/
         private const val WIFI_LOST = "WiFi signal LOST"
@@ -321,3 +326,4 @@ class BackgroundJobService : JobService(), ConnectivityReceiver.ConnectivityRece
     }
 
 }
+
