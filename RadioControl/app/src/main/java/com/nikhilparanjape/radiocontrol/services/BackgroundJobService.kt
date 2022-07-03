@@ -157,23 +157,18 @@ class BackgroundJobService : JobService(), ConnectivityReceiver.ConnectivityRece
                             jobFinished(params, false)
                         }//The user does want network alert notifications
 
-                    } else if (isCallActive(applicationContext)) {
-                        //Here we want to wait for the phone call to end before closing off the cellular connection. Don't assume WiFi handoff
-                        Log.d(TAG, "Still on the phone")
-                        jobFinished(params, true)
-                        while (isCallActive(applicationContext)) {
-                            waitFor(2000)//Wait for call to end. TODO this is actually dangerous and should be changed as it hangs the whole app
-                            Log.d(TAG, "waiting for call to end")
-                        }
-
-                        /*[Legacy Code] Waits for the active call to end, however, now it will just do a jobFinished. Idk if it works properly*/
                     }//Checks that user is currently in call and pauses execution till the call ends
                     //Waits for the active call to finish before initiating
                     else if (isCallActive(applicationContext)) {
-                        while (isCallActive(applicationContext)) {
-                            waitFor(1000)//Wait every second for call to end
+                        //Here we want to wait for the phone call to end before closing off the cellular connection. Don't assume WiFi handoff
+                        Log.d(TAG, "Still on the phone")
+                        jobFinished(params, true)
+                        /*while (isCallActive(applicationContext)) {
+                            waitFor(2000)//Wait for call to end. TODO this is actually dangerous and should be changed as it hangs the whole app
                             Log.d(TAG, "waiting for call to end")
-                        }
+                        }*/
+                        /*[Legacy Code] Waits for the active call to end, however, now it will just do a jobFinished. Idk if it works properly*/
+
                     }
                 } else if (selections!!.contains(getCurrentSsid(applicationContext))) {
                     Log.d(TAG, "The current SSID was blocked from list $selections")
