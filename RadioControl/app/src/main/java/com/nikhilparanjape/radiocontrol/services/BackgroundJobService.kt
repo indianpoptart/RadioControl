@@ -1,5 +1,6 @@
 package com.nikhilparanjape.radiocontrol.services
 
+import android.annotation.SuppressLint
 import android.app.job.JobParameters
 import android.app.job.JobService
 import android.content.Context
@@ -31,6 +32,7 @@ import java.net.InetAddress
  * @author Nikhil Paranjape
  *
  */
+@SuppressLint("SpecifyJobSchedulerIdRange")
 class BackgroundJobService : JobService(), ConnectivityReceiver.ConnectivityReceiverListener {
 
     //internal var util = Utilities() //Network and other related utilities

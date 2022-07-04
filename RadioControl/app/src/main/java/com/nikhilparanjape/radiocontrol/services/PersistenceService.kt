@@ -48,15 +48,17 @@ class PersistenceService : Service() {
 
         val getPrefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(applicationContext)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && getPrefs.getInt("isActive", 0) == 1) {
-            Utilities.scheduleJob(context)
-        }
-
         try {
             applicationContext.registerReceiver(myConnectivityReceiver, filter)
         } catch (e: Exception) {
             Log.e(TAG, "Registration Failed")
         }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && getPrefs.getInt("isActive", 0) == 1) {
+            Utilities.scheduleJob(context)
+        }
+
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
             val builder = Notification.Builder(this, "persistence")
