@@ -178,10 +178,10 @@ class BackgroundJobService : JobService(), ConnectivityReceiver.ConnectivityRece
                     jobFinished(params, false)
                 }//Pauses because WiFi network is in the list of disabled SSIDs
             }
-            //Handle any other event not covered above, usually something is not right, or we lack some permission
+            //Handle any other event not covered above, usually something is not right, or we lack some permission, or the app is double running
             else {
-                if (activeNetwork == null) {
-                    Log.d(TAG, "Yeah, we connected")
+                if (activeNetwork != null) {
+                    Log.d(TAG, "We are connected")
                 } else {
                     //So activeNetwork has to have some value, lets see what that is
                     Log.e(TAG, "EGADS: $activeNetwork")

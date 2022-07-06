@@ -703,7 +703,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
 
     //Initialize method for the Whats new dialog as well as the first start protocol
     private fun programVersionUpdateInit(isFirstStart: Boolean) {
-        Log.d("RadioControl-Main","CHECKING FOR NEW VERSION")
+        Log.d("RadioControl-Main","CHECKING IF NEW VERSION")
         lifecycleScope.launch {
             val getPrefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(applicationContext)
             val editor = getPrefs.edit()
