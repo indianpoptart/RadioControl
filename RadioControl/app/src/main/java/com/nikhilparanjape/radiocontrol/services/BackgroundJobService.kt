@@ -173,7 +173,7 @@ class BackgroundJobService : JobService(), ConnectivityReceiver.ConnectivityRece
 
                     }
                 } else if (selections!!.contains(getCurrentSsid(applicationContext))) {
-                    Log.d(TAG, "The current SSID was blocked from list $selections")
+                    Log.i(TAG, "The current SSID was blocked from list $selections")
                     writeLog("The current SSID was blocked from list $selections", applicationContext)
                     jobFinished(params, false)
                 }//Pauses because WiFi network is in the list of disabled SSIDs
@@ -193,10 +193,9 @@ class BackgroundJobService : JobService(), ConnectivityReceiver.ConnectivityRece
             connectivityManager.unregisterNetworkCallback(NetworkCallbackRequest)
         } else {
             Log.e(TAG, "Something's wrong, I can feel it")
-            jobFinished(params, false)
         }
         Log.i(TAG, "Job completed")
-
+        jobFinished(params, false)
         return true
     }
 
@@ -244,11 +243,11 @@ class BackgroundJobService : JobService(), ConnectivityReceiver.ConnectivityRece
                 //Thread.sleep(1000)
             }*/
             //Fix this, as it causes a hang when wifi is disconnected and the app is on airplane mode(Only if Internet Test is active)
-            if (!isConnected(applicationContext)){
+            /*if (!isConnected(applicationContext)){
                 waitFor(5000)
-            }
+            }*/ //Commented out because address.isReachable has a timeout of 5 seconds
             val address = InetAddress.getByName("1.1.1.1")
-            val reachable = address.isReachable(4000)
+            val reachable = address.isReachable(5000)
             Log.d(TAG, "Reachable?: $reachable")
 
             //val sp = applicationContext.getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE)
