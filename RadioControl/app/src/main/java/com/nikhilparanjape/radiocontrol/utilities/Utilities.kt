@@ -10,6 +10,7 @@ import android.app.job.JobInfo
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.media.AudioManager
 import android.net.ConnectivityManager
@@ -128,6 +129,56 @@ class Utilities {
                 throw e
             }
         }
+        internal fun enableNetworks(context: Context, prefs: SharedPreferences){
+            // Ensures that Airplane mode is on, or that the cell radio is off
+            if (isAirplaneMode(context) || !isConnectedMobile(context)) {
+
+                //Runs the alt cellular mode, otherwise, run the standard airplane mode
+                if (prefs.getBoolean("altRootCommand", false)) {
+                    if (getCellStatus(context) == 1) {
+                        val output = Shell.cmd("service call phone 27").exec()
+                        writeLog("root accessed: $output", context)
+                        Log.d(BackgroundJobService.TAG, BackgroundJobService.CELL_RADIO_ON)
+                        writeLog(BackgroundJobService.CELL_RADIO_ON, context)
+                    }
+                } else {
+                    val output = Shell.cmd("settings put global airplane_mode_on 0", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state false").exec()
+                    writeLog("root accessed: $output", context)
+                    //RootAccess.runCommands(airOffCmd3) *Here for legacy purposes
+                    Log.d(BackgroundJobService.TAG, BackgroundJobService.AIRPLANE_MODE_OFF)
+                    writeLog(BackgroundJobService.AIRPLANE_MODE_OFF, context)
+                }
+            }
+        }
+        internal fun disableNetworks(prefs: SharedPreferences, context: Context){
+            //Runs the cellular mode, otherwise, run default airplane mode
+            if (prefs.getBoolean("altRootCommand", false)) {
+
+                when {
+                    getCellStatus(context) == 0 -> {
+                        val output = Shell.cmd("service call phone 27").exec()
+                        writeLog("root accessed: $output", context)
+                        Log.d(BackgroundJobService.TAG, BackgroundJobService.CELL_RADIO_OFF)
+                        writeLog(BackgroundJobService.CELL_RADIO_OFF, context)
+                    }
+                    getCellStatus(context) == 1 -> {
+                        Log.d(BackgroundJobService.TAG, "Cell Radio is already off")
+                    }
+                    getCellStatus(context) == 2 -> {
+                        Log.e(BackgroundJobService.TAG, "Location can't be accessed, try alt method")
+                        setMobileNetworkFromLollipop(context)
+                    }
+                }
+
+            } else {
+                val output = Shell.cmd("settings put global airplane_mode_radios  \"cell\"", "content update --uri content://settings/global --bind value:s:'cell' --where \"name='airplane_mode_radios'\"", "settings put global airplane_mode_on 1", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state true").exec()
+                writeLog("root accessed: $output", context)
+                //RootAccess.runCommands(airCmd)
+                Log.d(BackgroundJobService.TAG, BackgroundJobService.AIRPLANE_MODE_ON)
+                writeLog(BackgroundJobService.AIRPLANE_MODE_ON, context)
+            }
+        }
+
         //An old function used for checking of we are on lollipop and whether mobile data can be turned on/off
         private fun isMobileDataEnabledFromLollipop(context: Context): Boolean {
             return Settings.Global.getInt(context.contentResolver, "mobile_data", 0) == 1
@@ -248,6 +299,7 @@ class Utilities {
 
             //(getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler).schedule(builder.build())
         }
+
 
         /**
          * Gets and returns the frequency of the connected WiFi network (eg. 2.4 or 5 GHz)

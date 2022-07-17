@@ -103,6 +103,8 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
         internal const val ITEM_THREE_DOLLAR = "com.nikihlparanjape.radiocontrol.donate.three"
         internal const val ITEM_FIVE_DOLLAR = "com.nikihlparanjape.radiocontrol.donate.five"
         internal const val ITEM_TEN_DOLLAR = "com.nikihlparanjape.radiocontrol.donate.ten"
+        //TAGS for logging
+        internal const val RADIOCONTROL_MAIN = "RadioControl-Main"
         private var alarmUtil = AlarmSchedulers() //Allows methods to extend the AlarmScheduler Utility
 
         //private var gUtility = GraphicsUtility() //Implements all graphics and the like
@@ -311,7 +313,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
             } else {
                 applicationContext.startService(i) //Start legacy service mode
             }
-            Log.d("RadioControl-Main", "persistence service launched")
+            Log.d(RADIOCONTROL_MAIN, "persistence service launched")
         } else {
             registerForBroadcasts(applicationContext)
         }
@@ -326,13 +328,13 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
 
         //Sets device logo icons
         deviceIcon = when {
-            getDeviceName.contains("Nexus") -> AppCompatResources.getDrawable(applicationContext, R.mipmap.ic_nexus_logo)!!
-            getDeviceName.contains("Pixel") -> AppCompatResources.getDrawable(applicationContext, R.drawable.ic_google__g__logo)!!
-            getDeviceName.contains("Huawei") -> AppCompatResources.getDrawable(applicationContext, R.drawable.ic_huawei_logo)!!
-            getDeviceName.contains("LG") -> AppCompatResources.getDrawable(applicationContext, R.drawable.ic_lg_logo_white)!!
-            getDeviceName.contains("Motorola") -> AppCompatResources.getDrawable(applicationContext, R.mipmap.moto2)!!
-            getDeviceName.contains("OnePlus") -> AppCompatResources.getDrawable(applicationContext, R.mipmap.oneplus)!!
-            getDeviceName.contains("Samsung") -> AppCompatResources.getDrawable(applicationContext, R.mipmap.samsung)!!
+            getDeviceName.contains("Nexus")     -> AppCompatResources.getDrawable(applicationContext, R.mipmap.ic_nexus_logo)!!
+            getDeviceName.contains("Pixel")     -> AppCompatResources.getDrawable(applicationContext, R.drawable.ic_google__g__logo)!!
+            getDeviceName.contains("Huawei")    -> AppCompatResources.getDrawable(applicationContext, R.drawable.ic_huawei_logo)!!
+            getDeviceName.contains("LG")        -> AppCompatResources.getDrawable(applicationContext, R.drawable.ic_lg_logo_white)!!
+            getDeviceName.contains("Motorola")  -> AppCompatResources.getDrawable(applicationContext, R.mipmap.moto2)!!
+            getDeviceName.contains("OnePlus")   -> AppCompatResources.getDrawable(applicationContext, R.mipmap.oneplus)!!
+            getDeviceName.contains("Samsung")   -> AppCompatResources.getDrawable(applicationContext, R.mipmap.samsung)!!
 
             else -> AppCompatResources.getDrawable(applicationContext, R.mipmap.ic_launcher)!!
         }
@@ -352,20 +354,20 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
 
         //Creates navigation drawer items
         /*
-        * item1 - Home
-        * ____________________
-        * item2 - Settings
-        * item6 - Statistics
-        * item3 - About
-        * ____________________
-        * item8 - Troubleshooting
-        * item4 - Donate
-        * item5 - Send Feedback
-        * item7 - Standby Mode
-        * _____________________
+        * item1 - Home              - (Position 1)
+        * ____________________      - (Position 2)
+        * item2 - Settings          - (Position 3)
+        * item6 - Statistics        - (Position 4)
+        * item3 - About             - (Position 5)
+        * ____________________      - (Position 6)
+        * item8 - Troubleshooting   - (Position 7)
+        * item4 - Donate            - (Position 8)
+        * item5 - Send Feedback     - (Position 9)
+        * item7 - Standby Mode      - (Position 10)
+        * _____________________     - (Position 11)
         * */
 
-        val item1 = PrimaryDrawerItem().apply { identifier = 1; nameRes = R.string.home; iconicsIcon = GoogleMaterial.Icon.gmd_wifi }
+        val item1 = PrimaryDrawerItem().apply   { identifier = 1; nameRes = R.string.home; iconicsIcon = GoogleMaterial.Icon.gmd_wifi }
         val item2 = SecondaryDrawerItem().apply { identifier = 2; nameRes = R.string.settings; iconicsIcon = GoogleMaterial.Icon.gmd_settings; isSelectable = false }
         val item3 = SecondaryDrawerItem().apply { identifier = 3; nameRes = R.string.about; iconicsIcon = GoogleMaterial.Icon.gmd_info; isSelectable = false }
         val item4 = SecondaryDrawerItem().apply { identifier = 4; nameRes = R.string.donate; iconicsIcon = GoogleMaterial.Icon.gmd_attach_money; isSelectable = false }
@@ -386,9 +388,57 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
                     item5,
                     item7
             )
-            onDrawerItemClickListener = { v, _, position ->
-                Log.d("RadioControl-Main", "The drawer is at position $position")
-                if (position == 3) {
+            onDrawerItemClickListener = { _, _, position ->
+                Log.d(RADIOCONTROL_MAIN, "The drawer is at position $position")
+                when (position) { // Position selected on drawer
+                    3 -> { // Settings Activity
+                        startSettingsActivity()
+
+                        Log.d("drawer", "Started settings activity")
+                    }
+                    4 -> { // Statistics
+                        val log = File(applicationContext.filesDir, "radiocontrol.log")
+                        if (log.exists() && log.canRead()) {
+                            Log.d(RADIOCONTROL_MAIN, "Log Exists")
+                            startStatsActivity()
+                        } else {
+                            Snackbar.make(clayout, "No log file found", Snackbar.LENGTH_LONG)
+                                .show()
+                        }
+                    }
+                    5 -> { // About Activity
+                        startAboutActivity()
+                        Log.d("drawer", "Started about activity")
+                    }
+                    7 -> { // Troubleshooting Activity
+                        Snackbar.make(clayout, "Coming in v6.1!", Snackbar.LENGTH_LONG)
+                            .show()
+                        //startTroubleActivity()
+                    }
+                    8 -> { // Donation Button
+                        //Donation
+                        Log.d(RADIOCONTROL_MAIN, "Donation button pressed")
+                        if (!isBillingReady){
+                            showErrorDialog(R.layout.dialog_no_billing,R.string.noBilling)
+                        }
+                        else if (!Utilities.isConnected(applicationContext)){
+                            showErrorDialog(R.layout.dialog_no_internet,R.string.noInternet)
+                        }
+                        else{
+                            showDonateDialog()
+                        }
+                    }
+                    9 -> { // Send Feedback
+                        Log.d(RADIOCONTROL_MAIN, "Feedback")
+                        sendFeedback()
+                    }
+                    10 -> { // Standby Mode Enabled
+                        Log.d(RADIOCONTROL_MAIN, "Standby Mode Engaged")
+                        startStandbyMode()
+                    }
+                }
+                /** BEGIN   Legacy If Statements**/
+                /*if (position == 3) {
                     startSettingsActivity()
 
                     Log.d("drawer", "Started settings activity")
@@ -396,7 +446,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
                 } else if (position == 4) {
                     val log = File(applicationContext.filesDir, "radiocontrol.log")
                     if (log.exists() && log.canRead()) {
-                        Log.d("RadioControl-Main", "Log Exists")
+                        Log.d(RADIOCONTROL_MAIN, "Log Exists")
                         startStatsActivity()
                     } else {
                         Snackbar.make(clayout, "No log file found", Snackbar.LENGTH_LONG)
@@ -411,7 +461,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
                     //startTroubleActivity()
                 } else if (position == 8) {
                     //Donation
-                    Log.d("RadioControl-Main", "Donation button pressed")
+                    Log.d(RADIOCONTROL_MAIN, "Donation button pressed")
                     if (!isBillingReady){
                         showErrorDialog(R.layout.dialog_no_billing,R.string.noBilling)
                     }
@@ -422,12 +472,13 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
                         showDonateDialog()
                     }
                 } else if (position == 9) {
-                    Log.d("RadioControl-Main", "Feedback")
+                    Log.d(RADIOCONTROL_MAIN, "Feedback")
                     sendFeedback()
                 } else if (position == 10) {
-                    Log.d("RadioControl-Main", "Standby Mode Engaged")
+                    Log.d(RADIOCONTROL_MAIN, "Standby Mode Engaged")
                     startStandbyMode()
-                }
+                }*/
+                /** END     Legacy If Statements**/
                 false
             }
             setSavedInstance(savedInstanceState)
@@ -485,11 +536,11 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
 
         /** Main RadioControl toggle switch listener **/
         toggle.setOnCheckedChangeListener { _, isChecked ->
-            Log.d("RadioControl-Main","Click Clock")
+            Log.d(RADIOCONTROL_MAIN,"Click Clock")
             mainProgressBar.visibility = View.VISIBLE
 
             if (!isChecked) {
-                Log.d("RadioControl-Main", "Not Checked")
+                Log.d(RADIOCONTROL_MAIN, "Not Checked")
                 //Preference handling
                 editor.putInt(getString(R.string.preference_app_active), 0)
                 editor.apply()
@@ -518,23 +569,23 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
                     }
                 }
                 lifecycleScope.launch(Dispatchers.Main) {
-                    Log.d("RadioControl-Main","Lifecycled")
+                    Log.d(RADIOCONTROL_MAIN,"Lifecycled")
                     delay(100)
                     if (deferred.isActive) {
                         try{
                             val result = deferred.await()
-                            Log.d("RadioControl-TryCycle","Result is: $result")
+                            Log.d(RADIOCONTROL_MAIN, "Lifecycle Try Result is: $result")
 
                         } finally {
                             val result = deferred.await()
-                            Log.d("RadioControl-FinalCycle","Result is: $result")
+                            Log.d(RADIOCONTROL_MAIN,"LifeCycle Final Result: $result")
                             uiSetToggle(result,editor,mySharedPref)
                             mainProgressBar.visibility = View.GONE
                         }
 
                     } else {
                         val result = deferred.await()
-                        Log.d("RadioControl-LifeCycle","Result is: $result")
+                        Log.d(RADIOCONTROL_MAIN, "Lifecycled result is: $result")
                         uiSetToggle(result,editor,mySharedPref)
                         mainProgressBar.visibility = View.GONE
                     }
@@ -581,7 +632,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
             connectionStatusText.setText(R.string.ping)
             connectionStatusText.setTextColor(ContextCompat.getColor(applicationContext, R.color.material_grey_50))
             mainProgressBar.visibility = View.VISIBLE
-            Log.d("RadioControl-Ping","Build SDK Version: " + Build.VERSION.SDK_INT)
+            Log.d(RADIOCONTROL_MAIN,"Build SDK Version(For LatencyTest): " + Build.VERSION.SDK_INT)
             lifecycleScope.async {
                 pingCheck()
             }
@@ -591,7 +642,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
             val i = Intent(applicationContext, BackgroundJobService::class.java)
             applicationContext.startService(i)
             alarmUtil.scheduleAlarm(applicationContext)
-            Log.d("RadioControl-Main", "Service started")
+            Log.d(RADIOCONTROL_MAIN, "Service started")
         }
         nightCancel.setOnClickListener {
             /*  val intent = Intent(applicationContext, NightModeReceiver::class.java)
@@ -622,10 +673,10 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
         //DEV View | Listener for the link speed button
         linkSpeedButton.setOnClickListener {
             //showWifiInfoDialog();
-            val activeNetwork = connectivityManager.activeNetworkInfo          //   For legacy systems
+            @Suppress("DEPRECATION") val activeNetwork = connectivityManager.activeNetworkInfo          //   For legacy systems
             val cellStat = Utilities.getCellStatus(applicationContext)        //    Uses Telephony Manager to return the status of the cellular radio
-            Log.d("RadioControl-Job", "Active: $activeNetwork")     //     Shows more info when debugging about the active network
-            Log.d("RadioControl-Main", "Cell: $cellStat")
+            Log.d(RADIOCONTROL_MAIN, "Job: ActiveNetwork is: $activeNetwork")     //     Shows more info when debugging about the active network
+            Log.d(RADIOCONTROL_MAIN, "Cellular Radio Status is: $cellStat")
             val linkSpeed = Utilities.linkSpeed(applicationContext)
             val gHz = Utilities.frequency(applicationContext)
             if (linkSpeed == -1) {
@@ -651,7 +702,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
         val toggle = findViewById<SwitchMaterial>(R.id.enableSwitch)
 
         if(!result){
-            Log.d("RadioControl-Main","NotRooted")
+            Log.d(RADIOCONTROL_MAIN,"NotRooted")
             //toggle.isEnabled = false
             toggle.isChecked = false //Uncheck toggle
             editor.putInt(getString(R.string.preference_app_active), 0)
@@ -664,7 +715,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
             carrierIcon = notRootedIcon
             carrierName = "Not Rooted"
         } else if (result) {
-            Log.d("RadioControl-Main","RootedIGuess")
+            Log.d(RADIOCONTROL_MAIN,"RootedIGuess")
             toggle.isChecked = true
             //Preference handling
             editor.putInt(getString(R.string.preference_app_active), 1)
@@ -690,7 +741,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
                 } else {
                     applicationContext.startService(i)
                 }
-                Log.d("RadioControl-Main", "persist Service launched")
+                Log.d(RADIOCONTROL_MAIN, "persist Service launched")
             } else {
                 registerForBroadcasts(applicationContext)
             }
@@ -703,7 +754,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
 
     //Initialize method for the Whats new dialog as well as the first start protocol
     private fun programVersionUpdateInit(isFirstStart: Boolean) {
-        Log.d("RadioControl-Main","CHECKING IF NEW VERSION")
+        Log.d(RADIOCONTROL_MAIN,"CHECKING IF NEW VERSION")
         lifecycleScope.launch {
             val getPrefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(applicationContext)
             val editor = getPrefs.edit()
@@ -719,7 +770,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
             }
             when {
                 isFirstStart -> {
-                    Log.d("RadioControl-Main","IT'S YOUR FIRST TIME HERE")
+                    Log.d(RADIOCONTROL_MAIN,"IT'S YOUR FIRST TIME HERE")
                     editor.putInt(VERSION_KEY, currentVersionNumber)
                     editor.putInt(getString(R.string.preference_app_active), 0) //Sets app to "off" for default
 
@@ -820,7 +871,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
         editor.putInt(getString(R.string.preference_app_active), 0)
 
         val intentAction = Intent(applicationContext, ActionReceiver::class.java)
-        Log.d("RadioControl-Main", "Value Changed")
+        Log.d(RADIOCONTROL_MAIN, "Value Changed")
         Toast.makeText(applicationContext, "Standby Mode enabled",
                 Toast.LENGTH_LONG).show()
 
@@ -962,7 +1013,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
         when (purchaseResult) {
             KinAppPurchaseResult.SUCCESS -> {
                 Toast.makeText(applicationContext, R.string.donationThanks, Toast.LENGTH_LONG).show()
-                Log.d("RadioControl-Main", "In-app purchase succeeded")
+                Log.d(RADIOCONTROL_MAIN, "In-app purchase succeeded")
                 val getPrefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(applicationContext)
                 val editor = getPrefs.edit()
                 editor.putBoolean(getString(R.string.preference_is_donated), true)
@@ -973,14 +1024,14 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
             }
             KinAppPurchaseResult.ALREADY_OWNED -> {
                 Toast.makeText(applicationContext, R.string.donationExists, Toast.LENGTH_LONG).show()
-                Log.d("RadioControl-Main", "Donation already purchased")
+                Log.d(RADIOCONTROL_MAIN, "Donation already purchased")
             }
             KinAppPurchaseResult.INVALID_PURCHASE -> {
                 // Purchase invalid and cannot be processed
             }
             KinAppPurchaseResult.INVALID_SIGNATURE -> {
                 Toast.makeText(applicationContext, R.string.donationThanks, Toast.LENGTH_LONG).show()
-                Log.d("RadioControl-Main", "In-app purchase succeeded, however verification failed")
+                Log.d(RADIOCONTROL_MAIN, "In-app purchase succeeded, however verification failed")
                 val pref = androidx.preference.PreferenceManager.getDefaultSharedPreferences(applicationContext)
                 val editor = pref.edit()
                 editor.putBoolean(getString(R.string.preference_is_donated), true)
@@ -990,7 +1041,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
                 //Toast.makeText(MainActivity.this, R.string.donationCancel, Toast.LENGTH_LONG).show();
                 Snackbar.make(findViewById(android.R.id.content), R.string.donationCancel, Snackbar.LENGTH_LONG)
                     .show()
-                Log.d("RadioControl-Main", "Purchase Cancelled")
+                Log.d(RADIOCONTROL_MAIN, "Purchase Cancelled")
             }
         }
     }
@@ -1090,7 +1141,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
         val timeDifference = measureTimeMillis {
             reachable = address.isReachable(1000)
         }
-        Log.d("RadioControl-Main", "Reachable?: $reachable, Time: $timeDifference")
+        Log.d(RADIOCONTROL_MAIN, "Reachable?: $reachable, Time: $timeDifference")
 
         val latencyProgressBar: ProgressBar = findViewById(R.id.pingProgressBar)
         latencyProgressBar.visibility = View.GONE

@@ -6,11 +6,10 @@ repositories {
     google()
     mavenCentral()
 }
-def libsuVersion = '5.0.1'
 android {
     compileSdkVersion 33
     buildToolsVersion '33.0.0'
-    kotlinOptions.useIR = true
+    kotlinOptions.useK2 = true
     defaultConfig {
         applicationId "com.nikhilparanjape.radiocontrol"
         minSdkVersion 21
@@ -92,7 +91,7 @@ dependencies {
 
     // Third party - Helper
     implementation "com.github.StephenVinouze:KinApp:1.0.3"
-    implementation "com.github.topjohnwu.libsu:core:${libsuVersion}"
+    implementation "com.github.topjohnwu.libsu:core:5.0.2"
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4'
     implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.7.10'
     implementation 'me.zhanghai.android.customtabshelper:library:1.0.6'

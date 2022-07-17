@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.job.JobParameters
 import android.app.job.JobService
 import android.content.Context
+import android.content.SharedPreferences
 import android.net.ConnectivityManager
 import android.net.NetworkRequest
 import android.text.format.DateFormat
@@ -15,7 +16,6 @@ import com.nikhilparanjape.radiocontrol.utilities.Utilities.Companion.getCellSta
 import com.nikhilparanjape.radiocontrol.utilities.Utilities.Companion.getCurrentSsid
 import com.nikhilparanjape.radiocontrol.utilities.Utilities.Companion.isAirplaneMode
 import com.nikhilparanjape.radiocontrol.utilities.Utilities.Companion.isCallActive
-import com.nikhilparanjape.radiocontrol.utilities.Utilities.Companion.isConnected
 import com.nikhilparanjape.radiocontrol.utilities.Utilities.Companion.isConnectedMobile
 import com.nikhilparanjape.radiocontrol.utilities.Utilities.Companion.isConnectedWifi
 import com.nikhilparanjape.radiocontrol.utilities.Utilities.Companion.setMobileNetworkFromLollipop
@@ -56,6 +56,9 @@ class BackgroundJobService : JobService(), ConnectivityReceiver.ConnectivityRece
         val selections = prefs.getStringSet("ssid", HashSet(listOf(""))) //Gets stringset, if empty sets default
         val networkAlert = prefs.getBoolean("isNetworkAlive", false) //Value for if user wants network alerts
 
+        if (isOngoingPhoneCall){
+            enableNetworks(prefs, params, applicationContext)
+        }
         //Check if user wants the app on
         if (prefs.getInt("isActive", 0) == 0) { //This means they DO NOT want the app enabled, or the app is disabled
             Log.d(TAG, "RadioControl has been disabled")
@@ -199,6 +202,29 @@ class BackgroundJobService : JobService(), ConnectivityReceiver.ConnectivityRece
         return true
     }
 
+    private fun enableNetworks(prefs: SharedPreferences, params: JobParameters, context: Context){
+        // Ensures that Airplane mode is on, or that the cell radio is off
+        if (isAirplaneMode(context) || !isConnectedMobile(context)) {
+
+            //Runs the alt cellular mode, otherwise, run the standard airplane mode
+            if (prefs.getBoolean("altRootCommand", false)) {
+                if (getCellStatus(context) == 1) {
+                    val output = Shell.cmd("service call phone 27").exec()
+                    writeLog("root accessed: $output", context)
+                    Log.d(TAG, CELL_RADIO_ON)
+                    writeLog(CELL_RADIO_ON, context)
+                    jobFinished(params, false)
+                }
+            } else {
+                val output = Shell.cmd("settings put global airplane_mode_on 0", "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state false").exec()
+                writeLog("root accessed: $output", context)
+                //RootAccess.runCommands(airOffCmd3) *Here for legacy purposes
+                Log.d(TAG, AIRPLANE_MODE_OFF)
+                writeLog(AIRPLANE_MODE_OFF, context)
+                jobFinished(params, false)
+            }
+        }
+    }
     /**
      * Write a private log for the Statistics Activity
      *
@@ -310,13 +336,14 @@ class BackgroundJobService : JobService(), ConnectivityReceiver.ConnectivityRece
 
     companion object {
         object NetworkCallbackRequest : ConnectivityManager.NetworkCallback()
-        private const val TAG = "RadioControl-JobSrv"
+        const val TAG = "RadioControl-JobSrv"
         /*private const val PRIVATE_PREF = "prefs"*/
+        var isOngoingPhoneCall = false
         private const val WIFI_LOST = "WiFi signal LOST"
-        private const val CELL_RADIO_ON = "Cell Radio has been turned on"
-        private const val CELL_RADIO_OFF = "Cell Radio has been turned on"
-        private const val AIRPLANE_MODE_OFF = "Airplane mode has been turned off"
-        private const val AIRPLANE_MODE_ON = "Airplane mode has been turned on"
+        const val CELL_RADIO_ON = "Cell Radio has been turned on"
+        const val CELL_RADIO_OFF = "Cell Radio has been turned on"
+        const val AIRPLANE_MODE_OFF = "Airplane mode has been turned off"
+        const val AIRPLANE_MODE_ON = "Airplane mode has been turned on"
 
 
     }
