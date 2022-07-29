@@ -69,13 +69,13 @@ dependencies {
     implementation 'androidx.cardview:cardview:1.0.0'
     //noinspection GradleDependency
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    implementation group: 'androidx.core', name: 'core-ktx', version: '1.9.0-alpha05' //1.9.0-alpha02 requires Tiramisu
+    implementation group: 'androidx.core', name: 'core-ktx', version: '1.9.0-alpha05'
 
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.preference:preference-ktx:1.2.0'
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.0'
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.5.0'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.5.1'
     implementation "androidx.work:work-runtime-ktx:2.7.1"
 
 
