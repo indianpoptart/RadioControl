@@ -9,6 +9,8 @@ import android.net.ConnectivityManager
 import android.net.NetworkRequest
 import android.text.format.DateFormat
 import android.util.Log
+import android.util.Log.DEBUG
+import android.util.Log.INFO
 import com.nikhilparanjape.radiocontrol.receivers.ConnectivityReceiver
 import com.nikhilparanjape.radiocontrol.utilities.AlarmSchedulers
 import com.nikhilparanjape.radiocontrol.utilities.Utilities
@@ -19,6 +21,7 @@ import com.nikhilparanjape.radiocontrol.utilities.Utilities.Companion.isCallActi
 import com.nikhilparanjape.radiocontrol.utilities.Utilities.Companion.isConnectedMobile
 import com.nikhilparanjape.radiocontrol.utilities.Utilities.Companion.isConnectedWifi
 import com.nikhilparanjape.radiocontrol.utilities.Utilities.Companion.setMobileNetworkFromLollipop
+import com.nikhilparanjape.radiocontrol.utilities.Utilities.Companion.writeLog
 import com.topjohnwu.superuser.Shell
 import java.io.File
 import java.io.IOException
@@ -45,6 +48,7 @@ class BackgroundJobService : JobService(), ConnectivityReceiver.ConnectivityRece
 
     override fun onStartJob(params: JobParameters): Boolean {
         Log.i(TAG, "Job started")
+        writeLog(TAG, "Job Started", applicationContext, INFO)
         //Utilities.scheduleJob(applicationContext) // reschedule the job
 
         //val sp = applicationContext.getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE)

@@ -31,6 +31,7 @@ import java.io.IOException
 import java.lang.reflect.Field
 import java.lang.reflect.Method
 
+
 /**
  * Created by Nikhil on 2/3/2016.
  *
@@ -56,6 +57,7 @@ class Utilities {
 
         /**
          * gets network ssid
+         * @version 1.0
          * @param context allows access to application-specific resources and classes
          * @return the current ssid the device is connected to as a string
          */
@@ -75,17 +77,41 @@ class Utilities {
             return ssid
         }
         /**
+         * Gets the current network SSID
+         *
+         * After Android 8.0+ You now need the COARSE_LOCATION of the device to run these commands
+         *
+         * @version 2.0-alpha01
+         * @param context allows access to application-specific resources and classes
+         * @return the current ssid the device is connected to as a string
+         **/
+        fun getCurrentSSID(context: Context): String{
+            var ssid: String? = null
+            val mWifiManager =
+                (context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager)
+            val info = mWifiManager.connectionInfo
+            return info.ssid
+        }
+        /**
          * Return the status of the cellular radio
          * @param context allows access to application-specific resources and classes
-         * @return a value between 0-3. 0 and 1 are good values, returning a 2 or 3 means there is some kind of error
+         * @return int  A value between 0-3.
+         *              0 and 1 are good values,
+         *              returning a 2 or 3 means there is some kind of error
          */
         fun getCellStatus(context: Context): Int {
-            var z = 0 // Z of 0 means we assume the cell radio is connected
+            var z = 0 // Initially, we forcibly assume the cell radio is connected
             val tm = context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
-            //val connMgr = c.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-            //var isWifiConn: Boolean = false
-            //var isMobileConn: Boolean = false
-
+            /**
+             * Old variables that are now deprecated
+                    //val connMgr = c.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+                            - This used to be the original connectivity manager, until that functionality was moved out of the utility
+                            - This removal allows the Utilities class to remain a relatively simple method
+                    //var isWifiConn: Boolean = false
+                            - Was used with connMgr
+                    //var isMobileConn: Boolean = false
+                            - Was used with connMgr
+            **/
             try{
                 if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED ){
                     val cellInfoList = tm.allCellInfo
@@ -272,6 +298,34 @@ class Utilities {
                     fos.close()
                 } catch (e: IOException) {
                     Log.e("RadioControl-util", "Error writing log")
+                }
+            }
+        }
+        /**
+         * Function to write data to the log. It will also execute functions defined by Log.* (DEBUG,INFO,VERBOSE,etc)
+         *
+         * @param data      This is the data that needs to be written to the log
+         * @param c         Allows access to application-specific resources and classes
+         * @param t         The type of Log level requested
+         */
+        fun writeLog(tag: String, data: String, c: Context, t: Int) {
+            println("$tag : $t  : $data")
+            val preferences = androidx.preference.PreferenceManager.getDefaultSharedPreferences(c)
+            if (preferences.getBoolean("enableLogs", false)) {
+                try {
+                    val h = DateFormat.format("yyyy-MM-dd HH:mm:ss", System.currentTimeMillis()).toString()
+                    val log = File(c.filesDir, "radiocontrol.log")
+                    if (!log.exists()) { //If the log don't exist
+                        log.createNewFile()
+                    }
+                    val logPath = "radiocontrol.log" //TODO Change this to grab what the user desires
+                    val loggedData = "\n$h: TYPE: $t: DATA: $data"
+
+                    val fos = c.openFileOutput(logPath, Context.MODE_APPEND) // Appends the log data
+                    fos.write(loggedData.toByteArray())                      // writes the log data to the log file above
+                    fos.close()                                              // Closes the file buffer
+                } catch (e: IOException) {
+                    Log.e("RadioControl-UTIL", "Error writing log")
                 }
             }
         }
