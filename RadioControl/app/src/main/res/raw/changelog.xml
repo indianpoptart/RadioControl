@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog bulletedList="true">
 
-    <changelogversion versionName="6.0" changeDate="August 21, 2021">
+    <changelogversion versionName="6.0" changeDate="August 21, 2022">
         <changelogtext>Visuals/UX:</changelogtext>
         <changelogtext>Added Adaptive Icons</changelogtext>
         <changelogtext>Added new app icon (Vector)</changelogtext>
