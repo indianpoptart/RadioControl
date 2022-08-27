@@ -64,12 +64,12 @@ dependencies {
 
     //AndroidX
     implementation 'androidx.annotation:annotation:1.4.0'
-    implementation 'androidx.appcompat:appcompat:1.4.2'
+    implementation 'androidx.appcompat:appcompat:1.5.0'
     implementation 'androidx.browser:browser:1.4.0'
     implementation 'androidx.cardview:cardview:1.0.0'
     //noinspection GradleDependency
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    implementation group: 'androidx.core', name: 'core-ktx', version: '1.9.0-alpha05'
+    implementation group: 'androidx.core', name: 'core-ktx', version: '1.9.0-rc01'
 
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.preference:preference-ktx:1.2.0'
@@ -84,7 +84,7 @@ dependencies {
 
     //Google
     implementation 'com.android.billingclient:billing-ktx:5.0.0'
-    implementation 'com.google.androidbrowserhelper:androidbrowserhelper:2.3.0'
+    implementation 'com.google.androidbrowserhelper:androidbrowserhelper:2.4.0'
     implementation 'com.google.android.material:material:1.6.1'
 
 
