@@ -89,7 +89,6 @@ import kotlin.system.measureTimeMillis
  *
  * @author Nikhil Paranjape
  *
- *
  */
 
 class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, CoroutineScope {
@@ -367,14 +366,14 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
         * _____________________     - (Position 11)
         * */
 
-        val item1 = PrimaryDrawerItem().apply   { identifier = 1; nameRes = R.string.home; iconicsIcon = GoogleMaterial.Icon.gmd_wifi }
-        val item2 = SecondaryDrawerItem().apply { identifier = 2; nameRes = R.string.settings; iconicsIcon = GoogleMaterial.Icon.gmd_settings; isSelectable = false }
-        val item3 = SecondaryDrawerItem().apply { identifier = 3; nameRes = R.string.about; iconicsIcon = GoogleMaterial.Icon.gmd_info; isSelectable = false }
-        val item4 = SecondaryDrawerItem().apply { identifier = 4; nameRes = R.string.donate; iconicsIcon = GoogleMaterial.Icon.gmd_attach_money; isSelectable = false }
-        val item5 = SecondaryDrawerItem().apply { identifier = 5; nameRes = R.string.sendFeedback; iconicsIcon = GoogleMaterial.Icon.gmd_send; isSelectable = false }
-        val item6 = SecondaryDrawerItem().apply { identifier = 6; nameRes = R.string.stats; iconicsIcon = GoogleMaterial.Icon.gmd_timeline; isSelectable = false }
-        val item7 = SecondaryDrawerItem().apply { identifier = 7; nameRes = R.string.standby_drawer_name; iconicsIcon = GoogleMaterial.Icon.gmd_pause_circle_outline; isSelectable = false }
-        val item8 = SecondaryDrawerItem().apply { identifier = 8; nameRes = R.string.drawer_string_troubleshooting; iconicsIcon = GoogleMaterial.Icon.gmd_help; isSelectable = false }
+        val item1 = PrimaryDrawerItem().apply   { identifier = 1; nameRes = R.string.home;                       iconicsIcon = GoogleMaterial.Icon.gmd_wifi }
+        val item2 = SecondaryDrawerItem().apply { identifier = 2; nameRes = R.string.settings;                   iconicsIcon = GoogleMaterial.Icon.gmd_settings; isSelectable = false }
+        val item3 = SecondaryDrawerItem().apply { identifier = 3; nameRes = R.string.about;                      iconicsIcon = GoogleMaterial.Icon.gmd_info; isSelectable = false }
+        val item4 = SecondaryDrawerItem().apply { identifier = 4; nameRes = R.string.donate;                     iconicsIcon = GoogleMaterial.Icon.gmd_attach_money; isSelectable = false }
+        val item5 = SecondaryDrawerItem().apply { identifier = 5; nameRes = R.string.sendFeedback;              iconicsIcon = GoogleMaterial.Icon.gmd_send; isSelectable = false }
+        val item6 = SecondaryDrawerItem().apply { identifier = 6; nameRes = R.string.stats;          iconicsIcon = GoogleMaterial.Icon.gmd_timeline; isSelectable = false }
+        val item7 = SecondaryDrawerItem().apply { identifier = 7; nameRes = R.string.standby_drawer_name;               iconicsIcon = GoogleMaterial.Icon.gmd_pause_circle_outline; isSelectable = false }
+        val item8 = SecondaryDrawerItem().apply { identifier = 8; nameRes = R.string.drawer_string_troubleshooting;     iconicsIcon = GoogleMaterial.Icon.gmd_help; isSelectable = false }
         slider.apply {
             addItems(
                     item1,
