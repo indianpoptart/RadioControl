@@ -20,7 +20,23 @@
         <item name="colorAccent">#448AFF</item>
 
     </style>
-    <style name="MaterialDarkThemenoab" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="MaterialDarkThemenoab" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
+        <!-- Main theme colors -->
+        <!--   your app branding color for the app bar -->
+        <item name="colorPrimary">@color/blue</item>
+        <!--   darker variant for the status bar and contextual app bars -->
+        <item name="colorPrimaryDark">@color/darkblue</item>
+        <!--   theme UI controls like checkboxes and text fields -->
+        <item name="colorAccent">#448AFF</item>
+        <item name="android:navigationBarColor">@color/colorPrimaryDark</item>
+        <!-- MaterialDrawer specific values -->
+        <item name="materialDrawerStyle">@style/Widget.MaterialDrawerStyle</item>
+        <item name="materialDrawerHeaderStyle">@style/Widget.MaterialDrawerHeaderStyle</item>
+
+
+    </style>
+    <style name="MaterialDarkThemev3.0" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
         <!-- Main theme colors -->
         <!--   your app branding color for the app bar -->
@@ -66,6 +82,10 @@
 
     <style name="FlatButton" parent="Theme.AppCompat">
         <item name="colorControlHighlight">@color/colorPrimaryDark</item>
+    </style>
+    <style name="fab_3_rounded">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
     </style>
 
 </resources>

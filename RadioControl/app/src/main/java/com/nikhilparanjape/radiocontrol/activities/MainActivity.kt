@@ -148,7 +148,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
         //A function that capitalizes the first letter in strings. Used directly by getDeviceName()
         private fun capitalizeText(s: String?): String {
             //Return nothing if string 's' is empty or null
-            if (s == null || s.isEmpty()) {
+            if (s.isNullOrEmpty()) {
                 return ""
             }
             val first = s[0]

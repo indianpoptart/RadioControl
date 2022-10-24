@@ -25,15 +25,16 @@
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab"
-            android:contentDescription="@string/description_network_reachability_checker_FAB"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_above="@+id/adView"
             android:layout_gravity="bottom|end"
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="16dp"
+            android:contentDescription="@string/description_network_reachability_checker_FAB"
             android:src="@drawable/ic_network_check_white_48dp"
             app:backgroundTint="@color/colorAccent"
+            app:shapeAppearanceOverlay="@style/fab_3_rounded"
             app:fabSize="normal" />
 
 

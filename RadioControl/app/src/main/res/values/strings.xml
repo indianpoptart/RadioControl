@@ -210,7 +210,7 @@
     <string name="title_no_log_data">No Log Data</string>
     <string name="title_boot_events">Boot events</string>
     <string name="donation_public_key">MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxnZmUx4gqEFCsMW+/uPXIzJSaaoP4J/2RVaxYT9Be0jfga0qdGF+Vq56mzQ/LYEZgLvFelGdWwXJ5Izq5Wl/cEW8cExhQ/WDuJvYVaemuU+JnHP1zIZ2H28NtzrDH0hb59k9R8owSx7NPNITshuC4MPwwOQDgDaYk02Hgi4woSzbDtyrvwW1A1FWpftb78i8Pphr7bT14MjpNyNznk4BohLMncEVK22O1N08xrVrR66kcTgYs+EZnkRKk2uPZclsPq4KVKG8LbLcxmDdslDBnhQkSPe3ntAC8DxGhVdgJJDwulcepxWoCby1GcMZTUAC1OKCZlvGRGSwyfIqbqF2JQIDAQAB</string>
-    <string name="description_network_reachability_checker_FAB">Network reachability checker button</string>
+    <string name="description_network_reachability_checker_FAB">Network reachability checker</string>
     <string name="alert_device_incompatible">This feature is currently incompatible with your device</string>
     <string name="dnd_status_content_description">This image shows the current status of the Do Not Disturb feature</string>
     <string name="app_icon_content_description">This is the app icon image. It is defined by a battery and airplane mode icon inscribed in a circlefor the intro screen</string>
