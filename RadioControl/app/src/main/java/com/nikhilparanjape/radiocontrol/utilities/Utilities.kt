@@ -44,6 +44,8 @@ import java.lang.reflect.Method
 class Utilities {
 
     companion object {
+        val airOffCmd2 = arrayOf("su", "settings put global airplane_mode_radios  \"cell,bluetooth,nfc,wimax\"", "content update --uri content://settings/global --bind value:s:'cell,bluetooth,nfc,wimax' --where \"name='airplane_mode_radios'\"")
+
         /**
          * Check if there is any active call
          *
