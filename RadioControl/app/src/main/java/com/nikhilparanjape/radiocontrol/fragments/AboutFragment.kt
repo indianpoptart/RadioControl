@@ -8,14 +8,16 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.browser.customtabs.CustomTabsIntent
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.ui.Modifier
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import com.google.android.material.snackbar.Snackbar
-import com.mikepenz.aboutlibraries.LibTaskCallback
 import com.mikepenz.aboutlibraries.Libs
 import com.mikepenz.aboutlibraries.LibsBuilder
 import com.mikepenz.aboutlibraries.LibsConfiguration
 import com.mikepenz.aboutlibraries.entity.Library
+import com.mikepenz.aboutlibraries.util.SpecialButton
 import com.mikepenz.fastadapter.adapters.ItemAdapter
 import com.nikhilparanjape.radiocontrol.BuildConfig
 import com.nikhilparanjape.radiocontrol.R
@@ -43,12 +45,15 @@ class AboutFragment : PreferenceFragmentCompat() {
         val cs = versionName
         versionPref?.summary = "v$cs"
 
+
+        // This will disable any preferences that require internet access to load
         if (!Utilities.isConnected(requireContext())) {
             preferenceScreen.findPreference<Preference>("help")?.isEnabled = false
             preferenceScreen.findPreference<Preference>("source")?.isEnabled = false
             preferenceScreen.findPreference<Preference>("support")?.isEnabled = false
         }
-        //SimpleChromeCustomTabs.initialize(requireContext()) //Wow I already migrated away from this nice
+        //SimpleChromeCustomTabs.initialize(requireContext()) //Initialize SimpleChromeCustomTabs process for loading webpages
+        // Wow I already migrated away from this nice, not sure exactly when, but maybe you do?: 20XX-XX-XX
     }
     override fun onPreferenceTreeClick(preference: Preference): Boolean {
 
@@ -96,7 +101,7 @@ class AboutFragment : PreferenceFragmentCompat() {
                 false
             }
             getString(R.string.key_preference_about_aboutlib) -> {
-                LibsBuilder()
+                /*LibsBuilder()
                         .withLibraries("crouton", "actionbarsherlock", "showcaseview", "android_job")
                         .withAutoDetect(true)
                         .withLicenseShown(true)
@@ -105,7 +110,14 @@ class AboutFragment : PreferenceFragmentCompat() {
                         .withListener(libsListener)
                         .withLibTaskCallback(libTaskCallback)
                         .withUiListener(libsUIListener)
-                        .start(requireContext())
+                        .start(requireContext())*/
+                val libs = Libs.Builder()
+                    .build()
+                val libraries = libs.libraries // retrieve all libraries defined in the metadata
+                val licenses = libs.licenses // retrieve all licenses defined in the metadata
+                for (lib in libraries) {
+                    Log.i("AboutLibraries", "${lib.name}")
+                }
                 false
             }
 
@@ -158,7 +170,8 @@ class AboutFragment : PreferenceFragmentCompat() {
         startActivity(i)
     }
 
-    private var libTaskCallback: LibTaskCallback = object : LibTaskCallback {
+    // libTaskCallback is deprecated after v8. Which is fine, it only did logging. Migrated away on 2022-11-01
+    /*private var libTaskCallback: LibTaskCallback = object : LibTaskCallback {
         override fun onLibTaskStarted() {
             Log.d(TAG, "About libraries started")
         }
@@ -166,7 +179,7 @@ class AboutFragment : PreferenceFragmentCompat() {
         override fun onLibTaskFinished(itemAdapter: ItemAdapter<*>) {
             Log.d(TAG, "About libraries finished")
         }
-    }
+    }*/
 
     private var libsUIListener: LibsConfiguration.LibsUIListener = object : LibsConfiguration.LibsUIListener {
         override fun preOnCreateView(view: View): View {
@@ -179,6 +192,7 @@ class AboutFragment : PreferenceFragmentCompat() {
     }
 
     private var libsListener: LibsConfiguration.LibsListener = object : LibsConfiguration.LibsListener {
+
         override fun onIconClicked(v: View) {
             Toast.makeText(v.context, "We are able to track this now ;)", Toast.LENGTH_LONG).show()
         }
@@ -195,7 +209,8 @@ class AboutFragment : PreferenceFragmentCompat() {
             return false
         }
 
-        override fun onExtraClicked(v: View, specialButton: Libs.SpecialButton): Boolean {
+
+        override fun onExtraClicked(v: View, specialButton: SpecialButton): Boolean {
             return false
         }
 
