@@ -108,6 +108,7 @@ dependencies {
     implementation 'com.gordonwong:material-sheet-fab:1.2.1'
     implementation "com.mikepenz:aboutlibraries-core:10.5.1"
     //implementation 'com.mikepenz:aboutlibraries:8.9.4' //v10.0 requires moderate refactor
+    implementation 'com.mikepenz:aboutlibraries:10.5.1'
     implementation "com.mikepenz:aboutlibraries-compose:10.5.1"
     implementation 'com.mikepenz:fastadapter:5.7.0'
     implementation 'com.mikepenz:fastadapter-extensions-expandable:5.7.0'
