@@ -5,20 +5,12 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import android.widget.Toast
 import androidx.browser.customtabs.CustomTabsIntent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.ui.Modifier
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import com.google.android.material.snackbar.Snackbar
 import com.mikepenz.aboutlibraries.Libs
-import com.mikepenz.aboutlibraries.LibsBuilder
-import com.mikepenz.aboutlibraries.LibsConfiguration
-import com.mikepenz.aboutlibraries.entity.Library
-import com.mikepenz.aboutlibraries.util.SpecialButton
-import com.mikepenz.fastadapter.adapters.ItemAdapter
 import com.nikhilparanjape.radiocontrol.BuildConfig
 import com.nikhilparanjape.radiocontrol.R
 import com.nikhilparanjape.radiocontrol.activities.ChangeLogActivity
@@ -180,56 +172,6 @@ class AboutFragment : PreferenceFragmentCompat() {
             Log.d(TAG, "About libraries finished")
         }
     }*/
-
-    private var libsUIListener: LibsConfiguration.LibsUIListener = object : LibsConfiguration.LibsUIListener {
-        override fun preOnCreateView(view: View): View {
-            return view
-        }
-
-        override fun postOnCreateView(view: View): View {
-            return view
-        }
-    }
-
-    private var libsListener: LibsConfiguration.LibsListener = object : LibsConfiguration.LibsListener {
-
-        override fun onIconClicked(v: View) {
-            Toast.makeText(v.context, "We are able to track this now ;)", Toast.LENGTH_LONG).show()
-        }
-
-        override fun onLibraryAuthorClicked(v: View, library: Library): Boolean {
-            return false
-        }
-
-        override fun onLibraryContentClicked(v: View, library: Library): Boolean {
-            return false
-        }
-
-        override fun onLibraryBottomClicked(v: View, library: Library): Boolean {
-            return false
-        }
-
-
-        override fun onExtraClicked(v: View, specialButton: SpecialButton): Boolean {
-            return false
-        }
-
-        override fun onIconLongClicked(v: View): Boolean {
-            return false
-        }
-
-        override fun onLibraryAuthorLongClicked(v: View, library: Library): Boolean {
-            return false
-        }
-
-        override fun onLibraryContentLongClicked(v: View, library: Library): Boolean {
-            return false
-        }
-
-        override fun onLibraryBottomLongClicked(v: View, library: Library): Boolean {
-            return false
-        }
-    }
 
     companion object {
         private const val TAG = "RadioControl-About"
