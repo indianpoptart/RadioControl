@@ -32,11 +32,10 @@ class AboutFragment : PreferenceFragmentCompat() {
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         addPreferencesFromResource(R.xml.about)
-        val versionPref = findPreference<Preference>("version")
 
+        val versionPref = findPreference<Preference>("version")
         val cs = versionName
         versionPref?.summary = "v$cs"
-
 
         // This will disable any preferences that require internet access to load
         if (!Utilities.isConnected(requireContext())) {
