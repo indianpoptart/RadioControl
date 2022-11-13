@@ -25,6 +25,7 @@ class CustomPhoneStateListener(private val context: Context) : PhoneStateListene
         //  private var lastState = TelephonyManager.CALL_STATE_IDLE      //  We assume the last state of the phone call is idle for now
         //  private var isIncoming: Boolean = false                       //  Boolean for if there is an incoming call
     **/
+    @Deprecated("Deprecated in Java")
     override fun onCallStateChanged(state: Int, phoneNumber: String?) {
         super.onCallStateChanged(state, "1") // Do not pull phone number for privacy
         val prefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(context) // General Shared Prefs for the whole app

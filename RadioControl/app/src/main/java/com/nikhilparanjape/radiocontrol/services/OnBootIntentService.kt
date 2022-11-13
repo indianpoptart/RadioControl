@@ -1,7 +1,9 @@
 package com.nikhilparanjape.radiocontrol.services
 
+import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.os.Build
@@ -24,15 +26,29 @@ import java.io.IOException
  */
 class OnBootIntentService : JobIntentService() {
 
+    override fun onCreate() {
+        super.onCreate()
 
-    override fun onHandleWork(intent: Intent) {
-        createNotificationChannel(applicationContext)
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationCompat.Builder(this, "Startup")
-                    .setSmallIcon(R.drawable.ic_radiocontrol_main)
-                    .setContentTitle("Startup Operations")
-                    .setContentText("Running startup operations...")
-                    .build()
+            val name = "Startup"
+            val description = "Channel for startup related notifications"
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val channel = NotificationChannel("startup", name, importance)
+            channel.description = description
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            val notificationManager = applicationContext.getSystemService(NotificationManager::class.java)
+            notificationManager!!.createNotificationChannel(channel)
+
+            val startupNotification = NotificationCompat.Builder(this, "Startup")
+                .setSmallIcon(R.drawable.ic_radiocontrol_main)
+                .setContentTitle("Startup Operations")
+                .setContentText("Running startup operations...")
+                .build()
+            "Oreo+ notification created".writeLog(applicationContext)
+            startForeground(1, startupNotification)
+
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -44,24 +60,13 @@ class OnBootIntentService : JobIntentService() {
             }
             Log.d(TAG, "persist Service launched")
         }
+    }
+
+    override fun onHandleWork(intent: Intent) {
+
         "boot procedure handled".writeLog(applicationContext)
     }
 
-    private fun createNotificationChannel(context: Context) {
-        // Create the NotificationChannel, but only on API 26+ because
-        // the NotificationChannel class is new and not in the support library
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val name = "Startup"
-            val description = "Channel for startup related notifications"
-            val importance = NotificationManager.IMPORTANCE_DEFAULT
-            val channel = NotificationChannel("startup", name, importance)
-            channel.description = description
-            // Register the channel with the system; you can't change the importance
-            // or other notification behaviors after this
-            val notificationManager = context.getSystemService(NotificationManager::class.java)
-            notificationManager!!.createNotificationChannel(channel)
-        }
-    }
     private fun String.writeLog(c: Context) {
         val preferences = androidx.preference.PreferenceManager.getDefaultSharedPreferences(c)
         if (preferences.getBoolean("enableLogs", false)) {

@@ -115,6 +115,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
         private lateinit var notRootedIcon: Drawable
         private lateinit var carrierName: String
         private var versionName = BuildConfig.VERSION_NAME //Takes the apps current version name and makes it a variable
+        private var troubleshootingDevMode = 0
         /**Variables for Drawer items**/
 
         //private var util = Utilities() //Allows methods to extend any general utilities
@@ -412,6 +413,13 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
                     7 -> { // Troubleshooting Activity
                         Snackbar.make(clayout, "Coming in v6.1!", Snackbar.LENGTH_LONG)
                             .show()
+                        // Added for testing purposes
+                        troubleshootingDevMode++
+                        if (troubleshootingDevMode > 6){
+                            Toast.makeText(applicationContext, R.string.dev_activated, Toast.LENGTH_LONG).show()
+                            troubleshootingDevMode = 0
+                            startTroubleActivity()
+                        }
                         //startTroubleActivity()
                     }
                     8 -> { // Donation Button
@@ -889,7 +897,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
     }
 
     //starts troubleshooting activity
-    private fun startTroubleActivity() {
+    private fun startTroubleActivity() { // Not used yet as it is quite buggy
         val intent = Intent(this, TroubleshootingActivity::class.java)
         startActivity(intent)
     }
@@ -1048,6 +1056,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
     override fun onResume() {
         super.onResume()
         //  TODO Figure out how to take init code and run without duplication
+        // Is this even the right way to resume/refresh
         val getPrefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(applicationContext)
         val pref = androidx.preference.PreferenceManager.getDefaultSharedPreferences(applicationContext)
         //If workmode is false

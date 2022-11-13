@@ -48,6 +48,7 @@
     <string name="help_wiki">Help Wiki</string>
     <string name="dev_deactivated">Developer features deactivated</string>
     <string name="dev_activated">Enabled developer features</string>
+    <string name="dev_bypass">Developer Bypass</string>
     <string name="reset_ssid">SSID list reset</string>
     <string name="open_source_title">Open source software licenses</string>
     <string name="open_source_summary">Details about open source licenses</string>
@@ -124,25 +125,24 @@
     <string name="title_gridlines">Gridlines</string>
     <string name="preference_gridlines">gridlines</string>
     <string name="error_count_return_null">Counting returned null</string>
-    <string name="preference_work_mode">workMode</string>
-    <string name="preference_is_donated">isDonated</string>
-    <string name="preference_allow_fabric">allowFabric</string>
-    <string name="preference_is_developer">isDeveloper</string>
-    <string name="preference_app_active">isActive</string>
-    <string name="preference_first_start">firstStart</string>
-    <string name="preference_airplane_service">isAirplaneService</string>
-    <string name="preference_standby_dialog">isStandbyDialog</string>
+    <string name="preference_work_mode" translatable="false">workMode</string>
+    <string name="preference_is_donated" translatable="false">isDonated</string>
+    <string name="preference_allow_fabric" translatable="false">allowFabric</string>
+    <string name="preference_is_developer" translatable="false">isDeveloper</string>
+    <string name="preference_app_active" translatable="false">isActive</string>
+    <string name="preference_first_start" translatable="false">firstStart</string>
+    <string name="preference_airplane_service" translatable="false">isAirplaneService</string>
+    <string name="preference_standby_dialog" translatable="false">isStandbyDialog</string>
     <string name="title_allow_fabric">Allow Fabric Crashlytics</string>
     <string name="title_delete_logs">Delete Logs</string>
     <string name="title_preference_instabug">Instabug In-app Feedback (Disabled)</string>
     <string name="summary_preference_instabug">Instabug is providing in-app feedback and bug reporting to mobile apps. It provides a seamless way for two-way communication with users, while providing detailed environment report for developers. Shake to activate</string>
-    <string name="pref_instabug_check">instabugCheck</string>
-    <string name="log_persistence_created">PERSISTENCE Created</string>
-    <string name="log_persistence_started">PERSISTENCE Started</string>
-    <string name="log_persistence_bound">PERSISTENCE Bound</string>
+    <string name="pref_instabug_check" translatable="false">instabugCheck</string>
+    <string name="log_persistence_created" translatable="false">PERSISTENCE Created</string>
+    <string name="log_persistence_started" translatable="false">PERSISTENCE Started</string>
+    <string name="log_persistence_bound" translatable="false">PERSISTENCE Bound</string>
     <string name="link_speed_24">Link speed: %1$d Mbps @ 2.4 GHz</string>
     <string name="link_speed_5">Link speed: %1$d Mbps @ 5 GHz</string>
-
     <string name="intro_description_magisk">This app uses Root to run low level commands. They are only to change the state of Airplane mode, Bluetooth, Cellular radios, and WiFi</string>
     <string name="intro_description_intelligent_mode">A notification allowing the app to continue working in the background. This is enabled by default on Android Nougat+ but can be disabled in settings</string>
     <string name="intro_description_call_handling">Automatically enables the cellular radios whenever there is an active phone call. Automatically enables the cellular radios whenever there is an active phone call. This allows for better roaming handover if WiFi is lost.</string>
@@ -176,32 +176,32 @@
     <string name="summary_doze_disabler">This allows RadioControl to ignore Android\'s Doze</string>
     <string name="text_status_set_for">set for</string>
     <string name="text_hour_s">hour(s)</string>
-    <string name="key_pref_about_changelog">changelog</string>
-    <string name="key_preference_about_version">version</string>
-    <string name="key_preference_about_tutorial">tutorial</string>
-    <string name="key_preference_about_source">source</string>
-    <string name="key_preference_about_support">support</string>
-    <string name="key_preference_about_aboutlib">aboutLib</string>
-    <string name="key_preference_settings_intelligent">workMode</string>
-    <string name="key_preference_settings_ssid">ssid</string>
-    <string name="key_preference_settings_clear_ssid">clear-ssid</string>
-    <string name="key_preference_settings_reset_airplane">reset-airplane</string>
-    <string name="key_preference_settings_doze">isDozeOff</string>
-    <string name="key_preference_settings_battery_opimization">isBatteryOn</string>
-    <string name="key_preference_settings_alternate_command">altRootCommand</string>
-    <string name="key_preference_settings_fabric">fabricCrashlytics</string>
-    <string name="key_preference_settings_instabug">instabugCheck</string>
-    <string name="key_preference_settings_phone_state">isPhoneStateCheck</string>
-    <string name="key_preference_settings_airplane_service">isAirplaneService</string>
-    <string name="key_preference_settings_interval">interval_prefs</string>
-    <string name="key_preference_settings_night_mode">night-mode-service</string>
-    <string name="key_preference_settings_do_not_disturb">do_not_disturb</string>
-    <string name="key_preference_settings_network_alert">isNetworkAlive</string>
-    <string name="key_preference_settings_notification">button_network_key</string>
-    <string name="key_preference_settings_logging">enableLogs</string>
-    <string name="key_preference_settings_log_directory">logDir</string>
-    <string name="key_preference_settings_log_delete">logDel</string>
-    <string name="key_preference_settings_ping_ip">prefPingIp</string>
+    <string name="key_pref_about_changelog" translatable="false">changelog</string>
+    <string name="key_preference_about_version" translatable="false">version</string>
+    <string name="key_preference_about_tutorial" translatable="false">tutorial</string>
+    <string name="key_preference_about_source" translatable="false">source</string>
+    <string name="key_preference_about_support" translatable="false">support</string>
+    <string name="key_preference_about_aboutlib" translatable="false">aboutLib</string>
+    <string name="key_preference_settings_intelligent" translatable="false">workMode</string>
+    <string name="key_preference_settings_ssid" translatable="false">ssid</string>
+    <string name="key_preference_settings_clear_ssid" translatable="false">clear-ssid</string>
+    <string name="key_preference_settings_reset_airplane" translatable="false">reset-airplane</string>
+    <string name="key_preference_settings_doze" translatable="false">isDozeOff</string>
+    <string name="key_preference_settings_battery_opimization" translatable="false">isBatteryOn</string>
+    <string name="key_preference_settings_alternate_command" translatable="false">altRootCommand</string>
+    <string name="key_preference_settings_fabric" translatable="false">fabricCrashlytics</string>
+    <string name="key_preference_settings_instabug" translatable="false">instabugCheck</string>
+    <string name="key_preference_settings_phone_state" translatable="false">isPhoneStateCheck</string>
+    <string name="key_preference_settings_airplane_service" translatable="false">isAirplaneService</string>
+    <string name="key_preference_settings_interval" translatable="false">interval_prefs</string>
+    <string name="key_preference_settings_night_mode" translatable="false">night-mode-service</string>
+    <string name="key_preference_settings_do_not_disturb" translatable="false">do_not_disturb</string>
+    <string name="key_preference_settings_network_alert" translatable="false">isNetworkAlive</string>
+    <string name="key_preference_settings_notification" translatable="false">button_network_key</string>
+    <string name="key_preference_settings_logging" translatable="false">enableLogs</string>
+    <string name="key_preference_settings_log_directory" translatable="false">logDir</string>
+    <string name="key_preference_settings_log_delete" translatable="false">logDel</string>
+    <string name="key_preference_settings_ping_ip" translatable="false">prefPingIp</string>
     <string name="preference_user_var_latency_address">Latency Test IP Address</string>
     <string name="summary_preference_log_delete">This will delete the log file used in Stats</string>
     <string name="title_preference_about_libraries">Libraries</string>
@@ -209,7 +209,7 @@
     <string name="button_no">No</string>
     <string name="title_no_log_data">No Log Data</string>
     <string name="title_boot_events">Boot events</string>
-    <string name="donation_public_key">MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxnZmUx4gqEFCsMW+/uPXIzJSaaoP4J/2RVaxYT9Be0jfga0qdGF+Vq56mzQ/LYEZgLvFelGdWwXJ5Izq5Wl/cEW8cExhQ/WDuJvYVaemuU+JnHP1zIZ2H28NtzrDH0hb59k9R8owSx7NPNITshuC4MPwwOQDgDaYk02Hgi4woSzbDtyrvwW1A1FWpftb78i8Pphr7bT14MjpNyNznk4BohLMncEVK22O1N08xrVrR66kcTgYs+EZnkRKk2uPZclsPq4KVKG8LbLcxmDdslDBnhQkSPe3ntAC8DxGhVdgJJDwulcepxWoCby1GcMZTUAC1OKCZlvGRGSwyfIqbqF2JQIDAQAB</string>
+    <string name="donation_public_key" translatable="false">MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxnZmUx4gqEFCsMW+/uPXIzJSaaoP4J/2RVaxYT9Be0jfga0qdGF+Vq56mzQ/LYEZgLvFelGdWwXJ5Izq5Wl/cEW8cExhQ/WDuJvYVaemuU+JnHP1zIZ2H28NtzrDH0hb59k9R8owSx7NPNITshuC4MPwwOQDgDaYk02Hgi4woSzbDtyrvwW1A1FWpftb78i8Pphr7bT14MjpNyNznk4BohLMncEVK22O1N08xrVrR66kcTgYs+EZnkRKk2uPZclsPq4KVKG8LbLcxmDdslDBnhQkSPe3ntAC8DxGhVdgJJDwulcepxWoCby1GcMZTUAC1OKCZlvGRGSwyfIqbqF2JQIDAQAB</string>
     <string name="description_network_reachability_checker_FAB">Network reachability checker</string>
     <string name="alert_device_incompatible">This feature is currently incompatible with your device</string>
     <string name="dnd_status_content_description">This image shows the current status of the Do Not Disturb feature</string>
