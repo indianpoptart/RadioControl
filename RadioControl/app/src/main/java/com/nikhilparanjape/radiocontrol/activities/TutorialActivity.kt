@@ -47,18 +47,22 @@ class TutorialActivity : AppIntro() {
                 or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                 or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
     }*/
+    @Deprecated("Deprecated in Java")
     @Override
     override fun onSkipPressed() {
         finish()
         // loadMainActivity()
     }
+    @Deprecated("Deprecated in Java")
     override fun onDonePressed() {
         //loadMainActivity()
         finish()
     }
+    @Deprecated("Deprecated in Java")
     override fun onSlideChanged() {
         // Do something when the slide changes.
     }
+    @Deprecated("Deprecated in Java")
     override fun onNextPressed() {
         // Do something when users tap on Next button.
     }

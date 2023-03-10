@@ -1270,6 +1270,7 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
         startService(startServiceIntent)
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (!billingManager.verifyPurchase(requestCode, resultCode, data)) {
             super.onActivityResult(requestCode, resultCode, data)

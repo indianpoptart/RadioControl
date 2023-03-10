@@ -907,6 +907,7 @@ class StatsActivity : AppCompatActivity() {
 
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         if (materialSheetFab.isSheetVisible) {
             materialSheetFab.hideSheet()
