@@ -8,7 +8,7 @@ repositories {
 }
 android {
     compileSdk 33
-    buildToolsVersion '34.0.1'
+    //buildToolsVersion '34.0.0'
     kotlinOptions.useK2 = true
     defaultConfig {
         applicationId "com.nikhilparanjape.radiocontrol"
@@ -46,7 +46,7 @@ android {
     }
     compileOptions {
         sourceCompatibility 1.8
-        targetCompatibility 1.8
+        targetCompatibility 17
     }
 
     lintOptions {
@@ -55,7 +55,7 @@ android {
         // but continue the build even when errors are found:
         abortOnError false
     }
-    ndkVersion '21.0.6113669'
+    ndkVersion '25.1.8937393'
     namespace 'com.nikhilparanjape.radiocontrol'
 }
 dependencies {
