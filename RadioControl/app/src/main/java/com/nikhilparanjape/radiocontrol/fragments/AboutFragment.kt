@@ -7,10 +7,15 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.browser.customtabs.CustomTabsIntent
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import com.google.android.material.snackbar.Snackbar
 import com.mikepenz.aboutlibraries.Libs
+import com.mikepenz.aboutlibraries.ui.compose.LibrariesContainer
+import com.mikepenz.aboutlibraries.util.withJson
 import com.nikhilparanjape.radiocontrol.BuildConfig
 import com.nikhilparanjape.radiocontrol.R
 import com.nikhilparanjape.radiocontrol.activities.ChangeLogActivity
@@ -46,6 +51,7 @@ class AboutFragment : PreferenceFragmentCompat() {
         //SimpleChromeCustomTabs.initialize(requireContext()) //Initialize SimpleChromeCustomTabs process for loading webpages
         // Wow I already migrated away from this nice, not sure exactly when, but maybe you do?: 20XX-XX-XX
     }
+    @Composable
     override fun onPreferenceTreeClick(preference: Preference): Boolean {
 
         return when (preference.key) {
@@ -102,13 +108,30 @@ class AboutFragment : PreferenceFragmentCompat() {
                         .withLibTaskCallback(libTaskCallback)
                         .withUiListener(libsUIListener)
                         .start(requireContext())*/
-                val libs = Libs.Builder()
-                    .build()
-                val libraries = libs.libraries // retrieve all libraries defined in the metadata
-                val licenses = libs.licenses // retrieve all licenses defined in the metadata
-                for (lib in libraries) {
-                    Log.i("AboutLibraries", "${lib.name}")
-                }
+
+                //Prior to 2023-08-24:
+                    /*val libs = Libs.Builder()
+                        .build()
+                    val libraries = libs.libraries // retrieve all libraries defined in the metadata
+                    val licenses = libs.licenses // retrieve all licenses defined in the metadata
+                    for (lib in libraries) {
+                        Log.i("AboutLibraries", "${lib.name}")
+                    }*/
+                //Prior to 2023-08-24^
+
+
+                //context?.let { DisplayAboutLibraries(it) }
+
+                /*LibrariesContainer(
+                    Modifier.fillMaxSize()
+                )*/
+
+                LibrariesContainer(
+                    librariesBlock = { ctx ->
+                        Libs.Builder().withJson(ctx, R.raw.aboutlibraries).build()
+                    }
+                )
+
                 false
             }
 
@@ -132,6 +155,14 @@ class AboutFragment : PreferenceFragmentCompat() {
                     .show()
         }
 
+    }
+    @Composable
+    private fun DisplayAboutLibraries(c: Context) {
+        LibrariesContainer(
+            librariesBlock = { ctx ->
+                Libs.Builder().withJson(ctx, R.raw.aboutlibraries).build()
+            }
+        )
     }
 
     private fun displaySupportWebsite(c: Context) {
