@@ -68,7 +68,7 @@ class PersistenceService : Service() {
                     .setAutoCancel(true)
 
             val notification = builder.build()
-            startForeground(1, notification)
+            startForeground(1, notification) //TODO Fix this error by adding foreground service
 
         } else {
             //Run this code if the device is older (With a probably better OS :))
