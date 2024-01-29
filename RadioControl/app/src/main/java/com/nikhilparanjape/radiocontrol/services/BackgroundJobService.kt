@@ -57,7 +57,7 @@ class BackgroundJobService : JobService(), ConnectivityReceiver.ConnectivityRece
 
         //TODO Transfer to external algorithm class
         //val h = HashSet(listOf("")) //Set default empty set for SSID check
-        val selections = prefs.getStringSet("ssid", HashSet(listOf(""))) //Gets stringset, if empty sets default
+        val selections = prefs.getStringSet("ssid", HashSet(listOf(""))) //Gets string set, if empty sets default
         val networkAlert = prefs.getBoolean("isNetworkAlive", false) //Value for if user wants network alerts
 
         if (isOngoingPhoneCall){
