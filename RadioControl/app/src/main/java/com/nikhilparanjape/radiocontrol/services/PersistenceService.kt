@@ -7,6 +7,7 @@ import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_CONNECTED_DEVICE
 import android.net.ConnectivityManager
 import android.os.Build
 import android.os.IBinder
@@ -68,7 +69,13 @@ class PersistenceService : Service() {
                     .setAutoCancel(true)
 
             val notification = builder.build()
-            startForeground(1, notification) //TODO Fix this error by adding foreground service
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+                startForeground(1, notification)
+            } else {
+                startForeground(1, notification,FOREGROUND_SERVICE_TYPE_CONNECTED_DEVICE)
+            }
+            //startForeground(1, notification) //TODO Fix this error by adding foreground service
+
 
         } else {
             //Run this code if the device is older (With a probably better OS :))
