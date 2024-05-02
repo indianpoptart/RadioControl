@@ -85,10 +85,6 @@
             android:label="PersistenceService"
             android:process=":persistent" />
         <service
-            android:name="androidx.work.impl.foreground.SystemForegroundService"
-            android:foregroundServiceType="connectedDevice"
-            tools:node="merge" />
-        <service
             android:name=".services.DoNotDisturbService"
             android:enabled="true"
             android:icon="@drawable/ic_do_not_disturb_on_black_48dp"
@@ -104,6 +100,7 @@
             android:name=".services.BackgroundJobService"
             android:icon="@drawable/ic_baseline_query_builder_24px"
             android:label="JobService"
+            android:foregroundServiceType="connectedDevice"
             android:permission="android.permission.BIND_JOB_SERVICE"/>
 
         <service android:name=".services.OnBootIntentService"

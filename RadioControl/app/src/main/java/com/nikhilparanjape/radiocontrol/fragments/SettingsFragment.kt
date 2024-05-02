@@ -59,7 +59,7 @@ class SettingsFragment : PreferenceFragmentCompat(), TimePickerDialog.OnTimeSetL
 
     }
     @SuppressLint("BatteryLife") // This app is one of the unusual circumstances where google doesn't have a built in platform feature to get around this, so disregard Google's bitching about REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
-    override fun onPreferenceTreeClick(preference: androidx.preference.Preference): Boolean {
+    override fun onPreferenceTreeClick(preference: Preference): Boolean {
         val sp = preferenceScreen.sharedPreferences
         //val editor = sp.edit()
         preferenceManager.findPreference<androidx.preference.CheckBoxPreference>("isBatteryOn")
@@ -189,7 +189,7 @@ class SettingsFragment : PreferenceFragmentCompat(), TimePickerDialog.OnTimeSetL
 
                     airplaneModeResetButton(requireActivity())
                 }
-                
+
                 false
             }
             getString(R.string.key_preference_settings_phone_state) -> { //Call Handling button
