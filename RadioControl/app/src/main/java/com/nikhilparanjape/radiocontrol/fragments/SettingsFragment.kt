@@ -17,6 +17,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 import androidx.preference.EditTextPreference
+import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.callbacks.onCancel
@@ -186,17 +187,9 @@ class SettingsFragment : PreferenceFragmentCompat(), TimePickerDialog.OnTimeSetL
                         //TODO add a check for if airplane mode is on, if so, run the script to reset airplane mode
                     }
 
-                    if(airplaneModeResetButton(requireActivity())){
-                        altRootModePref?.isChecked = true
-                    } else{
-                        altRootModePref?.isChecked = false
-                    }
-
-
-
+                    airplaneModeResetButton(requireActivity())
                 }
-
-
+                
                 false
             }
             getString(R.string.key_preference_settings_phone_state) -> { //Call Handling button
@@ -300,7 +293,6 @@ class SettingsFragment : PreferenceFragmentCompat(), TimePickerDialog.OnTimeSetL
                 super.onPreferenceTreeClick(preference)
             }
         }
-
     }
 
     private fun registerForBroadcasts(context: Context) {
@@ -342,8 +334,7 @@ class SettingsFragment : PreferenceFragmentCompat(), TimePickerDialog.OnTimeSetL
      * @param context allows access to application-specific resources and classes
      *
      */
-    private fun airplaneModeResetButton(context: Context): Boolean {
-        var status = false
+    private fun airplaneModeResetButton(context: Context) {
         MaterialDialog(requireContext())
             .icon(R.mipmap.wifi_off)
             .message(R.string.title_airplane_reset)
@@ -358,14 +349,10 @@ class SettingsFragment : PreferenceFragmentCompat(), TimePickerDialog.OnTimeSetL
                         R.string.title_airplane_reset,
                         Toast.LENGTH_LONG).show()
                 }
-                status = true
 
             }
-            .negativeButton(R.string.text_cancel) {
-
-            }
+            .negativeButton(R.string.text_cancel)
             .show()
-        return status
     }
 
     private fun logDirectoryButton() {
