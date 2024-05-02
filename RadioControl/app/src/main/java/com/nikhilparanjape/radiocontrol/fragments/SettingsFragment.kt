@@ -19,6 +19,8 @@ import androidx.fragment.app.FragmentActivity
 import androidx.preference.EditTextPreference
 import androidx.preference.PreferenceFragmentCompat
 import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.callbacks.onCancel
+import com.afollestad.materialdialogs.callbacks.onDismiss
 import com.borax12.materialdaterangepicker.time.RadialPickerLayout
 import com.borax12.materialdaterangepicker.time.TimePickerDialog
 import com.google.android.material.snackbar.Snackbar
@@ -62,7 +64,7 @@ class SettingsFragment : PreferenceFragmentCompat(), TimePickerDialog.OnTimeSetL
         preferenceManager.findPreference<androidx.preference.CheckBoxPreference>("isBatteryOn")
         val dozeSetting = preferenceManager.findPreference<androidx.preference.CheckBoxPreference>("isDozeOff")
         val workModePref = preferenceManager.findPreference<androidx.preference.CheckBoxPreference>("workMode")
-        preferenceManager.findPreference<androidx.preference.CheckBoxPreference>("altRootCommand")
+        val altRootModePref = preferenceManager.findPreference<androidx.preference.CheckBoxPreference>("altRootCommand")
         val callingCheck = preferenceManager.findPreference<androidx.preference.CheckBoxPreference>("isPhoneStateCheck")
         preferenceManager.findPreference<androidx.preference.CheckBoxPreference>("isAirplaneService")
         val checkboxPref = preferenceManager.findPreference<androidx.preference.CheckBoxPreference>("enableLogs")
@@ -175,14 +177,23 @@ class SettingsFragment : PreferenceFragmentCompat(), TimePickerDialog.OnTimeSetL
             }
             getString(R.string.key_preference_settings_alternate_command) -> { //Toggle Cellular Mode button
                 if ((preference as androidx.preference.CheckBoxPreference).isChecked) {
-                    val permissionCheck = ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION)
+
+                    val permissionCheck = ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)
 
                     if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
-                        ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION), 200)
+                        ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 200)
                         //altRootCommandPref?.isChecked = true
                         //TODO add a check for if airplane mode is on, if so, run the script to reset airplane mode
                     }
-                    airplaneModeResetButton(requireActivity())
+
+                    if(airplaneModeResetButton(requireActivity())){
+                        altRootModePref?.isChecked = true
+                    } else{
+                        altRootModePref?.isChecked = false
+                    }
+
+
+
                 }
 
 
@@ -331,7 +342,8 @@ class SettingsFragment : PreferenceFragmentCompat(), TimePickerDialog.OnTimeSetL
      * @param context allows access to application-specific resources and classes
      *
      */
-    private fun airplaneModeResetButton(context: Context) {
+    private fun airplaneModeResetButton(context: Context): Boolean {
+        var status = false
         MaterialDialog(requireContext())
             .icon(R.mipmap.wifi_off)
             .message(R.string.title_airplane_reset)
@@ -346,10 +358,14 @@ class SettingsFragment : PreferenceFragmentCompat(), TimePickerDialog.OnTimeSetL
                         R.string.title_airplane_reset,
                         Toast.LENGTH_LONG).show()
                 }
+                status = true
 
             }
-            .negativeButton(R.string.text_cancel)
+            .negativeButton(R.string.text_cancel) {
+
+            }
             .show()
+        return status
     }
 
     private fun logDirectoryButton() {

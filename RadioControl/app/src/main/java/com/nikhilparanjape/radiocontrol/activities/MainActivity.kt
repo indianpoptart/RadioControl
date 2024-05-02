@@ -206,7 +206,8 @@ class MainActivity : AppCompatActivity(), KinAppManager.KinAppListener, Coroutin
     val mySharedPref = androidx.preference.PreferenceManager.getDefaultSharedPreferences(applicationContext)
     /*val sharedPref = getSharedPreferences(PRIVATE_PREF, Context.MODE_PRIVATE)*/ /** Migrated away from custom prefs.xml file **/
     val editor = mySharedPref.edit()
-
+    //TODO Add a section here to initialize permissions based on settings/preferences.
+    // This is to ensure any changes between old app versions continue to function properly
     editor.putInt(getString(R.string.preference_app_active), 0) // Sets the main ON/OFF for the app
     //  Create a new boolean and preference and set it to true if it's not already there
     val isFirstStart = mySharedPref.getBoolean(getString(R.string.preference_first_start), true)

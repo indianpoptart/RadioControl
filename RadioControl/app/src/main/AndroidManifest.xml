@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /> <!-- Required for the app to see WiFi state properties -->
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" /> <!-- Required to toggle Airplane mode -->
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- Required to see full network state propteries -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <!--<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> Required for logging? -->
@@ -16,8 +17,7 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" /> <!-- Required for backwards compatibility to keep service running in the background -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" /> <!-- Required for the app to run its service on boot -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" /> <!-- Required to allow background service to run in the background -->
-    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_CONNECTED_DEVICE" /> <!-- Required to allow Netowkr related background service to run-->
     <uses-permission-sdk-23 android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" /> <!-- Required for allowing the app to bypass doze restrictions -->
 
     <application
@@ -81,8 +81,13 @@
             android:name=".services.PersistenceService"
             android:enabled="true"
             android:icon="@drawable/ic_baseline_query_builder_24px"
+            android:foregroundServiceType="connectedDevice"
             android:label="PersistenceService"
             android:process=":persistent" />
+        <service
+            android:name="androidx.work.impl.foreground.SystemForegroundService"
+            android:foregroundServiceType="connectedDevice"
+            tools:node="merge" />
         <service
             android:name=".services.DoNotDisturbService"
             android:enabled="true"
@@ -138,9 +143,9 @@
         <receiver android:name=".receivers.ActionReceiver" />
         <receiver android:name=".receivers.PersistenceAlarmReceiver" />
 
-        <meta-data
+<!--        <meta-data
             android:name="io.fabric.ApiKey"
-            android:value="81de282abeba311751e18b3d5109feb5ba38e192" />
+            android:value="81de282abeba311751e18b3d5109feb5ba38e192" />-->
 
         <activity
             android:name=".activities.TroubleshootingActivity"

@@ -39,7 +39,9 @@ android {
         viewBinding true
     }
     packagingOptions {
-        exclude 'META-INF/library_release.kotlin_module'
+        resources {
+            excludes += ['META-INF/library_release.kotlin_module']
+        }
     }
     productFlavors {
 
@@ -49,14 +51,12 @@ android {
         targetCompatibility 17
     }
 
-    lintOptions {
-        checkReleaseBuilds false
-        // Or, if you prefer, you can continue to check for errors in release builds,
-        // but continue the build even when errors are found:
-        abortOnError false
-    }
     ndkVersion '25.1.8937393'
     namespace 'com.nikhilparanjape.radiocontrol'
+    lint {
+        abortOnError false
+        checkReleaseBuilds false
+    }
 }
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
