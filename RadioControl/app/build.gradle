@@ -7,13 +7,13 @@ repositories {
     mavenCentral()
 }
 android {
-    compileSdk 34
+    compileSdk 35
     //buildToolsVersion '34.0.0'
     kotlinOptions.useK2 = true
     defaultConfig {
         applicationId "com.nikhilparanjape.radiocontrol"
         minSdkVersion 21
-        targetSdkVersion 34
+        targetSdkVersion 35
         versionCode 82
         versionName '6.0-Alpha8'
         // Enabling multidex support.
@@ -51,12 +51,13 @@ android {
         targetCompatibility 17
     }
 
-    ndkVersion '25.1.8937393'
+    ndkVersion '28.0.13004108'
     namespace 'com.nikhilparanjape.radiocontrol'
     lint {
         abortOnError false
         checkReleaseBuilds false
     }
+    buildToolsVersion '35.0.1'
 }
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
@@ -64,37 +65,37 @@ dependencies {
     // noinspection GradleCompatible
 
     //AndroidX
-    implementation 'androidx.annotation:annotation:1.7.1'
-    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'androidx.annotation:annotation:1.9.1'
+    implementation 'androidx.appcompat:appcompat:1.7.0'
     implementation 'androidx.browser:browser:1.8.0'
     implementation 'androidx.cardview:cardview:1.0.0'
     //noinspection GradleDependency
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    implementation group: 'androidx.core', name: 'core-ktx', version: '1.13.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.2.0'
+    implementation group: 'androidx.core', name: 'core-ktx', version: '1.15.0'
 
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.preference:preference-ktx:1.2.1'
-    implementation 'androidx.recyclerview:recyclerview:1.3.2'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0'
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.7.0'
-    implementation 'androidx.work:work-runtime-ktx:2.9.0'
+    implementation 'androidx.recyclerview:recyclerview:1.4.0'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.7'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.8.7'
+    implementation 'androidx.work:work-runtime-ktx:2.10.0'
 
 
     //Debug
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.14'
 
     //Google
-    implementation 'com.android.billingclient:billing-ktx:6.2.1'
+    implementation 'com.android.billingclient:billing-ktx:7.1.1'
     implementation 'com.google.androidbrowserhelper:androidbrowserhelper:2.5.0'
-    implementation 'com.google.android.material:material:1.11.0'
-    implementation 'androidx.compose.material3:material3:1.2.1'
+    implementation 'com.google.android.material:material:1.12.0'
+    implementation 'androidx.compose.material3:material3:1.3.1'
 
 
     // Third party - Helper
     implementation "com.github.StephenVinouze:KinApp:1.0.3"
     implementation "com.github.topjohnwu.libsu:core:5.2.2"
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0'
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.9.23'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.1'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:2.1.10'
     implementation 'me.zhanghai.android.customtabshelper:library:1.0.6'
 
     // Third party - UI/UX
